@@ -1,0 +1,283 @@
+erDiagram
+    USERS ||--o{ CONNECTIONS : has
+    USERS ||--|| CREDENTIALS : owns
+    USERS ||--o{ PAYMENT_METHODS : has
+    USERS ||--o{ BANK_ACCOUNTS : owns
+    USERS ||--o{ SITES : owns
+    USERS ||--o{ PANTRIES : owns
+    USERS ||--o{ RECIPES : authors
+    USERS ||--o{ RECIPE_FEEDBACK : writes
+    USERS ||--o{ RECIPE_COOKS_NOTES : writes
+    USERS ||--o{ RECIPE_IMPORTS : performs
+    USERS ||--o{ GROCERY_LISTS : owns
+    USERS ||--o{ RECIPE_BOXES : owns
+    USERS ||--o{ RECIPE_USERS : "access recipes"
+    USERS ||--o{ USER_SHARE_GROUPS : owns
+    USERS ||--o{ USER_SHARE_GROUP_MEMBERS : "is member of"
+    
+    RECIPES ||--|{ RECIPE_INGREDIENTS : use
+    RECIPES ||--|{ RECIPE_INSTRUCTIONS : has
+    RECIPES ||--o{ RECIPE_ROLYALTIES : has
+    RECIPES ||--o{ RECIPE_FEEDBACK : receives
+    RECIPES ||--o{ RECIPE_COOKS_NOTES : has
+    RECIPES ||--o{ RECIPE_IMPORTS : imported
+    RECIPES ||--o{ RECIPE_TAGS : "tagged with"
+    RECIPES ||--o{ RECIPE_BOX_RECIPES : are
+    RECIPES ||--o{ RECIPE_USERS : "accessible by"
+    RECIPES ||--o{ RECIPE_SHARE : "shared with"
+
+    INGREDIENTS ||--o{ SEASONAL_INGREDIENTS : "is available in"
+    INGREDIENTS ||--o{ INGREDIENT_GROCERY_STORE_AISLES : "located in"
+    INGREDIENTS ||--o{ INGREDIENT_IMAGES : has
+    INGREDIENTS ||--o{ RECIPE_INGREDIENTS : "used in"
+    INGREDIENTS ||--o{ PANTRY_INGREDIENTS : "stored in"
+    INGREDIENTS ||--o{ GROCERY_LIST_ITEMS : "listed in"
+
+    PANTRIES ||--o{ PANTRY_INGREDIENTS : contains
+    PANTRIES ||--o{ PANTRY_SHARE : "shared with"
+
+    RECIPE_BOXES ||--o{ RECIPE_BOX_RECIPES : contains
+    RECIPE_BOXES ||--o{ RECIPE_BOX_SHARE : "shared with"
+
+    GROCERY_LISTS ||--o{ GROCERY_LIST_ITEMS : contains
+    GROCERY_LISTS ||--o{ GROCERY_LIST_SHARE : "shared with"
+
+    USER_SHARE_GROUPS ||--o{ USER_SHARE_GROUP_MEMBERS : has
+    SEASONS ||--o{ SEASONAL_INGREDIENTS : includes
+    GROCERY_STORES ||--o{ GROCERY_STORE_AISLES : has
+    GROCERY_STORE_AISLES ||--o{ INGREDIENT_GROCERY_STORE_AISLES : contains
+    TAGS ||--o{ RECIPE_TAGS : "tags"
+
+    %% Users %%
+    USERS {
+        id uuid
+        username string
+        email string
+    }
+    CREDENTIALS {
+        id uuid
+        user_id uuid
+        credential_id string
+        public_key text
+        counter int
+    }
+    CONNECTIONS {
+        id uuid
+        type string
+        source_user_id uuid
+        target_user_id uuid
+    }
+    PAYMENT_METHODS {
+        id uuid
+        user_id uuid
+        type string
+        details jsonb
+    }
+    BANK_ACCOUNTS {
+        id uuid
+        user_id uuid
+        bank_name string
+        account_number string
+        routing_number string
+        account_type string
+    }
+    USER_SHARE_GROUPS {
+        id uuid
+        name string
+        owner_user_id uuid
+    }
+    USER_SHARE_GROUP_MEMBERS {
+        id uuid
+        user_share_group_id uuid
+        member_user_id uuid
+    }
+
+    %% Ingredients %%
+    INGREDIENTS {
+        id uuid
+        name string
+        description text
+        category string
+        nutrition_info jsonb
+    }
+    INGREDIENT_IMAGES {
+        id uuid
+        ingredient_id uuid
+        image_url string
+        alt_text string
+    }
+
+    %% Tags %%
+    TAGS {
+        id uuid
+        name string
+        type string
+    }
+
+    %% Sites %%
+    SITES {
+        id uuid
+        name string
+        domain string
+        owner_user_id uuid
+    }
+
+    %% Recipes %%
+    RECIPES {
+        id uuid
+        author_id uuid
+        title string
+        description text
+        servings int
+        prep_time int
+        cook_time int
+    }
+    RECIPE_SHARE {
+        id uuid
+        recipe_id uuid
+        shared_with_user_id uuid
+        user_share_group_id uuid
+    }
+    RECIPE_INGREDIENTS {
+        id uuid
+        ingredient_id uuid
+        quantity float
+        unit string
+        order int
+        treatment text 
+        %% ^ e.g., chopped, diced
+        modifier text 
+        %% ^ e.g., optional, substitute
+    }
+    RECIPE_FEEDBACK {
+        id uuid
+        recipe_id uuid
+        user_id uuid
+        rating int
+        comment text
+    }
+    RECIPE_COOKS_NOTES {
+        id uuid
+        recipe_id uuid
+        user_id uuid
+        note text
+    }
+    RECIPE_INSTRUCTIONS {
+        id uuid
+        recipe_id uuid
+        step_number int
+        instruction text
+    }
+    RECIPE_IMPORTS {
+        id uuid
+        user_id uuid
+        recipe_id uuid
+        source_url string
+        raw_data text
+    }
+    RECIPE_USERS {
+        id uuid
+        recipe_id uuid
+        user_id uuid
+    }
+    RECIPE_TAGS {
+        id uuid
+        recipe_id uuid
+        tag_id uuid
+    }
+    RECIPE_ROLYALTIES {
+        id uuid
+        recipe_id uuid
+        recipient_user_id uuid
+        sender_user_id uuid
+        amount decimal
+    }
+
+    %% Recipe Box %%
+    RECIPE_BOXES {
+        id uuid
+        user_id uuid
+        name string
+    }
+    RECIPE_BOX_SHARE {
+        id uuid
+        recipe_box_id uuid
+        shared_with_user_id uuid
+        user_share_group_id uuid
+    }
+    RECIPE_BOX_RECIPES {
+        id uuid
+        recipe_box_id uuid
+        recipe_id uuid
+    }
+
+    %% Seasonal Ingredients %%
+    SEASONS {
+        id uuid
+        name string
+        location string
+        months int[]
+    }
+    SEASONAL_INGREDIENTS {
+        id uuid
+        ingredient_id uuid
+        season_id uuid
+    }
+
+    %% User Pantries %%
+    PANTRIES {
+        id uuid
+        user_id uuid
+        name string
+    }
+    PANTRY_SHARE {
+        id uuid
+        pantry_id uuid
+        shared_with_user_id uuid
+        user_share_group_id uuid
+    }
+    PANTRY_INGREDIENTS {
+        id uuid
+        pantry_id uuid
+        ingredient_id uuid
+        quantity float
+        unit string
+    }
+
+    %% Grocery Lists %%
+    GROCERY_LISTS {
+        id uuid
+        user_id uuid
+        name string
+    }
+    GROCERY_LIST_SHARE {
+        id uuid
+        grocery_list_id uuid
+        shared_with_user_id uuid
+        user_share_group_id uuid
+    }
+    GROCERY_LIST_ITEMS {
+        id uuid
+        grocery_list_id uuid
+        ingredient_id uuid
+        quantity float
+        unit string
+        purchased boolean
+        notes text
+    }
+    GROCERY_STORES {
+        id uuid
+        name string
+        location string
+    }
+    GROCERY_STORE_AISLES {
+        id uuid
+        grocery_store_id uuid
+        name string
+        description text
+    }
+    INGREDIENT_GROCERY_STORE_AISLES {
+        id uuid
+        ingredient_id uuid
+        grocery_store_aisle_id uuid
+    }

@@ -1,0 +1,29 @@
+.main-nav {
+	flex: 1 0 100px;
+    display: flex;
+    width: 100%;
+    background: darkmagenta;
+    .nav-item {
+        width: 25%;
+        display: flex;
+        padding: 1rem 0;
+        overflow: hidden;
+        color: white;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        font-size: 1rem;
+        &.nav-item-active {
+            .nav-item-icon {
+                color: lime;
+            }
+        }
+        .nav-item-label {
+            white-space: nowrap;
+        }
+        .nav-item-icon {
+            font-size: 2rem;
+            line-height: 1.5rem;
+        }
+    }
+}
