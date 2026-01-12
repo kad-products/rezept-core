@@ -1,15 +1,15 @@
 import { RequestInfo } from "rwsdk/worker";
 
-import StandardLayout from '@/app/layouts/standard';
+import StandardLayout from '@/layouts/standard';
 import recipes from '@/data/recipes';
 
-export default function Recipes_Groceries({ params }: RequestInfo) {
+export default function Recipes_Groceries({ params, ctx }: RequestInfo) {
 
     const recipe = recipes.find((s) => s.id === params.id);
 
     if (!recipe) {
         return (
-            <StandardLayout currentBasePage="recipes">
+            <StandardLayout currentBasePage="recipes" ctx={ctx}>
                 <h2 className="page-title">
                     Recipe Not Found
                 </h2>
@@ -19,7 +19,7 @@ export default function Recipes_Groceries({ params }: RequestInfo) {
     }
 
     return (
-        <StandardLayout currentBasePage="recipes">
+        <StandardLayout currentBasePage="recipes" ctx={ctx}>
             <a href={`/recipes/${recipe.id}`}>← Back to Recipe</a>
             <h2 className="page-title">
                 Grocery Shop for {recipe.title}

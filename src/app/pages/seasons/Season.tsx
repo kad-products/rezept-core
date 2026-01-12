@@ -1,15 +1,15 @@
 import { RequestInfo } from "rwsdk/worker";
 
-import StandardLayout from '@/app/layouts/standard';
+import StandardLayout from '@/layouts/standard';
 import seasons from '@/data/seasons';
 
-export default function Season({ params }: RequestInfo) {
+export default function Season({ params, ctx }: RequestInfo) {
 
   const season = seasons.find( ( s ) => s.id === params.id );
   
   if ( !season ) {
     return (
-      <StandardLayout currentBasePage="seasons">
+      <StandardLayout currentBasePage="seasons" ctx={ctx}>
         <h2 className="page-title">
           Season Not Found
         </h2>
@@ -19,7 +19,7 @@ export default function Season({ params }: RequestInfo) {
   }
 
   return (
-    <StandardLayout currentBasePage="seasons">
+    <StandardLayout currentBasePage="seasons" ctx={ctx}>
       <a href="/seasons">← All Seasons</a>
 			<h2 className="page-title">
 				Season: { season.name }

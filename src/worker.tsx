@@ -1,8 +1,11 @@
-import { render, route } from "rwsdk/router";
+import { render, route, prefix } from "rwsdk/router";
 import { defineApp } from "rwsdk/worker";
 
 import { Document } from "@/app/Document";
 import { setCommonHeaders } from "@/app/headers";
+import { authRoutes } from "@/passkey/routes";
+import { setupPasskeyAuth } from "@/passkey/setup";
+import { Session } from "@/session/durableObject";
 
 import Home from "@/app/pages/Home";
 import GroceryStores from "./app/pages/grocery-stores/GroceryStores";
@@ -18,16 +21,23 @@ import RecipeCooksNoteAdd from "./app/pages/recipes/CooksNoteAdd";
 import Seasons from "./app/pages/seasons/Seasons";
 import Season from "./app/pages/seasons/Season";
 
-export type AppContext = {};
+export type AppContext = {
+  session: Session | null;
+};
+export { SessionDurableObject } from "@/session/durableObject";
+export { PasskeyDurableObject } from "@/passkey/durableObject";
 
 export default defineApp([
   setCommonHeaders(),
+  setupPasskeyAuth(),
   ({ ctx }) => {
     // setup ctx here
     ctx;
   },
   render(Document, [
     route("/", Home),
+
+    prefix("/auth", authRoutes()),
 
     route("/grocery-stores", GroceryStores),
     route("/grocery-stores/:id", GroceryStore),

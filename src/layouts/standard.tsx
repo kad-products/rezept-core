@@ -2,13 +2,21 @@ import classNames from "classnames";
 import { CiHome } from "react-icons/ci";
 import { GiFallingLeaf } from "react-icons/gi";
 import { BiFoodMenu } from "react-icons/bi";
-import { FaUsers } from "react-icons/fa";
-import { FaStoreAlt } from "react-icons/fa";
+import { FaStoreAlt, FaUsers } from "react-icons/fa";
 import { MdFoodBank } from "react-icons/md";
 import { PiBooksBold } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
+import { IoLogInOutline } from "react-icons/io5";
 
-export default function StandardLayout({ children, currentBasePage }: { children: React.ReactNode, currentBasePage: string | undefined }) {	
+export default function StandardLayout({ 
+    children, 
+    currentBasePage,
+    ctx = {}
+}: { 
+    children: React.ReactNode, 
+    currentBasePage: string | undefined,
+    ctx: any
+}) {	
 
     const navItems = {
         'home': { label: "Home", href: "/", icon: CiHome },
@@ -42,6 +50,29 @@ export default function StandardLayout({ children, currentBasePage }: { children
                                 </a>
                             )
                         } )
+                    }
+                    {
+                        ctx.session ?
+                            <a 
+                                className={ classNames( {
+                                    'nav-item': true,
+                                    'nav-item-active': currentBasePage === "auth"
+                                } ) } 
+                                href="/auth/logout"
+                            >
+                                <span className="nav-item-icon"><IoLogInOutline /></span>
+                                <span className="nav-item-label">Logout</span>
+                            </a> :
+                            <a 
+                                className={ classNames( {
+                                    'nav-item': true,
+                                    'nav-item-active': currentBasePage === "auth"
+                                } ) } 
+                                href="/auth/login"
+                            >
+                                <span className="nav-item-icon"><IoLogInOutline /></span>
+                                <span className="nav-item-label">Login</span>
+                            </a>
                     }
                 </nav>
 			</header>

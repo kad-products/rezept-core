@@ -1,10 +1,10 @@
 import { RequestInfo } from "rwsdk/worker";
 
-import StandardLayout from '@/app/layouts/standard';
+import StandardLayout from '@/layouts/standard';
 
 export default function Home({ ctx }: RequestInfo) {
   return (
-    <StandardLayout currentBasePage="home">
+    <StandardLayout currentBasePage="home" ctx={ctx}>
 			<h2 className="page-title">
 				Home
 			</h2>

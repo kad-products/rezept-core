@@ -1,4 +1,4 @@
-import styles from './styles/global.css?url';
+import styles from '../styles/global.css?url';
 
 export const Document: React.FC<{ children: React.ReactNode }> = ({
   children,

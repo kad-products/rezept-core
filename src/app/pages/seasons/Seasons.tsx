@@ -1,11 +1,11 @@
 import { RequestInfo } from "rwsdk/worker";
 
-import StandardLayout from '@/app/layouts/standard';
+import StandardLayout from '@/layouts/standard';
 import seasons from '@/data/seasons';
 
 export default function Seasons({ ctx }: RequestInfo) {
   return (
-    <StandardLayout currentBasePage="seasons">
+    <StandardLayout currentBasePage="seasons" ctx={ctx}>
 			<h2 className="page-title">
 				Seasons
 			</h2>

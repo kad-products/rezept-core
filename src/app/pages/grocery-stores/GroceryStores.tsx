@@ -1,11 +1,11 @@
 import { RequestInfo } from "rwsdk/worker";
 
-import StandardLayout from '@/app/layouts/standard';
+import StandardLayout from '@/layouts/standard';
 import groceryStores from '@/data/grocery-stores';
 
 export default function GroceryStores({ ctx }: RequestInfo) {
   return (
-    <StandardLayout currentBasePage="grocery-stores">
+    <StandardLayout currentBasePage="grocery-stores" ctx={ctx}>
 			<h2 className="page-title">
 				Grocery Stores
 			</h2>
