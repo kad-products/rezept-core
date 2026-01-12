@@ -7,19 +7,19 @@ import { authRoutes } from "@/passkey/routes";
 import { setupPasskeyAuth } from "@/passkey/setup";
 import { Session } from "@/session/durableObject";
 
-import Home from "@/app/pages/Home";
-import GroceryStores from "./app/pages/grocery-stores/GroceryStores";
-import GroceryStore from "./app/pages/grocery-stores/GroceryStore";
-import RecipeBoxes from "./app/pages/recipe-boxes/RecipeBoxes";
-import RecipeBox from "./app/pages/recipe-boxes/RecipeBox";
-import Recipes from "./app/pages/recipes/Recipes";
-import Recipe from "./app/pages/recipes/Recipe";
-import RecipeAdd from "./app/pages/recipes/Add";
-import RecipeFeedback from "./app/pages/recipes/FeedbackAdd";
-import RecipeCooksNotes from "./app/pages/recipes/CooksNotes";
-import RecipeCooksNoteAdd from "./app/pages/recipes/CooksNoteAdd";
-import Seasons from "./app/pages/seasons/Seasons";
-import Season from "./app/pages/seasons/Season";
+import Home from "@/Home";
+import GroceryStores from "./grocery-stores/GroceryStores";
+import GroceryStore from "./grocery-stores/GroceryStore";
+import RecipeBoxes from "./recipe-boxes/RecipeBoxes";
+import RecipeBox from "./recipe-boxes/RecipeBox";
+import Recipes from "./recipes/Recipes";
+import Recipe from "./recipes/Recipe";
+import RecipeAdd from "./recipes/Add";
+import RecipeFeedback from "./recipes/FeedbackAdd";
+import RecipeCooksNotes from "./recipes/CooksNotes";
+import RecipeCooksNoteAdd from "./recipes/CooksNoteAdd";
+import Seasons from "./seasons/Seasons";
+import Season from "./seasons/Season";
 
 export type AppContext = {
   session: Session | null;
