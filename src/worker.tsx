@@ -1,8 +1,8 @@
 import { render, route, prefix } from "rwsdk/router";
 import { defineApp } from "rwsdk/worker";
 
-import { Document } from "@/app/Document";
-import { setCommonHeaders } from "@/app/headers";
+import { Document } from "@/Document";
+import { setCommonHeaders } from "@/headers";
 import { authRoutes } from "@/passkey/routes";
 import { setupPasskeyAuth } from "@/passkey/setup";
 import { Session } from "@/session/durableObject";
