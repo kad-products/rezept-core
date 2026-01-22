@@ -7,7 +7,7 @@ import { authRoutes } from "@/passkey/routes";
 import { setupPasskeyAuth } from "@/passkey/setup";
 import { Session } from "@/session/durableObject";
 import { getUserById } from "@/repositories/users";
-import { type User } from "@/db/schema";
+import { type User } from "@/models/schema";
 
 import Home from "@/Home";
 import GroceryStores from "./grocery-stores/GroceryStores";

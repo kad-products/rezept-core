@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/d1";
 import { env } from "cloudflare:workers";
-import * as schema from "./schema";
+import * as schema from "./models/schema";
 
 export const db = drizzle(env.rezept_core, {
     schema,

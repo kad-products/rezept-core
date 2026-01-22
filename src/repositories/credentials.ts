@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
-import { db } from "@/db/db";
-import { type Credential, credentials, CredentialInsert } from "@/db/schema";
+import { db } from "@/db";
+import { type Credential, credentials, CredentialInsert } from "@/models/schema";
 
 export async function createCredential(
   newCredential: CredentialInsert,
