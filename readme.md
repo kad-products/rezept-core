@@ -23,6 +23,14 @@ Point your browser to the URL displayed in the terminal (e.g. `http://localhost:
 - [RedwoodSDK Documentation](https://docs.rwsdk.com/)
 - [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers)
 
+## Project Structure
+
+- `/src/layouts`: Highest level non-framework components that define the page layout.  Probably will just be one for the user-facing stuff and one for any administrative views.
+- `/src/models`: Files in here are used by Drizzle to build the migrations and ORM tooling.  These should only be used by Drizzle or imported by Repositories, no other application runtime code should reference them.
+- `/src/pages`: Page-level components organized by the URL they are responsible for.
+- `/src/repositories`: Data access methods to be used throughout the rest of the application.
+- `/src/styles`: CSS and LESS files for styling the application
+
 ## Database 
 
 Using D1 for essentially everything but session objects.
