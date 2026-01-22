@@ -5,10 +5,7 @@ import groceryStores from '@/data/grocery-stores';
 
 export default function GroceryStores({ ctx }: RequestInfo) {
   return (
-    <StandardLayout currentBasePage="grocery-stores" ctx={ctx}>
-			<h2 className="page-title">
-				Grocery Stores
-			</h2>
+    <StandardLayout currentBasePage="grocery-stores" pageTitle="Grocery Stores" ctx={ctx}>
       { groceryStores.map( ( store ) => (
         <section key={store.id}>
           <h3>{ store.name }</h3>

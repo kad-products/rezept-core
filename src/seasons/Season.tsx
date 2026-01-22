@@ -9,21 +9,15 @@ export default function Season({ params, ctx }: RequestInfo) {
   
   if ( !season ) {
     return (
-      <StandardLayout currentBasePage="seasons" ctx={ctx}>
-        <h2 className="page-title">
-          Season Not Found
-        </h2>
+      <StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
         <p>The season you are looking for does not exist.</p>
       </StandardLayout>
     );
   }
 
   return (
-    <StandardLayout currentBasePage="seasons" ctx={ctx}>
+    <StandardLayout currentBasePage="seasons" pageTitle={ `Season: ${ season.name }`} ctx={ctx}>
       <a href="/seasons">← All Seasons</a>
-			<h2 className="page-title">
-				Season: { season.name }
-			</h2>
       <p><span>Location: { season.location }</span></p>
       <p><span>Months: { season.months.join( ', ' ) }</span></p>
       <p><span>ID: { season.id }</span></p>

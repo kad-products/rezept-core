@@ -89,7 +89,7 @@ export function Login({ ctx }: { ctx: any }) {
   };
 
   return (
-    <StandardLayout currentBasePage="auth" ctx={ctx}>
+    <StandardLayout currentBasePage="auth" pageTitle="Login" ctx={ctx}>
       {
         ctx.user ?
           <div>

@@ -5,10 +5,7 @@ import seasons from '@/data/seasons';
 
 export default function Seasons({ ctx }: RequestInfo) {
   return (
-    <StandardLayout currentBasePage="seasons" ctx={ctx}>
-			<h2 className="page-title">
-				Seasons
-			</h2>
+    <StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
       { seasons.map( ( season ) => (
         <section key={season.name}>
           <h3>{ season.name }</h3>

@@ -5,10 +5,7 @@ import recipes from '@/data/recipes';
 
 export default function Recipes({ ctx }: RequestInfo) {
   return (
-    <StandardLayout currentBasePage="recipes" ctx={ctx}>
-			<h2 className="page-title">
-				Recipes
-			</h2>
+    <StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
       { recipes.map( ( recipe ) => (
         <section key={recipe.id}>
           <h3>{ recipe.title }</h3>
