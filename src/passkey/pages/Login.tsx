@@ -14,7 +14,7 @@ import {
 
 import StandardLayout from '@/layouts/standard';
 
-export function Login({ctx}: {ctx: any}) {
+export function Login({ ctx }: { ctx: any }) {
   const [username, setUsername] = useState("");
   const [result, setResult] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -23,22 +23,25 @@ export function Login({ctx}: {ctx: any}) {
     try {
       // 1. Get a challenge from the worker
       const options = await startPasskeyLogin();
+      console.log(options);
 
       // 2. Ask the browser to sign the challenge
       const login = await startAuthentication({ optionsJSON: options });
+      console.log(login);
 
       // 3. Give the signed challenge to the worker to finish the login process
       const success = await finishPasskeyLogin(login);
+      console.log(success);
 
       if (!success) {
+        console.log( 'Failed')
         setResult("Login failed");
       } else {
         setResult("Login successful!");
       }
     } catch (error: unknown) {
       setResult(
-        `Login error: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `Login error: ${error instanceof Error ? error.message : "Unknown error"
         }`,
       );
     }
@@ -66,8 +69,7 @@ export function Login({ctx}: {ctx: any}) {
       }
     } catch (error: unknown) {
       setResult(
-        `Registration error: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `Registration error: ${error instanceof Error ? error.message : "Unknown error"
         }`,
       );
     }
@@ -88,22 +90,44 @@ export function Login({ctx}: {ctx: any}) {
 
   return (
     <StandardLayout currentBasePage="auth" ctx={ctx}>
-      <input
-        type="text"
-        value={username}
-        onChange={handleUsernameChange}
-        placeholder="Username"
-      />
-      <button onClick={handlePerformPasskeyLogin} disabled={isPending}>
-        {isPending ? <>...</> : "Login with passkey"}
-      </button>
-      <button onClick={handlePerformPasskeyRegister} disabled={isPending}>
-        {isPending ? <>...</> : "Register with passkey"}
-      </button>
-      {result && <div>{result}</div>}
       {
-        JSON.stringify(ctx)
+        ctx.user ?
+          <div>
+            <div>
+              <h2>User</h2>
+              <pre>{JSON.stringify(ctx.user, null, 4)}</pre>
+            </div>
+            <div>
+              <h2>Session</h2>
+              <pre>{JSON.stringify(ctx.session, null, 4)}</pre>
+            </div>
+          </div> :
+          <>
+            <h2 className="page-title">
+              Login
+            </h2>
+            <button onClick={handlePerformPasskeyLogin} disabled={isPending}>
+              {isPending ? <>...</> : "Login with passkey"}
+            </button>
+            <h2 className="page-title">
+              Register
+            </h2>
+            <input
+              type="text"
+              value={username}
+              onChange={handleUsernameChange}
+              placeholder="Username"
+            />
+            <button onClick={handlePerformPasskeyRegister} disabled={isPending}>
+              {isPending ? <>...</> : "Register with passkey"}
+            </button>
+            {result && <div>{result}</div>}
+            <div>
+              <pre>{JSON.stringify(ctx, null, 4)}</pre>
+            </div>
+          </>
       }
+
     </StandardLayout>
   );
 }

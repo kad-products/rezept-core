@@ -52,7 +52,7 @@ export default function StandardLayout({
                         } )
                     }
                     {
-                        ctx.session ?
+                        ctx.user ?
                             <a 
                                 className={ classNames( {
                                     'nav-item': true,

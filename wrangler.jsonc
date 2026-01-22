@@ -1,38 +1,42 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "rezept",
-  "main": "src/worker.tsx",
-  "compatibility_date": "2025-08-21",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
-  "assets": {
-    "binding": "ASSETS"
-  },
-  "observability": {
-    "enabled": true
-  },
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "SESSION_DURABLE_OBJECT",
-        "class_name": "SessionDurableObject"
-      },
-      {
-        "name": "PASSKEY_DURABLE_OBJECT",
-        "class_name": "PasskeyDurableObject"
-      }
-    ]
-  },
-  "vars": {
-    "WEBAUTHN_APP_NAME": "rezept"
-  },
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_sqlite_classes": [
-        "PasskeyDurableObject"
-      ]
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "rezept",
+	"main": "src/worker.tsx",
+	"compatibility_date": "2025-08-21",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"assets": {
+		"binding": "ASSETS"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "SESSION_DURABLE_OBJECT",
+				"class_name": "SessionDurableObject"
+			}
+		]
+	},
+	"vars": {
+		"WEBAUTHN_APP_NAME": "rezept"
+	},
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": [
+				"SessionDurableObject"
+			]
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "rezept_core",
+			"database_name": "rezept-core",
+			"database_id": "3500413b-0c56-4bb5-b3f1-9590c91846c8",
+      		"migrations_dir": "drizzle"
+		}
+	]
 }

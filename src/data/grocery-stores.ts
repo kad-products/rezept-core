@@ -1,11 +1,24 @@
 import { v5 as uuidv5 } from 'uuid';
 
+type Category = string;
+
+type Aisle = {
+  name: string;
+  categories: Category[];
+};
+
+type Store = {
+  id: string;
+  name: string;
+  aisles: Aisle[];
+};
+
 const stores = [
   "Cub Foods - Richfield, MN",
   "Costco - Eden Prairie, MN"
-]
+];
 
-const aisles = [
+const aisles: Aisle[] = [
   {
     name: "Produce",
     categories: ["Fresh Fruits", "Fresh Vegetables", "Salad Greens", "Herbs"]
@@ -68,10 +81,13 @@ const aisles = [
   }
 ];
 
-export default stores.map(store => {
+const storesList: Store[] = stores.map(store => {
   return {
     id: uuidv5(store, uuidv5.URL),
     name: store,
     aisles
-  }
-})
+  };
+});
+
+export default storesList;
+export type { Store, Aisle, Category };

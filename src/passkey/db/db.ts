@@ -1,81 +1,65 @@
-import { env } from "cloudflare:workers";
-
-import { type Database, createDb } from "rwsdk/db";
 import debug from "rwsdk/debug";
-import { type migrations } from "./migrations";
+import { eq } from "drizzle-orm";
+
+import { db } from "@/db/db";
+import { users, type User, type UserInsert, type Credential, credentials, CredentialInsert } from "@/db/schema";
 
 const log = debug("passkey:db");
 
-export type PasskeyDatabase = Database<typeof migrations>;
-export type User = PasskeyDatabase["users"];
-export type Credential = PasskeyDatabase["credentials"];
-
-export const db = createDb<PasskeyDatabase>(
-  env.PASSKEY_DURABLE_OBJECT,
-  "passkey-main",
-);
-
 export async function createUser(username: string): Promise<User> {
-  const user: User = {
+  const user: UserInsert = {
     id: crypto.randomUUID(),
     username,
     createdAt: new Date().toISOString(),
   };
-  await db.insertInto("users").values(user).execute();
-  return user;
+  const [insertedUser] = await db.insert(users).values(user).returning();
+  return insertedUser;
 }
 
 export async function getUserById(id: string): Promise<User | undefined> {
-  return await db
-    .selectFrom("users")
-    .selectAll()
-    .where("id", "=", id)
-    .executeTakeFirst();
+
+  const matchedUsers = await db.select().from(users).where(eq(users.id, id));
+  if( matchedUsers.length !==1 ){
+    throw new Error( `getUserById: matchedUsers length is ${ matchedUsers.length} for id ${ id }`);
+  }
+  return matchedUsers[0];
 }
 
 export async function createCredential(
-  credential: Omit<Credential, "id" | "createdAt">,
+  newCredential: CredentialInsert,
 ): Promise<Credential> {
-  log("Creating credential for user: %s", credential.userId);
+  log("Creating credential for user: %s", newCredential.userId);
 
-  const newCredential: Credential = {
-    id: crypto.randomUUID(),
-    createdAt: new Date().toISOString(),
-    ...credential,
-  };
-
-  await db.insertInto("credentials").values(newCredential).execute();
-  log("Credential created successfully: %s", newCredential.id);
-  return newCredential;
+  const [insertedCredential] = await db.insert(credentials).values(newCredential).returning();
+  log("Credential created successfully: %s", insertedCredential.id);
+  return insertedCredential;
 }
 
 export async function getCredentialById(
   credentialId: string,
 ): Promise<Credential | undefined> {
-  return await db
-    .selectFrom("credentials")
-    .selectAll()
-    .where("credentialId", "=", credentialId)
-    .executeTakeFirst();
+  const matchedCredentials = await db.select().from(credentials).where(eq(credentials.credentialId, credentialId));
+
+  if( matchedCredentials.length > 1 ){
+    throw new Error( `getCredentialById: matchedCredentials length is ${ matchedCredentials.length} for id ${ credentialId }`);
+  }
+
+  if( matchedCredentials.length === 0 ){
+    return undefined;
+  }
+
+  return matchedCredentials[0];
 }
 
 export async function updateCredentialCounter(
   credentialId: string,
   counter: number,
 ): Promise<void> {
-  await db
-    .updateTable("credentials")
-    .set({ counter })
-    .where("credentialId", "=", credentialId)
-    .execute();
-}
 
-export async function getUserCredentials(
-  userId: string,
-): Promise<Credential[]> {
-  return await db
-    .selectFrom("credentials")
-    .selectAll()
-    .where("userId", "=", userId)
-    .execute();
+  await db.update(credentials)
+    .set({ counter })
+    .where(eq(credentials.id, credentialId));
+
+  log("Updated credential counter for %s to %d", credentialId, counter);
+
 }

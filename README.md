@@ -22,3 +22,18 @@ Point your browser to the URL displayed in the terminal (e.g. `http://localhost:
 
 - [RedwoodSDK Documentation](https://docs.rwsdk.com/)
 - [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers)
+
+## Database 
+
+Using D1 for essentially everything but session objects.
+
+### Schema Changes
+
+1. Define schema in `/src/db/schema.ts`
+2. Run `pnpm migrate:new` to create the SQL file(s) in `/drizzle`
+3. Run `pnpm migrate:dev` to apply that to the dev D1 instance in `/.wrangler/state/v3/d1/*`
+4. Run `pnpm dev` to operation with the new changes
+
+### Drizzle Studio
+
+1. Run `pnpm drizzle-kit studio` to fire up Drizzle Studio on `https://local.drizzle.studio`

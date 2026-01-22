@@ -1,4 +1,5 @@
 "use server";
+import { UAParser as uap } from 'ua-parser-js';
 import {
   AuthenticationResponseJSON,
   generateAuthenticationOptions,
@@ -100,23 +101,59 @@ export async function finishPasskeyRegistration(
     credentialId: verification.registrationInfo.credential.id,
     publicKey: verification.registrationInfo.credential.publicKey,
     counter: verification.registrationInfo.credential.counter,
+    name: deviceNameFromUA( request.headers.get('User-Agent') || '' ),
   });
 
   return true;
+}
+
+function deviceNameFromUA( uaString: string ) {
+  const ua = new uap( uaString );
+  const device = ua.getDevice();
+  const os = ua.getOS();
+  const browser = ua.getBrowser();
+
+  let nameParts = [];
+
+  if ( device.vendor && device.model ) {
+    nameParts.push( `${ device.vendor } ${ device.model }` );
+  } else if ( device.model ) {
+    nameParts.push( device.model );
+  }
+
+  if ( os.name && os.version ) {
+    nameParts.push( `${ os.name } ${ os.version }` );
+  } else if ( os.name ) {
+    nameParts.push( os.name );
+  }
+
+  if ( browser.name && browser.version ) {
+    nameParts.push( `${ browser.name } ${ browser.version }` );
+  } else if ( browser.name ) {
+    nameParts.push( browser.name );
+  }
+
+  return nameParts.join( ' | ' ) || 'Unknown Device';
 }
 
 export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
   const { request, response } = requestInfo;
   const { origin } = new URL(request.url);
 
+  console.log( `Login: ${ JSON.stringify( login, null, 4 ) }`);
+
   const session = await sessions.load(request);
   const challenge = session?.challenge;
+
+  console.log( `Challenge: ${ JSON.stringify( challenge, null, 4 ) }`)
 
   if (!challenge) {
     return false;
   }
 
   const credential = await getCredentialById(login.id);
+
+  console.log( `Credential: ${ JSON.stringify( credential, null, 4 ) }`);
 
   if (!credential) {
     return false;
@@ -135,16 +172,17 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
     },
   });
 
+  console.log( `Verification: ${ JSON.stringify( verification, null, 4 ) }`);
+
   if (!verification.verified) {
     return false;
   }
 
-  await updateCredentialCounter(
-    login.id,
-    verification.authenticationInfo.newCounter,
-  );
+  await updateCredentialCounter( login.id, verification.authenticationInfo.newCounter);
 
   const user = await getUserById(credential.userId);
+
+  console.log( `User: ${ JSON.stringify( user, null, 4 ) }`);
 
   if (!user) {
     return false;

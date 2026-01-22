@@ -6,6 +6,8 @@ import { setCommonHeaders } from "@/headers";
 import { authRoutes } from "@/passkey/routes";
 import { setupPasskeyAuth } from "@/passkey/setup";
 import { Session } from "@/session/durableObject";
+import { getUserById } from "@/passkey/db/db";
+import { type User } from "@/db/schema";
 
 import Home from "@/Home";
 import GroceryStores from "./grocery-stores/GroceryStores";
@@ -23,16 +25,17 @@ import Season from "./seasons/Season";
 
 export type AppContext = {
   session: Session | null;
+	user: User | undefined;
 };
 export { SessionDurableObject } from "@/session/durableObject";
-export { PasskeyDurableObject } from "@/passkey/durableObject";
 
 export default defineApp([
   setCommonHeaders(),
   setupPasskeyAuth(),
-  ({ ctx }) => {
-    // setup ctx here
-    ctx;
+  async ({ ctx }) => {
+    if (ctx.session?.userId) {
+			ctx.user = await getUserById( ctx.session.userId );
+		}
   },
   render(Document, [
     route("/", Home),
