@@ -6,7 +6,7 @@ import { setCommonHeaders } from "@/headers";
 import { authRoutes } from "@/passkey/routes";
 import { setupPasskeyAuth } from "@/passkey/setup";
 import { Session } from "@/session/durableObject";
-import { getUserById } from "@/passkey/db/db";
+import { getUserById } from "@/repositories/users";
 import { type User } from "@/db/schema";
 
 import Home from "@/Home";

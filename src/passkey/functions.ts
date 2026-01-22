@@ -12,13 +12,8 @@ import {
 import { sessions } from "@/session/store";
 import { env } from "cloudflare:workers";
 import { requestInfo } from "rwsdk/worker";
-import {
-  createCredential,
-  createUser,
-  getCredentialById,
-  getUserById,
-  updateCredentialCounter,
-} from "./db";
+import { createUser, getUserById } from '@/repositories/users';
+import { createCredential, getCredentialById, updateCredentialCounter } from '@/repositories/credentials';
 
 function getWebAuthnConfig(request: Request) {
   const rpID = env.WEBAUTHN_RP_ID ?? new URL(request.url).hostname;

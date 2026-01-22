@@ -1,37 +1,15 @@
-import debug from "rwsdk/debug";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db/db";
-import { users, type User, type UserInsert, type Credential, credentials, CredentialInsert } from "@/db/schema";
-
-const log = debug("passkey:db");
-
-export async function createUser(username: string): Promise<User> {
-  const user: UserInsert = {
-    id: crypto.randomUUID(),
-    username,
-    createdAt: new Date().toISOString(),
-  };
-  const [insertedUser] = await db.insert(users).values(user).returning();
-  return insertedUser;
-}
-
-export async function getUserById(id: string): Promise<User | undefined> {
-
-  const matchedUsers = await db.select().from(users).where(eq(users.id, id));
-  if( matchedUsers.length !==1 ){
-    throw new Error( `getUserById: matchedUsers length is ${ matchedUsers.length} for id ${ id }`);
-  }
-  return matchedUsers[0];
-}
+import { type Credential, credentials, CredentialInsert } from "@/db/schema";
 
 export async function createCredential(
   newCredential: CredentialInsert,
 ): Promise<Credential> {
-  log("Creating credential for user: %s", newCredential.userId);
+  console.log("Creating credential for user: %s", newCredential.userId);
 
   const [insertedCredential] = await db.insert(credentials).values(newCredential).returning();
-  log("Credential created successfully: %s", insertedCredential.id);
+  console.log("Credential created successfully: %s", insertedCredential.id);
   return insertedCredential;
 }
 
@@ -60,6 +38,6 @@ export async function updateCredentialCounter(
     .set({ counter })
     .where(eq(credentials.id, credentialId));
 
-  log("Updated credential counter for %s to %d", credentialId, counter);
+  console.log("Updated credential counter for %s to %d", credentialId, counter);
 
 }
