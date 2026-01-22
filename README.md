@@ -29,7 +29,7 @@ Using D1 for essentially everything but session objects.
 
 ### Schema Changes
 
-1. Define schema in `/src/db/schema.ts`
+1. Add/adjust schemas in the appropriate `/src/models` file(s)
 2. Run `pnpm migrate:new` to create the SQL file(s) in `/drizzle`
 3. Run `pnpm migrate:dev` to apply that to the dev D1 instance in `/.wrangler/state/v3/d1/*`
 4. Run `pnpm dev` to operation with the new changes
