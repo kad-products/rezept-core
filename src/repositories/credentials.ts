@@ -13,6 +13,13 @@ export async function createCredential(
   return insertedCredential;
 }
 
+export async function getCredentialsByUserId(
+  userId: string,
+): Promise<Credential[]> {
+  const matchedCredentials = await db.select().from(credentials).where(eq(credentials.userId, userId));
+  return matchedCredentials;
+}
+
 export async function getCredentialById(
   credentialId: string,
 ): Promise<Credential | undefined> {

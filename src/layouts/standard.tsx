@@ -11,10 +11,12 @@ import { IoLogInOutline } from "react-icons/io5";
 export default function StandardLayout({ 
     children, 
     currentBasePage,
+    pageTitle,
     ctx = {}
 }: { 
     children: React.ReactNode, 
     currentBasePage: string | undefined,
+    pageTitle: string,
     ctx: any
 }) {	
 
@@ -77,6 +79,9 @@ export default function StandardLayout({
                 </nav>
 			</header>
 			<main>
+                <h2 className="page-title">
+                    { pageTitle }
+                </h2>
 				{children}
 			</main>
 		</>

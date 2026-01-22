@@ -9,7 +9,9 @@ import { Session } from "@/session/durableObject";
 import { getUserById } from "@/repositories/users";
 import { type User } from "@/models/schema";
 
-import Home from "@/Home";
+import profileRoutes from "@/pages/profile/routes";
+import Pages__root from "./pages/root";
+
 import GroceryStores from "./grocery-stores/GroceryStores";
 import GroceryStore from "./grocery-stores/GroceryStore";
 import RecipeBoxes from "./recipe-boxes/RecipeBoxes";
@@ -38,9 +40,10 @@ export default defineApp([
 		}
   },
   render(Document, [
-    route("/", Home),
+    route("/", Pages__root),
 
     prefix("/auth", authRoutes()),
+    prefix("/profile", profileRoutes),
 
     route("/grocery-stores", GroceryStores),
     route("/grocery-stores/:id", GroceryStore),
