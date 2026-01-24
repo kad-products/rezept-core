@@ -8,6 +8,7 @@ import { setupPasskeyAuth } from "@/passkey/setup";
 import { Session } from "@/session/durableObject";
 import { getUserById } from "@/repositories/users";
 import { type User } from "@/models/schema";
+import { sessions } from "@/session/store";
 
 import profileRoutes from "@/pages/profile/routes";
 import Pages__root from "./pages/root";
@@ -34,9 +35,21 @@ export { SessionDurableObject } from "@/session/durableObject";
 export default defineApp([
   setCommonHeaders(),
   setupPasskeyAuth(),
-  async ({ ctx }) => {
+  async ({ ctx, request }) => {
     if (ctx.session?.userId) {
-			ctx.user = await getUserById( ctx.session.userId );
+      try {
+			  ctx.user = await getUserById( ctx.session.userId );
+      } catch( err ) {
+        console.log( `Error fetching current user: ${ err }` )
+        const headers = new Headers();
+        await sessions.remove(request, headers);
+        headers.set("Location", "/");
+  
+        return new Response(null, {
+          status: 302,
+          headers,
+        });
+      }
 		}
   },
   render(Document, [
