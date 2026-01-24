@@ -10,11 +10,10 @@
   "private": true,
   "scripts": {
     "build": "vite build",
-    "dev": "vite dev",
+    "dev": "npm run clean:vite && vite dev",
     "dev:init": "rw-scripts dev-init",
     "preview": "vite preview",
     "worker:run": "rw-scripts worker-run",
-    "clean": "npm run clean:vite",
     "clean:vite": "rm -rf ./node_modules/.vite",
     "migrate:new": "drizzle-kit generate",
     "migrate:dev": "wrangler d1 migrations apply rezept_core --local",
@@ -23,10 +22,10 @@
     "generate": "rw-scripts ensure-env && wrangler types --include-runtime false",
     "check": "npm run generate && npm run types",
     "types": "tsc",
-    "prepare": "husky"
+    "prepare": "husky",
+    "seed": "tsx scripts/seeding/main.ts"
   },
   "dependencies": {
-    "@libsql/client": "^0.17.0",
     "@simplewebauthn/browser": "^13.2.2",
     "@simplewebauthn/server": "^13.2.2",
     "classnames": "^2.5.1",
@@ -44,12 +43,16 @@
     "@cloudflare/vite-plugin": "1.16.1",
     "@cloudflare/workers-types": "4.20251202.0",
     "@faker-js/faker": "^10.1.0",
+    "@libsql/client": "^0.17.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "~24.5.2",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
     "drizzle-kit": "^0.31.8",
+    "drizzle-seed": "^0.3.1",
     "husky": "^9.1.7",
     "less": "^4.3.0",
+    "tsx": "^4.21.0",
     "typescript": "5.8.3",
     "vite": "7.2.6",
     "wrangler": "4.52.1"
