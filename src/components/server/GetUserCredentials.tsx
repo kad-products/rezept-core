@@ -2,8 +2,12 @@ import { Suspense } from "react";
 import { getCredentialsByUserId } from '@/repositories/credentials';
 import UserCredentialsTable from '@/components/client/UserCredentialsTable';
 
-export default async function GetUserCredentials({ userId }: { userId: string }) {
+export default async function GetUserCredentials({ userId }: { userId: string | undefined}) {
 
+    if( !userId ) {
+        return null;
+    }
+    
     const userCredentials = await getCredentialsByUserId(userId);
 
     // Only plain objects can be passed to Client Components from Server Components. Uint8Array objects are not supported.
