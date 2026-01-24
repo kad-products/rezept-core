@@ -103,15 +103,15 @@ export function Login({ ctx }: { ctx: any }) {
             </div>
           </div> :
           <>
-            <h2 className="page-title">
+            <h3>
               Login
-            </h2>
+            </h3>
             <button onClick={handlePerformPasskeyLogin} disabled={isPending}>
               {isPending ? <>...</> : "Login with passkey"}
             </button>
-            <h2 className="page-title">
+            <h3>
               Register
-            </h2>
+            </h3>
             <input
               type="text"
               value={username}
