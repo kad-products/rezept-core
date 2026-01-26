@@ -23,7 +23,8 @@
     "check": "npm run generate && npm run types",
     "types": "tsc",
     "prepare": "husky",
-    "seed": "tsx scripts/seeding/main.ts"
+    "seed": "tsx scripts/seeding/main.ts",
+    "db-reset": "tsx scripts/db-reset.ts"
   },
   "dependencies": {
     "@simplewebauthn/browser": "^13.2.2",

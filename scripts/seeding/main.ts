@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import { reset, seed } from 'drizzle-seed';
 import * as schema from '../../src/models/schema';
-import findD1DatabaseFile from './utils/find-local-db-file';
+import findD1DatabaseFile from '../utils/find-local-db-file';
 import generateStandardRefinements from './utils/get-standard-refinements'
 
 const dbPath = findD1DatabaseFile();

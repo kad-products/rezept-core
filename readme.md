@@ -42,6 +42,14 @@ Using D1 for essentially everything but session objects.
 3. Run `pnpm migrate:dev` to apply that to the dev D1 instance in `/.wrangler/state/v3/d1/*`
 4. Run `pnpm dev` to operation with the new changes
 
+### Reset Database
+
+This will erase all local data so use it carefully!
+
+```sh
+pnpm db-reset
+```
+
 ### Drizzle Studio
 
 1. Run `pnpm drizzle-kit studio` to fire up Drizzle Studio on `https://local.drizzle.studio`
