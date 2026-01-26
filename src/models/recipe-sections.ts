@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { relations } from 'drizzle-orm';
 import { users } from './users';
 import { recipes } from './recipes';
@@ -24,6 +24,7 @@ export const recipeSections = sqliteTable('recipe_sections', {
 }, (table) => [
   index('recipe_sections_recipe_id_idx').on(table.recipeId),
   index('recipe_sections_recipe_id_order_idx').on(table.recipeId, table.order),
+  uniqueIndex('recipe_sections_recipe_id_order_unique').on(table.recipeId, table.order),
 ]);
 
 export const recipeSectionsRelations = relations(recipeSections, ({ one, many }) => ({

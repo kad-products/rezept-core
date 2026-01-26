@@ -15,6 +15,20 @@
       "when": 1769139347752,
       "tag": "0001_same_slyde",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1769312810158,
+      "tag": "0002_cool_starjammers",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1769319224616,
+      "tag": "0003_nostalgic_xorn",
+      "breakpoints": true
     }
   ]
 }

@@ -58,7 +58,7 @@ export default defineApp([
 
     prefix("/auth", authRoutes()),
     prefix("/profile", profileRoutes),
-    prefix("/recipes",recipeRoutes),
+    prefix("/recipes", recipeRoutes),
 
     route("/grocery-stores", GroceryStores),
     route("/grocery-stores/:id", GroceryStore),
