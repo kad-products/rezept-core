@@ -3,7 +3,7 @@ import { CiHome } from "react-icons/ci";
 import { GiFallingLeaf } from "react-icons/gi";
 import { BiFoodMenu } from "react-icons/bi";
 import { FaStoreAlt, FaUsers } from "react-icons/fa";
-import { MdFoodBank } from "react-icons/md";
+import { MdFoodBank, MdOutlineChecklistRtl } from "react-icons/md";
 import { PiBooksBold } from "react-icons/pi";
 import { CgProfile } from "react-icons/cg";
 import { IoLogInOutline } from "react-icons/io5";
@@ -24,6 +24,7 @@ export default function StandardLayout({
         'home': { label: "Home", href: "/", icon: CiHome },
         'seasons': { label: "Seasons", href: "/seasons", icon: GiFallingLeaf },
         'recipes': { label: "Recipes", href: "/recipes", icon: BiFoodMenu },
+        'lists': { label: "Lists", href: "/lists", icon: MdOutlineChecklistRtl },
         'users': { label: "Users", href: "/users", icon: FaUsers },
         'grocery-stores': { label: "Grocery Stores", href: "/grocery-stores", icon: FaStoreAlt },
         'pantries': { label: "Pantries", href: "/pantries", icon: MdFoodBank },

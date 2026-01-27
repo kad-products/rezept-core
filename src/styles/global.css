@@ -1,4 +1,5 @@
 @import "./cards.less";
+@import "./lists.less";
 @import "./nav.less";
 @import "./recipes.less";
 
@@ -18,6 +19,6 @@ body {
 
 * {
 	box-sizing: border-box;
-	/* padding: 0;
-	margin: 0; */
+	padding: 0;
+	margin: 0;
 }

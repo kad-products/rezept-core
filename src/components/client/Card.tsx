@@ -1,7 +1,10 @@
-export default async function Card({ title, body, actions }: { title: string, body: string | null, actions: any[] }){
+export default async function Card({ title, body, actions }: { title: string, body?: string, actions: any[] }){
     return <div className="rezept-card">
         <div className="rezept-card-title">{ title }</div>
-        <div className="rezept-card-body">{ body }</div>
+        {
+            body &&
+            <div className="rezept-card-body">{ body }</div>
+        }
         <div className="rezept-card-actions">
             {
                 actions.map( ( a, idx ) => {

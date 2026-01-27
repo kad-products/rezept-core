@@ -10,6 +10,7 @@ import { getUserById } from "@/repositories/users";
 import { type User } from "@/models/schema";
 import { sessions } from "@/session/store";
 
+import listRoutes from "@/pages/lists/routes";
 import profileRoutes from "@/pages/profile/routes";
 import recipeRoutes from '@/pages/recipes/routes';
 import Pages__root from "./pages/root";
@@ -57,6 +58,7 @@ export default defineApp([
     route("/", Pages__root),
 
     prefix("/auth", authRoutes()),
+    prefix("/lists", listRoutes),
     prefix("/profile", profileRoutes),
     prefix("/recipes", recipeRoutes),
 

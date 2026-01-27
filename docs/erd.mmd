@@ -267,40 +267,42 @@ erDiagram
         unit string
     }
 
-    %% Grocery Lists %%
-    GROCERY_LISTS {
+    %% Lists %%
+    LISTS {
         id uuid
         user_id uuid
         name string
     }
-    GROCERY_LIST_SHARE {
+    LIST_SHARE {
         id uuid
-        grocery_list_id uuid
+        list_id uuid
         shared_with_user_id uuid
         user_share_group_id uuid
     }
-    GROCERY_LIST_ITEMS {
+    LIST_ITEMS {
         id uuid
-        grocery_list_id uuid
+        list_id uuid
         ingredient_id uuid
         quantity float
         unit string
         purchased boolean
         notes text
     }
-    GROCERY_STORES {
+    
+    %% Stores %%
+    STORES {
         id uuid
         name string
         location string
     }
-    GROCERY_STORE_AISLES {
+    STORE_AISLES {
         id uuid
-        grocery_store_id uuid
+        store_id uuid
         name string
         description text
     }
-    INGREDIENT_GROCERY_STORE_AISLES {
+    INGREDIENT_STORE_AISLES {
         id uuid
         ingredient_id uuid
-        grocery_store_aisle_id uuid
+        store_aisle_id uuid
     }
