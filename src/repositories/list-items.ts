@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "@/db";
-import { type ListItem, listItems } from "@/models/schema";
+import { listItems } from "@/models/schema";
 
 // pull this out here so we can use the type in the return type of getListItemsByListId
 const getListItemsQuery = (listId: string) => 
@@ -12,7 +12,7 @@ const getListItemsQuery = (listId: string) =>
     },
   });
 
-type ListItemWithRelations = Awaited<ReturnType<typeof getListItemsQuery>>[number];
+export type ListItemWithRelations = Awaited<ReturnType<typeof getListItemsQuery>>[number];
 
 export async function getListItemsByListId(
   listId: string,
@@ -20,4 +20,8 @@ export async function getListItemsByListId(
 
   return await getListItemsQuery(listId);
 
+}
+
+export default async function removeListItemById(itemId: string) {
+  return await db.delete(listItems).where(eq(listItems.id, itemId));
 }

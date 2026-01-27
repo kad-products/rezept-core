@@ -16,6 +16,9 @@ export default async function ListView({ listId }: { listId: string }) {
     return (
         <Suspense fallback={<div>Loading recipe...</div>}>
             <h3>{ list.name }</h3>
+            <nav className="in-page-nav">
+                <a href={ `/lists/${ list.id }/edit` }>Edit</a>
+            </nav>
             {
                 listItems.map( item => {
                     return <div key={ item.id }>
