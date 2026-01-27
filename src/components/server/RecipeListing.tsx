@@ -16,7 +16,7 @@ export default async function RecipeListing() {
                             <Card
                                 key={ r.id }
                                 title={ r.title }
-                                body={ r.description }
+                                body={ r.description || '' }
                                 actions={ [
                                     {
                                         href: `/recipes/${ r.id }`,
