@@ -5,6 +5,7 @@ import ListItem from "../client/ListItem";
 import { getListById } from '@/repositories/lists';
 import { getListItemsByListId } from '@/repositories/list-items';
 import { removeListItem } from '@/functions/list-items';
+import ListItemForm from "@/forms/list-item";
 
 export default async function ListEdit({ listId }: { listId: string }) {
 
@@ -23,6 +24,7 @@ export default async function ListEdit({ listId }: { listId: string }) {
                 <a href={ `/lists/${ list.id }` }>View</a>
             </nav>
             <List items={ listItems } itemRender={ item => <ListItem item={ item } handleRemove={ removeListItem } /> } />
+            <ListItemForm listId={ listId } />
         </Suspense>
     );
 
