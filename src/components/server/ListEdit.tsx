@@ -20,7 +20,7 @@ export default async function ListEdit({ listId }: { listId: string }) {
         <Suspense fallback={<div>Loading recipe...</div>}>
             <h3>Edit { list.name }</h3>
             <nav className="in-page-nav">
-                <a href={ `/lists/${ list.id }/edit` }>Edit</a>
+                <a href={ `/lists/${ list.id }` }>View</a>
             </nav>
             <List items={ listItems } itemRender={ item => <ListItem item={ item } handleRemove={ removeListItem } /> } />
         </Suspense>
