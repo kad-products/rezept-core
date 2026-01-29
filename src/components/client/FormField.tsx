@@ -16,23 +16,25 @@ export default function FormField({
 	required = false,
 }: FormFieldProps) {
 	return (
-		<div>
-			<label htmlFor={name}>
-				{label}
-				{required && <span className="required">*</span>}
-			</label>
+		<div className="form-field">
+			<div className="form-inputs">
+				<label htmlFor={name}>
+					{label}
+					{required && <span className="required">*</span>}
+				</label>
 
-			{type === 'textarea' ? (
-				<textarea id={name} name={name} />
-			) : type === 'select' ? (
-				<select id={name} name={name}>
-					{children}
-				</select>
-			) : (
-				<input id={name} type={type} name={name} />
-			)}
+				{type === 'textarea' && <textarea id={name} name={name} />}
 
-			{error && <p className="error">{error}</p>}
+				{type === 'select' && (
+					<select id={name} name={name}>
+						{children}
+					</select>
+				)}
+
+				{type !== 'textarea' && type !== 'select' && <input id={name} type={type} name={name} />}
+			</div>
+
+			{error && <div className="form-field-error">{error}</div>}
 		</div>
 	);
 }

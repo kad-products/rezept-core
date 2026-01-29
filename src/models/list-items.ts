@@ -1,9 +1,9 @@
 import crypto from 'node:crypto';
 import { relations } from 'drizzle-orm';
 import { index, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { ingredientUnits } from './ingredient-units';
 import { ingredients } from './ingredients';
 import { lists } from './lists';
-import { recipeIngredientUnits } from './recipe-ingredient-units';
 import { users } from './users';
 
 export const listItemStatusEnum = ['NEEDED', 'PURCHASED', 'SKIPPED'] as const;
@@ -22,7 +22,7 @@ export const listItems = sqliteTable(
 			.notNull()
 			.references(() => ingredients.id),
 		quantity: real(),
-		unitId: text().references(() => recipeIngredientUnits.id),
+		unitId: text().references(() => ingredientUnits.id),
 		status: text().$type<ListItemStatus>().notNull().default('NEEDED'),
 		notes: text(),
 		createdAt: text()
@@ -51,9 +51,9 @@ export const listItemsRelations = relations(listItems, ({ one }) => ({
 		fields: [listItems.ingredientId],
 		references: [ingredients.id],
 	}),
-	unit: one(recipeIngredientUnits, {
+	unit: one(ingredientUnits, {
 		fields: [listItems.unitId],
-		references: [recipeIngredientUnits.id],
+		references: [ingredientUnits.id],
 	}),
 	creator: one(users, {
 		fields: [listItems.createdBy],

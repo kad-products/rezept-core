@@ -32,8 +32,6 @@ export async function saveListItem(
 
 	console.log(`Form data received: ${JSON.stringify(parsed, null, 4)} `);
 
-	const id = formData.get('id') as string | undefined;
-
 	if (!parsed.success) {
 		console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 		return {
@@ -43,15 +41,17 @@ export async function saveListItem(
 	}
 
 	try {
-		if (!id) {
+		if (!parsed.data.id) {
 			await createListItem(parsed.data, userId);
 		} else {
-			await updateListItem(id, parsed.data, userId);
+			await updateListItem(parsed.data.id, parsed.data, userId);
 		}
 
 		return { success: true };
 	} catch (error) {
 		console.log(`Error saving list item: ${error} `);
+
+		console.log(error);
 
 		const errorMessage =
 			env.REZEPT_ENV === 'development'

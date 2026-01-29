@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 import ListItemForm from '@/forms/list-item';
 import { removeListItem } from '@/functions/list-items';
+import { getUnits } from '@/repositories/ingredient_units';
+import { getIngredients } from '@/repositories/ingredients';
 import { getListItemsByListId } from '@/repositories/list-items';
 import { getListById } from '@/repositories/lists';
 import List from '../client/List';
@@ -13,7 +15,11 @@ export default async function ListEdit({ listId }: { listId: string }) {
 		return null;
 	}
 
-	const listItems = await getListItemsByListId(listId);
+	const [units, ingregients, listItems] = await Promise.all([
+		getUnits(),
+		getIngredients(),
+		getListItemsByListId(listId),
+	]);
 
 	return (
 		<Suspense fallback={<div>Loading recipe...</div>}>
@@ -25,7 +31,7 @@ export default async function ListEdit({ listId }: { listId: string }) {
 				items={listItems}
 				itemRender={item => <ListItem item={item} handleRemove={removeListItem} />}
 			/>
-			<ListItemForm listId={listId} />
+			<ListItemForm item={null} listId={listId} units={units} ingredients={ingregients} />
 		</Suspense>
 	);
 }

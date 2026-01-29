@@ -1,8 +1,8 @@
 import crypto from 'node:crypto';
 import { relations } from 'drizzle-orm';
 import { index, integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { ingredientUnits } from './ingredient-units';
 import { ingredients } from './ingredients';
-import { recipeIngredientUnits } from './recipe-ingredient-units';
 import { recipeSections } from './recipe-sections';
 import { users } from './users';
 
@@ -19,7 +19,7 @@ export const recipeIngredients = sqliteTable(
 			.notNull()
 			.references(() => ingredients.id),
 		quantity: real(), // nullable for "to taste"
-		unitId: text().references(() => recipeIngredientUnits.id),
+		unitId: text().references(() => ingredientUnits.id),
 		preparation: text(), // chopped, diced, etc.
 		modifier: text(), // optional, substitute, etc.
 		order: integer().notNull(),
@@ -50,9 +50,9 @@ export const recipeIngredientsRelations = relations(recipeIngredients, ({ one })
 		fields: [recipeIngredients.ingredientId],
 		references: [ingredients.id],
 	}),
-	unit: one(recipeIngredientUnits, {
+	unit: one(ingredientUnits, {
 		fields: [recipeIngredients.unitId],
-		references: [recipeIngredientUnits.id],
+		references: [ingredientUnits.id],
 	}),
 	creator: one(users, {
 		fields: [recipeIngredients.createdBy],

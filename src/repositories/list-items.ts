@@ -26,6 +26,10 @@ export async function removeListItemById(itemId: string) {
 }
 
 export const createListItemFormValidationSchema = createInsertSchema(listItems, {
+	id: z
+		.string()
+		.optional()
+		.transform(val => (val === '' ? undefined : val)),
 	quantity: z.coerce.number().positive().optional(),
 	status: z.enum(listItemStatusEnum).default('NEEDED'),
 	ingredientId: z.string().min(1, 'Ingredient is required'),

@@ -3,15 +3,31 @@ import { useActionState } from 'react';
 
 import FormField from '@/components/client/FormField';
 import { saveListItem } from '@/functions/list-items';
+import type { IngredientUnit } from '@/models/ingredient-units';
+import type { Ingredient } from '@/models/ingredients';
+import type { ListItem as ListItemModel } from '@/models/list-items';
 
-export default function ListItem({ listId }: { listId: string }) {
+export default function ListItem({
+	item,
+	listId,
+	units,
+	ingredients,
+}: {
+	item: ListItemModel | null;
+	listId: string;
+	units: IngredientUnit[];
+	ingredients: Ingredient[];
+}) {
 	const [state, formAction] = useActionState(saveListItem, null);
 	return (
 		<form action={formAction}>
-			<div>
-				id:
-				<input type="text" name="id" />
-			</div>
+			{item?.id && (
+				<div>
+					id:
+					<input type="text" name="id" value={item.id} />
+				</div>
+			)}
+
 			<div>
 				listId:
 				<input type="text" name="listId" value={listId} />
@@ -20,9 +36,16 @@ export default function ListItem({ listId }: { listId: string }) {
 			<FormField
 				label="Ingredient ID"
 				name="ingredientId"
+				type="select"
 				error={state?.errors?.ingredientId?.[0]}
 				required
-			/>
+			>
+				{ingredients.map(ingredient => (
+					<option key={ingredient.id} value={ingredient.id}>
+						{ingredient.name}
+					</option>
+				))}
+			</FormField>
 
 			<FormField
 				label="Quantity"
@@ -31,7 +54,13 @@ export default function ListItem({ listId }: { listId: string }) {
 				error={state?.errors?.quantity?.[0]}
 			/>
 
-			<FormField label="Unit ID" name="unitId" error={state?.errors?.unitId?.[0]} required />
+			<FormField label="Unit ID" name="unitId" type="select" error={state?.errors?.unitId?.[0]}>
+				{units.map(unit => (
+					<option key={unit.id} value={unit.id}>
+						{unit.name}
+					</option>
+				))}
+			</FormField>
 
 			<FormField label="Status" name="status" type="select" error={state?.errors?.status?.[0]}>
 				<option value="NEEDED">Needed</option>

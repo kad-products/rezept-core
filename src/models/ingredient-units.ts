@@ -4,7 +4,7 @@ import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { recipeIngredients } from './recipe-ingredients';
 import { users } from './users';
 
-export const recipeIngredientUnits = sqliteTable('recipe_ingredient_units', {
+export const ingredientUnits = sqliteTable('ingredient_units', {
 	id: text()
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
@@ -23,14 +23,14 @@ export const recipeIngredientUnits = sqliteTable('recipe_ingredient_units', {
 	deletedBy: text().references(() => users.id),
 });
 
-export const recipeIngredientUnitsRelations = relations(recipeIngredientUnits, ({ many, one }) => ({
+export const ingredientUnitsRelations = relations(ingredientUnits, ({ many, one }) => ({
 	recipeIngredients: many(recipeIngredients),
 	creator: one(users, {
-		fields: [recipeIngredientUnits.createdBy],
+		fields: [ingredientUnits.createdBy],
 		references: [users.id],
 		relationName: 'unitCreator',
 	}),
 }));
 
-export type RecipeIngredientUnit = typeof recipeIngredientUnits.$inferSelect;
-export type RecipeIngredientUnitInsert = typeof recipeIngredientUnits.$inferInsert;
+export type IngredientUnit = typeof ingredientUnits.$inferSelect;
+export type IngredientUnitInsert = typeof ingredientUnits.$inferInsert;
