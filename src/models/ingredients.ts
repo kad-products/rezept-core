@@ -1,30 +1,34 @@
-import crypto from 'crypto';
-import { sqliteTable, text, index } from "drizzle-orm/sqlite-core";
+import crypto from 'node:crypto';
 import { relations } from 'drizzle-orm';
-import { users } from './users';
+import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { recipeIngredients } from './recipe-ingredients';
+import { users } from './users';
 
 export const ingredients = sqliteTable('ingredients', {
-  id: text().primaryKey().$defaultFn(() => crypto.randomUUID()),
-  name: text().notNull().unique(),
-  description: text(),
-  createdAt: text().notNull().$defaultFn(() => new Date().toISOString()),
-  createdBy: text()
-    .notNull()
-    .references(() => users.id),
-  updatedAt: text().$defaultFn(() => new Date().toISOString()),
-  updatedBy: text().references(() => users.id),
-  deletedAt: text(),
-  deletedBy: text().references(() => users.id),
+	id: text()
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	name: text().notNull().unique(),
+	description: text(),
+	createdAt: text()
+		.notNull()
+		.$defaultFn(() => new Date().toISOString()),
+	createdBy: text()
+		.notNull()
+		.references(() => users.id),
+	updatedAt: text().$defaultFn(() => new Date().toISOString()),
+	updatedBy: text().references(() => users.id),
+	deletedAt: text(),
+	deletedBy: text().references(() => users.id),
 });
 
 export const ingredientsRelations = relations(ingredients, ({ many, one }) => ({
-  recipeIngredients: many(recipeIngredients),
-  creator: one(users, {
-    fields: [ingredients.createdBy],
-    references: [users.id],
-    relationName: 'ingredientCreator',
-  }),
+	recipeIngredients: many(recipeIngredients),
+	creator: one(users, {
+		fields: [ingredients.createdBy],
+		references: [users.id],
+		relationName: 'ingredientCreator',
+	}),
 }));
 
 export type Ingredient = typeof ingredients.$inferSelect;

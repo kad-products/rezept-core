@@ -1,133 +1,119 @@
-"use client";
+'use client';
 
-import {
-  startAuthentication,
-  startRegistration,
-} from "@simplewebauthn/browser";
-import { useState, useTransition } from "react";
-import {
-  finishPasskeyLogin,
-  finishPasskeyRegistration,
-  startPasskeyLogin,
-  startPasskeyRegistration,
-} from "../functions";
-
+import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
+import { useState, useTransition } from 'react';
 import StandardLayout from '@/layouts/standard';
+import type { AppContext } from '@/worker';
+import {
+	finishPasskeyLogin,
+	finishPasskeyRegistration,
+	startPasskeyLogin,
+	startPasskeyRegistration,
+} from '../functions';
 
-export function Login({ ctx }: { ctx: any }) {
-  const [username, setUsername] = useState("");
-  const [result, setResult] = useState("");
-  const [isPending, startTransition] = useTransition();
+export function Login({ ctx }: { ctx: AppContext }) {
+	const [username, setUsername] = useState('');
+	const [result, setResult] = useState('');
+	const [isPending, startTransition] = useTransition();
 
-  const passkeyLogin = async () => {
-    try {
-      // 1. Get a challenge from the worker
-      const options = await startPasskeyLogin();
-      console.log(options);
+	const passkeyLogin = async () => {
+		try {
+			// 1. Get a challenge from the worker
+			const options = await startPasskeyLogin();
+			console.log(options);
 
-      // 2. Ask the browser to sign the challenge
-      const login = await startAuthentication({ optionsJSON: options });
-      console.log(login);
+			// 2. Ask the browser to sign the challenge
+			const login = await startAuthentication({ optionsJSON: options });
+			console.log(login);
 
-      // 3. Give the signed challenge to the worker to finish the login process
-      const success = await finishPasskeyLogin(login);
-      console.log(success);
+			// 3. Give the signed challenge to the worker to finish the login process
+			const success = await finishPasskeyLogin(login);
+			console.log(success);
 
-      if (!success) {
-        console.log( 'Failed')
-        setResult("Login failed");
-      } else {
-        setResult("Login successful!");
-      }
-    } catch (error: unknown) {
-      setResult(
-        `Login error: ${error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
-    }
-  };
+			if (!success) {
+				console.log('Failed');
+				setResult('Login failed');
+			} else {
+				setResult('Login successful!');
+			}
+		} catch (error: unknown) {
+			setResult(`Login error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		}
+	};
 
-  const passkeyRegister = async () => {
-    if (!username.trim()) {
-      setResult("Please enter a username");
-      return;
-    }
+	const passkeyRegister = async () => {
+		if (!username.trim()) {
+			setResult('Please enter a username');
+			return;
+		}
 
-    try {
-      // 1. Get a challenge from the worker
-      const options = await startPasskeyRegistration(username);
-      // 2. Ask the browser to sign the challenge
-      const registration = await startRegistration({ optionsJSON: options });
+		try {
+			// 1. Get a challenge from the worker
+			const options = await startPasskeyRegistration(username);
+			// 2. Ask the browser to sign the challenge
+			const registration = await startRegistration({ optionsJSON: options });
 
-      // 3. Give the signed challenge to the worker to finish the registration process
-      const success = await finishPasskeyRegistration(username, registration);
+			// 3. Give the signed challenge to the worker to finish the registration process
+			const success = await finishPasskeyRegistration(username, registration);
 
-      if (!success) {
-        setResult("Registration failed");
-      } else {
-        setResult("Registration successful!");
-      }
-    } catch (error: unknown) {
-      setResult(
-        `Registration error: ${error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
-    }
-  };
+			if (!success) {
+				setResult('Registration failed');
+			} else {
+				setResult('Registration successful!');
+			}
+		} catch (error: unknown) {
+			setResult(`Registration error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		}
+	};
 
-  const handlePerformPasskeyLogin = () => {
-    startTransition(() => void passkeyLogin());
-  };
+	const handlePerformPasskeyLogin = () => {
+		startTransition(() => void passkeyLogin());
+	};
 
-  const handlePerformPasskeyRegister = () => {
-    startTransition(() => void passkeyRegister());
-  };
+	const handlePerformPasskeyRegister = () => {
+		startTransition(() => void passkeyRegister());
+	};
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newUsername = e.currentTarget.value;
-    setUsername(newUsername);
-  };
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newUsername = e.currentTarget.value;
+		setUsername(newUsername);
+	};
 
-  return (
-    <StandardLayout currentBasePage="auth" pageTitle="Login" ctx={ctx}>
-      {
-        ctx.user ?
-          <div>
-            <div>
-              <h2>User</h2>
-              <pre>{JSON.stringify(ctx.user, null, 4)}</pre>
-            </div>
-            <div>
-              <h2>Session</h2>
-              <pre>{JSON.stringify(ctx.session, null, 4)}</pre>
-            </div>
-          </div> :
-          <>
-            <h3>
-              Login
-            </h3>
-            <button onClick={handlePerformPasskeyLogin} disabled={isPending}>
-              {isPending ? <>...</> : "Login with passkey"}
-            </button>
-            <h3>
-              Register
-            </h3>
-            <input
-              type="text"
-              value={username}
-              onChange={handleUsernameChange}
-              placeholder="Username"
-            />
-            <button onClick={handlePerformPasskeyRegister} disabled={isPending}>
-              {isPending ? <>...</> : "Register with passkey"}
-            </button>
-            {result && <div>{result}</div>}
-            <div>
-              <pre>{JSON.stringify(ctx, null, 4)}</pre>
-            </div>
-          </>
-      }
-
-    </StandardLayout>
-  );
+	return (
+		<StandardLayout currentBasePage="auth" pageTitle="Login" ctx={ctx}>
+			{ctx.user ? (
+				<div>
+					<div>
+						<h2>User</h2>
+						<pre>{JSON.stringify(ctx.user, null, 4)}</pre>
+					</div>
+					<div>
+						<h2>Session</h2>
+						<pre>{JSON.stringify(ctx.session, null, 4)}</pre>
+					</div>
+				</div>
+			) : (
+				<>
+					<h3>Login</h3>
+					<button type="button" onClick={handlePerformPasskeyLogin} disabled={isPending}>
+						{isPending ? <>...</> : 'Login with passkey'}
+					</button>
+					<h3>Register</h3>
+					<input
+						type="text"
+						value={username}
+						onChange={handleUsernameChange}
+						placeholder="Username"
+					/>
+					<button type="button" onClick={handlePerformPasskeyRegister} disabled={isPending}>
+						{isPending ? <>...</> : 'Register with passkey'}
+					</button>
+					{result && <div>{result}</div>}
+					<div>
+						<pre>{JSON.stringify(ctx, null, 4)}</pre>
+					</div>
+				</>
+			)}
+		</StandardLayout>
+	);
 }

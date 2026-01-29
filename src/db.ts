@@ -1,8 +1,8 @@
-import { drizzle } from "drizzle-orm/d1";
-import { env } from "cloudflare:workers";
-import * as schema from "./models/schema";
+import { env } from 'cloudflare:workers';
+import { drizzle } from 'drizzle-orm/d1';
+import * as schema from './models/schema';
 
 export default drizzle(env.rezept_core, {
-    schema,
-    casing: 'snake_case'
+	schema,
+	casing: 'snake_case',
 });
