@@ -43,6 +43,13 @@
 			"when": 1769649912540,
 			"tag": "0005_dapper_tombstone",
 			"breakpoints": true
+		},
+		{
+			"idx": 6,
+			"version": "6",
+			"when": 1769662998980,
+			"tag": "0006_seed_users",
+			"breakpoints": true
 		}
 	]
 }
