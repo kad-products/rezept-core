@@ -6,13 +6,15 @@ export default async function ListItem({
 	handleRemove,
 }: {
 	item: ListItemWithRelations;
-	handleRemove: (itemId: string) => void;
+	handleRemove?: (itemId: string) => void;
 }) {
 	return (
 		<div key={item.id}>
-			<button type="button" onClick={() => handleRemove(item.id)}>
-				Remove
-			</button>
+			{handleRemove && (
+				<button type="button" onClick={() => handleRemove(item.id)}>
+					Remove
+				</button>
+			)}
 			<div>
 				({item.quantity} {item.unit?.abbreviation}) {item.ingredient?.name}
 			</div>

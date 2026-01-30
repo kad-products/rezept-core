@@ -1,6 +1,7 @@
 'use client';
 import { startAuthentication } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
+import { navigate } from 'rwsdk/client';
 import { finishPasskeyLogin, startPasskeyLogin } from '@/functions/auth';
 
 export default function PasskeyLogin() {
@@ -26,6 +27,7 @@ export default function PasskeyLogin() {
 				setResult('Login failed');
 			} else {
 				setResult('Login successful!');
+				navigate('/profile', { history: 'replace' });
 			}
 		} catch (error: unknown) {
 			setResult(`Login error: ${error instanceof Error ? error.message : 'Unknown error'}`);
