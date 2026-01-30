@@ -21,7 +21,7 @@ export default function StandardLayout({
 		home: { label: 'Home', href: '/', icon: CiHome },
 		recipes: { label: 'Recipes', href: '/recipes', icon: BiFoodMenu },
 		lists: { label: 'Lists', href: '/lists', icon: MdOutlineChecklistRtl },
-		profile: { label: 'Profile', href: '/profile', icon: CgProfile }
+		profile: { label: 'Profile', href: '/profile', icon: CgProfile },
 	};
 
 	return (
