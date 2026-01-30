@@ -1,9 +1,9 @@
 import { route } from 'rwsdk/router';
 import { sessions } from '@/session/store';
-import { Login } from './login';
+import Pages__auth__login from './login';
 
 export default [
-	route('/login', Login),
+	route('/login', Pages__auth__login),
 	route('/logout', async ({ request }) => {
 		const headers = new Headers();
 		await sessions.remove(request, headers);

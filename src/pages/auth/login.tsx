@@ -11,7 +11,7 @@ import {
 import StandardLayout from '@/layouts/standard';
 import type { AppContext } from '@/worker';
 
-export function Login({ ctx }: { ctx: AppContext }) {
+export default function Pages__auth__login({ ctx }: { ctx: AppContext }) {
 	const [username, setUsername] = useState('');
 	const [result, setResult] = useState('');
 	const [isPending, startTransition] = useTransition();
