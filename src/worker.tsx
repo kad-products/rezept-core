@@ -3,12 +3,12 @@ import { defineApp } from 'rwsdk/worker';
 
 import { Document } from '@/Document';
 import { setCommonHeaders } from '@/headers';
+import { setupPasskeyAuth } from '@/middleware/auth';
 import type { User } from '@/models/schema';
+import authRoutes from '@/pages/auth/routes';
 import listRoutes from '@/pages/lists/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
-import { authRoutes } from '@/passkey/routes';
-import { setupPasskeyAuth } from '@/passkey/setup';
 import { getUserById } from '@/repositories/users';
 import type { Session } from '@/session/durableObject';
 import { sessions } from '@/session/store';
@@ -44,7 +44,7 @@ export default defineApp([
 	render(Document, [
 		route('/', Pages__root),
 
-		prefix('/auth', authRoutes()),
+		prefix('/auth', authRoutes),
 		prefix('/lists', listRoutes),
 		prefix('/profile', profileRoutes),
 		prefix('/recipes', recipeRoutes),

@@ -2,14 +2,14 @@
 
 import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
-import StandardLayout from '@/layouts/standard';
-import type { AppContext } from '@/worker';
 import {
 	finishPasskeyLogin,
 	finishPasskeyRegistration,
 	startPasskeyLogin,
 	startPasskeyRegistration,
-} from '../functions';
+} from '@/functions/auth';
+import StandardLayout from '@/layouts/standard';
+import type { AppContext } from '@/worker';
 
 export function Login({ ctx }: { ctx: AppContext }) {
 	const [username, setUsername] = useState('');
