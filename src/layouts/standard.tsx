@@ -2,11 +2,8 @@ import classNames from 'classnames';
 import { BiFoodMenu } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { CiHome } from 'react-icons/ci';
-import { FaStoreAlt, FaUsers } from 'react-icons/fa';
-import { GiFallingLeaf } from 'react-icons/gi';
 import { IoLogInOutline } from 'react-icons/io5';
-import { MdFoodBank, MdOutlineChecklistRtl } from 'react-icons/md';
-import { PiBooksBold } from 'react-icons/pi';
+import { MdOutlineChecklistRtl } from 'react-icons/md';
 import type { AppContext } from '@/worker';
 
 export default function StandardLayout({
@@ -22,14 +19,9 @@ export default function StandardLayout({
 }) {
 	const navItems = {
 		home: { label: 'Home', href: '/', icon: CiHome },
-		seasons: { label: 'Seasons', href: '/seasons', icon: GiFallingLeaf },
 		recipes: { label: 'Recipes', href: '/recipes', icon: BiFoodMenu },
 		lists: { label: 'Lists', href: '/lists', icon: MdOutlineChecklistRtl },
-		users: { label: 'Users', href: '/users', icon: FaUsers },
-		'grocery-stores': { label: 'Grocery Stores', href: '/grocery-stores', icon: FaStoreAlt },
-		pantries: { label: 'Pantries', href: '/pantries', icon: MdFoodBank },
-		profile: { label: 'Profile', href: '/profile', icon: CgProfile },
-		'recipe-boxes': { label: 'Recipe Boxes', href: '/recipe-boxes', icon: PiBooksBold },
+		profile: { label: 'Profile', href: '/profile', icon: CgProfile }
 	};
 
 	return (
