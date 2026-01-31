@@ -8,7 +8,7 @@ export async function getIngredientsByRecipeSectionId(
 	return await db.query.recipeIngredients.findMany({
 		where: eq(recipeIngredients.recipeSectionId, recipeSectionId),
 		with: {
-			unit: true, // This uses the relation you defined
+			unit: true,
 		},
 	});
 }
