@@ -9,6 +9,7 @@ import authRoutes from '@/pages/auth/routes';
 import listRoutes from '@/pages/lists/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
+import seasonRoutes from '@/pages/seasons/routes';
 import { getUserById } from '@/repositories/users';
 import type { Session } from '@/session/durableObject';
 import { sessions } from '@/session/store';
@@ -48,5 +49,6 @@ export default defineApp([
 		prefix('/lists', listRoutes),
 		prefix('/profile', profileRoutes),
 		prefix('/recipes', recipeRoutes),
+		prefix('/seasons', seasonRoutes),
 	]),
 ]);

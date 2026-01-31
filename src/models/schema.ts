@@ -7,4 +7,6 @@ export * from './recipe-ingredients';
 export * from './recipe-instructions';
 export * from './recipe-sections';
 export * from './recipes';
+export * from './seasonal-ingredients';
+export * from './seasons';
 export * from './users';

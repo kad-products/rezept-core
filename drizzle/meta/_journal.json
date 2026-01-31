@@ -50,6 +50,13 @@
 			"when": 1769662998980,
 			"tag": "0006_seed_users",
 			"breakpoints": true
+		},
+		{
+			"idx": 7,
+			"version": "6",
+			"when": 1769828601454,
+			"tag": "0007_heavy_mysterio",
+			"breakpoints": true
 		}
 	]
 }
