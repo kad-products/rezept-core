@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import ListItemForm from '@/forms/list-item';
 import { removeListItem } from '@/functions/list-items';
-import { getUnits } from '@/repositories/ingredient_units';
+import { getUnits } from '@/repositories/ingredient-units';
 import { getIngredients } from '@/repositories/ingredients';
 import { getListItemsByListId } from '@/repositories/list-items';
 import { getListById } from '@/repositories/lists';
