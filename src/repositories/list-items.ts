@@ -3,7 +3,7 @@ import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
 import db from '@/db';
-import { type ListItemInsert, listItemStatusEnum, listItems } from '@/models/schema';
+import { type ListItemFormSave, listItemStatusEnum, listItems } from '@/models/schema';
 
 // pull this out here so we can use the type in the return type of getListItemsByListId
 const getListItemsQuery = (listId: string) =>
@@ -48,12 +48,7 @@ export const createListItemFormValidationSchema = createInsertSchema(listItems, 
 	deletedBy: true,
 });
 
-export type CreateListItemInput = Omit<
-	ListItemInsert,
-	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
->;
-
-export async function createListItem(itemData: CreateListItemInput, userId: string) {
+export async function createListItem(itemData: ListItemFormSave, userId: string) {
 	console.log(`Form data in createListItem: ${JSON.stringify(itemData, null, 4)} `);
 
 	return await db.insert(listItems).values({
@@ -62,11 +57,7 @@ export async function createListItem(itemData: CreateListItemInput, userId: stri
 	});
 }
 
-export async function updateListItem(
-	itemId: string,
-	itemData: CreateListItemInput,
-	userId: string,
-) {
+export async function updateListItem(itemId: string, itemData: ListItemFormSave, userId: string) {
 	console.log(`Form data in updateListItem: ${JSON.stringify(itemData, null, 4)} `);
 
 	return await db

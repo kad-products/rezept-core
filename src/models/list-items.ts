@@ -63,4 +63,7 @@ export const listItemsRelations = relations(listItems, ({ one }) => ({
 }));
 
 export type ListItem = typeof listItems.$inferSelect;
-export type ListItemInsert = typeof listItems.$inferInsert;
+export type ListItemFormSave = Omit<
+	typeof listItems.$inferInsert,
+	'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
+>;
