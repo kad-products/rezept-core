@@ -45,4 +45,7 @@ export const seasonsRelations = relations(seasons, ({ one, many }) => ({
 }));
 
 export type Season = typeof seasons.$inferSelect;
-export type SeasonInsert = typeof seasons.$inferInsert;
+export type SeasonFormSave = Omit<
+	typeof seasons.$inferInsert,
+	'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
+>;

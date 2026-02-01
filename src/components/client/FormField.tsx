@@ -5,6 +5,7 @@ type FormFieldProps = {
 	error?: string;
 	children?: React.ReactNode; // For select options
 	required?: boolean;
+	value?: string | number | undefined | null;
 };
 
 export default function FormField({
@@ -14,6 +15,7 @@ export default function FormField({
 	error,
 	children,
 	required = false,
+	value,
 }: FormFieldProps) {
 	return (
 		<div className="form-field">
@@ -23,15 +25,19 @@ export default function FormField({
 					{required && <span className="required">*</span>}
 				</label>
 
-				{type === 'textarea' && <textarea id={name} name={name} />}
+				{type === 'textarea' && (
+					<textarea id={name} name={name} defaultValue={value ?? undefined} />
+				)}
 
 				{type === 'select' && (
-					<select id={name} name={name}>
+					<select id={name} name={name} defaultValue={value ?? undefined}>
 						{children}
 					</select>
 				)}
 
-				{type !== 'textarea' && type !== 'select' && <input id={name} type={type} name={name} />}
+				{type !== 'textarea' && type !== 'select' && (
+					<input id={name} type={type} name={name} defaultValue={value ?? undefined} />
+				)}
 			</div>
 
 			{error && <div className="form-field-error">{error}</div>}
