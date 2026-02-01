@@ -24,6 +24,9 @@ export default async function RecipeView({ recipeId }: { recipeId: string }) {
 	return (
 		<Suspense fallback={<div>Loading recipe...</div>}>
 			<h3>{recipe.title}</h3>
+			<nav className="in-page-nav">
+				<a href={`/recipes/${recipe.id}/edit`}>Edit</a>
+			</nav>
 			<p>Author: {author?.username}</p>
 			<p>Source: {recipe.source}</p>
 			<p>Servings: {recipe.servings}</p>
