@@ -2,12 +2,14 @@
 
 import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
+import { updateSeasonalIngredientsForSeason } from '@/repositories/seasonal-ingredients';
 import {
 	createSeason,
 	createSeasonFormValidationSchema,
 	updateSeason,
 } from '@/repositories/seasons';
 import type { ActionState } from '@/types';
+import { formDataToObject } from '@/utils';
 
 export async function saveSeason(
 	_prevState: ActionState,
@@ -23,7 +25,11 @@ export async function saveSeason(
 		};
 	}
 
-	const parsed = createSeasonFormValidationSchema.safeParse(Object.fromEntries(formData));
+	const formDataObj = formDataToObject(formData);
+
+	console.log(`Form data received: ${JSON.stringify(formDataObj, null, 4)} `);
+
+	const parsed = createSeasonFormValidationSchema.safeParse(formDataObj);
 
 	console.log(`Form data received: ${JSON.stringify(parsed, null, 4)} `);
 
@@ -36,10 +42,22 @@ export async function saveSeason(
 	}
 
 	try {
+		let seasonId: string = parsed.data.id || '';
 		if (!parsed.data.id) {
-			await createSeason(parsed.data, userId);
+			const [newSeason] = await createSeason(parsed.data, userId);
+			seasonId = newSeason.id;
 		} else {
 			await updateSeason(parsed.data.id, parsed.data, userId);
+		}
+
+		if (formDataObj.ingredients) {
+			const ingredientIds = Array.isArray(formDataObj.ingredients)
+				? formDataObj.ingredients
+				: [formDataObj.ingredients];
+
+			console.log(`Updating seasonal ingredients: ${JSON.stringify(ingredientIds, null, 4)} `);
+
+			await updateSeasonalIngredientsForSeason(seasonId, ingredientIds, userId);
 		}
 
 		return { success: true };

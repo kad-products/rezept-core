@@ -1,0 +1,15 @@
+export default function FormField({
+	error,
+	children,
+}: {
+	error?: string;
+	children?: React.ReactNode;
+}) {
+	return (
+		<div className="form-field">
+			<div className="form-inputs">{children}</div>
+
+			{error && <div className="form-field-error">{error}</div>}
+		</div>
+	);
+}

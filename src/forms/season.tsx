@@ -1,10 +1,12 @@
 'use client';
 import { useActionState } from 'react';
-
+import Checkboxes from '@/components/client/Checkboxes';
 import FormField from '@/components/client/FormField';
+import FormFieldWrapper from '@/components/client/FormFieldWrapper';
 import { saveSeason } from '@/functions/season';
 import type { Ingredient } from '@/models/ingredients';
 import type { Season as SeasonModel } from '@/models/seasons';
+import type { SeasonalIngredientWithRelations } from '@/repositories/seasonal-ingredients';
 
 const userLocale = navigator.language; // 'en-US', 'nb-NO', etc.
 const monthNames = Array.from({ length: 12 }, (_, i) => {
@@ -18,13 +20,18 @@ const monthNames = Array.from({ length: 12 }, (_, i) => {
 export default function Season({
 	season,
 	ingredients,
+	seasonalIngredients,
 	countries,
 }: {
 	season?: SeasonModel;
 	ingredients: Ingredient[];
+	seasonalIngredients?: SeasonalIngredientWithRelations[];
 	countries: { code: string; name: string }[];
 }) {
 	const [state, formAction] = useActionState(saveSeason, null);
+
+	const buttonText = season ? 'Save Season' : 'Add Season';
+
 	return (
 		<form action={formAction}>
 			{season?.id && (
@@ -111,10 +118,24 @@ export default function Season({
 				value={season?.notes}
 			/>
 
+			<FormFieldWrapper error={state?.errors?.ingredients?.[0]}>
+				<Checkboxes
+					label="Ingredients"
+					name="ingredients"
+					options={ingredients.map(ingredient => ({
+						value: ingredient.id,
+						label: ingredient.name,
+						checked: seasonalIngredients
+							? seasonalIngredients.some(si => si.ingredientId === ingredient.id)
+							: false,
+					}))}
+				/>
+			</FormFieldWrapper>
+
 			{state?.errors?._form && <p className="error">{state.errors._form[0]}</p>}
 
 			{state?.success && <p className="success">Season saved!</p>}
-			<button type="submit">Add</button>
+			<button type="submit">{buttonText}</button>
 		</form>
 	);
 }

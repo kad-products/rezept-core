@@ -3,6 +3,7 @@ import en from 'i18n-iso-countries/langs/en.json';
 import { Suspense } from 'react';
 import Season from '@/forms/season';
 import { getIngredients } from '@/repositories/ingredients';
+import { getIngredientsBySeasonId } from '@/repositories/seasonal-ingredients';
 import { getSeasonById } from '@/repositories/seasons';
 
 countries.registerLocale(en);
@@ -19,7 +20,10 @@ export default async function SeasonEdit({ listId }: { listId: string }) {
 		return null;
 	}
 
-	const ingredients = await getIngredients();
+	const [allIngredients, seasonalIngredients] = await Promise.all([
+		getIngredients(),
+		getIngredientsBySeasonId(season.id),
+	]);
 
 	return (
 		<Suspense fallback={<div>Loading season...</div>}>
@@ -27,7 +31,12 @@ export default async function SeasonEdit({ listId }: { listId: string }) {
 			<nav className="in-page-nav">
 				<a href={`/seasons/${season.id}`}>View</a>
 			</nav>
-			<Season season={season} ingredients={ingredients} countries={countryList} />
+			<Season
+				season={season}
+				ingredients={allIngredients}
+				countries={countryList}
+				seasonalIngredients={seasonalIngredients}
+			/>
 		</Suspense>
 	);
 }

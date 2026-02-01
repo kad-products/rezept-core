@@ -43,10 +43,13 @@ export const createSeasonFormValidationSchema = createInsertSchema(seasons, {
 export async function createSeason(season: SeasonFormSave, userId: string) {
 	console.log(`Form data in createSeason: ${JSON.stringify(season, null, 4)} `);
 
-	return await db.insert(seasons).values({
-		...season,
-		createdBy: userId,
-	});
+	return await db
+		.insert(seasons)
+		.values({
+			...season,
+			createdBy: userId,
+		})
+		.returning();
 }
 
 export async function updateSeason(seasonId: string, seasonData: SeasonFormSave, userId: string) {
@@ -58,5 +61,6 @@ export async function updateSeason(seasonId: string, seasonData: SeasonFormSave,
 			...seasonData,
 			updatedBy: userId,
 		})
-		.where(eq(seasons.id, seasonId));
+		.where(eq(seasons.id, seasonId))
+		.returning();
 }
