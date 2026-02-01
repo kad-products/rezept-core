@@ -3,7 +3,7 @@ import { useActionState } from 'react';
 import Checkboxes from '@/components/client/Checkboxes';
 import FormField from '@/components/client/FormField';
 import FormFieldWrapper from '@/components/client/FormFieldWrapper';
-import { saveSeason } from '@/functions/season';
+import { saveSeason } from '@/functions/seasons';
 import type { Ingredient } from '@/models/ingredients';
 import type { Season as SeasonModel } from '@/models/seasons';
 import type { SeasonalIngredientWithRelations } from '@/repositories/seasonal-ingredients';
