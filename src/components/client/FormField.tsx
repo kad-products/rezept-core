@@ -1,3 +1,5 @@
+import FormFieldWrapper from './FormFieldWrapper';
+
 type FormFieldProps = {
 	label: string;
 	name: string;
@@ -18,29 +20,23 @@ export default function FormField({
 	value,
 }: FormFieldProps) {
 	return (
-		<div className="form-field">
-			<div className="form-inputs">
-				<label htmlFor={name}>
-					{label}
-					{required && <span className="required">*</span>}
-				</label>
+		<FormFieldWrapper error={error}>
+			<label htmlFor={name}>
+				{label}
+				{required && <span className="required">*</span>}
+			</label>
 
-				{type === 'textarea' && (
-					<textarea id={name} name={name} defaultValue={value ?? undefined} />
-				)}
+			{type === 'textarea' && <textarea id={name} name={name} defaultValue={value ?? undefined} />}
 
-				{type === 'select' && (
-					<select id={name} name={name} defaultValue={value ?? undefined}>
-						{children}
-					</select>
-				)}
+			{type === 'select' && (
+				<select id={name} name={name} defaultValue={value ?? undefined}>
+					{children}
+				</select>
+			)}
 
-				{type !== 'textarea' && type !== 'select' && (
-					<input id={name} type={type} name={name} defaultValue={value ?? undefined} />
-				)}
-			</div>
-
-			{error && <div className="form-field-error">{error}</div>}
-		</div>
+			{type !== 'textarea' && type !== 'select' && (
+				<input id={name} type={type} name={name} defaultValue={value ?? undefined} />
+			)}
+		</FormFieldWrapper>
 	);
 }

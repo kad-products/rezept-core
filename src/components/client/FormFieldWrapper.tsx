@@ -1,4 +1,4 @@
-export default function FormField({
+export default function FormFieldWrapper({
 	error,
 	children,
 }: {
