@@ -124,20 +124,20 @@ export async function saveRecipe(
 			(ing: RecipeIngredient) => ing.ingredientId !== '--- select ingredient ---' || ing.id,
 		);
 
-		const { errors, data } = await validateFormData(
+		const ingredientsValidatedData = await validateFormData(
 			formDataObj.ingredients,
 			createRecipeIngredientFormValidationSchema,
 			(idx: number, key: string) => `ingredients.${idx}.${key}`,
 		);
 
-		if (errors) {
+		if (ingredientsValidatedData.errors) {
 			return {
 				success: false,
-				errors,
+				errors: ingredientsValidatedData.errors,
 			};
 		}
 
-		await updateRecipeIngredients(recipeId, data, userId);
+		await updateRecipeIngredients(recipeId, ingredientsValidatedData.data, userId);
 
 		return { success: true };
 	} catch (error) {
