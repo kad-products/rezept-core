@@ -37,7 +37,7 @@ export default function ListItem({
 				label="Ingredient ID"
 				name="ingredientId"
 				type="select"
-				error={state?.errors?.ingredientId?.[0]}
+				errors={state?.errors?.ingredientId?.[0]}
 				required
 			>
 				{ingredients.map(ingredient => (
@@ -51,10 +51,10 @@ export default function ListItem({
 				label="Quantity"
 				name="quantity"
 				type="number"
-				error={state?.errors?.quantity?.[0]}
+				errors={state?.errors?.quantity?.[0]}
 			/>
 
-			<FormField label="Unit ID" name="unitId" type="select" error={state?.errors?.unitId?.[0]}>
+			<FormField label="Unit ID" name="unitId" type="select" errors={state?.errors?.unitId?.[0]}>
 				{units.map(unit => (
 					<option key={unit.id} value={unit.id}>
 						{unit.name}
@@ -62,13 +62,13 @@ export default function ListItem({
 				))}
 			</FormField>
 
-			<FormField label="Status" name="status" type="select" error={state?.errors?.status?.[0]}>
+			<FormField label="Status" name="status" type="select" errors={state?.errors?.status?.[0]}>
 				<option value="NEEDED">Needed</option>
 				<option value="PURCHASED">Purchased</option>
 				<option value="SKIPPED">Skipped</option>
 			</FormField>
 
-			<FormField label="Notes" name="notes" type="textarea" error={state?.errors?.notes?.[0]} />
+			<FormField label="Notes" name="notes" type="textarea" errors={state?.errors?.notes?.[0]} />
 
 			{state?.errors?._form && <p className="error">{state.errors._form[0]}</p>}
 

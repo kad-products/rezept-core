@@ -1,15 +1,23 @@
 export default function FormFieldWrapper({
-	error,
+	errors,
 	children,
 }: {
-	error?: string;
+	errors?: string[] | undefined;
 	children?: React.ReactNode;
 }) {
 	return (
 		<div className="form-field">
 			<div className="form-inputs">{children}</div>
 
-			{error && <div className="form-field-error">{error}</div>}
+			{errors && (
+				<div className="form-field-error">
+					{errors.map(error => (
+						<p key={error} className="error">
+							{error}
+						</p>
+					))}
+				</div>
+			)}
 		</div>
 	);
 }

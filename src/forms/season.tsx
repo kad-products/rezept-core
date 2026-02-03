@@ -47,7 +47,7 @@ export default function Season({
 				label="Name"
 				name="name"
 				type="text"
-				error={state?.errors?.name?.[0]}
+				errors={state?.errors?.name?.[0]}
 				value={season?.name}
 			/>
 
@@ -55,7 +55,7 @@ export default function Season({
 				label="Country"
 				name="country"
 				type="select"
-				error={state?.errors?.country?.[0]}
+				errors={state?.errors?.country?.[0]}
 				required
 				value={season?.country}
 			>
@@ -70,7 +70,7 @@ export default function Season({
 				label="Region"
 				name="region"
 				type="text"
-				error={state?.errors?.region?.[0]}
+				errors={state?.errors?.region?.[0]}
 				value={season?.region}
 			/>
 
@@ -78,7 +78,7 @@ export default function Season({
 				label="Start Month"
 				name="startMonth"
 				type="select"
-				error={state?.errors?.startMonth?.[0]}
+				errors={state?.errors?.startMonth?.[0]}
 				value={season?.startMonth}
 			>
 				{monthNames.map(month => (
@@ -92,7 +92,7 @@ export default function Season({
 				label="End Month"
 				name="endMonth"
 				type="select"
-				error={state?.errors?.endMonth?.[0]}
+				errors={state?.errors?.endMonth?.[0]}
 				value={season?.endMonth}
 			>
 				{monthNames.map(month => (
@@ -106,7 +106,7 @@ export default function Season({
 				label="Description"
 				name="description"
 				type="textarea"
-				error={state?.errors?.description?.[0]}
+				errors={state?.errors?.description?.[0]}
 				value={season?.description}
 			/>
 
@@ -114,11 +114,11 @@ export default function Season({
 				label="Notes"
 				name="notes"
 				type="textarea"
-				error={state?.errors?.notes?.[0]}
+				errors={state?.errors?.notes?.[0]}
 				value={season?.notes}
 			/>
 
-			<FormFieldWrapper error={state?.errors?.ingredients?.[0]}>
+			<FormFieldWrapper errors={state?.errors?.ingredients?.[0]}>
 				<Checkboxes
 					label="Ingredients"
 					name="ingredients"
