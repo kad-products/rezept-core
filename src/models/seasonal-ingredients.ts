@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import { relations } from 'drizzle-orm';
 import { index, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { ingredients } from './ingredients';

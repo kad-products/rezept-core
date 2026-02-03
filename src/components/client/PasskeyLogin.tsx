@@ -39,15 +39,13 @@ export default function PasskeyLogin() {
 	};
 
 	return (
-		<>
-			<div className="login-option">
-				<h3>Login with Passkey</h3>
-				<p>For users that have already registered a passkey.</p>
-				<button type="button" onClick={handlePerformPasskeyLogin} disabled={isPending}>
-					{isPending ? <>...</> : 'Login with passkey'}
-				</button>
-				{result && <div>{result}</div>}
-			</div>
-		</>
+		<div className="login-option">
+			<h3>Login with Passkey</h3>
+			<p>For users that have already registered a passkey.</p>
+			<button type="button" onClick={handlePerformPasskeyLogin} disabled={isPending}>
+				{isPending ? <>...</> : 'Login with passkey'}
+			</button>
+			{result && <div>{result}</div>}
+		</div>
 	);
 }

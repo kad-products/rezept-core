@@ -13,10 +13,8 @@ export default function UserCredentialsTable({
 	loading = false,
 }: UserCredentialsTableProps) {
 	return (
-		<>
-			<div>
-				<pre>{JSON.stringify({ credentials, loading }, null, 2)}</pre>
-			</div>
-		</>
+		<div>
+			<pre>{JSON.stringify({ credentials, loading }, null, 2)}</pre>
+		</div>
 	);
 }

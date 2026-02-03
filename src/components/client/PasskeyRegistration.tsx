@@ -44,23 +44,16 @@ export default function PasskeyRegistration() {
 	};
 
 	return (
-		<>
-			<div className="login-option">
-				<h3>Passkey Registration</h3>
-				<p>
-					Enter a username and click the register button to start the passkey registration process.
-				</p>
-				<input
-					type="text"
-					value={username}
-					onChange={handleUsernameChange}
-					placeholder="Username"
-				/>
-				<button type="button" onClick={handlePerformPasskeyRegister} disabled={isPending}>
-					{isPending ? <>...</> : 'Register with passkey'}
-				</button>
-				{result && <div>{result}</div>}
-			</div>
-		</>
+		<div className="login-option">
+			<h3>Passkey Registration</h3>
+			<p>
+				Enter a username and click the register button to start the passkey registration process.
+			</p>
+			<input type="text" value={username} onChange={handleUsernameChange} placeholder="Username" />
+			<button type="button" onClick={handlePerformPasskeyRegister} disabled={isPending}>
+				{isPending ? <>...</> : 'Register with passkey'}
+			</button>
+			{result && <div>{result}</div>}
+		</div>
 	);
 }

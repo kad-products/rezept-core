@@ -5,7 +5,6 @@ import { CiHome } from 'react-icons/ci';
 import { GiFallingLeaf } from 'react-icons/gi';
 import { IoLogInOutline } from 'react-icons/io5';
 import { MdOutlineChecklistRtl } from 'react-icons/md';
-import { seasons } from '@/models/seasons';
 import type { AppContext } from '@/worker';
 
 export default function StandardLayout({
