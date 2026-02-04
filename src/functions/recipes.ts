@@ -2,8 +2,7 @@
 
 import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
-import type { ZodType } from 'zod';
-import type { RecipeIngredient } from '@/models/recipe-ingredients';
+import type { RecipeIngredient, RecipeIngredientFormSave } from '@/models/recipe-ingredients';
 import type { RecipeInstruction, RecipeInstructionFormSave } from '@/models/recipe-instructions';
 import type { RecipeSection, RecipeSectionFormSave } from '@/models/recipe-sections';
 
@@ -59,14 +58,14 @@ export async function saveRecipe(_prevState: ActionState, formData: FormData): P
 		);
 		const sectionErrors = extractErrors(sectionValidationResults);
 
+		console.log(`Section validation results: ${JSON.stringify(sectionValidationResults, null, 4)}`);
+
 		if (sectionErrors) {
 			return {
 				success: false,
 				errors: sectionErrors,
 			};
 		}
-
-		console.log(`Section validation results: ${JSON.stringify(sectionValidationResults, null, 4)}`);
 
 		const sections: RecipeSectionFormSave[] = sectionValidationResults
 			.map(r => r.data)
@@ -89,14 +88,14 @@ export async function saveRecipe(_prevState: ActionState, formData: FormData): P
 		);
 		const instructionErrors = extractErrors(instructionsValidationResults);
 
+		console.log(`Instruction validation results: ${JSON.stringify(instructionsValidationResults, null, 4)}`);
+
 		if (instructionErrors) {
 			return {
 				success: false,
 				errors: instructionErrors,
 			};
 		}
-
-		console.log(`Instruction validation results: ${JSON.stringify(instructionsValidationResults, null, 4)}`);
 
 		const instructions: RecipeInstructionFormSave[] = instructionsValidationResults
 			.map(r => r.data)
@@ -114,20 +113,27 @@ export async function saveRecipe(_prevState: ActionState, formData: FormData): P
 			(ing: RecipeIngredient) => ing.ingredientId !== '--- select ingredient ---' || ing.id,
 		);
 
-		const ingredientsValidatedData = await validateFormData(
-			formDataObj.ingredients,
-			createRecipeIngredientFormValidationSchema,
-			(idx: number, key: string) => `ingredients.${idx}.${key}`,
+		const ingredientsValidationResults = (formDataObj.ingredients as RecipeIngredient[]).map(
+			(i: RecipeIngredient, ingIdx: number) =>
+				validateFormDataSingular(i, createRecipeIngredientFormValidationSchema, `ingredients.${ingIdx}.`),
 		);
 
-		if (ingredientsValidatedData.errors) {
+		const ingredientErrors = extractErrors(ingredientsValidationResults);
+
+		console.log(`Ingredient validation results: ${JSON.stringify(ingredientsValidationResults, null, 4)}`);
+
+		if (ingredientErrors) {
 			return {
 				success: false,
-				errors: ingredientsValidatedData.errors,
+				errors: ingredientErrors,
 			};
 		}
 
-		await updateRecipeIngredients(recipeId, ingredientsValidatedData.data, userId);
+		const ingredients: RecipeIngredientFormSave[] = ingredientsValidationResults
+			.map(r => r.data)
+			.filter(Boolean) as RecipeIngredientFormSave[];
+
+		await updateRecipeIngredients(recipeId, ingredients, userId);
 
 		return { success: true };
 	} catch (error) {
@@ -141,62 +147,4 @@ export async function saveRecipe(_prevState: ActionState, formData: FormData): P
 			errors: { _form: [errorMessage] },
 		};
 	}
-}
-
-type FormValidationResponse<T> = {
-	errors?: Record<string, string[]>;
-	data?: T[];
-};
-
-async function validateFormData<T>(
-	inputData: unknown,
-	validationSchema: ZodType<T>,
-	keyPattern: (idx: number, key: string) => string,
-): Promise<FormValidationResponse<T>> {
-	console.log(`Validation input: ${JSON.stringify(inputData, null, 4)}`);
-
-	// Type guard: ensure inputData is an array
-	if (!Array.isArray(inputData)) {
-		return {
-			errors: { _form: ['Invalid input data - expected array'] },
-		};
-	}
-
-	// validate and parse
-	const parsedData = await Promise.all(inputData.map(async (item: unknown) => validationSchema.safeParse(item)));
-
-	if (!parsedData.every(p => p.success)) {
-		const errors = parsedData
-			.map((p, idx) => {
-				// we include successful items initially so the `idx` matches how it came into the
-				// validation method but we don't actually need to process it
-				if (p.success) {
-					return null;
-				}
-				const fieldErrors = p.error.flatten().fieldErrors;
-				const mappedErrors: Record<string, string[]> = {};
-
-				for (const [key, value] of Object.entries(fieldErrors)) {
-					const newKey = keyPattern(idx, key);
-					mappedErrors[newKey] = Array.isArray(value) ? value : [value];
-				}
-
-				return mappedErrors;
-			})
-			.filter(Boolean); // filter out the successful ones
-
-		console.log(`Validation Errors: ${JSON.stringify(errors, null, 4)}`);
-
-		return {
-			errors: Object.assign({}, ...errors),
-		};
-	}
-
-	const validatedData = parsedData.map(p => (p as { success: true; data: T }).data);
-
-	console.log(`Parsed and validated data: ${JSON.stringify(validatedData, null, 4)}`);
-
-	return {
-		data: validatedData,
-	};
 }

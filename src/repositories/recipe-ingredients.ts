@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import z from 'zod';
 import db from '@/db';
-import { type RecipeIngredient, recipeIngredients } from '@/models/schema';
+import { type RecipeIngredient, type RecipeIngredientFormSave, recipeIngredients } from '@/models/schema';
 
 export const createRecipeIngredientFormValidationSchema = createInsertSchema(recipeIngredients, {
 	id: z
@@ -31,7 +31,7 @@ export async function getIngredientsByRecipeSectionId(recipeSectionId: string): 
 
 export async function updateRecipeIngredients(
 	recipeSectionId: string,
-	ingredientsData: RecipeIngredient[],
+	ingredientsData: RecipeIngredientFormSave[],
 	userId: string,
 ): Promise<void> {
 	console.log(
@@ -45,9 +45,7 @@ export async function updateRecipeIngredients(
 		.where(eq(recipeIngredients.recipeSectionId, recipeSectionId));
 
 	// remove ones that are not present in ingredientsData
-	const removedIngredientIds = existingIngredients
-		.map(i => i.id)
-		.filter(id => !ingredientsData.some((idData: RecipeIngredient) => idData.id === id));
+	const removedIngredientIds = existingIngredients.map(i => i.id).filter(id => !ingredientsData.some(idData => idData.id === id));
 
 	await Promise.all(removedIngredientIds.map(id => db.delete(recipeIngredients).where(eq(recipeIngredients.id, id))));
 
@@ -55,7 +53,7 @@ export async function updateRecipeIngredients(
 
 	// update or insert ingredients from ingredientsData
 	await Promise.all(
-		ingredientsData.map(async (ingData: RecipeIngredient) => {
+		ingredientsData.map(async (ingData: RecipeIngredientFormSave) => {
 			if (ingData.id) {
 				// update existing ingredients
 				await db
