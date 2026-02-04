@@ -5,10 +5,7 @@ export const setCommonHeaders =
 	({ response, rw: { nonce } }) => {
 		if (!import.meta.env.VITE_IS_DEV_SERVER) {
 			// Forces browsers to always use HTTPS for a specified time period (2 years)
-			response.headers.set(
-				'Strict-Transport-Security',
-				'max-age=63072000; includeSubDomains; preload',
-			);
+			response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
 		}
 
 		// Forces browser to use the declared content-type instead of trying to guess/sniff it

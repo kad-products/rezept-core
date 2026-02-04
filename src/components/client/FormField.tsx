@@ -10,15 +10,7 @@ type FormFieldProps = {
 	value?: string | number | undefined | null;
 };
 
-export default function FormField({
-	label,
-	name,
-	type = 'text',
-	errors,
-	children,
-	required = false,
-	value,
-}: FormFieldProps) {
+export default function FormField({ label, name, type = 'text', errors, children, required = false, value }: FormFieldProps) {
 	return (
 		<FormFieldWrapper errors={errors}>
 			<label htmlFor={name}>
@@ -26,9 +18,7 @@ export default function FormField({
 				{required && <span className="required">*</span>}
 			</label>
 
-			{type === 'textarea' && (
-				<textarea id={name} name={name} defaultValue={value ?? undefined} required={required} />
-			)}
+			{type === 'textarea' && <textarea id={name} name={name} defaultValue={value ?? undefined} required={required} />}
 
 			{type === 'select' && (
 				<select id={name} name={name} defaultValue={value ?? undefined} required={required}>
@@ -37,13 +27,7 @@ export default function FormField({
 			)}
 
 			{type !== 'textarea' && type !== 'select' && (
-				<input
-					id={name}
-					type={type}
-					name={name}
-					defaultValue={value ?? undefined}
-					required={required}
-				/>
+				<input id={name} type={type} name={name} defaultValue={value ?? undefined} required={required} />
 			)}
 		</FormFieldWrapper>
 	);

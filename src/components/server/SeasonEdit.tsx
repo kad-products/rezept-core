@@ -20,10 +20,7 @@ export default async function SeasonEdit({ listId }: { listId: string }) {
 		return null;
 	}
 
-	const [allIngredients, seasonalIngredients] = await Promise.all([
-		getIngredients(),
-		getIngredientsBySeasonId(season.id),
-	]);
+	const [allIngredients, seasonalIngredients] = await Promise.all([getIngredients(), getIngredientsBySeasonId(season.id)]);
 
 	return (
 		<Suspense fallback={<div>Loading season...</div>}>
@@ -31,12 +28,7 @@ export default async function SeasonEdit({ listId }: { listId: string }) {
 			<nav className="in-page-nav">
 				<a href={`/seasons/${season.id}`}>View</a>
 			</nav>
-			<Season
-				season={season}
-				ingredients={allIngredients}
-				countries={countryList}
-				seasonalIngredients={seasonalIngredients}
-			/>
+			<Season season={season} ingredients={allIngredients} countries={countryList} seasonalIngredients={seasonalIngredients} />
 		</Suspense>
 	);
 }

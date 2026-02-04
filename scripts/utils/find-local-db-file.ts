@@ -13,19 +13,13 @@ export default function findD1DatabaseFile(): string {
 		}
 
 		if (sqliteFiles.length > 1) {
-			throw new Error(
-				`Multiple D1 database files found: ${sqliteFiles.join(', ')}. ` +
-					'Please specify which one to use manually.',
-			);
+			throw new Error(`Multiple D1 database files found: ${sqliteFiles.join(', ')}. Please specify which one to use manually.`);
 		}
 
 		return join(d1Dir, sqliteFiles[0]);
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-			throw new Error(
-				`D1 directory not found at ${d1Dir}. ` +
-					'Make sure you have run your app locally with Wrangler at least once.',
-			);
+			throw new Error(`D1 directory not found at ${d1Dir}. Make sure you have run your app locally with Wrangler at least once.`);
 		}
 		throw error;
 	}

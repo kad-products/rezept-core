@@ -87,11 +87,6 @@ ${rows
 	await fs.writeFile(path.join(process.cwd(), 'drizzle', migrationFilename), sql);
 
 	// rename source csv file to reference migration number which indicates it has been processed
-	await fs.rename(
-		path.join(process.cwd(), 'db-load', file),
-		path.join(process.cwd(), 'db-load', newFileName),
-	);
-	console.log(
-		chalk`  Wrote SQL to migration file and renamed source file to {yellow ${newFileName}}`,
-	);
+	await fs.rename(path.join(process.cwd(), 'db-load', file), path.join(process.cwd(), 'db-load', newFileName));
+	console.log(chalk`  Wrote SQL to migration file and renamed source file to {yellow ${newFileName}}`);
 }

@@ -15,11 +15,7 @@ export default async function ListEdit({ listId }: { listId: string }) {
 		return null;
 	}
 
-	const [units, ingregients, listItems] = await Promise.all([
-		getUnits(),
-		getIngredients(),
-		getListItemsByListId(listId),
-	]);
+	const [units, ingregients, listItems] = await Promise.all([getUnits(), getIngredients(), getListItemsByListId(listId)]);
 
 	return (
 		<Suspense fallback={<div>Loading recipe...</div>}>
@@ -27,10 +23,7 @@ export default async function ListEdit({ listId }: { listId: string }) {
 			<nav className="in-page-nav">
 				<a href={`/lists/${list.id}`}>View</a>
 			</nav>
-			<List
-				items={listItems}
-				itemRender={item => <ListItem item={item} handleRemove={removeListItem} />}
-			/>
+			<List items={listItems} itemRender={item => <ListItem item={item} handleRemove={removeListItem} />} />
 			<ListItemForm item={null} listId={listId} units={units} ingredients={ingregients} />
 		</Suspense>
 	);

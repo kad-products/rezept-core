@@ -2,13 +2,7 @@
 import { Fragment, useActionState } from 'react';
 import FormField from '@/components/client/FormField';
 import { saveRecipe } from '@/functions/recipes';
-import type {
-	Ingredient,
-	RecipeIngredient,
-	RecipeInstruction,
-	Recipe as RecipeModel,
-	RecipeSection,
-} from '@/models/schema';
+import type { Ingredient, RecipeIngredient, RecipeInstruction, Recipe as RecipeModel, RecipeSection } from '@/models/schema';
 
 export default function Recipe({
 	recipe,
@@ -40,37 +34,13 @@ export default function Recipe({
 				<pre>{JSON.stringify(state?.errors, null, 4)}</pre>
 			</div>
 
-			<FormField
-				label="Title"
-				name="title"
-				type="text"
-				errors={state?.errors?.title}
-				value={recipe?.title}
-			/>
+			<FormField label="Title" name="title" type="text" errors={state?.errors?.title} value={recipe?.title} />
 
-			<FormField
-				label="Author"
-				name="authorId"
-				type="text"
-				errors={state?.errors?.authorId}
-				value={recipe?.authorId}
-			/>
+			<FormField label="Author" name="authorId" type="text" errors={state?.errors?.authorId} value={recipe?.authorId} />
 
-			<FormField
-				label="Source"
-				name="source"
-				type="text"
-				errors={state?.errors?.source}
-				value={recipe?.source}
-			/>
+			<FormField label="Source" name="source" type="text" errors={state?.errors?.source} value={recipe?.source} />
 
-			<FormField
-				label="Servings"
-				name="servings"
-				type="text"
-				errors={state?.errors?.servings}
-				value={recipe?.servings}
-			/>
+			<FormField label="Servings" name="servings" type="text" errors={state?.errors?.servings} value={recipe?.servings} />
 
 			<FormField
 				label="Prep Time (minutes)"
@@ -125,11 +95,7 @@ export default function Recipe({
 												errors={state?.errors?.[`instructions.${instIdx}.instruction`]}
 											/>
 											<input type="hidden" name={`instructions.${instIdx}.id`} value={inst.id} />
-											<input
-												type="hidden"
-												name={`instructions.${instIdx}.recipeSectionId`}
-												value={s.id}
-											/>
+											<input type="hidden" name={`instructions.${instIdx}.recipeSectionId`} value={s.id} />
 										</li>
 									);
 								})}
@@ -138,23 +104,15 @@ export default function Recipe({
 										label="Step Number"
 										name={`instructions.${sectionInstructions.length}.stepNumber`}
 										type="number"
-										errors={
-											state?.errors?.[`instructions.${sectionInstructions.length}.stepNumber`]
-										}
+										errors={state?.errors?.[`instructions.${sectionInstructions.length}.stepNumber`]}
 									/>
 									<FormField
 										label="New Instruction"
 										name={`instructions.${sectionInstructions.length}.instruction`}
 										type="textarea"
-										errors={
-											state?.errors?.[`instructions.${sectionInstructions.length}.instruction`]
-										}
+										errors={state?.errors?.[`instructions.${sectionInstructions.length}.instruction`]}
 									/>
-									<input
-										type="hidden"
-										name={`instructions.${sectionInstructions.length}.recipeSectionId`}
-										value={s.id}
-									/>
+									<input type="hidden" name={`instructions.${sectionInstructions.length}.recipeSectionId`} value={s.id} />
 								</li>
 							</ol>
 							<h4>Ingredients</h4>
@@ -208,11 +166,7 @@ export default function Recipe({
 												errors={state?.errors?.[`ingredients.${ingIdx}.preparation`]}
 											/>
 											<input type="hidden" name={`ingredients.${ingIdx}.id`} value={ing.id} />
-											<input
-												type="hidden"
-												name={`ingredients.${ingIdx}.recipeSectionId`}
-												value={s.id}
-											/>
+											<input type="hidden" name={`ingredients.${ingIdx}.recipeSectionId`} value={s.id} />
 										</li>
 									);
 								})}
@@ -240,9 +194,7 @@ export default function Recipe({
 										name={`ingredients.${sectionIngredients.length}.ingredientId`}
 										type="select"
 										required
-										errors={
-											state?.errors?.[`ingredients.${sectionIngredients.length}.ingredientId`]
-										}
+										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.ingredientId`]}
 									>
 										<option>--- select ingredient ---</option>
 										{allIngredients?.map(ingredient => (
@@ -257,11 +209,7 @@ export default function Recipe({
 										type="text"
 										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.preparation`]}
 									/>
-									<input
-										type="hidden"
-										name={`ingredients.${sectionIngredients.length}.recipeSectionId`}
-										value={s.id}
-									/>
+									<input type="hidden" name={`ingredients.${sectionIngredients.length}.recipeSectionId`} value={s.id} />
 								</li>
 							</ul>
 						</fieldset>

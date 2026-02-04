@@ -13,9 +13,7 @@ export async function getRecipeById(recipeId: string): Promise<Recipe | undefine
 	const matchedRecipes = await db.select().from(recipes).where(eq(recipes.id, recipeId));
 
 	if (matchedRecipes.length > 1) {
-		throw new Error(
-			`getRecipeById: matchedRecipes length is ${matchedRecipes.length} for id ${recipeId}`,
-		);
+		throw new Error(`getRecipeById: matchedRecipes length is ${matchedRecipes.length} for id ${recipeId}`);
 	}
 
 	if (matchedRecipes.length === 0) {

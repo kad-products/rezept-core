@@ -43,22 +43,9 @@ export default function Season({
 
 			{JSON.stringify(season, null, 2)}
 
-			<FormField
-				label="Name"
-				name="name"
-				type="text"
-				errors={state?.errors?.name}
-				value={season?.name}
-			/>
+			<FormField label="Name" name="name" type="text" errors={state?.errors?.name} value={season?.name} />
 
-			<FormField
-				label="Country"
-				name="country"
-				type="select"
-				errors={state?.errors?.country}
-				required
-				value={season?.country}
-			>
+			<FormField label="Country" name="country" type="select" errors={state?.errors?.country} required value={season?.country}>
 				{countries.map(country => (
 					<option key={country.code} value={country.code}>
 						{country.name}
@@ -66,13 +53,7 @@ export default function Season({
 				))}
 			</FormField>
 
-			<FormField
-				label="Region"
-				name="region"
-				type="text"
-				errors={state?.errors?.region}
-				value={season?.region}
-			/>
+			<FormField label="Region" name="region" type="text" errors={state?.errors?.region} value={season?.region} />
 
 			<FormField
 				label="Start Month"
@@ -88,13 +69,7 @@ export default function Season({
 				))}
 			</FormField>
 
-			<FormField
-				label="End Month"
-				name="endMonth"
-				type="select"
-				errors={state?.errors?.endMonth}
-				value={season?.endMonth}
-			>
+			<FormField label="End Month" name="endMonth" type="select" errors={state?.errors?.endMonth} value={season?.endMonth}>
 				{monthNames.map(month => (
 					<option key={month.code} value={month.code}>
 						{month.name}
@@ -110,13 +85,7 @@ export default function Season({
 				value={season?.description}
 			/>
 
-			<FormField
-				label="Notes"
-				name="notes"
-				type="textarea"
-				errors={state?.errors?.notes}
-				value={season?.notes}
-			/>
+			<FormField label="Notes" name="notes" type="textarea" errors={state?.errors?.notes} value={season?.notes} />
 
 			<FormFieldWrapper errors={state?.errors?.ingredients}>
 				<Checkboxes
@@ -125,9 +94,7 @@ export default function Season({
 					options={ingredients.map(ingredient => ({
 						value: ingredient.id,
 						label: ingredient.name,
-						checked: seasonalIngredients
-							? seasonalIngredients.some(si => si.ingredientId === ingredient.id)
-							: false,
+						checked: seasonalIngredients ? seasonalIngredients.some(si => si.ingredientId === ingredient.id) : false,
 					}))}
 				/>
 			</FormFieldWrapper>

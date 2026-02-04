@@ -14,10 +14,7 @@ export async function removeListItem(itemId: string) {
 	return await removeListItemById(itemId);
 }
 
-export async function saveListItem(
-	_prevState: ActionState,
-	formData: FormData,
-): Promise<ActionState> {
+export async function saveListItem(_prevState: ActionState, formData: FormData): Promise<ActionState> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
@@ -54,11 +51,7 @@ export async function saveListItem(
 		console.log(error);
 
 		const errorMessage =
-			env.REZEPT_ENV === 'development'
-				? error instanceof Error
-					? error.message
-					: String(error)
-				: 'Failed to save item';
+			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
 
 		return {
 			success: false,

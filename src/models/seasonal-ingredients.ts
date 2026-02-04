@@ -32,10 +32,7 @@ export const seasonalIngredients = sqliteTable(
 	table => [
 		index('seasonal_ingredients_ingredient_id_idx').on(table.ingredientId),
 		index('seasonal_ingredients_season_id_idx').on(table.seasonId),
-		uniqueIndex('seasonal_ingredients_ingredient_season_unique').on(
-			table.ingredientId,
-			table.seasonId,
-		),
+		uniqueIndex('seasonal_ingredients_ingredient_season_unique').on(table.ingredientId, table.seasonId),
 	],
 );
 

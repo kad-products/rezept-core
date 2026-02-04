@@ -1,10 +1,4 @@
-export default function FormFieldWrapper({
-	errors,
-	children,
-}: {
-	errors?: string[] | undefined;
-	children?: React.ReactNode;
-}) {
+export default function FormFieldWrapper({ errors, children }: { errors?: string[] | undefined; children?: React.ReactNode }) {
 	return (
 		<div className="form-field">
 			<div className="form-inputs">{children}</div>

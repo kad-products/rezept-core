@@ -12,23 +12,15 @@ export async function createCredential(newCredential: CredentialInsert): Promise
 }
 
 export async function getCredentialsByUserId(userId: string): Promise<Credential[]> {
-	const matchedCredentials = await db
-		.select()
-		.from(credentials)
-		.where(eq(credentials.userId, userId));
+	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.userId, userId));
 	return matchedCredentials;
 }
 
 export async function getCredentialById(credentialId: string): Promise<Credential | undefined> {
-	const matchedCredentials = await db
-		.select()
-		.from(credentials)
-		.where(eq(credentials.credentialId, credentialId));
+	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.credentialId, credentialId));
 
 	if (matchedCredentials.length > 1) {
-		throw new Error(
-			`getCredentialById: matchedCredentials length is ${matchedCredentials.length} for id ${credentialId}`,
-		);
+		throw new Error(`getCredentialById: matchedCredentials length is ${matchedCredentials.length} for id ${credentialId}`);
 	}
 
 	if (matchedCredentials.length === 0) {
@@ -38,10 +30,7 @@ export async function getCredentialById(credentialId: string): Promise<Credentia
 	return matchedCredentials[0];
 }
 
-export async function updateCredentialCounter(
-	credentialId: string,
-	counter: number,
-): Promise<void> {
+export async function updateCredentialCounter(credentialId: string, counter: number): Promise<void> {
 	await db.update(credentials).set({ counter }).where(eq(credentials.id, credentialId));
 
 	console.log('Updated credential counter for %s to %d', credentialId, counter);

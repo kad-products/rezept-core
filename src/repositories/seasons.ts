@@ -12,9 +12,7 @@ export async function getSeasons(): Promise<Season[]> {
 export async function getSeasonById(seasonId: string): Promise<Season | undefined> {
 	const matchedSeasons = await db.select().from(seasons).where(eq(seasons.id, seasonId));
 	if (matchedSeasons.length > 1) {
-		throw new Error(
-			`getSeasonById: matchedSeasons length is ${matchedSeasons.length} for id ${seasonId}`,
-		);
+		throw new Error(`getSeasonById: matchedSeasons length is ${matchedSeasons.length} for id ${seasonId}`);
 	}
 
 	if (matchedSeasons.length === 0) {

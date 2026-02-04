@@ -36,10 +36,7 @@ export const listItems = sqliteTable(
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
 	},
-	table => [
-		index('list_items_list_id_idx').on(table.listId),
-		index('list_items_ingredient_id_idx').on(table.ingredientId),
-	],
+	table => [index('list_items_list_id_idx').on(table.listId), index('list_items_ingredient_id_idx').on(table.ingredientId)],
 );
 
 export const listItemsRelations = relations(listItems, ({ one }) => ({

@@ -20,10 +20,7 @@ export const createRecipeSectionFormValidationSchema = createInsertSchema(recipe
 });
 
 export async function getSectionsByRecipeId(recipeId: string): Promise<RecipeSection[]> {
-	const sections = await db
-		.select()
-		.from(recipeSections)
-		.where(eq(recipeSections.recipeId, recipeId));
+	const sections = await db.select().from(recipeSections).where(eq(recipeSections.recipeId, recipeId));
 
 	return sections.sort((a, b) => a.order - b.order);
 }
@@ -33,30 +30,22 @@ export async function updateSectionsForRecipe(
 	sectionsData: RecipeSectionFormSave[],
 	userId: string,
 ): Promise<void> {
-	console.log(
-		`Updating recipe sections for recipeId ${recipeId} with data: ${JSON.stringify(sectionsData, null, 4)} `,
-	);
+	console.log(`Updating recipe sections for recipeId ${recipeId} with data: ${JSON.stringify(sectionsData, null, 4)} `);
 
 	// get existing sections
 	const existingSections = await getSectionsByRecipeId(recipeId);
 
 	// remove ones that are not present in sectionsData
-	const removedSectionIds = existingSections
-		.map(s => s.id)
-		.filter(id => !sectionsData.some(sd => sd.id === id));
+	const removedSectionIds = existingSections.map(s => s.id).filter(id => !sectionsData.some(sd => sd.id === id));
 
-	await Promise.all(
-		removedSectionIds.map(id => db.delete(recipeSections).where(eq(recipeSections.id, id))),
-	);
+	await Promise.all(removedSectionIds.map(id => db.delete(recipeSections).where(eq(recipeSections.id, id))));
 
 	console.log(`Removed section IDs: ${JSON.stringify(removedSectionIds, null, 4)} `);
 
 	// update or insert sections from sectionsData
 	for (const section of sectionsData) {
 		if (section.id) {
-			console.log(
-				`Updating existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `,
-			);
+			console.log(`Updating existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
 
 			// update existing section
 			await db
@@ -68,13 +57,9 @@ export async function updateSectionsForRecipe(
 				})
 				.where(eq(recipeSections.id, section.id));
 
-			console.log(
-				`Updated existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `,
-			);
+			console.log(`Updated existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
 		} else {
-			console.log(
-				`Inserting new section for recipeId ${recipeId}: ${JSON.stringify(section, null, 4)} `,
-			);
+			console.log(`Inserting new section for recipeId ${recipeId}: ${JSON.stringify(section, null, 4)} `);
 
 			// insert new section
 			await db.insert(recipeSections).values({
@@ -88,7 +73,5 @@ export async function updateSectionsForRecipe(
 		}
 	}
 
-	console.log(
-		`Updated/Inserted sections for recipeId ${recipeId}: ${JSON.stringify(sectionsData, null, 4)} `,
-	);
+	console.log(`Updated/Inserted sections for recipeId ${recipeId}: ${JSON.stringify(sectionsData, null, 4)} `);
 }

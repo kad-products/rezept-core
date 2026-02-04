@@ -10,11 +10,7 @@ import {
 } from '@simplewebauthn/server';
 import { requestInfo } from 'rwsdk/worker';
 import { UAParser as uap } from 'ua-parser-js';
-import {
-	createCredential,
-	getCredentialById,
-	updateCredentialCounter,
-} from '@/repositories/credentials';
+import { createCredential, getCredentialById, updateCredentialCounter } from '@/repositories/credentials';
 import { createUser, getUserById } from '@/repositories/users';
 import { sessions } from '@/session/store';
 
@@ -63,10 +59,7 @@ export async function startPasskeyLogin() {
 	return options;
 }
 
-export async function finishPasskeyRegistration(
-	username: string,
-	registration: RegistrationResponseJSON,
-) {
+export async function finishPasskeyRegistration(username: string, registration: RegistrationResponseJSON) {
 	const { request, response } = requestInfo;
 	const { origin } = new URL(request.url);
 

@@ -20,9 +20,7 @@ export const createRecipeIngredientFormValidationSchema = createInsertSchema(rec
 	deletedBy: true,
 });
 
-export async function getIngredientsByRecipeSectionId(
-	recipeSectionId: string,
-): Promise<RecipeIngredient[]> {
+export async function getIngredientsByRecipeSectionId(recipeSectionId: string): Promise<RecipeIngredient[]> {
 	return await db.query.recipeIngredients.findMany({
 		where: eq(recipeIngredients.recipeSectionId, recipeSectionId),
 		with: {
@@ -51,11 +49,7 @@ export async function updateRecipeIngredients(
 		.map(i => i.id)
 		.filter(id => !ingredientsData.some((idData: RecipeIngredient) => idData.id === id));
 
-	await Promise.all(
-		removedIngredientIds.map(id =>
-			db.delete(recipeIngredients).where(eq(recipeIngredients.id, id)),
-		),
-	);
+	await Promise.all(removedIngredientIds.map(id => db.delete(recipeIngredients).where(eq(recipeIngredients.id, id))));
 
 	console.log(`Removed ingredient IDs: ${JSON.stringify(removedIngredientIds, null, 4)} `);
 
@@ -77,9 +71,7 @@ export async function updateRecipeIngredients(
 					})
 					.where(eq(recipeIngredients.id, ingData.id));
 
-				console.log(
-					`Updated existing ingredient ID ${ingData.id}: ${JSON.stringify(ingData, null, 4)} `,
-				);
+				console.log(`Updated existing ingredient ID ${ingData.id}: ${JSON.stringify(ingData, null, 4)} `);
 			} else {
 				// insert new ingredient
 				await db.insert(recipeIngredients).values({

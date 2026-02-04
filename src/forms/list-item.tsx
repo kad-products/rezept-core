@@ -33,13 +33,7 @@ export default function ListItem({
 				<input type="text" name="listId" value={listId} />
 			</div>
 
-			<FormField
-				label="Ingredient ID"
-				name="ingredientId"
-				type="select"
-				errors={state?.errors?.ingredientId}
-				required
-			>
+			<FormField label="Ingredient ID" name="ingredientId" type="select" errors={state?.errors?.ingredientId} required>
 				{ingredients.map(ingredient => (
 					<option key={ingredient.id} value={ingredient.id}>
 						{ingredient.name}

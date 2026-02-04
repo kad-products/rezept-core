@@ -10,13 +10,9 @@ const getSeasonalIngredientsQuery = (seasonId: string) =>
 		},
 	});
 
-export type SeasonalIngredientWithRelations = Awaited<
-	ReturnType<typeof getSeasonalIngredientsQuery>
->[number];
+export type SeasonalIngredientWithRelations = Awaited<ReturnType<typeof getSeasonalIngredientsQuery>>[number];
 
-export async function getIngredientsBySeasonId(
-	seasonId: string,
-): Promise<SeasonalIngredientWithRelations[]> {
+export async function getIngredientsBySeasonId(seasonId: string): Promise<SeasonalIngredientWithRelations[]> {
 	return await getSeasonalIngredientsQuery(seasonId);
 }
 
@@ -42,20 +38,13 @@ export async function updateSeasonalIngredientsForSeason(
 	}));
 	await db.insert(seasonalIngredients).values(insertValues).onConflictDoNothing();
 
-	console.log(
-		`Inserted/ignored seasonal ingredients for season ${seasonId}: ${JSON.stringify(insertValues, null, 4)} `,
-	);
+	console.log(`Inserted/ignored seasonal ingredients for season ${seasonId}: ${JSON.stringify(insertValues, null, 4)} `);
 
 	// delete the existing ones not in the new list
 	const removedIngredientIds = existingIngredientIds.filter(id => !ingredientIds.includes(id));
 	await db
 		.delete(seasonalIngredients)
-		.where(
-			and(
-				inArray(seasonalIngredients.ingredientId, removedIngredientIds),
-				eq(seasonalIngredients.seasonId, seasonId),
-			),
-		);
+		.where(and(inArray(seasonalIngredients.ingredientId, removedIngredientIds), eq(seasonalIngredients.seasonId, seasonId)));
 
 	console.log(`Removed ingredient IDs: ${JSON.stringify(removedIngredientIds, null, 4)} `);
 

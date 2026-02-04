@@ -15,12 +15,8 @@ export default async function RecipeEdit({ recipeId }: { recipeId: string }) {
 
 	const sections = await getSectionsByRecipeId(recipeId);
 	const allIngredients = await getIngredients();
-	const instructions = await Promise.all(
-		sections.map(async s => await getInstructionsByRecipeSectionId(s.id)),
-	);
-	const ingredients = await Promise.all(
-		sections.map(async s => await getIngredientsByRecipeSectionId(s.id)),
-	);
+	const instructions = await Promise.all(sections.map(async s => await getInstructionsByRecipeSectionId(s.id)));
+	const ingredients = await Promise.all(sections.map(async s => await getIngredientsByRecipeSectionId(s.id)));
 
 	return (
 		<Suspense fallback={<div>Loading recipe...</div>}>

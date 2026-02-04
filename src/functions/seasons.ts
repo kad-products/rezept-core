@@ -3,18 +3,11 @@
 import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
 import { updateSeasonalIngredientsForSeason } from '@/repositories/seasonal-ingredients';
-import {
-	createSeason,
-	createSeasonFormValidationSchema,
-	updateSeason,
-} from '@/repositories/seasons';
+import { createSeason, createSeasonFormValidationSchema, updateSeason } from '@/repositories/seasons';
 import type { ActionState } from '@/types';
-import { formDataToObject } from '@/utils';
+import { formDataToObject } from '@/utils/forms';
 
-export async function saveSeason(
-	_prevState: ActionState,
-	formData: FormData,
-): Promise<ActionState> {
+export async function saveSeason(_prevState: ActionState, formData: FormData): Promise<ActionState> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
@@ -51,9 +44,7 @@ export async function saveSeason(
 		}
 
 		if (formDataObj.ingredients) {
-			const ingredientIds = Array.isArray(formDataObj.ingredients)
-				? formDataObj.ingredients
-				: [formDataObj.ingredients];
+			const ingredientIds = Array.isArray(formDataObj.ingredients) ? formDataObj.ingredients : [formDataObj.ingredients];
 
 			console.log(`Updating seasonal ingredients: ${JSON.stringify(ingredientIds, null, 4)} `);
 
@@ -67,11 +58,7 @@ export async function saveSeason(
 		console.log(error);
 
 		const errorMessage =
-			env.REZEPT_ENV === 'development'
-				? error instanceof Error
-					? error.message
-					: String(error)
-				: 'Failed to save season';
+			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save season';
 
 		return {
 			success: false,

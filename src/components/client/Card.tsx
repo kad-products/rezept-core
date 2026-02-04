@@ -3,15 +3,7 @@ type CardAction = {
 	text: string;
 };
 
-export default async function Card({
-	title,
-	body,
-	actions,
-}: {
-	title: string;
-	body?: string;
-	actions: CardAction[];
-}) {
+export default async function Card({ title, body, actions }: { title: string; body?: string; actions: CardAction[] }) {
 	return (
 		<div className="rezept-card">
 			<div className="rezept-card-title">{title}</div>
