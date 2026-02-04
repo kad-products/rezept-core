@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import z from 'zod';
 import db from '@/db';
-import { type RecipeInstruction, recipeInstructions } from '@/models/schema';
+import { type RecipeInstruction, type RecipeInstructionFormSave, recipeInstructions } from '@/models/schema';
 
 export const createRecipeInstructionFormValidationSchema = createInsertSchema(recipeInstructions, {
 	id: z
@@ -20,20 +20,15 @@ export const createRecipeInstructionFormValidationSchema = createInsertSchema(re
 	deletedBy: true,
 });
 
-export async function getInstructionsByRecipeSectionId(
-	recipeSectionId: string,
-): Promise<RecipeInstruction[]> {
-	const instructions = await db
-		.select()
-		.from(recipeInstructions)
-		.where(eq(recipeInstructions.recipeSectionId, recipeSectionId));
+export async function getInstructionsByRecipeSectionId(recipeSectionId: string): Promise<RecipeInstruction[]> {
+	const instructions = await db.select().from(recipeInstructions).where(eq(recipeInstructions.recipeSectionId, recipeSectionId));
 
 	return instructions.sort((a, b) => a.stepNumber - b.stepNumber);
 }
 
 export async function updateRecipeInstructions(
 	recipeSectionId: string,
-	instructionsData: RecipeInstruction[],
+	instructionsData: RecipeInstructionFormSave[],
 	userId: string,
 ): Promise<void> {
 	console.log(
@@ -49,19 +44,15 @@ export async function updateRecipeInstructions(
 	// remove ones that are not present in instructionsData
 	const removedInstructionIds = existingInstructions
 		.map(i => i.id)
-		.filter(id => !instructionsData.some((idData: RecipeInstruction) => idData.id === id));
+		.filter(id => !instructionsData.some(idData => idData.id === id));
 
-	await Promise.all(
-		removedInstructionIds.map(id =>
-			db.delete(recipeInstructions).where(eq(recipeInstructions.id, id)),
-		),
-	);
+	await Promise.all(removedInstructionIds.map(id => db.delete(recipeInstructions).where(eq(recipeInstructions.id, id))));
 
 	console.log(`Removed instruction IDs: ${JSON.stringify(removedInstructionIds, null, 4)} `);
 
 	// update or insert instructions from instructionsData
 	await Promise.all(
-		instructionsData.map(async (instData: RecipeInstruction) => {
+		instructionsData.map(async (instData: RecipeInstructionFormSave) => {
 			if (instData.id) {
 				// update existing instruction
 				await db
@@ -73,9 +64,7 @@ export async function updateRecipeInstructions(
 					})
 					.where(eq(recipeInstructions.id, instData.id));
 
-				console.log(
-					`Updated existing instruction ID ${instData.id}: ${JSON.stringify(instData, null, 4)} `,
-				);
+				console.log(`Updated existing instruction ID ${instData.id}: ${JSON.stringify(instData, null, 4)} `);
 			} else {
 				// insert new instruction
 				await db.insert(recipeInstructions).values({

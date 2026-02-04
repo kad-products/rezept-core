@@ -21,10 +21,5 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 };
 declare namespace NodeJS {
 	interface ProcessEnv
-		extends StringifyValues<
-			Pick<
-				Cloudflare.Env,
-				'WEBAUTHN_APP_NAME' | 'WEBAUTHN_RP_ID' | 'AUTH_SECRET_KEY' | 'REZEPT_ENV'
-			>
-		> {}
+		extends StringifyValues<Pick<Cloudflare.Env, 'WEBAUTHN_APP_NAME' | 'WEBAUTHN_RP_ID' | 'AUTH_SECRET_KEY' | 'REZEPT_ENV'>> {}
 }
