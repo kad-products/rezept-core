@@ -34,15 +34,6 @@ export default function Season({
 
 	return (
 		<form action={formAction}>
-			{season?.id && (
-				<div>
-					id:
-					<input type="text" name="id" value={season.id} />
-				</div>
-			)}
-
-			{JSON.stringify(season, null, 2)}
-
 			<FormField label="Name" name="name" type="text" errors={state?.errors?.name} value={season?.name} />
 
 			<FormField label="Country" name="country" type="select" errors={state?.errors?.country} required value={season?.country}>
@@ -59,6 +50,7 @@ export default function Season({
 				label="Start Month"
 				name="startMonth"
 				type="select"
+				required
 				errors={state?.errors?.startMonth}
 				value={season?.startMonth}
 			>
@@ -69,7 +61,14 @@ export default function Season({
 				))}
 			</FormField>
 
-			<FormField label="End Month" name="endMonth" type="select" errors={state?.errors?.endMonth} value={season?.endMonth}>
+			<FormField
+				label="End Month"
+				name="endMonth"
+				type="select"
+				required
+				errors={state?.errors?.endMonth}
+				value={season?.endMonth}
+			>
 				{monthNames.map(month => (
 					<option key={month.code} value={month.code}>
 						{month.name}
@@ -102,6 +101,9 @@ export default function Season({
 			{state?.errors?._form && <p className="error">{state.errors._form[0]}</p>}
 
 			{state?.success && <p className="success">Season saved!</p>}
+
+			{season?.id && <input type="hidden" name="id" value={season.id} />}
+
 			<button type="submit">{buttonText}</button>
 		</form>
 	);

@@ -21,18 +21,6 @@ export default function ListItem({
 	const [state, formAction] = useActionState(saveListItem, null);
 	return (
 		<form action={formAction}>
-			{item?.id && (
-				<div>
-					id:
-					<input type="text" name="id" value={item.id} />
-				</div>
-			)}
-
-			<div>
-				listId:
-				<input type="text" name="listId" value={listId} />
-			</div>
-
 			<FormField label="Ingredient ID" name="ingredientId" type="select" errors={state?.errors?.ingredientId} required>
 				{ingredients.map(ingredient => (
 					<option key={ingredient.id} value={ingredient.id}>
@@ -62,6 +50,10 @@ export default function ListItem({
 			{state?.errors?._form && <p className="error">{state.errors._form[0]}</p>}
 
 			{state?.success && <p className="success">Item saved!</p>}
+
+			{item?.id && <input type="hidden" name="id" value={item.id} />}
+			<input type="hidden" name="listId" value={listId} />
+
 			<button type="submit">Add</button>
 		</form>
 	);

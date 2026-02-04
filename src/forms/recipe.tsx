@@ -23,17 +23,6 @@ export default function Recipe({
 
 	return (
 		<form action={formAction}>
-			{recipe?.id && (
-				<div>
-					id:
-					<input type="text" name="id" value={recipe.id} />
-				</div>
-			)}
-
-			<div>
-				<pre>{JSON.stringify(state?.errors, null, 4)}</pre>
-			</div>
-
 			<FormField label="Title" name="title" type="text" errors={state?.errors?.title} value={recipe?.title} />
 
 			<FormField label="Author" name="authorId" type="text" errors={state?.errors?.authorId} value={recipe?.authorId} />
@@ -220,6 +209,9 @@ export default function Recipe({
 			{state?.errors?._form && <p className="error">{state.errors._form[0]}</p>}
 
 			{state?.success && <p className="success">Recipe saved!</p>}
+
+			{recipe?.id && <input type="hidden" name="id" value={recipe.id} />}
+
 			<button type="submit">{buttonText}</button>
 		</form>
 	);
