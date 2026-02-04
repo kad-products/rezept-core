@@ -1,11 +1,11 @@
 import type { ZodType } from 'zod';
-import type { FormValidationSingularResponse } from './types';
+import type { FormValidationResponse } from './types';
 
-export function validateFormDataSingular<T>(
+export function validateFormData<T>(
 	inputData: unknown,
 	validationSchema: ZodType<T>,
 	errorKeyPrefix: string = '',
-): FormValidationSingularResponse<T> {
+): FormValidationResponse<T> {
 	console.log(`Validation input: ${JSON.stringify(inputData, null, 4)}`);
 
 	const parsed = validationSchema.safeParse(inputData);

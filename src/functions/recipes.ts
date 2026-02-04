@@ -11,7 +11,7 @@ import { createRecipeInstructionFormValidationSchema, updateRecipeInstructions }
 import { createRecipeSectionFormValidationSchema, updateSectionsForRecipe } from '@/repositories/recipe-sections';
 import { createRecipe, createRecipeFormValidationSchema, updateRecipe } from '@/repositories/recipes';
 import type { ActionState } from '@/types';
-import { extractErrors, formDataToObject, validateFormDataSingular } from '@/utils/forms';
+import { extractErrors, formDataToObject, validateFormData } from '@/utils/forms';
 
 export async function saveRecipe(_prevState: ActionState, formData: FormData): Promise<ActionState> {
 	const { ctx } = requestInfo;
@@ -54,7 +54,7 @@ export async function saveRecipe(_prevState: ActionState, formData: FormData): P
 		//  ______| |______ |_____     |    __|__ |_____| |  \_| ______|
 		//
 		const sectionValidationResults = (formDataObj.sections as RecipeSection[]).map((s: RecipeSection, sectionIdx: number) =>
-			validateFormDataSingular({ ...s, recipeId }, createRecipeSectionFormValidationSchema, `sections.${sectionIdx}.`),
+			validateFormData({ ...s, recipeId }, createRecipeSectionFormValidationSchema, `sections.${sectionIdx}.`),
 		);
 		const sectionErrors = extractErrors(sectionValidationResults);
 
@@ -84,7 +84,7 @@ export async function saveRecipe(_prevState: ActionState, formData: FormData): P
 
 		const instructionsValidationResults = (formDataObj.instructions as RecipeInstruction[]).map(
 			(i: RecipeInstruction, instIdx: number) =>
-				validateFormDataSingular(i, createRecipeInstructionFormValidationSchema, `instructions.${instIdx}.`),
+				validateFormData(i, createRecipeInstructionFormValidationSchema, `instructions.${instIdx}.`),
 		);
 		const instructionErrors = extractErrors(instructionsValidationResults);
 
@@ -115,7 +115,7 @@ export async function saveRecipe(_prevState: ActionState, formData: FormData): P
 
 		const ingredientsValidationResults = (formDataObj.ingredients as RecipeIngredient[]).map(
 			(i: RecipeIngredient, ingIdx: number) =>
-				validateFormDataSingular(i, createRecipeIngredientFormValidationSchema, `ingredients.${ingIdx}.`),
+				validateFormData(i, createRecipeIngredientFormValidationSchema, `ingredients.${ingIdx}.`),
 		);
 
 		const ingredientErrors = extractErrors(ingredientsValidationResults);

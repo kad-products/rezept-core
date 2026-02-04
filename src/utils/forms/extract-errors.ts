@@ -1,7 +1,7 @@
-import type { FormValidationSingularResponse } from './types';
+import type { FormValidationResponse } from './types';
 
 export function extractErrors<T>(
-	zodValidationResults: FormValidationSingularResponse<T> | FormValidationSingularResponse<T>[],
+	zodValidationResults: FormValidationResponse<T> | FormValidationResponse<T>[],
 ): Record<string, string[]> | undefined {
 	zodValidationResults = Array.isArray(zodValidationResults) ? zodValidationResults : [zodValidationResults];
 
