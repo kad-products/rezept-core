@@ -5,7 +5,7 @@ import { requestInfo } from 'rwsdk/worker';
 import type { ZodType } from 'zod';
 import type { RecipeIngredient } from '@/models/recipe-ingredients';
 import type { RecipeInstruction } from '@/models/recipe-instructions';
-import type { RecipeSection } from '@/models/recipe-sections';
+import type { RecipeSection, RecipeSectionFormSave } from '@/models/recipe-sections';
 
 import {
 	createRecipeIngredientFormValidationSchema,
@@ -70,20 +70,30 @@ export async function saveRecipe(
 		//  |______ |______ |          |      |   |     | | \  | |______
 		//  ______| |______ |_____     |    __|__ |_____| |  \_| ______|
 		//
-		const sectionsValidatedData = await validateFormData(
-			(formDataObj.sections as RecipeSection[]).map((s: RecipeSection) => ({ ...s, recipeId })),
-			createRecipeSectionFormValidationSchema,
-			(idx: number, key: string) => `sections.${idx}.${key}`,
+		const sectionValidationResults = (formDataObj.sections as RecipeSection[]).map(
+			(s: RecipeSection, sectionIdx: number) =>
+				validateFormDataSingular(
+					{ ...s, recipeId },
+					createRecipeSectionFormValidationSchema,
+					`sections.${sectionIdx}.`,
+				),
 		);
+		const sectionErrors = extractErrors(sectionValidationResults);
 
-		if (sectionsValidatedData.errors) {
+		if (sectionErrors) {
 			return {
 				success: false,
-				errors: sectionsValidatedData.errors,
+				errors: sectionErrors,
 			};
 		}
 
-		await updateSectionsForRecipe(recipeId, sectionsValidatedData.data, userId);
+		console.log(`Section validation results: ${JSON.stringify(sectionValidationResults, null, 4)}`);
+
+		const sections: RecipeSectionFormSave[] = sectionValidationResults
+			.map(r => r.data)
+			.filter(Boolean) as RecipeSectionFormSave[];
+
+		await updateSectionsForRecipe(recipeId, sections, userId);
 
 		//  _____ __   _ _______ _______  ______ _     _ _______ _______ _____  _____  __   _ _______
 		//    |   | \  | |______    |    |_____/ |     | |          |      |   |     | | \  | |______
@@ -157,6 +167,64 @@ export async function saveRecipe(
 			errors: { _form: [errorMessage] },
 		};
 	}
+}
+
+function extractErrors<T>(
+	zodValidationResults: FormValidationSingularResponse<T> | FormValidationSingularResponse<T>[],
+): Record<string, string[]> | undefined {
+	zodValidationResults = Array.isArray(zodValidationResults)
+		? zodValidationResults
+		: [zodValidationResults];
+
+	if (zodValidationResults.some(r => r.errors)) {
+		return zodValidationResults.reduce(
+			(allErrors, result) => {
+				if (result.errors) {
+					Object.entries(result.errors).forEach(pair => {
+						allErrors[pair[0]] = pair[1];
+					});
+				}
+				return allErrors;
+			},
+			{} as Record<string, string[]>,
+		);
+	}
+
+	return undefined;
+}
+
+type FormValidationSingularResponse<T> = {
+	errors?: Record<string, string[]>;
+	data?: T;
+};
+
+function validateFormDataSingular<T>(
+	inputData: unknown,
+	validationSchema: ZodType<T>,
+	errorKeyPrefix: string = '',
+): FormValidationSingularResponse<T> {
+	console.log(`Validation input: ${JSON.stringify(inputData, null, 4)}`);
+
+	const parsed = validationSchema.safeParse(inputData);
+
+	if (!parsed.success) {
+		const errors = parsed.error.flatten().fieldErrors;
+		const mappedErrors: Record<string, string[]> = {};
+		console.log(`Errors: ${JSON.stringify(errors, null, 4)}`);
+		if (errors) {
+			for (const [key, value] of Object.entries(errors)) {
+				if (!value) {
+					continue;
+				}
+				mappedErrors[`${errorKeyPrefix}${key}`] = Array.isArray(value) ? value : [value];
+			}
+		}
+		return {
+			errors: mappedErrors,
+		};
+	}
+
+	return parsed;
 }
 
 type FormValidationResponse<T> = {

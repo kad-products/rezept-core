@@ -49,4 +49,7 @@ export const recipeInstructionsRelations = relations(recipeInstructions, ({ one 
 }));
 
 export type RecipeInstruction = typeof recipeInstructions.$inferSelect;
-export type RecipeInstructionInsert = typeof recipeInstructions.$inferInsert;
+export type RecipeInstructionFormSave = Omit<
+	typeof recipeInstructions.$inferInsert,
+	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
+>;

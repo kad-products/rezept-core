@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import z from 'zod';
 import db from '@/db';
-import { type RecipeSection, recipeSections } from '@/models/schema';
+import { type RecipeSection, type RecipeSectionFormSave, recipeSections } from '@/models/schema';
 
 export const createRecipeSectionFormValidationSchema = createInsertSchema(recipeSections, {
 	id: z
@@ -10,7 +10,6 @@ export const createRecipeSectionFormValidationSchema = createInsertSchema(recipe
 		.optional()
 		.transform(val => (val === '' ? undefined : val)),
 	order: z.coerce.number().min(0).default(0),
-	title: z.string().min(1, 'Title is required'),
 }).omit({
 	createdAt: true,
 	createdBy: true,
@@ -31,7 +30,7 @@ export async function getSectionsByRecipeId(recipeId: string): Promise<RecipeSec
 
 export async function updateSectionsForRecipe(
 	recipeId: string,
-	sectionsData: RecipeSection[],
+	sectionsData: RecipeSectionFormSave[],
 	userId: string,
 ): Promise<void> {
 	console.log(
