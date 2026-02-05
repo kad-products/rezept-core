@@ -70,14 +70,14 @@ export default function Recipe({
 									return (
 										<li key={inst.id}>
 											<FormField
-												label={`${s.order}`}
+												label="Step Number"
 												name={`instructions.${instIdx}.stepNumber`}
 												type="number"
 												value={inst.stepNumber}
 												errors={state?.errors?.[`instructions.${instIdx}.stepNumber`]}
 											/>
 											<FormField
-												label={`${s.order}`}
+												label="Instruction"
 												name={`instructions.${instIdx}.instruction`}
 												type="textarea"
 												value={inst.instruction}
