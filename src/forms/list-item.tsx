@@ -21,29 +21,37 @@ export default function ListItem({
 	const [state, formAction] = useActionState(saveListItem, null);
 	return (
 		<form action={formAction}>
-			<FormField label="Ingredient ID" name="ingredientId" type="select" errors={state?.errors?.ingredientId} required>
-				{ingredients.map(ingredient => (
-					<option key={ingredient.id} value={ingredient.id}>
-						{ingredient.name}
-					</option>
-				))}
-			</FormField>
+			<FormField
+				label="Ingredient ID"
+				name="ingredientId"
+				type="select"
+				creatable={true}
+				options={ingredients.map(i => ({ value: i.id, label: i.name }))}
+				errors={state?.errors?.ingredientId}
+				required
+			/>
 
 			<FormField label="Quantity" name="quantity" type="number" errors={state?.errors?.quantity} />
 
-			<FormField label="Unit ID" name="unitId" type="select" errors={state?.errors?.unitId}>
-				{units.map(unit => (
-					<option key={unit.id} value={unit.id}>
-						{unit.name}
-					</option>
-				))}
-			</FormField>
+			<FormField
+				label="Unit ID"
+				name="unitId"
+				type="select"
+				options={units.map(u => ({ value: u.id, label: u.name }))}
+				errors={state?.errors?.unitId}
+			/>
 
-			<FormField label="Status" name="status" type="select" errors={state?.errors?.status}>
-				<option value="NEEDED">Needed</option>
-				<option value="PURCHASED">Purchased</option>
-				<option value="SKIPPED">Skipped</option>
-			</FormField>
+			<FormField
+				label="Status"
+				name="status"
+				type="select"
+				options={[
+					{ value: 'NEEDED', label: 'Needed' },
+					{ value: 'PURCHASED', label: 'Purchased' },
+					{ value: 'SKIPPED', label: 'Skipped' },
+				]}
+				errors={state?.errors?.status}
+			/>
 
 			<FormField label="Notes" name="notes" type="textarea" errors={state?.errors?.notes} />
 

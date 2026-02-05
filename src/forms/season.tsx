@@ -36,13 +36,15 @@ export default function Season({
 		<form action={formAction}>
 			<FormField label="Name" name="name" type="text" errors={state?.errors?.name} value={season?.name} />
 
-			<FormField label="Country" name="country" type="select" errors={state?.errors?.country} required value={season?.country}>
-				{countries.map(country => (
-					<option key={country.code} value={country.code}>
-						{country.name}
-					</option>
-				))}
-			</FormField>
+			<FormField
+				label="Country"
+				name="country"
+				type="select"
+				options={countries.map(c => ({ value: c.code, label: c.name }))}
+				errors={state?.errors?.country}
+				required
+				value={season?.country}
+			/>
 
 			<FormField label="Region" name="region" type="text" errors={state?.errors?.region} value={season?.region} />
 
@@ -51,30 +53,20 @@ export default function Season({
 				name="startMonth"
 				type="select"
 				required
+				options={monthNames.map(m => ({ value: m.code, label: m.name }))}
 				errors={state?.errors?.startMonth}
 				value={season?.startMonth}
-			>
-				{monthNames.map(month => (
-					<option key={month.code} value={month.code}>
-						{month.name}
-					</option>
-				))}
-			</FormField>
+			/>
 
 			<FormField
 				label="End Month"
 				name="endMonth"
 				type="select"
 				required
+				options={monthNames.map(m => ({ value: m.code, label: m.name }))}
 				errors={state?.errors?.endMonth}
 				value={season?.endMonth}
-			>
-				{monthNames.map(month => (
-					<option key={month.code} value={month.code}>
-						{month.name}
-					</option>
-				))}
-			</FormField>
+			/>
 
 			<FormField
 				label="Description"

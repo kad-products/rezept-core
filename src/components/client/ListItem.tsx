@@ -1,7 +1,7 @@
 'use client';
 import type { ListItemWithRelations } from '@/repositories/list-items';
 
-export default async function ListItem({
+export default function ListItem({
 	item,
 	handleRemove,
 }: {

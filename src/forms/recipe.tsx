@@ -136,17 +136,12 @@ export default function Recipe({
 												type="select"
 												value={ing.ingredientId}
 												required={true}
+												options={[
+													{ value: '', label: '--- select ingredient ---' },
+													...(allIngredients?.map(i => ({ value: i.id, label: i.name })) || []),
+												]}
 												errors={state?.errors?.[`ingredients.${ingIdx}.ingredientId`]}
-											>
-												<option value="" disabled>
-													--- select ingredient ---
-												</option>
-												{allIngredients?.map(ingredient => (
-													<option key={ingredient.id} value={ingredient.id}>
-														{ingredient.name}
-													</option>
-												))}
-											</FormField>
+											/>
 											<FormField
 												label="Preparation"
 												name={`ingredients.${ingIdx}.preparation`}
@@ -183,15 +178,12 @@ export default function Recipe({
 										name={`ingredients.${sectionIngredients.length}.ingredientId`}
 										type="select"
 										required
+										options={[
+											{ value: '', label: '--- select ingredient ---' },
+											...(allIngredients?.map(i => ({ value: i.id, label: i.name })) || []),
+										]}
 										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.ingredientId`]}
-									>
-										<option>--- select ingredient ---</option>
-										{allIngredients?.map(ingredient => (
-											<option key={ingredient.id} value={ingredient.id}>
-												{ingredient.name}
-											</option>
-										))}
-									</FormField>
+									/>
 									<FormField
 										label="Preparation"
 										name={`ingredients.${sectionIngredients.length}.preparation`}
