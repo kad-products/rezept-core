@@ -1,0 +1,20 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 1rem auto 3rem;
+    .form-field {        
+        .form-inputs {
+            display: flex;
+            gap: 0.5rem;
+            > * {
+                flex: 1;
+            }
+        }
+        .form-field-error {
+            color: red;
+            font-size: 0.875rem;
+        }
+    }
+}

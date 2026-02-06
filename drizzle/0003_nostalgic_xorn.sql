@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `recipe_instructions_recipe_section_id_step_number_unique` ON `recipe_instructions` (`recipe_section_id`,`step_number`);

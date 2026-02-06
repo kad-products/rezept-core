@@ -131,23 +131,52 @@ erDiagram
         servings int
         prep_time int
         cook_time int
+        source string
+        slug string
+    }
+    RECIPE_SECTIONS {
+        id uuid
+        recipe_id uuid
+        title string
+        order int
+    }
+    RECIPE_INGREDIENTS {
+        id uuid
+        recipe_section_id uuid
+        ingredient_id uuid
+        quantity float
+        range_quantity float
+        unit_id int
+        order int
+        preparation text 
+        %% ^ e.g., chopped, diced
+        modifier text 
+        %% ^ e.g., optional, substitute
+    }
+    RECIPE_INGREDIENT_UNITS {
+        id uuid
+        name string
+        abbreviation string
+        type string
+    }
+    RECIPE_INSTRUCTIONS {
+        id uuid
+        recipe_section_id uuid
+        step_number int
+        instruction text
+    }
+    RECIPE_IMAGES {
+        id uuid
+        recipe_id uuid
+        image_url string
+        alt_text string
+        order int
     }
     RECIPE_SHARE {
         id uuid
         recipe_id uuid
         shared_with_user_id uuid
         user_share_group_id uuid
-    }
-    RECIPE_INGREDIENTS {
-        id uuid
-        ingredient_id uuid
-        quantity float
-        unit string
-        order int
-        treatment text 
-        %% ^ e.g., chopped, diced
-        modifier text 
-        %% ^ e.g., optional, substitute
     }
     RECIPE_FEEDBACK {
         id uuid
@@ -161,12 +190,6 @@ erDiagram
         recipe_id uuid
         user_id uuid
         note text
-    }
-    RECIPE_INSTRUCTIONS {
-        id uuid
-        recipe_id uuid
-        step_number int
-        instruction text
     }
     RECIPE_IMPORTS {
         id uuid
@@ -244,40 +267,42 @@ erDiagram
         unit string
     }
 
-    %% Grocery Lists %%
-    GROCERY_LISTS {
+    %% Lists %%
+    LISTS {
         id uuid
         user_id uuid
         name string
     }
-    GROCERY_LIST_SHARE {
+    LIST_SHARE {
         id uuid
-        grocery_list_id uuid
+        list_id uuid
         shared_with_user_id uuid
         user_share_group_id uuid
     }
-    GROCERY_LIST_ITEMS {
+    LIST_ITEMS {
         id uuid
-        grocery_list_id uuid
+        list_id uuid
         ingredient_id uuid
         quantity float
         unit string
         purchased boolean
         notes text
     }
-    GROCERY_STORES {
+    
+    %% Stores %%
+    STORES {
         id uuid
         name string
         location string
     }
-    GROCERY_STORE_AISLES {
+    STORE_AISLES {
         id uuid
-        grocery_store_id uuid
+        store_id uuid
         name string
         description text
     }
-    INGREDIENT_GROCERY_STORE_AISLES {
+    INGREDIENT_STORE_AISLES {
         id uuid
         ingredient_id uuid
-        grocery_store_aisle_id uuid
+        store_aisle_id uuid
     }

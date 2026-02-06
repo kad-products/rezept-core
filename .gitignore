@@ -18,7 +18,7 @@ dist
 *.tsbuildinfo
 
 # IDEs and editors
-.vscode/
+# .vscode/  # commented this as I like to commit this
 .idea/
 *.suo
 *.ntvs*

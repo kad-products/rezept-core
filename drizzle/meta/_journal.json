@@ -1,0 +1,62 @@
+{
+	"version": "7",
+	"dialect": "sqlite",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "6",
+			"when": 1769046117643,
+			"tag": "0000_spicy_bucky",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "6",
+			"when": 1769139347752,
+			"tag": "0001_same_slyde",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1769312810158,
+			"tag": "0002_cool_starjammers",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "6",
+			"when": 1769319224616,
+			"tag": "0003_nostalgic_xorn",
+			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "6",
+			"when": 1769490317479,
+			"tag": "0004_fat_sue_storm",
+			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "6",
+			"when": 1769649912540,
+			"tag": "0005_dapper_tombstone",
+			"breakpoints": true
+		},
+		{
+			"idx": 6,
+			"version": "6",
+			"when": 1769662998980,
+			"tag": "0006_seed_users",
+			"breakpoints": true
+		},
+		{
+			"idx": 7,
+			"version": "6",
+			"when": 1769828601454,
+			"tag": "0007_heavy_mysterio",
+			"breakpoints": true
+		}
+	]
+}
