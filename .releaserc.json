@@ -1,5 +1,5 @@
 {
-	"branches": ["main"],
+	"branches": ["main", "kad-ci"],
 	"repositoryUrl": "https://github.com/kad-products/rezept-core",
 	"plugins": [
 		[
