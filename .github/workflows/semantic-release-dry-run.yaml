@@ -1,0 +1,10 @@
+name: '[KAD CI] Semantic Release Dry Run'
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  semantic-release-dry-run:
+    uses: kad-products/kad-ci/.github/workflows/semantic-release-dry-run.yaml@main
