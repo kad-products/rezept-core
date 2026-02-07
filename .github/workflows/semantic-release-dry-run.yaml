@@ -7,4 +7,26 @@ on:
 
 jobs:
   semantic-release-dry-run:
-    uses: kad-products/kad-ci/.github/workflows/semantic-release-dry-run.yaml@main
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - name: 🔬 Check semantic versioning
+        id: semantic-release
+        run: |
+            pnpm dlx semantic-release --dry-run --no-ci
