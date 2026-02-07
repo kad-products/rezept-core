@@ -29,4 +29,4 @@ jobs:
       - name: 🔬 Check semantic versioning
         id: semantic-release
         run: |
-          pnpm dlx semantic-release --dry-run --no-ci --branches foo,bar
+          pnpm dlx semantic-release --dry-run --no-ci --branches foo bar
