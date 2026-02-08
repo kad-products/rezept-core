@@ -1,6 +1,6 @@
 {
 	"name": "@redwoodjs/starter",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"description": "A bare-bones RedwoodSDK starter",
 	"main": "index.js",
 	"type": "module",
@@ -52,8 +52,14 @@
 		"@biomejs/biome": "^2.3.13",
 		"@cloudflare/vite-plugin": "1.16.1",
 		"@cloudflare/workers-types": "4.20251202.0",
+		"@commitlint/cli": "^20.4.1",
+		"@commitlint/config-conventional": "^20.4.1",
 		"@faker-js/faker": "^10.1.0",
 		"@libsql/client": "^0.17.0",
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/commit-analyzer": "^13.0.1",
+		"@semantic-release/git": "^10.0.1",
+		"@semantic-release/release-notes-generator": "^14.1.0",
 		"@types/better-sqlite3": "^7.6.13",
 		"@types/node": "~24.5.2",
 		"@types/object-path": "^0.11.4",
@@ -86,5 +92,6 @@
 			"biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
 		],
 		"worker-configuration.d.ts": []
-	}
+	},
+	"packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264"
 }
