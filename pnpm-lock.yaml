@@ -17,6 +17,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      conventional-changelog-conventionalcommits:
+        specifier: ^9.1.0
+        version: 9.1.0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.19
