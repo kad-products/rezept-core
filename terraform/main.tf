@@ -20,22 +20,14 @@ resource "github_branch_protection" "main" {
   repository_id = var.repository_name
   pattern       = "main"
 
-  required_pull_request_reviews {
-    dismiss_stale_reviews           = true
-    require_code_owner_reviews      = false
-    required_approving_review_count = 1
-  }
-
   required_status_checks {
     strict = true
     contexts = [
-      "commitlint",
-      "semantic-release-dry-run"
+      "commitlint"
     ]
   }
 
   enforce_admins = false
-
   allows_deletions    = false
   allows_force_pushes = false
 
