@@ -1,6 +1,6 @@
 'use client';
 import { Fragment, useActionState } from 'react';
-import FormField from '@/components/client/FormField';
+import FormField from '@/components/client/FormFieldLegacy';
 import { saveRecipe } from '@/functions/recipes';
 import type { Ingredient, RecipeIngredient, RecipeInstruction, Recipe as RecipeModel, RecipeSection } from '@/models/schema';
 
@@ -138,7 +138,10 @@ export default function Recipe({
 												required={true}
 												options={[
 													{ value: '', label: '--- select ingredient ---' },
-													...(allIngredients?.map(i => ({ value: i.id, label: i.name })) || []),
+													...(allIngredients?.map(i => ({
+														value: i.id,
+														label: i.name,
+													})) || []),
 												]}
 												errors={state?.errors?.[`ingredients.${ingIdx}.ingredientId`]}
 											/>
@@ -180,7 +183,10 @@ export default function Recipe({
 										required
 										options={[
 											{ value: '', label: '--- select ingredient ---' },
-											...(allIngredients?.map(i => ({ value: i.id, label: i.name })) || []),
+											...(allIngredients?.map(i => ({
+												value: i.id,
+												label: i.name,
+											})) || []),
 										]}
 										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.ingredientId`]}
 									/>
