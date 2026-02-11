@@ -1,7 +1,7 @@
 'use client';
 import { useActionState } from 'react';
 
-import FormField from '@/components/client/FormField';
+import FormField from '@/components/client/FormFieldLegacy';
 import { saveListItem } from '@/functions/list-items';
 import type { IngredientUnit } from '@/models/ingredient-units';
 import type { Ingredient } from '@/models/ingredients';

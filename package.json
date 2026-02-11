@@ -30,6 +30,7 @@
 		"db-load": "tsx scripts/db-load.ts"
 	},
 	"dependencies": {
+		"@hookform/resolvers": "^5.2.2",
 		"@simplewebauthn/browser": "^13.2.2",
 		"@simplewebauthn/server": "^13.2.2",
 		"classnames": "^2.5.1",
@@ -41,6 +42,7 @@
 		"object-path": "^0.11.8",
 		"react": "19.2.3",
 		"react-dom": "19.2.3",
+		"react-hook-form": "^7.71.1",
 		"react-icons": "^5.5.0",
 		"react-select": "^5.10.2",
 		"react-server-dom-webpack": "19.2.3",

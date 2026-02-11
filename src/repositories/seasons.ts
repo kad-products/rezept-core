@@ -27,6 +27,7 @@ export const createSeasonFormValidationSchema = createInsertSchema(seasons, {
 		.string()
 		.optional()
 		.transform(val => (val === '' ? undefined : val)),
+	name: z.string().min(1, 'Name is required'),
 	startMonth: z.coerce.number().min(1).max(12),
 	endMonth: z.coerce.number().min(1).max(12),
 }).omit({

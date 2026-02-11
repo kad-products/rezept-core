@@ -1,17 +1,11 @@
-export default function FormFieldWrapper({ errors, children }: { errors?: string[] | undefined; children?: React.ReactNode }) {
+import type { FieldError } from 'react-hook-form';
+
+export default function FormFieldWrapper({ error, children }: { error?: FieldError | undefined; children?: React.ReactNode }) {
 	return (
 		<div className="form-field">
 			<div className="form-inputs">{children}</div>
 
-			{errors && (
-				<div className="form-field-error">
-					{errors.map(error => (
-						<p key={error} className="error">
-							{error}
-						</p>
-					))}
-				</div>
-			)}
+			{error && <div className="form-field-error">{error.message}</div>}
 		</div>
 	);
 }
