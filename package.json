@@ -32,6 +32,9 @@
 	"dependencies": {
 		"@simplewebauthn/browser": "^13.2.2",
 		"@simplewebauthn/server": "^13.2.2",
+		"@tanstack/react-devtools": "^0.9.5",
+		"@tanstack/react-form": "^1.28.0",
+		"@tanstack/react-form-devtools": "^0.2.13",
 		"classnames": "^2.5.1",
 		"conventional-changelog-conventionalcommits": "^9.1.0",
 		"dayjs": "^1.11.13",
