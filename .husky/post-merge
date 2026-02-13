@@ -1,2 +1,8 @@
 pnpm install
-pnpm generate
+
+# Only create symlink if it doesn't exist
+if [ ! -L .dev.vars ]; then
+  pnpm rw-scripts ensure-env
+fi
+
+pnpm wrangler types --include-runtime false

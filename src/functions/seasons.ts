@@ -5,9 +5,20 @@ import { requestInfo } from 'rwsdk/worker';
 import { updateSeasonalIngredientsForSeason } from '@/repositories/seasonal-ingredients';
 import { createSeason, createSeasonFormValidationSchema, updateSeason } from '@/repositories/seasons';
 import type { ActionState } from '@/types';
-import { formDataToObject } from '@/utils/forms';
 
-export async function saveSeason(_prevState: ActionState, formData: FormData): Promise<ActionState> {
+type SeasonFormData__ServerAction = {
+	name: string;
+	id?: string | undefined;
+	description?: string | undefined | null;
+	country: string;
+	region?: string | null;
+	startMonth: number;
+	endMonth: number;
+	notes?: string | null;
+	ingredients: string[];
+};
+
+export async function saveSeason(season: SeasonFormData__ServerAction): Promise<ActionState> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
@@ -18,11 +29,9 @@ export async function saveSeason(_prevState: ActionState, formData: FormData): P
 		};
 	}
 
-	const formDataObj = formDataToObject(formData);
+	console.log(`Form data received: ${JSON.stringify(season, null, 4)} `);
 
-	console.log(`Form data received: ${JSON.stringify(formDataObj, null, 4)} `);
-
-	const parsed = createSeasonFormValidationSchema.safeParse(formDataObj);
+	const parsed = createSeasonFormValidationSchema.safeParse(season);
 
 	console.log(`Form data received: ${JSON.stringify(parsed, null, 4)} `);
 
@@ -43,8 +52,8 @@ export async function saveSeason(_prevState: ActionState, formData: FormData): P
 			await updateSeason(parsed.data.id, parsed.data, userId);
 		}
 
-		if (formDataObj.ingredients) {
-			const ingredientIds = Array.isArray(formDataObj.ingredients) ? formDataObj.ingredients : [formDataObj.ingredients];
+		if (season.ingredients) {
+			const ingredientIds = Array.isArray(season.ingredients) ? season.ingredients : [season.ingredients];
 
 			console.log(`Updating seasonal ingredients: ${JSON.stringify(ingredientIds, null, 4)} `);
 
