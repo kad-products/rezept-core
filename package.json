@@ -27,7 +27,10 @@
 		"prepare": "husky",
 		"seed": "tsx scripts/seeding/main.ts",
 		"db-reset": "tsx scripts/db-reset.ts",
-		"db-load": "tsx scripts/db-load.ts"
+		"db-load": "tsx scripts/db-load.ts",
+		"test": "vitest",
+		"test:ui": "vitest --ui",
+		"test:run": "vitest run"
 	},
 	"dependencies": {
 		"@simplewebauthn/browser": "^13.2.2",
@@ -68,6 +71,7 @@
 		"@types/qs": "^6.14.0",
 		"@types/react": "19.1.2",
 		"@types/react-dom": "19.1.2",
+		"@vitest/ui": "^4.0.18",
 		"chalk-template": "^1.1.2",
 		"change-case": "^5.4.4",
 		"drizzle-kit": "^0.31.8",
@@ -79,6 +83,7 @@
 		"tsx": "^4.21.0",
 		"typescript": "5.8.3",
 		"vite": "7.2.6",
+		"vitest": "^4.0.18",
 		"wrangler": "4.52.1"
 	},
 	"pnpm": {
