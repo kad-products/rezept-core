@@ -1,7 +1,7 @@
 'use client';
 import { Fragment, useActionState } from 'react';
+import { saveRecipe } from '@/actions/recipes';
 import FormField from '@/components/client/FormField';
-import { saveRecipe } from '@/functions/recipes';
 import type { Ingredient, RecipeIngredient, RecipeInstruction, Recipe as RecipeModel, RecipeSection } from '@/types';
 
 export default function Recipe({

@@ -1,9 +1,9 @@
 'use client';
 import { useActionState } from 'react';
+import { saveSeason } from '@/actions/seasons';
 import Checkboxes from '@/components/client/Checkboxes';
 import FormField from '@/components/client/FormField';
 import FormFieldWrapper from '@/components/client/FormFieldWrapper';
-import { saveSeason } from '@/functions/seasons';
 import type { SeasonalIngredientWithRelations } from '@/repositories/seasonal-ingredients';
 import type { Ingredient, Season as SeasonModel } from '@/types';
 
