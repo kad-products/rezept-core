@@ -1,5 +1,5 @@
 import db from '@/db';
-import { ingredientUnits } from '@/models/ingredient-units';
+import { ingredientUnits } from '@/models/schema';
 import type { IngredientUnit } from '@/types';
 
 export async function getUnits(): Promise<IngredientUnit[]> {

@@ -1,5 +1,5 @@
 import db from '@/db';
-import { ingredients } from '@/models/ingredients';
+import { ingredients } from '@/models/schema';
 import type { Ingredient, IngredientFormSave } from '@/types';
 
 export async function getIngredients(): Promise<Ingredient[]> {
