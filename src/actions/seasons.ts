@@ -4,7 +4,7 @@ import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
 import { updateSeasonalIngredientsForSeason } from '@/repositories/seasonal-ingredients';
 import { createSeason, updateSeason } from '@/repositories/seasons';
-import { createSeasonFormValidationSchema } from '@/schemas';
+import { createSeasonSchema, updateSeasonSchema } from '@/schemas';
 import type { ActionState } from '@/types';
 import { formDataToObject } from '@/utils/forms';
 
@@ -19,40 +19,32 @@ export async function saveSeason(_prevState: ActionState, formData: FormData): P
 		};
 	}
 
-	const formDataObj = formDataToObject(formData);
-
-	console.log(`Form data received: ${JSON.stringify(formDataObj, null, 4)} `);
-
-	const parsed = createSeasonFormValidationSchema.safeParse(formDataObj);
-
-	console.log(`Form data received: ${JSON.stringify(parsed, null, 4)} `);
-
-	if (!parsed.success) {
-		console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
-		return {
-			success: false,
-			errors: parsed.error.flatten().fieldErrors,
-		};
-	}
+	console.log(`Form data received: ${JSON.stringify(Object.fromEntries(formData), null, 4)} `);
 
 	try {
-		let seasonId: string = parsed.data.id || '';
-		if (!parsed.data.id) {
-			const [newSeason] = await createSeason(parsed.data, userId);
-			seasonId = newSeason.id;
-		} else {
+		if (formData.get('id')) {
+			const parsed = updateSeasonSchema.safeParse(Object.fromEntries(formData));
+			if (!parsed.success) {
+				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
+				return {
+					success: false,
+					errors: parsed.error.flatten().fieldErrors,
+				};
+			}
 			await updateSeason(parsed.data.id, parsed.data, userId);
+			return { success: true };
+		} else {
+			const parsed = createSeasonSchema.safeParse(Object.fromEntries(formData));
+			if (!parsed.success) {
+				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
+				return {
+					success: false,
+					errors: parsed.error.flatten().fieldErrors,
+				};
+			}
+			await createSeason(parsed.data, userId);
+			return { success: true };
 		}
-
-		if (formDataObj.ingredients) {
-			const ingredientIds = Array.isArray(formDataObj.ingredients) ? formDataObj.ingredients : [formDataObj.ingredients];
-
-			console.log(`Updating seasonal ingredients: ${JSON.stringify(ingredientIds, null, 4)} `);
-
-			await updateSeasonalIngredientsForSeason(seasonId, ingredientIds, userId);
-		}
-
-		return { success: true };
 	} catch (error) {
 		console.log(`Error saving season: ${error} `);
 

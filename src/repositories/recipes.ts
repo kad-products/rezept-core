@@ -25,19 +25,21 @@ export async function getRecipeById(recipeId: string): Promise<Recipe | undefine
 export async function createRecipe(recipe: RecipeFormSave, userId: string) {
 	console.log(`Form data in createRecipe: ${JSON.stringify(recipe, null, 4)} `);
 
-	return await db
+	const insertedRecipes = await db
 		.insert(recipes)
 		.values({
 			...recipe,
 			createdBy: userId,
 		})
 		.returning();
+
+	return insertedRecipes[0];
 }
 
 export async function updateRecipe(recipeId: string, recipeData: RecipeFormSave, userId: string) {
 	console.log(`Form data in updateRecipe: ${JSON.stringify(recipeData, null, 4)} `);
 
-	return await db
+	const updatedRecipes = await db
 		.update(recipes)
 		.set({
 			...recipeData,
@@ -45,4 +47,6 @@ export async function updateRecipe(recipeId: string, recipeData: RecipeFormSave,
 		})
 		.where(eq(recipes.id, recipeId))
 		.returning();
+
+	return updatedRecipes[0];
 }

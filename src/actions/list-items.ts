@@ -3,7 +3,7 @@
 import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
 import { createListItem, removeListItemById, updateListItem } from '@/repositories/list-items';
-import { createListItemFormValidationSchema } from '@/schemas';
+import { createListItemSchema, updateListItemSchema } from '@/schemas';
 import type { ActionState } from '@/types';
 
 export async function removeListItem(itemId: string) {
@@ -21,26 +21,32 @@ export async function saveListItem(_prevState: ActionState, formData: FormData):
 		};
 	}
 
-	const parsed = createListItemFormValidationSchema.safeParse(Object.fromEntries(formData));
-
-	console.log(`Form data received: ${JSON.stringify(parsed, null, 4)} `);
-
-	if (!parsed.success) {
-		console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
-		return {
-			success: false,
-			errors: parsed.error.flatten().fieldErrors,
-		};
-	}
+	console.log(`Form data received: ${JSON.stringify(Object.fromEntries(formData), null, 4)} `);
 
 	try {
-		if (!parsed.data.id) {
-			await createListItem(parsed.data, userId);
-		} else {
+		if (formData.get('id')) {
+			const parsed = updateListItemSchema.safeParse(Object.fromEntries(formData));
+			if (!parsed.success) {
+				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
+				return {
+					success: false,
+					errors: parsed.error.flatten().fieldErrors,
+				};
+			}
 			await updateListItem(parsed.data.id, parsed.data, userId);
+			return { success: true };
+		} else {
+			const parsed = createListItemSchema.safeParse(Object.fromEntries(formData));
+			if (!parsed.success) {
+				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
+				return {
+					success: false,
+					errors: parsed.error.flatten().fieldErrors,
+				};
+			}
+			await createListItem(parsed.data, userId);
+			return { success: true };
 		}
-
-		return { success: true };
 	} catch (error) {
 		console.log(`Error saving list item: ${error} `);
 
