@@ -1,4 +1,4 @@
-import type { seasons } from '@/models/schema';
+import type { seasons } from '@/models';
 
 export type Season = typeof seasons.$inferSelect;
 export type SeasonFormSave = Omit<

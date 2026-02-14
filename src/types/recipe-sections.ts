@@ -1,4 +1,4 @@
-import type { recipeSections } from '@/models/schema';
+import type { recipeSections } from '@/models';
 
 export type RecipeSection = typeof recipeSections.$inferSelect;
 export type RecipeSectionFormSave = Omit<

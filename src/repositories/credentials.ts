@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 
 import db from '@/db';
-import { credentials } from '@/models/schema';
+import { credentials } from '@/models';
 import type { Credential, CredentialInsert } from '@/types';
 
 export async function createCredential(newCredential: CredentialInsert): Promise<Credential> {

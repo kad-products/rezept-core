@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import db from '@/db';
-import { seasons } from '@/models/schema';
+import { seasons } from '@/models';
 import type { Season, SeasonFormSave } from '@/types';
 
 export async function getSeasons(): Promise<Season[]> {

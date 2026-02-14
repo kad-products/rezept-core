@@ -1,3 +1,3 @@
-import type { ingredientUnits } from '@/models/schema';
+import type { ingredientUnits } from '@/models';
 
 export type IngredientUnit = typeof ingredientUnits.$inferSelect;

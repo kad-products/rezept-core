@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import z from 'zod';
 import db from '@/db';
-import { recipeInstructions } from '@/models/schema';
+import { recipeInstructions } from '@/models';
 import type { RecipeInstruction, RecipeInstructionFormSave } from '@/types';
 
 export const createRecipeInstructionFormValidationSchema = createInsertSchema(recipeInstructions, {

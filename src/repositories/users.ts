@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 
 import db from '@/db';
-import { users } from '@/models/schema';
+import { users } from '@/models';
 import type { User, UserInsert } from '@/types';
 
 export async function createUser(username: string): Promise<User> {

@@ -1,4 +1,4 @@
-import type { ingredients } from '@/models/schema';
+import type { ingredients } from '@/models';
 
 export type Ingredient = typeof ingredients.$inferSelect;
 export type IngredientFormSave = Omit<

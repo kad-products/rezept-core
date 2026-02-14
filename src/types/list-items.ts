@@ -1,4 +1,4 @@
-import type { listItems } from '@/models/schema';
+import type { listItems } from '@/models';
 
 export type ListItem = typeof listItems.$inferSelect;
 export type ListItemFormSave = Omit<
