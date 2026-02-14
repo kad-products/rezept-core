@@ -3,7 +3,8 @@
 import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
 import { updateSeasonalIngredientsForSeason } from '@/repositories/seasonal-ingredients';
-import { createSeason, createSeasonFormValidationSchema, updateSeason } from '@/repositories/seasons';
+import { createSeason, updateSeason } from '@/repositories/seasons';
+import { createSeasonFormValidationSchema } from '@/schemas';
 import type { ActionState } from '@/types';
 import { formDataToObject } from '@/utils/forms';
 

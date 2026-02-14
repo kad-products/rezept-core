@@ -2,12 +2,8 @@
 
 import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
-import {
-	createListItem,
-	createListItemFormValidationSchema,
-	removeListItemById,
-	updateListItem,
-} from '@/repositories/list-items';
+import { createListItem, removeListItemById, updateListItem } from '@/repositories/list-items';
+import { createListItemFormValidationSchema } from '@/schemas';
 import type { ActionState } from '@/types';
 
 export async function removeListItem(itemId: string) {

@@ -1,9 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { createInsertSchema } from 'drizzle-zod';
-import { z } from 'zod';
-
 import db from '@/db';
-import { listItemStatusEnum, listItems } from '@/models';
+import { listItems } from '@/models';
 import type { ListItemFormSave } from '@/types';
 
 // pull this out here so we can use the type in the return type of getListItemsByListId
@@ -25,29 +22,6 @@ export async function getListItemsByListId(listId: string): Promise<ListItemWith
 export async function removeListItemById(itemId: string) {
 	return await db.delete(listItems).where(eq(listItems.id, itemId));
 }
-
-export const createListItemFormValidationSchema = createInsertSchema(listItems, {
-	id: z
-		.string()
-		.optional()
-		.transform(val => (val === '' ? undefined : val)),
-	quantity: z.coerce.number().positive().optional(),
-	status: z.enum(listItemStatusEnum).default('NEEDED'),
-	ingredientId: z.string().min(1, 'Ingredient is required'),
-	unitId: z
-		.string()
-		.min(1)
-		.optional()
-		.or(z.literal(''))
-		.transform(val => (val === '' ? undefined : val)),
-}).omit({
-	createdAt: true,
-	createdBy: true,
-	updatedAt: true,
-	updatedBy: true,
-	deletedAt: true,
-	deletedBy: true,
-});
 
 export async function createListItem(itemData: ListItemFormSave, userId: string) {
 	console.log(`Form data in createListItem: ${JSON.stringify(itemData, null, 4)} `);
