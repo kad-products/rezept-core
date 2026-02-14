@@ -30,9 +30,3 @@ export const ingredientsRelations = relations(ingredients, ({ many, one }) => ({
 		relationName: 'ingredientCreator',
 	}),
 }));
-
-export type Ingredient = typeof ingredients.$inferSelect;
-export type IngredientFormSave = Omit<
-	typeof ingredients.$inferInsert,
-	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
->;

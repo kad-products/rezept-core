@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import db from '@/db';
-import { type List, lists } from '@/models/schema';
+import { lists } from '@/models/schema';
+import type { List } from '@/types';
 
 export async function getLists(): Promise<List[]> {
 	const allLists = await db.select().from(lists);

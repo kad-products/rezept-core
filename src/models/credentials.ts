@@ -33,6 +33,3 @@ export const credentialsRelations = relations(credentials, ({ one }) => ({
 		references: [users.id],
 	}),
 }));
-
-export type Credential = typeof credentials.$inferSelect;
-export type CredentialInsert = typeof credentials.$inferInsert;

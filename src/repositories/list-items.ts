@@ -3,7 +3,8 @@ import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
 import db from '@/db';
-import { type ListItemFormSave, listItemStatusEnum, listItems } from '@/models/schema';
+import { listItemStatusEnum, listItems } from '@/models/schema';
+import type { ListItemFormSave } from '@/types';
 
 // pull this out here so we can use the type in the return type of getListItemsByListId
 const getListItemsQuery = (listId: string) =>

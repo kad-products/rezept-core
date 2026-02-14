@@ -2,7 +2,8 @@ import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import db from '@/db';
-import { type Season, type SeasonFormSave, seasons } from '@/models/schema';
+import { seasons } from '@/models/schema';
+import type { Season, SeasonFormSave } from '@/types';
 
 export async function getSeasons(): Promise<Season[]> {
 	const allSeasons = await db.select().from(seasons);

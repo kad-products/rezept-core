@@ -2,7 +2,8 @@ import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import z from 'zod';
 import db from '@/db';
-import { type RecipeSection, type RecipeSectionFormSave, recipeSections } from '@/models/schema';
+import { recipeSections } from '@/models/schema';
+import type { RecipeSection, RecipeSectionFormSave } from '@/types';
 
 export const createRecipeSectionFormValidationSchema = createInsertSchema(recipeSections, {
 	id: z

@@ -2,7 +2,8 @@ import { eq } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
 import z from 'zod';
 import db from '@/db';
-import { type Recipe, type RecipeFormSave, recipes } from '@/models/schema';
+import { recipes } from '@/models/schema';
+import type { Recipe, RecipeFormSave } from '@/types';
 
 export async function getRecipes(): Promise<Recipe[]> {
 	const allRecipes = await db.select().from(recipes);

@@ -31,6 +31,3 @@ export const ingredientUnitsRelations = relations(ingredientUnits, ({ many, one 
 		relationName: 'unitCreator',
 	}),
 }));
-
-export type IngredientUnit = typeof ingredientUnits.$inferSelect;
-export type IngredientUnitInsert = typeof ingredientUnits.$inferInsert;
