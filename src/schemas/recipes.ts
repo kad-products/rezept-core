@@ -1,20 +1,31 @@
-import { createInsertSchema } from 'drizzle-zod';
-import z from 'zod';
-import { recipes } from '@/models';
+import { z } from 'zod';
+import { optionalString, optionalUuid, requiredUuid } from './utils';
 
-export const createRecipeFormValidationSchema = createInsertSchema(recipes, {
-	id: z
-		.string()
-		.optional()
-		.transform(val => (val === '' ? undefined : val)),
-	servings: z.coerce.number().min(1, { message: 'Servings must be at least 1' }).default(1),
-	cookTime: z.coerce.number().min(0, { message: 'Cook time cannot be negative' }).default(0),
-	prepTime: z.coerce.number().min(0, { message: 'Prep time cannot be negative' }).default(0),
-}).omit({
-	createdAt: true,
-	createdBy: true,
-	updatedAt: true,
-	updatedBy: true,
-	deletedAt: true,
-	deletedBy: true,
+// Shared base fields for recipes
+const baseRecipeFields = {
+	authorId: requiredUuid,
+	title: z.string().trim().min(1, 'Title is required').max(200, 'Title must be 200 characters or less'),
+	description: optionalString
+		.transform(val => val?.trim())
+		.pipe(z.string().max(1000, 'Description must be 1000 characters or less').optional()),
+	source: optionalString
+		.transform(val => val?.trim())
+		.pipe(z.string().max(500, 'Source must be 500 characters or less').optional()),
+	servings: z.coerce.number().int().positive().optional(),
+	prepTime: z.coerce.number().int().min(0).optional(), // minutes
+	cookTime: z.coerce.number().int().min(0).optional(), // minutes
+};
+
+// Create schema - no id, requires createdBy
+export const createRecipeSchema = z.object({
+	...baseRecipeFields,
+	createdBy: requiredUuid,
+});
+
+// Update schema - requires id and updatedBy
+export const updateRecipeSchema = z.object({
+	...baseRecipeFields,
+	id: requiredUuid,
+	updatedBy: requiredUuid,
+	deletedBy: optionalUuid,
 });

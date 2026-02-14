@@ -1,19 +1,23 @@
-import { createInsertSchema } from 'drizzle-zod';
-import z from 'zod';
-import { recipeInstructions } from '@/models';
+import { z } from 'zod';
+import { optionalUuid, requiredUuid } from './utils';
 
-export const createRecipeInstructionFormValidationSchema = createInsertSchema(recipeInstructions, {
-	id: z
-		.string()
-		.optional()
-		.transform(val => (val === '' ? undefined : val)),
-	stepNumber: z.coerce.number().min(0).default(0),
-	instruction: z.string().min(1, 'Instruction is required'),
-}).omit({
-	createdAt: true,
-	createdBy: true,
-	updatedAt: true,
-	updatedBy: true,
-	deletedAt: true,
-	deletedBy: true,
+// Shared base fields for recipe instructions
+const baseRecipeInstructionFields = {
+	recipeSectionId: requiredUuid,
+	stepNumber: z.coerce.number().int().min(1),
+	instruction: z.string().trim().min(1, 'Instruction is required').max(2000, 'Instruction must be 2000 characters or less'),
+};
+
+// Create schema - no id, requires createdBy
+export const createRecipeInstructionSchema = z.object({
+	...baseRecipeInstructionFields,
+	createdBy: requiredUuid,
+});
+
+// Update schema - requires id and updatedBy
+export const updateRecipeInstructionSchema = z.object({
+	...baseRecipeInstructionFields,
+	id: requiredUuid,
+	updatedBy: requiredUuid,
+	deletedBy: optionalUuid,
 });

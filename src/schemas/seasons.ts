@@ -1,5 +1,3 @@
-// src/schemas/season.ts
-
 import { getAlpha2Codes } from 'i18n-iso-countries';
 import { z } from 'zod';
 import { optionalString, optionalUuid, requiredUuid } from './utils';

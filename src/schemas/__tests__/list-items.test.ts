@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { createListItemSchema, updateListItemSchema } from '../';
+import { createListItemSchema, updateListItemSchema } from '..';
 
 describe('CreateListItem form schema', () => {
 	it('accepts valid list item with all fields', () => {

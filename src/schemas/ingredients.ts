@@ -1,4 +1,3 @@
-// src/schemas/ingredient.ts
 import { z } from 'zod';
 import { optionalString, optionalUuid, requiredUuid } from './utils';
 
