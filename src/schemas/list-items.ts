@@ -1,26 +1,26 @@
-import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
-import { listItemStatusEnum, listItems } from '@/models';
+import { listItemStatusEnum } from '@/models';
+import { optionalUuid, requiredUuid } from './utils';
 
-export const createListItemFormValidationSchema = createInsertSchema(listItems, {
-	id: z
-		.string()
-		.optional()
-		.transform(val => (val === '' ? undefined : val)),
-	quantity: z.coerce.number().positive().optional(),
-	status: z.enum(listItemStatusEnum).default('NEEDED'),
-	ingredientId: z.string().min(1, 'Ingredient is required'),
-	unitId: z
-		.string()
-		.min(1)
-		.optional()
-		.or(z.literal(''))
-		.transform(val => (val === '' ? undefined : val)),
-}).omit({
-	createdAt: true,
-	createdBy: true,
-	updatedAt: true,
-	updatedBy: true,
-	deletedAt: true,
-	deletedBy: true,
+// Shared base fields
+const baseListItemFields = {
+	listId: requiredUuid,
+	ingredientId: requiredUuid,
+	quantity: z.coerce.number().positive().multipleOf(0.01).optional(),
+	status: z.enum(listItemStatusEnum),
+	unitId: optionalUuid,
+};
+
+// Create schema - no id, requires createdBy
+export const createListItemSchema = z.object({
+	...baseListItemFields,
+	createdBy: requiredUuid,
+});
+
+// Update schema - requires id, no createdBy
+export const updateListItemSchema = z.object({
+	...baseListItemFields,
+	id: requiredUuid,
+	updatedBy: requiredUuid,
+	deletedBy: optionalUuid,
 });
