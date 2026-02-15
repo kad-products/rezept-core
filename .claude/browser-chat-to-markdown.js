@@ -170,20 +170,20 @@ function convertPageToMarkdown() {
 	if (result) {
 		console.log('%c=== MARKDOWN OUTPUT ===', 'color: #0066cc; font-weight: bold; font-size: 14px;');
 		console.log(result.markdown);
-		console.log('\n%c=== Original HTML ===', 'color: #666; font-weight: bold; font-size: 12px;');
-		console.log(result.html);
+		// console.log('\n%c=== Original HTML ===', 'color: #666; font-weight: bold; font-size: 12px;');
+		// console.log(result.html);
 
 		// Also copy markdown to clipboard if available
-		if (navigator.clipboard && navigator.clipboard.writeText) {
-			navigator.clipboard
-				.writeText(result.markdown)
-				.then(() => {
-					console.log('%c✓ Markdown copied to clipboard!', 'color: #00aa00; font-weight: bold;');
-				})
-				.catch(err => {
-					console.log('%cClipboard copy failed (may need secure context)', 'color: #aa6600;');
-				});
-		}
+		// if (navigator.clipboard && navigator.clipboard.writeText) {
+		// 	navigator.clipboard
+		// 		.writeText(result.markdown)
+		// 		.then(() => {
+		// 			console.log('%c✓ Markdown copied to clipboard!', 'color: #00aa00; font-weight: bold;');
+		// 		})
+		// 		.catch(err => {
+		// 			console.log('%cClipboard copy failed (may need secure context)', 'color: #aa6600;');
+		// 		});
+		// }
 
 		// Make result available globally for further manipulation
 		window.markdownResult = result;
