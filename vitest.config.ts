@@ -6,10 +6,14 @@ export default defineConfig({
 		globals: true,
 		environment: 'node',
 		alias: {
-			'@': path.resolve(__dirname, './src'),
-			'@/db': path.resolve(__dirname, 'tests/mocks/db.ts'),
 			'cloudflare:workers': path.resolve(__dirname, 'tests/mocks/cloudflare-workers.ts'),
 			'rwsdk/auth': path.resolve(__dirname, 'tests/mocks/rwsdk-auth.ts'),
+			'@': path.resolve(__dirname, './src'),
+		},
+	},
+	resolve: {
+		alias: {
+			'@/db': path.resolve(__dirname, 'tests/mocks/db.ts'),
 		},
 	},
 });
