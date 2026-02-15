@@ -29,7 +29,7 @@
 		"db-load": "tsx scripts/db-load.ts",
 		"test": "vitest",
 		"test:ui": "vitest --ui",
-		"test:run": "vitest run"
+		"test:run": "vitest run --coverage"
 	},
 	"dependencies": {
 		"@simplewebauthn/browser": "^13.2.2",
@@ -70,6 +70,7 @@
 		"@types/qs": "^6.14.0",
 		"@types/react": "19.1.2",
 		"@types/react-dom": "19.1.2",
+		"@vitest/coverage-v8": "^4.0.18",
 		"@vitest/ui": "^4.0.18",
 		"chalk-template": "^1.1.2",
 		"change-case": "^5.4.4",
