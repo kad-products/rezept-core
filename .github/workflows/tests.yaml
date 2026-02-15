@@ -20,6 +20,8 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
 
-      - run: pnpm install
-
-      - run: pnpm test
+      - run: |
+            pnpm install
+            pnpm test
+            pnpm biome:check
+            pnpm type-check
