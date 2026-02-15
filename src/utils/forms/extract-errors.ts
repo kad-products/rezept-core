@@ -1,4 +1,4 @@
-import type { FormValidationResponse } from './types';
+import type { FormValidationResponse } from '@/types';
 
 export function extractErrors<T>(
 	zodValidationResults: FormValidationResponse<T> | FormValidationResponse<T>[],

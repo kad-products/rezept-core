@@ -41,6 +41,3 @@ export const listsRelations = relations(lists, ({ one, many }) => ({
 		relationName: 'listCreator',
 	}),
 }));
-
-export type List = typeof lists.$inferSelect;
-export type ListInsert = typeof lists.$inferInsert;

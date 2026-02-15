@@ -2,7 +2,7 @@
 import { startAuthentication } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
 import { navigate } from 'rwsdk/client';
-import { finishPasskeyLogin, startPasskeyLogin } from '@/functions/auth';
+import { finishPasskeyLogin, startPasskeyLogin } from '@/actions/auth';
 
 export default function PasskeyLogin() {
 	const [result, setResult] = useState('');

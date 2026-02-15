@@ -1,5 +1,5 @@
 'use client';
-import type { Credential } from '@/models/credentials';
+import type { Credential } from '@/types';
 
 type CredentialDisplay = Omit<Credential, 'publicKey' | 'credentialId'>;
 

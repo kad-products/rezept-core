@@ -1,6 +1,6 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import db from '@/db';
-import { seasonalIngredients } from '@/models/schema';
+import { seasonalIngredients } from '@/models';
 
 const getSeasonalIngredientsQuery = (seasonId: string) =>
 	db.query.seasonalIngredients.findMany({

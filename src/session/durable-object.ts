@@ -1,10 +1,13 @@
 import { DurableObject } from 'cloudflare:workers';
 import { MAX_SESSION_DURATION } from 'rwsdk/auth';
 
+type SessionError = 'Invalid session' | 'Session expired';
+
 export interface Session {
 	userId?: string | null;
 	challenge?: string | null;
 	createdAt: number;
+	lastAccessedAt: number;
 }
 
 export class SessionDurableObject extends DurableObject {
@@ -14,6 +17,11 @@ export class SessionDurableObject extends DurableObject {
 		this.session = undefined;
 	}
 
+	// seems a little silly but this makes testing much easier
+	protected now(): number {
+		return Date.now();
+	}
+
 	async saveSession({
 		userId = null,
 		challenge = null,
@@ -21,10 +29,12 @@ export class SessionDurableObject extends DurableObject {
 		userId?: string | null;
 		challenge?: string | null;
 	}): Promise<Session> {
+		const now = this.now();
 		const session: Session = {
 			userId,
 			challenge,
-			createdAt: Date.now(),
+			createdAt: now,
+			lastAccessedAt: now,
 		};
 
 		await this.ctx.storage.put<Session>('session', session);
@@ -32,8 +42,11 @@ export class SessionDurableObject extends DurableObject {
 		return session;
 	}
 
-	async getSession(): Promise<{ value: Session } | { error: string }> {
+	async getSession(): Promise<{ value: Session } | { error: SessionError }> {
 		if (this.session) {
+			// Update lastAccessedAt even for cached sessions
+			this.session.lastAccessedAt = this.now();
+			await this.ctx.storage.put<Session>('session', this.session);
 			return { value: this.session };
 		}
 
@@ -45,13 +58,16 @@ export class SessionDurableObject extends DurableObject {
 			};
 		}
 
-		if (session.createdAt + MAX_SESSION_DURATION < Date.now()) {
+		if (session.lastAccessedAt + MAX_SESSION_DURATION < this.now()) {
 			await this.revokeSession();
 			return {
 				error: 'Session expired',
 			};
 		}
 
+		// Update lastAccessedAt on read
+		session.lastAccessedAt = this.now();
+		await this.ctx.storage.put<Session>('session', session);
 		this.session = session;
 		return { value: session };
 	}

@@ -1,5 +1,5 @@
 import type { ZodType } from 'zod';
-import type { FormValidationResponse } from './types';
+import type { FormValidationResponse } from '../../types/form-validation-response';
 
 export function validateFormData<T>(
 	inputData: unknown,

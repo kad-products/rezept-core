@@ -2,7 +2,7 @@
 import { useTransition } from 'react';
 import Select, { type GroupBase } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { addIngredient } from '@/functions/ingredients';
+import { addIngredient } from '@/actions/ingredients';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type SelectOption = {

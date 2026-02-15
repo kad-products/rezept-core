@@ -51,6 +51,3 @@ export const seasonalIngredientsRelations = relations(seasonalIngredients, ({ on
 		relationName: 'seasonalIngredientCreator',
 	}),
 }));
-
-export type SeasonalIngredient = typeof seasonalIngredients.$inferSelect;
-export type SeasonalIngredientInsert = typeof seasonalIngredients.$inferInsert;

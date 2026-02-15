@@ -15,6 +15,3 @@ export const users = sqliteTable('users', {
 export const usersRelations = relations(users, ({ many }) => ({
 	credentials: many(credentials),
 }));
-
-export type User = typeof users.$inferSelect;
-export type UserInsert = typeof users.$inferInsert;
