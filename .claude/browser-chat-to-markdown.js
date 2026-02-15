@@ -1,4 +1,5 @@
-// HTML to Markdown Converter
+// biome-ignore-all lint: because this is a hack script and not part of the application
+// // HTML to Markdown Converter
 // Finds header with data-testid="page-header" and converts sibling div content
 
 function htmlToMarkdown(html) {

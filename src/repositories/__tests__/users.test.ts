@@ -108,9 +108,9 @@ describe('getUserById', () => {
 	});
 
 	it('returns correct user when multiple users exist', async () => {
-		const user1 = await createUser('alice', testDb);
+		const _user1 = await createUser('alice', testDb);
 		const user2 = await createUser('bob', testDb);
-		const user3 = await createUser('charlie', testDb);
+		const _user3 = await createUser('charlie', testDb);
 
 		const found = await getUserById(user2.id, testDb);
 
