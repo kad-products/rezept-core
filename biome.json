@@ -27,6 +27,9 @@
 			"indentStyle": "tab"
 		}
 	},
+	"files": {
+		"includes": ["**", "!coverage", "!worker-configuration.d.ts"]
+	},
 	"overrides": [
 		{
 			"includes": ["**/__tests__/**"],
