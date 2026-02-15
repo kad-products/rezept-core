@@ -6,7 +6,7 @@ import { createSeason, updateSeason } from '@/repositories/seasons';
 import { createSeasonSchema, updateSeasonSchema } from '@/schemas';
 import type { ActionState } from '@/types';
 
-export async function saveSeason(_prevState: ActionState, formData: FormData): Promise<ActionState> {
+export async function saveSeason(_prevState: ActionState, formData: FormData): Promise<ActionState<{ id: string }>> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
@@ -29,8 +29,8 @@ export async function saveSeason(_prevState: ActionState, formData: FormData): P
 					errors: parsed.error.flatten().fieldErrors,
 				};
 			}
-			await updateSeason(parsed.data.id, parsed.data, userId);
-			return { success: true };
+			const updatedSeason = await updateSeason(parsed.data.id, parsed.data, userId);
+			return { success: true, data: { id: updatedSeason.id } };
 		} else {
 			const parsed = createSeasonSchema.safeParse(Object.fromEntries(formData));
 			if (!parsed.success) {
@@ -40,8 +40,8 @@ export async function saveSeason(_prevState: ActionState, formData: FormData): P
 					errors: parsed.error.flatten().fieldErrors,
 				};
 			}
-			await createSeason(parsed.data, userId);
-			return { success: true };
+			const createdSeason = await createSeason(parsed.data, userId);
+			return { success: true, data: { id: createdSeason.id } };
 		}
 	} catch (error) {
 		console.log(`Error saving season: ${error} `);
