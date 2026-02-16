@@ -1,7 +1,7 @@
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import { reset, seed } from 'drizzle-seed';
-import * as schema from '../../src/models/schema';
+import * as schema from '../../src/models';
 import findD1DatabaseFile from '../utils/find-local-db-file';
 import generateStandardRefinements from './utils/get-standard-refinements';
 

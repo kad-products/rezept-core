@@ -13,7 +13,7 @@ export const credentials = sqliteTable(
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		createdAt: text().notNull().default(sql`(datetime('now', 'localtime'))`),
-		updatedAt: text().$defaultFn(() => new Date().toISOString()),
+		updatedAt: text(),
 		credentialId: text().notNull().unique(),
 		publicKey: blob().$type<Uint8Array>().notNull(),
 		counter: integer().notNull().default(0),
@@ -33,6 +33,3 @@ export const credentialsRelations = relations(credentials, ({ one }) => ({
 		references: [users.id],
 	}),
 }));
-
-export type Credential = typeof credentials.$inferSelect;
-export type CredentialInsert = typeof credentials.$inferInsert;

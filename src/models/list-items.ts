@@ -31,7 +31,7 @@ export const listItems = sqliteTable(
 		createdBy: text()
 			.notNull()
 			.references(() => users.id),
-		updatedAt: text().$defaultFn(() => new Date().toISOString()),
+		updatedAt: text(),
 		updatedBy: text().references(() => users.id),
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
@@ -58,9 +58,3 @@ export const listItemsRelations = relations(listItems, ({ one }) => ({
 		relationName: 'listItemCreator',
 	}),
 }));
-
-export type ListItem = typeof listItems.$inferSelect;
-export type ListItemFormSave = Omit<
-	typeof listItems.$inferInsert,
-	'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
->;

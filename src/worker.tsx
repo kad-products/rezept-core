@@ -4,15 +4,15 @@ import { defineApp } from 'rwsdk/worker';
 import { Document } from '@/Document';
 import { setCommonHeaders } from '@/headers';
 import { setupPasskeyAuth } from '@/middleware/auth';
-import type { User } from '@/models/schema';
 import authRoutes from '@/pages/auth/routes';
 import listRoutes from '@/pages/lists/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
 import { getUserById } from '@/repositories/users';
-import type { Session } from '@/session/durableObject';
+import type { Session } from '@/session/durable-object';
 import { sessions } from '@/session/store';
+import type { User } from '@/types';
 
 import Pages__root from './pages/root';
 
@@ -20,7 +20,7 @@ export type AppContext = {
 	session?: Session | null;
 	user?: User | undefined;
 };
-export { SessionDurableObject } from '@/session/durableObject';
+export { SessionDurableObject } from '@/session/durable-object';
 
 export default defineApp([
 	setCommonHeaders(),

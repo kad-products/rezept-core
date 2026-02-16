@@ -9,12 +9,9 @@ export const users = sqliteTable('users', {
 		.$defaultFn(() => crypto.randomUUID()),
 	username: text().notNull().unique(),
 	createdAt: text().notNull().default(sql`(datetime('now', 'localtime'))`),
-	updatedAt: text().$defaultFn(() => new Date().toISOString()),
+	updatedAt: text(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
 	credentials: many(credentials),
 }));
-
-export type User = typeof users.$inferSelect;
-export type UserInsert = typeof users.$inferInsert;

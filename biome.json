@@ -26,5 +26,20 @@
 			"enabled": true,
 			"indentStyle": "tab"
 		}
-	}
+	},
+	"files": {
+		"includes": ["**", "!coverage", "!worker-configuration.d.ts"]
+	},
+	"overrides": [
+		{
+			"includes": ["**/__tests__/**"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noExplicitAny": "off"
+					}
+				}
+			}
+		}
+	]
 }

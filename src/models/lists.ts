@@ -20,7 +20,7 @@ export const lists = sqliteTable(
 		createdBy: text()
 			.notNull()
 			.references(() => users.id),
-		updatedAt: text().$defaultFn(() => new Date().toISOString()),
+		updatedAt: text(),
 		updatedBy: text().references(() => users.id),
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
@@ -41,6 +41,3 @@ export const listsRelations = relations(lists, ({ one, many }) => ({
 		relationName: 'listCreator',
 	}),
 }));
-
-export type List = typeof lists.$inferSelect;
-export type ListInsert = typeof lists.$inferInsert;

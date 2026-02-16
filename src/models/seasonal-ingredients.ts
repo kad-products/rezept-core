@@ -24,7 +24,7 @@ export const seasonalIngredients = sqliteTable(
 		createdBy: text()
 			.notNull()
 			.references(() => users.id),
-		updatedAt: text().$defaultFn(() => new Date().toISOString()),
+		updatedAt: text(),
 		updatedBy: text().references(() => users.id),
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
@@ -51,6 +51,3 @@ export const seasonalIngredientsRelations = relations(seasonalIngredients, ({ on
 		relationName: 'seasonalIngredientCreator',
 	}),
 }));
-
-export type SeasonalIngredient = typeof seasonalIngredients.$inferSelect;
-export type SeasonalIngredientInsert = typeof seasonalIngredients.$inferInsert;

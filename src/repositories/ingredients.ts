@@ -1,5 +1,6 @@
 import db from '@/db';
-import { type Ingredient, type IngredientFormSave, ingredients } from '@/models/ingredients';
+import { ingredients } from '@/models';
+import type { Ingredient, IngredientFormSave } from '@/types';
 
 export async function getIngredients(): Promise<Ingredient[]> {
 	const ingredientsList = await db.select().from(ingredients);

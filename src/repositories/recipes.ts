@@ -1,8 +1,7 @@
 import { eq } from 'drizzle-orm';
-import { createInsertSchema } from 'drizzle-zod';
-import z from 'zod';
 import db from '@/db';
-import { type Recipe, type RecipeFormSave, recipes } from '@/models/schema';
+import { recipes } from '@/models';
+import type { Recipe, RecipeFormSave } from '@/types';
 
 export async function getRecipes(): Promise<Recipe[]> {
 	const allRecipes = await db.select().from(recipes);
@@ -23,39 +22,24 @@ export async function getRecipeById(recipeId: string): Promise<Recipe | undefine
 	return matchedRecipes[0];
 }
 
-export const createRecipeFormValidationSchema = createInsertSchema(recipes, {
-	id: z
-		.string()
-		.optional()
-		.transform(val => (val === '' ? undefined : val)),
-	servings: z.coerce.number().min(1, { message: 'Servings must be at least 1' }).default(1),
-	cookTime: z.coerce.number().min(0, { message: 'Cook time cannot be negative' }).default(0),
-	prepTime: z.coerce.number().min(0, { message: 'Prep time cannot be negative' }).default(0),
-}).omit({
-	createdAt: true,
-	createdBy: true,
-	updatedAt: true,
-	updatedBy: true,
-	deletedAt: true,
-	deletedBy: true,
-});
-
 export async function createRecipe(recipe: RecipeFormSave, userId: string) {
 	console.log(`Form data in createRecipe: ${JSON.stringify(recipe, null, 4)} `);
 
-	return await db
+	const insertedRecipes = await db
 		.insert(recipes)
 		.values({
 			...recipe,
 			createdBy: userId,
 		})
 		.returning();
+
+	return insertedRecipes[0];
 }
 
 export async function updateRecipe(recipeId: string, recipeData: RecipeFormSave, userId: string) {
 	console.log(`Form data in updateRecipe: ${JSON.stringify(recipeData, null, 4)} `);
 
-	return await db
+	const updatedRecipes = await db
 		.update(recipes)
 		.set({
 			...recipeData,
@@ -63,4 +47,6 @@ export async function updateRecipe(recipeId: string, recipeData: RecipeFormSave,
 		})
 		.where(eq(recipes.id, recipeId))
 		.returning();
+
+	return updatedRecipes[0];
 }

@@ -29,7 +29,7 @@ export const recipeIngredients = sqliteTable(
 		createdBy: text()
 			.notNull()
 			.references(() => users.id),
-		updatedAt: text().$defaultFn(() => new Date().toISOString()),
+		updatedAt: text(),
 		updatedBy: text().references(() => users.id),
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
@@ -60,9 +60,3 @@ export const recipeIngredientsRelations = relations(recipeIngredients, ({ one })
 		relationName: 'recipeIngredientCreator',
 	}),
 }));
-
-export type RecipeIngredient = typeof recipeIngredients.$inferSelect;
-export type RecipeIngredientFormSave = Omit<
-	typeof recipeIngredients.$inferInsert,
-	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
->;

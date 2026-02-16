@@ -25,7 +25,7 @@ export const recipes = sqliteTable(
 		createdBy: text()
 			.notNull()
 			.references(() => users.id),
-		updatedAt: text().$defaultFn(() => new Date().toISOString()),
+		updatedAt: text(),
 		updatedBy: text().references(() => users.id),
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
@@ -46,9 +46,3 @@ export const recipesRelations = relations(recipes, ({ many, one }) => ({
 		relationName: 'recipeCreator',
 	}),
 }));
-
-export type Recipe = typeof recipes.$inferSelect;
-export type RecipeFormSave = Omit<
-	typeof recipes.$inferInsert,
-	'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
->;

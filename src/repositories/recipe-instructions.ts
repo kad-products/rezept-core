@@ -1,24 +1,7 @@
 import { eq } from 'drizzle-orm';
-import { createInsertSchema } from 'drizzle-zod';
-import z from 'zod';
 import db from '@/db';
-import { type RecipeInstruction, type RecipeInstructionFormSave, recipeInstructions } from '@/models/schema';
-
-export const createRecipeInstructionFormValidationSchema = createInsertSchema(recipeInstructions, {
-	id: z
-		.string()
-		.optional()
-		.transform(val => (val === '' ? undefined : val)),
-	stepNumber: z.coerce.number().min(0).default(0),
-	instruction: z.string().min(1, 'Instruction is required'),
-}).omit({
-	createdAt: true,
-	createdBy: true,
-	updatedAt: true,
-	updatedBy: true,
-	deletedAt: true,
-	deletedBy: true,
-});
+import { recipeInstructions } from '@/models';
+import type { RecipeInstruction, RecipeInstructionFormSave } from '@/types';
 
 export async function getInstructionsByRecipeSectionId(recipeSectionId: string): Promise<RecipeInstruction[]> {
 	const instructions = await db.select().from(recipeInstructions).where(eq(recipeInstructions.recipeSectionId, recipeSectionId));

@@ -23,7 +23,7 @@ export const seasons = sqliteTable(
 		createdBy: text()
 			.notNull()
 			.references(() => users.id),
-		updatedAt: text().$defaultFn(() => new Date().toISOString()),
+		updatedAt: text(),
 		updatedBy: text().references(() => users.id),
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
@@ -43,9 +43,3 @@ export const seasonsRelations = relations(seasons, ({ one, many }) => ({
 		relationName: 'seasonCreator',
 	}),
 }));
-
-export type Season = typeof seasons.$inferSelect;
-export type SeasonFormSave = Omit<
-	typeof seasons.$inferInsert,
-	'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
->;
