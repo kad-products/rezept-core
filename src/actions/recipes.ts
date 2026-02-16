@@ -27,7 +27,7 @@ import type {
 } from '@/types';
 import { extractErrors, formDataToObject, validateFormData } from '@/utils/forms';
 
-export async function saveRecipe(_prevState: ActionState, formData: FormData): Promise<ActionState> {
+export async function saveRecipe(_prevState: ActionState | null, formData: FormData): Promise<ActionState> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 

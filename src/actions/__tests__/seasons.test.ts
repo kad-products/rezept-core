@@ -54,10 +54,10 @@ describe('saveSeason', () => {
 			const formData = new FormData();
 			formData.set('name', 'Test Season');
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?._form).toContain('You must be logged in');
+			expect(result.success).toBe(false);
+			expect(result.errors?._form).toContain('You must be logged in');
 			expect(createSeason).not.toHaveBeenCalled();
 		});
 	});
@@ -71,9 +71,9 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '5');
 			formData.set('createdBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(true);
+			expect(result.success).toBe(true);
 			expect(createSeason).toHaveBeenCalledTimes(1);
 			expect(createSeason).toHaveBeenCalledWith(
 				expect.objectContaining({
@@ -90,10 +90,10 @@ describe('saveSeason', () => {
 			const formData = new FormData();
 			// Missing name, country, months
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors).toBeDefined();
+			expect(result.success).toBe(false);
+			expect(result.errors).toBeDefined();
 			expect(createSeason).not.toHaveBeenCalled();
 		});
 
@@ -105,10 +105,10 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?.country).toBeDefined();
+			expect(result.success).toBe(false);
+			expect(result.errors?.country).toBeDefined();
 		});
 
 		it('validates invalid country code', async () => {
@@ -119,10 +119,10 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?.country).toBeDefined();
+			expect(result.success).toBe(false);
+			expect(result.errors?.country).toBeDefined();
 		});
 
 		it('validates month range minimum', async () => {
@@ -133,10 +133,10 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?.startMonth).toBeDefined();
+			expect(result.success).toBe(false);
+			expect(result.errors?.startMonth).toBeDefined();
 		});
 
 		it('validates month range maximum', async () => {
@@ -147,10 +147,10 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '13'); // Too high
 			formData.set('createdBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?.endMonth).toBeDefined();
+			expect(result.success).toBe(false);
+			expect(result.errors?.endMonth).toBeDefined();
 		});
 
 		it('validates createdBy is valid UUID', async () => {
@@ -161,10 +161,10 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', 'not-a-uuid');
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?.createdBy).toBeDefined();
+			expect(result.success).toBe(false);
+			expect(result.errors?.createdBy).toBeDefined();
 		});
 
 		it('handles repository errors gracefully', async () => {
@@ -177,11 +177,11 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?._form).toBeDefined();
-			expect(result?.errors?._form?.[0]).toContain('Failed to save season'); // Test env shows real error
+			expect(result.success).toBe(false);
+			expect(result.errors?._form).toBeDefined();
+			expect(result.errors?._form?.[0]).toContain('Failed to save season'); // Test env shows real error
 		});
 
 		it('accepts optional fields', async () => {
@@ -193,9 +193,9 @@ describe('saveSeason', () => {
 			formData.set('createdBy', randomUUID());
 			// No description, region, notes
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(true);
+			expect(result.success).toBe(true);
 		});
 
 		it('accepts season with all optional fields', async () => {
@@ -209,9 +209,9 @@ describe('saveSeason', () => {
 			formData.set('notes', 'Great for lavender');
 			formData.set('createdBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(true);
+			expect(result.success).toBe(true);
 			expect(createSeason).toHaveBeenCalledWith(
 				expect.objectContaining({
 					description: 'Spring in Provence',
@@ -233,12 +233,12 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
 			// Should NOT expose the real error
-			expect(result?.errors?._form?.[0]).toBe('Failed to save season');
-			expect(result?.errors?._form?.[0]).not.toContain('postgres://');
-			expect(result?.errors?._form?.[0]).not.toContain('password');
+			expect(result.errors?._form?.[0]).toBe('Failed to save season');
+			expect(result.errors?._form?.[0]).not.toContain('postgres://');
+			expect(result.errors?._form?.[0]).not.toContain('password');
 		});
 	});
 
@@ -253,9 +253,9 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '8');
 			formData.set('updatedBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(true);
+			expect(result.success).toBe(true);
 			expect(updateSeason).toHaveBeenCalledTimes(1);
 			expect(updateSeason).toHaveBeenCalledWith(
 				seasonId,
@@ -278,10 +278,10 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '3');
 			// Missing updatedBy
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?.updatedBy).toBeDefined();
+			expect(result.success).toBe(false);
+			expect(result.errors?.updatedBy).toBeDefined();
 		});
 
 		it('handles update repository errors', async () => {
@@ -295,10 +295,10 @@ describe('saveSeason', () => {
 			formData.set('endMonth', '3');
 			formData.set('updatedBy', randomUUID());
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.errors?._form).toBeDefined();
+			expect(result.success).toBe(false);
+			expect(result.errors?._form).toBeDefined();
 		});
 	});
 });

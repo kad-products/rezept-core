@@ -59,10 +59,10 @@ describe('saveSeason integration', () => {
 			formData.set('endMonth', '5');
 			formData.set('createdBy', testUserId);
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(true);
-			expect(result?.data?.id).toBeDefined();
+			expect(result.success).toBe(true);
+			expect(result.data?.id).toBeDefined();
 
 			// Verify it's actually in the database
 			if (result.data?.id) {
@@ -84,10 +84,10 @@ describe('saveSeason integration', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', testUserId);
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
-			expect(result?.data).toBeUndefined();
+			expect(result.success).toBe(false);
+			expect(result.data).toBeUndefined();
 
 			// Verify nothing was saved to database
 			const seasonData = await testDb.select().from(seasons);
@@ -105,10 +105,10 @@ describe('saveSeason integration', () => {
 			formData.set('endMonth', '6');
 			formData.set('createdBy', testUserId);
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(true);
-			expect(result?.data?.id).toBeDefined();
+			expect(result.success).toBe(true);
+			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
 				const season = await getSeasonById(result.data.id, testDb);
@@ -126,10 +126,10 @@ describe('saveSeason integration', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', testUserId);
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(true);
-			expect(result?.data?.id).toBeDefined();
+			expect(result.success).toBe(true);
+			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
 				const season = await getSeasonById(result.data.id, testDb);
@@ -150,9 +150,9 @@ describe('saveSeason integration', () => {
 			formData.set('endMonth', '3');
 			formData.set('createdBy', testUserId);
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
-			expect(result?.success).toBe(false);
+			expect(result.success).toBe(false);
 
 			// Verify nothing was saved
 			const seasonData = await testDb.select().from(seasons);
@@ -170,12 +170,12 @@ describe('saveSeason integration', () => {
 			createFormData.set('endMonth', '3');
 			createFormData.set('createdBy', testUserId);
 
-			const createResult = await saveSeason({} as ActionState, createFormData);
+			const createResult = await saveSeason(null, createFormData);
 
-			expect(createResult?.success).toBe(true);
-			expect(createResult?.data?.id).toBeDefined();
+			expect(createResult.success).toBe(true);
+			expect(createResult.data?.id).toBeDefined();
 
-			if (createResult?.data?.id) {
+			if (createResult.data?.id) {
 				const seasonId = createResult.data.id;
 
 				// Now update it
@@ -187,10 +187,10 @@ describe('saveSeason integration', () => {
 				updateFormData.set('endMonth', '8');
 				updateFormData.set('updatedBy', testUserId);
 
-				const updateResult = await saveSeason({} as ActionState, updateFormData);
+				const updateResult = await saveSeason(null, updateFormData);
 
-				expect(updateResult?.success).toBe(true);
-				expect(updateResult?.data?.id).toBe(seasonId);
+				expect(updateResult.success).toBe(true);
+				expect(updateResult.data?.id).toBe(seasonId);
 
 				// Verify the update persisted
 				const season = await getSeasonById(seasonId, testDb);
@@ -209,10 +209,10 @@ describe('saveSeason integration', () => {
 			createFormData.set('endMonth', '3');
 			createFormData.set('createdBy', testUserId);
 
-			const createResult = await saveSeason({} as ActionState, createFormData);
+			const createResult = await saveSeason(null, createFormData);
 
-			expect(createResult?.success).toBe(true);
-			expect(createResult?.data?.id).toBeDefined();
+			expect(createResult.success).toBe(true);
+			expect(createResult.data?.id).toBeDefined();
 
 			if (createResult.data?.id) {
 				const seasonId = createResult.data.id;
@@ -229,7 +229,7 @@ describe('saveSeason integration', () => {
 				updateFormData.set('endMonth', '3');
 				updateFormData.set('updatedBy', testUserId);
 
-				await saveSeason({} as ActionState, updateFormData);
+				await saveSeason(null, updateFormData);
 
 				const season = await getSeasonById(seasonId, testDb);
 				expect(season?.createdBy).toBe(testUserId);
@@ -248,10 +248,10 @@ describe('saveSeason integration', () => {
 			formData.set('endMonth', '3');
 			formData.set('updatedBy', testUserId);
 
-			const result = await saveSeason({} as ActionState, formData);
+			const result = await saveSeason(null, formData);
 
 			// Should fail - season doesn't exist
-			expect(result?.success).toBe(false);
+			expect(result.success).toBe(false);
 		});
 
 		it('preserves fields not being updated', async () => {
@@ -264,10 +264,10 @@ describe('saveSeason integration', () => {
 			createFormData.set('endMonth', '3');
 			createFormData.set('createdBy', testUserId);
 
-			const createResult = await saveSeason({} as ActionState, createFormData);
+			const createResult = await saveSeason(null, createFormData);
 
-			expect(createResult?.success).toBe(true);
-			expect(createResult?.data?.id).toBeDefined();
+			expect(createResult.success).toBe(true);
+			expect(createResult.data?.id).toBeDefined();
 
 			if (createResult.data?.id) {
 				const seasonId = createResult.data.id;
@@ -281,7 +281,7 @@ describe('saveSeason integration', () => {
 				updateFormData.set('endMonth', '3');
 				updateFormData.set('updatedBy', testUserId);
 
-				await saveSeason({} as ActionState, updateFormData);
+				await saveSeason(null, updateFormData);
 
 				const season = await getSeasonById(seasonId, testDb);
 				expect(season?.name).toBe('Updated Name');
@@ -301,13 +301,13 @@ describe('saveSeason integration', () => {
 				formData.set('endMonth', '3');
 				formData.set('createdBy', testUserId);
 
-				return saveSeason({} as ActionState, formData);
+				return saveSeason(null, formData);
 			});
 
 			const results = await Promise.all(promises);
 
 			// All should succeed
-			expect(results.every(r => r?.success)).toBe(true);
+			expect(results.every(r => r.success)).toBe(true);
 
 			// All should have unique IDs
 			const ids = results.map(r => r.data?.id).filter(Boolean);

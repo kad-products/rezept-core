@@ -6,7 +6,10 @@ import { createSeason, updateSeason } from '@/repositories/seasons';
 import { createSeasonSchema, updateSeasonSchema } from '@/schemas';
 import type { ActionState } from '@/types';
 
-export async function saveSeason(_prevState: ActionState, formData: FormData): Promise<ActionState<{ id: string }>> {
+export async function saveSeason(
+	_prevState: ActionState<{ id: string }> | null | undefined,
+	formData: FormData,
+): Promise<ActionState<{ id: string }>> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
