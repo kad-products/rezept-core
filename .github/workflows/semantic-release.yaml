@@ -1,4 +1,4 @@
-name: '[KAD CI] Semantic Release'
+name: Semantic Release (Local Test)
 
 on:
   push:
@@ -7,4 +7,36 @@ on:
 
 jobs:
   semantic-release:
-    uses: kad-products/kad-ci/.github/workflows/semantic-release.yaml@main
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: semantic-release-bot
+          GIT_AUTHOR_EMAIL: semantic-release-bot@users.noreply.github.com
+          GIT_COMMITTER_NAME: semantic-release-bot
+          GIT_COMMITTER_EMAIL: semantic-release-bot@users.noreply.github.com
+          HUSKY: 0
+        run: pnpm dlx semantic-release
+
+      - name: Trigger Integration Deploy
+        if: success()
+        run: echo "Integration deploy would trigger here"
