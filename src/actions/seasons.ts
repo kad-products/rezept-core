@@ -49,8 +49,6 @@ export async function saveSeason(
 	} catch (error) {
 		console.log(`Error saving season: ${error} `);
 
-		console.log(error);
-
 		const errorMessage =
 			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save season';
 
