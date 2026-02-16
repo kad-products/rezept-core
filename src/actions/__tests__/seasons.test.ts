@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ActionState } from '@/types';
 
 // Mock repositories
 vi.mock('@/repositories/seasons', () => ({
