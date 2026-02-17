@@ -111,7 +111,7 @@ mockRequestInfo.ctx.user = null; // Now unauthenticated
 
 Instead of passing `database` parameter everywhere, use a getter:
 ```typescript
-let testDb: AnyDrizzleDb;
+let testDb: TestableDB;
 
 vi.mock('@/db', () => ({
   get default() { return testDb; }
@@ -186,7 +186,7 @@ it('rejects unauthenticated requests', async () => {
 Real database, test full stack:
 ```typescript
 // seasons.integration.test.ts
-let testDb: AnyDrizzleDb;
+let testDb: TestableDB;
 
 vi.mock('@/db', () => ({
   get default() { return testDb; }

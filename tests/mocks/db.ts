@@ -1,4 +1,4 @@
-import type { AnyDrizzleDb } from '@/types';
+import type { TestableDB } from '@/types';
 
 // Mock db export - actual testDb passed via parameter
-export default {} as AnyDrizzleDb;
+export default {} as TestableDB;

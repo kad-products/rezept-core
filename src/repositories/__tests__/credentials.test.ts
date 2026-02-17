@@ -1,11 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { AnyDrizzleDb, CredentialInsert } from '@/types';
+import type { CredentialInsert, TestableDB } from '@/types';
 import { createTestDb } from '../../../tests/setup';
 import { createCredential, getCredentialById, getCredentialsByUserId, updateCredentialCounter } from '../credentials';
 import { createUser } from '../users';
 
-let testDb: AnyDrizzleDb;
+let testDb: TestableDB;
 
 beforeEach(async () => {
 	testDb = await createTestDb();

@@ -1,14 +1,14 @@
 import { eq } from 'drizzle-orm';
 import db from '@/db';
 import { seasons } from '@/models';
-import type { AnyDrizzleDb, Season, SeasonFormSave } from '@/types';
+import type { Season, SeasonFormSave, TestableDB } from '@/types';
 
 export async function getSeasons(): Promise<Season[]> {
 	const allSeasons = await db.select().from(seasons);
 	return allSeasons;
 }
 
-export async function getSeasonById(seasonId: string, database: AnyDrizzleDb = db): Promise<Season | undefined> {
+export async function getSeasonById(seasonId: string, database: TestableDB = db): Promise<Season | undefined> {
 	const matchedSeasons = await database.select().from(seasons).where(eq(seasons.id, seasonId));
 	if (matchedSeasons.length > 1) {
 		throw new Error(`getSeasonById: matchedSeasons length is ${matchedSeasons.length} for id ${seasonId}`);
@@ -21,7 +21,7 @@ export async function getSeasonById(seasonId: string, database: AnyDrizzleDb = d
 	return matchedSeasons[0];
 }
 
-export async function createSeason(season: SeasonFormSave, userId: string, database: AnyDrizzleDb = db) {
+export async function createSeason(season: SeasonFormSave, userId: string, database: TestableDB = db) {
 	console.log(`Form data in createSeason: ${JSON.stringify(season, null, 4)} `);
 
 	const createdSeasons = await database
@@ -37,7 +37,7 @@ export async function createSeason(season: SeasonFormSave, userId: string, datab
 	return createdSeasons[0];
 }
 
-export async function updateSeason(seasonId: string, seasonData: SeasonFormSave, userId: string, database: AnyDrizzleDb = db) {
+export async function updateSeason(seasonId: string, seasonData: SeasonFormSave, userId: string, database: TestableDB = db) {
 	console.log(`Form data in updateSeason: ${JSON.stringify(seasonData, null, 4)} `);
 
 	const updatedSeasons = await database

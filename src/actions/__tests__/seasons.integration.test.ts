@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { AnyDrizzleDb } from '@/types';
+import type { TestableDB } from '@/types';
 
-let testDb: AnyDrizzleDb;
+let testDb: TestableDB;
 
 vi.mock('cloudflare:workers', () => ({
 	env: { REZEPT_ENV: 'test' },

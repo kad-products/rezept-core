@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { createTestDb } from '../../../tests/setup';
-import type { AnyDrizzleDb } from '../../types';
+import type { TestableDB } from '../../types';
 import { createUser, getUserById } from '../users';
 
-let testDb: AnyDrizzleDb;
+let testDb: TestableDB;
 
 beforeEach(async () => {
 	testDb = await createTestDb();
