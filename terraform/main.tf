@@ -27,6 +27,12 @@ resource "github_branch_protection" "main" {
     ]
   }
 
+  required_pull_request_reviews {
+    dismiss_stale_reviews           = true
+    require_code_owner_reviews      = false
+    required_approving_review_count = 0
+  }
+
   enforce_admins = false
   allows_deletions    = false
   allows_force_pushes = false

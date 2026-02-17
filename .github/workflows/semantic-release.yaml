@@ -64,7 +64,7 @@ jobs:
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/kad-products/rezept-core/branches/main/protection \
-            -d '{"restrictions":{"users":["arsdehnel"],"teams":[]},"required_status_checks":{"strict":true,"contexts":["commitlint / commitlint"]},"enforce_admins":false,"required_pull_request_reviews":null}'
+            -d '{"restrictions":{"users":["arsdehnel"],"teams":[]},"required_status_checks":{"strict":true,"contexts":["commitlint / commitlint"]},"enforce_admins":false,"required_pull_request_reviews":{"dismiss_stale_reviews":false,"require_code_owner_reviews":false,"required_approving_review_count":0},"allow_deletions":false,"allow_force_pushes":false,"block_creations":false}'
 
       - name: Trigger Integration Deploy
         if: success()
