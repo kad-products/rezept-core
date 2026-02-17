@@ -2,46 +2,23 @@ import { prefix, render, route } from 'rwsdk/router';
 import { defineApp } from 'rwsdk/worker';
 
 import { Document } from '@/Document';
-import { setCommonHeaders } from '@/headers';
-import { setupPasskeyAuth } from '@/middleware/auth';
+import authMiddleware from '@/middleware/auth';
+import headersMiddleware from '@/middleware/headers';
+import userMiddleware from '@/middleware/user';
 import authRoutes from '@/pages/auth/routes';
 import listRoutes from '@/pages/lists/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
-import { getUserById } from '@/repositories/users';
-import type { Session } from '@/session/durable-object';
-import { sessions } from '@/session/store';
-import type { User } from '@/types';
 
 import Pages__root from './pages/root';
 
-export type AppContext = {
-	session?: Session | null;
-	user?: User | undefined;
-};
 export { SessionDurableObject } from '@/session/durable-object';
 
 export default defineApp([
-	setCommonHeaders(),
-	setupPasskeyAuth(),
-	async ({ ctx, request }) => {
-		if (ctx.session?.userId) {
-			try {
-				ctx.user = await getUserById(ctx.session.userId);
-			} catch (err) {
-				console.log(`Error fetching current user: ${err}`);
-				const headers = new Headers();
-				await sessions.remove(request, headers);
-				headers.set('Location', '/');
-
-				return new Response(null, {
-					status: 302,
-					headers,
-				});
-			}
-		}
-	},
+	headersMiddleware,
+	authMiddleware,
+	userMiddleware,
 	render(Document, [
 		route('/', Pages__root),
 
