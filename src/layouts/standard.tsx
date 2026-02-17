@@ -5,7 +5,7 @@ import { CiHome } from 'react-icons/ci';
 import { GiFallingLeaf } from 'react-icons/gi';
 import { IoLogInOutline } from 'react-icons/io5';
 import { MdOutlineChecklistRtl } from 'react-icons/md';
-import type { AppContext } from '@/worker';
+import type { DefaultAppContext } from 'rwsdk/worker';
 
 export default function StandardLayout({
 	children,
@@ -16,7 +16,7 @@ export default function StandardLayout({
 	children: React.ReactNode;
 	currentBasePage: string | undefined;
 	pageTitle: string;
-	ctx: AppContext;
+	ctx: DefaultAppContext;
 }) {
 	const navItems = {
 		home: { label: 'Home', href: '/', icon: CiHome },
