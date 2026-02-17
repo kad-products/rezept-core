@@ -54,8 +54,9 @@ jobs:
           HUSKY: 0
         run: pnpm dlx semantic-release
 
+        # NOTE: this would ideally be the same settings that are in Terraform but they could drift
       - name: Re-enable branch protection
-        if: always()  # ← runs even if semantic-release fails
+        if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
         run: |
@@ -63,7 +64,7 @@ jobs:
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/kad-products/rezept-core/branches/main/protection \
-            -d '{"restrictions":{"users":["arsdehnel"],"teams":[]},"required_status_checks":null,"enforce_admins":false,"required_pull_request_reviews":null}'
+            -d '{"restrictions":{"users":["arsdehnel"],"teams":[]},"required_status_checks":{"strict":true,"contexts":["commitlint / commitlint"]},"enforce_admins":false,"required_pull_request_reviews":null}'
 
       - name: Trigger Integration Deploy
         if: success()
