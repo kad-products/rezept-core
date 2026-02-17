@@ -1,4 +1,6 @@
 'use client';
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { useActionState } from 'react';
 import { saveSeason } from '@/actions/seasons';
 import Checkboxes from '@/components/client/Checkboxes';
@@ -96,6 +98,7 @@ export default function Season({
 			{season?.id && <input type="hidden" name="id" value={season.id} />}
 
 			<button type="submit">{buttonText}</button>
+			<TanStackDevtools plugins={[formDevtoolsPlugin()]} />
 		</form>
 	);
 }
