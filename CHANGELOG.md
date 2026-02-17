@@ -1,3 +1,9 @@
+## [1.1.4](https://github.com/kad-products/rezept-core/compare/v1.1.3...v1.1.4) (2026-02-17)
+
+### Bug Fixes
+
+* reenable the same protections we have in TF ([2914189](https://github.com/kad-products/rezept-core/commit/2914189df5095aa64c94ed016a0f274cd267248c))
+
 ## [1.1.3](https://github.com/kad-products/rezept-core/compare/v1.1.2...v1.1.3) (2026-02-17)
 
 ### Bug Fixes
