@@ -8,7 +8,7 @@ export default defineConfig({
 		coverage: {
 			provider: 'v8', // or 'istanbul'
 			reporter: ['text', 'json-summary'],
-			include: ['src/actions/**', 'src/repositories/**', 'src/schemas/**', 'src/session/**', 'src/utils/**'],
+			include: ['src/actions/**', 'src/middleware/**', 'src/repositories/**', 'src/schemas/**', 'src/session/**', 'src/utils/**'],
 			exclude: [
 				'**/*.md',
 				'**/__tests__/**',
@@ -25,6 +25,9 @@ export default defineConfig({
 				lines: 30, // using this to make sure we don't miss something big or have dead code
 				'src/actions/**': {
 					branches: 8,
+				},
+				'src/middleware/**': {
+					branches: 100,
 				},
 				'src/repositories/**': {
 					branches: 40,
