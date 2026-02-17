@@ -66,7 +66,7 @@ describe('saveSeason integration', () => {
 
 			// Verify it's actually in the database
 			if (result.data?.id) {
-				const season = await getSeasonById(result.data.id, testDb);
+				const season = await getSeasonById(result.data.id);
 				expect(season).toBeDefined();
 				expect(season?.name).toBe('Spring Season');
 				expect(season?.country).toBe('US');
@@ -111,7 +111,7 @@ describe('saveSeason integration', () => {
 			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
-				const season = await getSeasonById(result.data.id, testDb);
+				const season = await getSeasonById(result.data.id);
 				expect(season?.region).toBe('Provence');
 				expect(season?.description).toBe('Spring season');
 				expect(season?.notes).toBe('Great for lavender');
@@ -132,7 +132,7 @@ describe('saveSeason integration', () => {
 			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
-				const season = await getSeasonById(result.data.id, testDb);
+				const season = await getSeasonById(result.data.id);
 				expect(season?.createdBy).toBe(testUserId);
 				expect(season?.createdAt).toBeDefined();
 				expect(season?.updatedAt).toBeNull();
@@ -193,7 +193,7 @@ describe('saveSeason integration', () => {
 				expect(updateResult.data?.id).toBe(seasonId);
 
 				// Verify the update persisted
-				const season = await getSeasonById(seasonId, testDb);
+				const season = await getSeasonById(seasonId);
 				expect(season?.name).toBe('Updated Name');
 				expect(season?.country).toBe('CA');
 				expect(season?.startMonth).toBe(6);
@@ -231,7 +231,7 @@ describe('saveSeason integration', () => {
 
 				await saveSeason(null, updateFormData);
 
-				const season = await getSeasonById(seasonId, testDb);
+				const season = await getSeasonById(seasonId);
 				expect(season?.createdBy).toBe(testUserId);
 				expect(season?.updatedBy).toBe(testUserId);
 				expect(season?.updatedAt).toBeDefined();
@@ -283,7 +283,7 @@ describe('saveSeason integration', () => {
 
 				await saveSeason(null, updateFormData);
 
-				const season = await getSeasonById(seasonId, testDb);
+				const season = await getSeasonById(seasonId);
 				expect(season?.name).toBe('Updated Name');
 				expect(season?.description).toBe('Original description');
 			}
