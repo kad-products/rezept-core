@@ -27,6 +27,13 @@ jobs:
 
       - run: pnpm install
 
+      - name: Debug Token
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+        run: |
+          echo "Token starts with: ${GITHUB_TOKEN:0:10}..."
+          curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user
+
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
