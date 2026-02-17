@@ -32,6 +32,7 @@ resource "github_branch_protection" "main" {
   allows_force_pushes = false
 
   restrict_pushes {
+    blocks_creations = false
     push_allowances = [
       data.github_user.admin.node_id
     ]
