@@ -1,3 +1,13 @@
+## [1.1.3](https://github.com/kad-products/rezept-core/compare/v1.1.2...v1.1.3) (2026-02-17)
+
+### Bug Fixes
+
+* use default context pattern ([e64411e](https://github.com/kad-products/rezept-core/commit/e64411ec3067feef1aec6bd113afb4a56a2f4125))
+
+### Code Refactoring
+
+* move headers and user middleware and add tests ([ebd5b2a](https://github.com/kad-products/rezept-core/commit/ebd5b2aaf719e26af9bff1986ee9aeba421e11af))
+
 ## [1.1.2](https://github.com/kad-products/rezept-core/compare/v1.1.1...v1.1.2) (2026-02-17)
 
 ### Bug Fixes
