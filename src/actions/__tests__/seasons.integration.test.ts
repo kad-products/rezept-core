@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { TestableDB } from '@/types';
-
-let testDb: TestableDB;
+import { getSeasonById, getSeasons } from '@/repositories/seasons';
+import { createUser } from '@/repositories/users';
+import { resetDb } from '../../../tests/mocks/db';
+import { saveSeason } from '../seasons';
 
 vi.mock('cloudflare:workers', () => ({
 	env: { REZEPT_ENV: 'test' },
@@ -25,25 +26,12 @@ vi.mock('rwsdk/worker', () => ({
 	},
 }));
 
-vi.mock('@/db', () => ({
-	get default() {
-		return testDb; // Returns current testDb
-	},
-}));
-
-import { seasons } from '@/models';
-import { getSeasonById } from '@/repositories/seasons';
-import { createUser } from '@/repositories/users';
-import { createTestDb } from '../../../tests/setup';
-import { saveSeason } from '../seasons';
-
 describe('saveSeason integration', () => {
 	let testUserId: string;
 
 	beforeEach(async () => {
-		testDb = await createTestDb(); // Fresh db assigned to testDb
-
-		const user = await createUser('testuser', testDb);
+		await resetDb();
+		const user = await createUser('testuser');
 		testUserId = user.id;
 		mockRequestInfo.ctx.user = { id: testUserId };
 
@@ -90,7 +78,7 @@ describe('saveSeason integration', () => {
 			expect(result.data).toBeUndefined();
 
 			// Verify nothing was saved to database
-			const seasonData = await testDb.select().from(seasons);
+			const seasonData = await getSeasons();
 			expect(seasonData).toHaveLength(0);
 		});
 
@@ -155,7 +143,7 @@ describe('saveSeason integration', () => {
 			expect(result.success).toBe(false);
 
 			// Verify nothing was saved
-			const seasonData = await testDb.select().from(seasons);
+			const seasonData = await getSeasons();
 			expect(seasonData).toHaveLength(0);
 		});
 	});
