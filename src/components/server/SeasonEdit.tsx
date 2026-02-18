@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { countryOptions } from '@/data/countries';
+import { monthOptions } from '@/data/months';
 import Season from '@/forms/season';
 import { getIngredients } from '@/repositories/ingredients';
 import { getIngredientsBySeasonId } from '@/repositories/seasonal-ingredients';
@@ -24,6 +25,7 @@ export default async function SeasonEdit({ listId }: { listId: string }) {
 				season={season}
 				ingredients={allIngredients}
 				countryOptions={countryOptions}
+				monthOptions={monthOptions}
 				seasonalIngredients={seasonalIngredients}
 			/>
 		</Suspense>

@@ -11,25 +11,18 @@ import type { SeasonalIngredientWithRelations } from '@/repositories/seasonal-in
 import type { Ingredient, Season as SeasonModel } from '@/types';
 import { useAppForm } from './context';
 
-const userLocale = navigator.language; // 'en-US', 'nb-NO', etc.
-const monthNames = Array.from({ length: 12 }, (_, i) => {
-	const date = new Date(2000, i, 1);
-	return {
-		name: new Intl.DateTimeFormat(userLocale, { month: 'long' }).format(date),
-		code: i + 1,
-	};
-});
-
 export default function Season({
 	season,
 	ingredients,
 	seasonalIngredients,
 	countryOptions,
+	monthOptions,
 }: {
 	season?: SeasonModel;
 	ingredients: Ingredient[];
 	seasonalIngredients?: SeasonalIngredientWithRelations[];
-	countryOptions: { code: string; name: string }[];
+	countryOptions: { value: string; label: string }[];
+	monthOptions: { value: string; label: string }[];
 }) {
 	const [state, formAction] = useActionState(saveSeason, null);
 
@@ -43,7 +36,7 @@ export default function Season({
 				label="Country"
 				name="country"
 				type="select"
-				options={countryOptions.map(c => ({ value: c.code, label: c.name }))}
+				options={countryOptions}
 				errors={state?.errors?.country}
 				required
 				value={season?.country}
@@ -56,7 +49,7 @@ export default function Season({
 				name="startMonth"
 				type="select"
 				required
-				options={monthNames.map(m => ({ value: m.code, label: m.name }))}
+				options={monthOptions}
 				errors={state?.errors?.startMonth}
 				value={season?.startMonth}
 			/>
@@ -66,7 +59,7 @@ export default function Season({
 				name="endMonth"
 				type="select"
 				required
-				options={monthNames.map(m => ({ value: m.code, label: m.name }))}
+				options={monthOptions}
 				errors={state?.errors?.endMonth}
 				value={season?.endMonth}
 			/>
