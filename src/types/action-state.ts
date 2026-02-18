@@ -1,5 +1,5 @@
 export type ActionState<T = undefined> = {
-	success: boolean;
+	success: boolean | undefined;
 	errors?: Record<string, string[]>;
 	data?: T;
 };
