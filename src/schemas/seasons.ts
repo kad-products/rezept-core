@@ -1,9 +1,6 @@
-import { getAlpha2Codes } from 'i18n-iso-countries';
 import { z } from 'zod';
+import { validCountryCodes } from '@/data/countries';
 import { optionalString, optionalUuid, requiredUuid } from './utils';
-
-// Get valid country codes
-const validCountryCodes = Object.keys(getAlpha2Codes());
 
 // Shared base fields
 const baseSeasonFields = {

@@ -1,13 +1,15 @@
 'use client';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
+import { z } from 'zod';
 import { saveSeason } from '@/actions/seasons';
 import Checkboxes from '@/components/client/Checkboxes';
 import FormField from '@/components/client/FormField';
 import FormFieldWrapper from '@/components/client/FormFieldWrapper';
 import type { SeasonalIngredientWithRelations } from '@/repositories/seasonal-ingredients';
 import type { Ingredient, Season as SeasonModel } from '@/types';
+import { useAppForm } from './context';
 
 const userLocale = navigator.language; // 'en-US', 'nb-NO', etc.
 const monthNames = Array.from({ length: 12 }, (_, i) => {
@@ -22,12 +24,12 @@ export default function Season({
 	season,
 	ingredients,
 	seasonalIngredients,
-	countries,
+	countryOptions,
 }: {
 	season?: SeasonModel;
 	ingredients: Ingredient[];
 	seasonalIngredients?: SeasonalIngredientWithRelations[];
-	countries: { code: string; name: string }[];
+	countryOptions: { code: string; name: string }[];
 }) {
 	const [state, formAction] = useActionState(saveSeason, null);
 
@@ -41,7 +43,7 @@ export default function Season({
 				label="Country"
 				name="country"
 				type="select"
-				options={countries.map(c => ({ value: c.code, label: c.name }))}
+				options={countryOptions.map(c => ({ value: c.code, label: c.name }))}
 				errors={state?.errors?.country}
 				required
 				value={season?.country}
