@@ -5,7 +5,7 @@ import StandardLayout from '@/layouts/standard';
 export default function Pages__seasons__view({ ctx, params }: RequestInfo) {
 	return (
 		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
-			<SeasonView listId={params.listId} />
+			<SeasonView seasonId={params.seasonId} />
 		</StandardLayout>
 	);
 }

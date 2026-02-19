@@ -8,6 +8,7 @@ export default async function SeasonsListing() {
 
 	return (
 		<Suspense fallback={<div>Loading seasons...</div>}>
+			<a href="/seasons/new">New Season</a>
 			<div className="seasons-listing">
 				{seasons.map(s => {
 					return (

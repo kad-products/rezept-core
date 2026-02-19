@@ -1,8 +1,8 @@
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 
-import { CheckboxGroup, Select, TextareaInput, TextInput } from './inputs';
+import { CheckboxGroup, Select, Submit, TextareaInput, TextInput } from './inputs';
 
-export const { fieldContext, formContext, useFieldContext } = createFormHookContexts();
+export const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
 
 export const { useAppForm } = createFormHook({
 	fieldComponents: {
@@ -11,7 +11,9 @@ export const { useAppForm } = createFormHook({
 		TextInput,
 		TextareaInput,
 	},
-	formComponents: {},
+	formComponents: {
+		Submit,
+	},
 	fieldContext,
 	formContext,
 });

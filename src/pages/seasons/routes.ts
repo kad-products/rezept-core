@@ -5,6 +5,7 @@ import Pages__seasons__view from './view';
 
 export default [
 	route('/', Pages__seasons__listing),
-	route('/:listId', Pages__seasons__view),
-	route('/:listId/edit', Pages__seasons__edit),
+	route('/new', Pages__seasons__edit),
+	route('/:seasonId', Pages__seasons__view),
+	route('/:seasonId/edit', Pages__seasons__edit),
 ];

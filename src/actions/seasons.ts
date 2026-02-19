@@ -4,12 +4,9 @@ import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
 import { createSeason, updateSeason } from '@/repositories/seasons';
 import { createSeasonSchema, updateSeasonSchema } from '@/schemas';
-import type { ActionState } from '@/types';
+import type { ActionState, SeasonFormSave } from '@/types';
 
-export async function saveSeason(
-	_prevState: ActionState<{ id: string }> | null | undefined,
-	formData: FormData,
-): Promise<ActionState<{ id: string }>> {
+export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<SeasonFormSave>> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
@@ -20,11 +17,11 @@ export async function saveSeason(
 		};
 	}
 
-	console.log(`Form data received: ${JSON.stringify(Object.fromEntries(formData), null, 4)} `);
+	console.log(`Form data received: ${JSON.stringify(formData, null, 4)} `);
 
 	try {
-		if (formData.get('id')) {
-			const parsed = updateSeasonSchema.safeParse(Object.fromEntries(formData));
+		if (formData.id) {
+			const parsed = updateSeasonSchema.safeParse(formData);
 			if (!parsed.success) {
 				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 				return {
@@ -33,9 +30,9 @@ export async function saveSeason(
 				};
 			}
 			const updatedSeason = await updateSeason(parsed.data.id, parsed.data, userId);
-			return { success: true, data: { id: updatedSeason.id } };
+			return { success: true, data: updatedSeason };
 		} else {
-			const parsed = createSeasonSchema.safeParse(Object.fromEntries(formData));
+			const parsed = createSeasonSchema.safeParse(formData);
 			if (!parsed.success) {
 				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 				return {
@@ -44,7 +41,7 @@ export async function saveSeason(
 				};
 			}
 			const createdSeason = await createSeason(parsed.data, userId);
-			return { success: true, data: { id: createdSeason.id } };
+			return { success: true, data: createdSeason };
 		}
 	} catch (error) {
 		console.log(`Error saving season: ${error} `);

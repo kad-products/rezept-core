@@ -14,8 +14,8 @@ const baseSeasonFields = {
 		.length(2, 'Country must be a 2-letter code')
 		.refine(code => validCountryCodes.includes(code.toUpperCase()), { message: 'Invalid country code' }),
 	region: optionalString.transform(val => val?.trim()),
-	startMonth: z.coerce.number().int().min(1).max(12),
-	endMonth: z.coerce.number().int().min(1).max(12),
+	startMonth: z.coerce.number().int().min(1).max(12) as z.ZodNumber,
+	endMonth: z.coerce.number().int().min(1).max(12) as z.ZodNumber,
 	notes: optionalString
 		.transform(val => val?.trim())
 		.pipe(z.string().max(2000, 'Notes must be 2000 characters or less').optional()),

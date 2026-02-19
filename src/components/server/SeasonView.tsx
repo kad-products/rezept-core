@@ -2,14 +2,15 @@ import { Suspense } from 'react';
 import { getIngredientsBySeasonId } from '@/repositories/seasonal-ingredients';
 import { getSeasonById } from '@/repositories/seasons';
 
-export default async function SeasonView({ listId }: { listId: string }) {
-	const season = await getSeasonById(listId);
+export default async function SeasonView({ seasonId }: { seasonId: string }) {
+	const [season, seasonalIngredients] = await Promise.all([
+		seasonId ? getSeasonById(seasonId) : Promise.resolve(undefined),
+		seasonId ? getIngredientsBySeasonId(seasonId) : Promise.resolve(undefined),
+	]);
 
 	if (!season) {
 		return null;
 	}
-
-	const ingredients = await getIngredientsBySeasonId(season.id);
 
 	return (
 		<Suspense fallback={<div>Loading season...</div>}>
@@ -27,7 +28,7 @@ export default async function SeasonView({ listId }: { listId: string }) {
 			<p>{season.notes}</p>
 			<h4>Seasonal Ingredients</h4>
 			<ul>
-				{ingredients.map(si => (
+				{seasonalIngredients?.map(si => (
 					<li key={si.id}>{si.ingredient.name}</li>
 				))}
 			</ul>
