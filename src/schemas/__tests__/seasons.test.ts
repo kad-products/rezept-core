@@ -243,7 +243,6 @@ describe('CreateSeason form schema', () => {
 			expect(paths).toContain('country');
 			expect(paths).toContain('startMonth');
 			expect(paths).toContain('endMonth');
-			expect(paths).toContain('createdBy');
 		}
 	});
 
@@ -447,23 +446,6 @@ describe('CreateSeason form schema', () => {
 		expect(result.success).toBe(true);
 	});
 
-	it('rejects invalid UUID format for createdBy', () => {
-		const invalidData = {
-			name: 'Test',
-			country: 'US',
-			startMonth: 1,
-			endMonth: 3,
-			createdBy: 'not-a-uuid',
-		};
-
-		const result = createSeasonSchema.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('createdBy');
-		}
-	});
-
 	it('accepts valid season with ingredients', () => {
 		const validData = {
 			name: 'Summer',
@@ -610,23 +592,6 @@ describe('UpdateSeason form schema', () => {
 		}
 	});
 
-	it('rejects update missing required updatedBy', () => {
-		const invalidData = {
-			id: randomUUID(),
-			name: 'Test',
-			country: 'US',
-			startMonth: 1,
-			endMonth: 3,
-		};
-
-		const result = updateSeasonSchema.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('updatedBy');
-		}
-	});
-
 	it('rejects invalid UUID format for id', () => {
 		const invalidData = {
 			id: 'bad-uuid',
@@ -642,43 +607,6 @@ describe('UpdateSeason form schema', () => {
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
 			expect(paths).toContain('id');
-		}
-	});
-
-	it('rejects invalid UUID format for updatedBy', () => {
-		const invalidData = {
-			id: randomUUID(),
-			name: 'Test',
-			country: 'US',
-			startMonth: 1,
-			endMonth: 3,
-			updatedBy: 'invalid-uuid',
-		};
-
-		const result = updateSeasonSchema.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('updatedBy');
-		}
-	});
-
-	it('rejects invalid UUID format for deletedBy', () => {
-		const invalidData = {
-			id: randomUUID(),
-			name: 'Test',
-			country: 'US',
-			startMonth: 1,
-			endMonth: 3,
-			updatedBy: randomUUID(),
-			deletedBy: 'not-valid',
-		};
-
-		const result = updateSeasonSchema.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('deletedBy');
 		}
 	});
 

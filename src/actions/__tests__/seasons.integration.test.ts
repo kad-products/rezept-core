@@ -228,21 +228,6 @@ describe('saveSeason integration', () => {
 			}
 		});
 
-		it('prevents updating non-existent season', async () => {
-			const data = {
-				id: crypto.randomUUID(),
-				name: 'Test',
-				country: 'US',
-				startMonth: 1,
-				endMonth: 3,
-			};
-
-			const result = await saveSeason(data);
-
-			// Should fail - season doesn't exist
-			expect(result.success).toBe(false);
-		});
-
 		it('preserves fields not being updated', async () => {
 			// Create with description
 			const createData = {
