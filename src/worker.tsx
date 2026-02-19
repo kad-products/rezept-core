@@ -6,7 +6,6 @@ import authMiddleware from '@/middleware/auth';
 import headersMiddleware from '@/middleware/headers';
 import userMiddleware from '@/middleware/user';
 import authRoutes from '@/pages/auth/routes';
-import listRoutes from '@/pages/lists/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
@@ -23,7 +22,6 @@ export default defineApp([
 		route('/', Pages__root),
 
 		prefix('/auth', authRoutes),
-		prefix('/lists', listRoutes),
 		prefix('/profile', profileRoutes),
 		prefix('/recipes', recipeRoutes),
 		prefix('/seasons', seasonRoutes),
