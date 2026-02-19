@@ -14,6 +14,7 @@ export function TextareaInput({ label, required = false }: { label: string; requ
 					id={field.name}
 					name={field.name}
 					value={field.state.value}
+					onBlur={field.handleBlur}
 					onChange={e => field.handleChange(e.target.value)}
 				/>
 				{!field.state.meta.isValid && (

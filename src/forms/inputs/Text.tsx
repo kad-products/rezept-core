@@ -15,6 +15,7 @@ export function TextInput({ label, required = false }: { label: string; required
 					type="text"
 					name={field.name}
 					value={field.state.value}
+					onBlur={field.handleBlur}
 					onChange={e => field.handleChange(e.target.value)}
 				/>
 			</div>

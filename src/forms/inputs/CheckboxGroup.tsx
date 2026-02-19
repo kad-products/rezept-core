@@ -22,6 +22,7 @@ export function CheckboxGroup({ label, options, required = false }: CheckboxGrou
 							type="checkbox"
 							value={option.value}
 							checked={field.state.value?.includes(option.value) ?? false}
+							onBlur={field.handleBlur}
 							onChange={e => {
 								if (e.target.checked) {
 									field.pushValue(option.value);
