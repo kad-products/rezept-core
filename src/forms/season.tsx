@@ -45,22 +45,10 @@ export default function Season({
 				}
 			: ({} as SeasonFormData),
 		validators: {
-			onSubmit: schema,
+			onBlur: schema,
 		},
 		onSubmit: async ({ value: formDataObj }) => {
-			console.log(`In submit handler`, formDataObj);
-			const results = await saveSeason(formDataObj);
-			console.log(results);
-			setFormState(results);
-		},
-		onSubmitInvalid: ({ value, formApi }) => {
-			console.log('=== VALIDATION FAILED ===');
-			console.log('Submitted values:', value);
-			console.log('Form errors:', formApi.state.errors);
-			console.log('Field meta:', formApi.state.fieldMeta);
-
-			// Force update to show errors in UI
-			// formApi.store.setState(prev => ({ ...prev }));
+			setFormState(await saveSeason(formDataObj));
 		},
 	});
 
@@ -104,52 +92,41 @@ export default function Season({
 						</pre>
 					</details>
 				</div>
-				{form.state.submissionAttempts > 0 && !form.state.isValid && (
-					<div className="bg-red-100 border border-red-500 p-4 mb-4">
-						<h3>Validation Errors:</h3>
-						<pre>{JSON.stringify(form.state.errors, null, 2)}</pre>
-					</div>
-				)}
-				<pre>{JSON.stringify(form.state, null, 2)}</pre>
-				<hr />
-				{JSON.stringify(form.getAllErrors())}
-				<hr />
-				{JSON.stringify(formState)}
 				<form.AppField name="name">{field => <field.TextInput label="Name" required />}</form.AppField>
-
 				<form.AppField name="description">{field => <field.TextareaInput label="Description" required />}</form.AppField>
-
 				<form.AppField name="country">
 					{field => <field.Select label="Country" options={countryOptions} required />}
 				</form.AppField>
-
 				<form.AppField name="region">{field => <field.TextInput label="Region" required />}</form.AppField>
-
 				<form.AppField name="startMonth">
 					{field => <field.Select<number> label="Start Month" options={monthOptions} required />}
 				</form.AppField>
-
 				<form.AppField name="endMonth">
 					{field => <field.Select<number> label="End Month" options={monthOptions} required />}
 				</form.AppField>
-
 				<form.AppField name="notes">{field => <field.TextareaInput label="Notes" />}</form.AppField>
-
 				<form.AppField name="ingredients">
 					{field => <field.CheckboxGroup label="Ingredients" required options={ingredientOptions} />}
 				</form.AppField>
-
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
-
 				{formState?.success && <p className="success">Season saved!</p>}
-
-				{formState?.errors && <p className="error">{JSON.stringify(formState?.errors, null, 4)}</p>}
-
-				{formState?.success && <p className="success">Season saved!</p>}
-
 				<form.AppForm>
 					<form.Submit label={buttonText} />
 				</form.AppForm>
+				<form.Subscribe
+					key={form.state.submissionAttempts} // Force re-render on each attempt
+					selector={state => ({
+						errors: state.errors,
+						attempts: state.submissionAttempts,
+					})}
+				>
+					{state => (
+						<div>
+							<pre>Submission Attempts: {state.attempts}</pre>
+							<pre>Errors: {JSON.stringify(state.errors, null, 2)}</pre>
+						</div>
+					)}
+				</form.Subscribe>{' '}
 			</form>
 			<TanStackDevtools plugins={[formDevtoolsPlugin()]} />
 		</>
