@@ -40,14 +40,14 @@ describe('saveSeason integration', () => {
 
 	describe('create season', () => {
 		it('creates season and persists to database', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Spring Season');
-			formData.set('country', 'US');
-			formData.set('startMonth', '3');
-			formData.set('endMonth', '5');
-			formData.set('createdBy', testUserId);
+			const data = {
+				name: 'Spring Season',
+				country: 'US',
+				startMonth: 3,
+				endMonth: 5,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -65,14 +65,14 @@ describe('saveSeason integration', () => {
 		});
 
 		it('validates data before saving', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'INVALID');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('createdBy', testUserId);
+			const data = {
+				name: 'Test',
+				country: 'INVALID',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.data).toBeUndefined();
@@ -83,17 +83,17 @@ describe('saveSeason integration', () => {
 		});
 
 		it('saves season with all optional fields', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Full Season');
-			formData.set('country', 'FR');
-			formData.set('region', 'Provence');
-			formData.set('description', 'Spring season');
-			formData.set('notes', 'Great for lavender');
-			formData.set('startMonth', '4');
-			formData.set('endMonth', '6');
-			formData.set('createdBy', testUserId);
+			const data = {
+				name: 'Full Season',
+				country: 'FR',
+				region: 'Provence',
+				description: 'Spring season',
+				notes: 'Great for lavender',
+				startMonth: 4,
+				endMonth: 6,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -107,14 +107,14 @@ describe('saveSeason integration', () => {
 		});
 
 		it('sets audit fields correctly', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('createdBy', testUserId);
+			const data = {
+				name: 'Test',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -131,14 +131,14 @@ describe('saveSeason integration', () => {
 		it('requires authentication', async () => {
 			mockRequestInfo.ctx.user = null;
 
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('createdBy', testUserId);
+			const data = {
+				name: 'Test',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 
@@ -151,14 +151,14 @@ describe('saveSeason integration', () => {
 	describe('update season', () => {
 		it('updates existing season in database', async () => {
 			// First create a season
-			const createFormData = new FormData();
-			createFormData.set('name', 'Original Name');
-			createFormData.set('country', 'US');
-			createFormData.set('startMonth', '1');
-			createFormData.set('endMonth', '3');
-			createFormData.set('createdBy', testUserId);
+			const createData = {
+				name: 'Original Name',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const createResult = await saveSeason(null, createFormData);
+			const createResult = await saveSeason(createData);
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -167,15 +167,15 @@ describe('saveSeason integration', () => {
 				const seasonId = createResult.data.id;
 
 				// Now update it
-				const updateFormData = new FormData();
-				updateFormData.set('id', seasonId);
-				updateFormData.set('name', 'Updated Name');
-				updateFormData.set('country', 'CA');
-				updateFormData.set('startMonth', '6');
-				updateFormData.set('endMonth', '8');
-				updateFormData.set('updatedBy', testUserId);
+				const updateData = {
+					id: seasonId,
+					name: 'Updated Name',
+					country: 'CA',
+					startMonth: 6,
+					endMonth: 8,
+				};
 
-				const updateResult = await saveSeason(null, updateFormData);
+				const updateResult = await saveSeason(updateData);
 
 				expect(updateResult.success).toBe(true);
 				expect(updateResult.data?.id).toBe(seasonId);
@@ -188,16 +188,17 @@ describe('saveSeason integration', () => {
 				expect(season?.endMonth).toBe(8);
 			}
 		});
+
 		it('updates audit fields on update', async () => {
 			// Create
-			const createFormData = new FormData();
-			createFormData.set('name', 'Original');
-			createFormData.set('country', 'US');
-			createFormData.set('startMonth', '1');
-			createFormData.set('endMonth', '3');
-			createFormData.set('createdBy', testUserId);
+			const createData = {
+				name: 'Original',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const createResult = await saveSeason(null, createFormData);
+			const createResult = await saveSeason(createData);
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -209,15 +210,15 @@ describe('saveSeason integration', () => {
 				await new Promise(resolve => setTimeout(resolve, 10));
 
 				// Update
-				const updateFormData = new FormData();
-				updateFormData.set('id', seasonId);
-				updateFormData.set('name', 'Updated');
-				updateFormData.set('country', 'CA');
-				updateFormData.set('startMonth', '1');
-				updateFormData.set('endMonth', '3');
-				updateFormData.set('updatedBy', testUserId);
+				const updateData = {
+					id: seasonId,
+					name: 'Updated',
+					country: 'CA',
+					startMonth: 1,
+					endMonth: 3,
+				};
 
-				await saveSeason(null, updateFormData);
+				await saveSeason(updateData);
 
 				const season = await getSeasonById(seasonId);
 				expect(season?.createdBy).toBe(testUserId);
@@ -228,15 +229,15 @@ describe('saveSeason integration', () => {
 		});
 
 		it('prevents updating non-existent season', async () => {
-			const formData = new FormData();
-			formData.set('id', crypto.randomUUID());
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('updatedBy', testUserId);
+			const data = {
+				id: crypto.randomUUID(),
+				name: 'Test',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			// Should fail - season doesn't exist
 			expect(result.success).toBe(false);
@@ -244,15 +245,15 @@ describe('saveSeason integration', () => {
 
 		it('preserves fields not being updated', async () => {
 			// Create with description
-			const createFormData = new FormData();
-			createFormData.set('name', 'Original');
-			createFormData.set('description', 'Original description');
-			createFormData.set('country', 'US');
-			createFormData.set('startMonth', '1');
-			createFormData.set('endMonth', '3');
-			createFormData.set('createdBy', testUserId);
+			const createData = {
+				name: 'Original',
+				description: 'Original description',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const createResult = await saveSeason(null, createFormData);
+			const createResult = await saveSeason(createData);
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -261,15 +262,15 @@ describe('saveSeason integration', () => {
 				const seasonId = createResult.data.id;
 
 				// Update only name, omit description
-				const updateFormData = new FormData();
-				updateFormData.set('id', seasonId);
-				updateFormData.set('name', 'Updated Name');
-				updateFormData.set('country', 'US');
-				updateFormData.set('startMonth', '1');
-				updateFormData.set('endMonth', '3');
-				updateFormData.set('updatedBy', testUserId);
+				const updateData = {
+					id: seasonId,
+					name: 'Updated Name',
+					country: 'US',
+					startMonth: 1,
+					endMonth: 3,
+				};
 
-				await saveSeason(null, updateFormData);
+				await saveSeason(updateData);
 
 				const season = await getSeasonById(seasonId);
 				expect(season?.name).toBe('Updated Name');
@@ -282,14 +283,14 @@ describe('saveSeason integration', () => {
 		it('handles concurrent creates', async () => {
 			// Create multiple seasons simultaneously
 			const promises = Array.from({ length: 5 }, (_, i) => {
-				const formData = new FormData();
-				formData.set('name', `Season ${i}`);
-				formData.set('country', 'US');
-				formData.set('startMonth', '1');
-				formData.set('endMonth', '3');
-				formData.set('createdBy', testUserId);
+				const data = {
+					name: `Season ${i}`,
+					country: 'US',
+					startMonth: 1,
+					endMonth: 3,
+				};
 
-				return saveSeason(null, formData);
+				return saveSeason(data);
 			});
 
 			const results = await Promise.all(promises);

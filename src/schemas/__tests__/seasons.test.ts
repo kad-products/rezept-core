@@ -682,24 +682,6 @@ describe('UpdateSeason form schema', () => {
 		}
 	});
 
-	it('converts empty string deletedBy to undefined', () => {
-		const validData = {
-			id: randomUUID(),
-			name: 'Test',
-			country: 'US',
-			startMonth: 1,
-			endMonth: 3,
-			updatedBy: randomUUID(),
-			deletedBy: '',
-		};
-
-		const result = updateSeasonSchema.safeParse(validData);
-		expect(result.success).toBe(true);
-		if (result.success) {
-			expect(result.data.deletedBy).toBeUndefined();
-		}
-	});
-
 	it('applies same validation rules as create schema', () => {
 		// Invalid month
 		const invalidMonth = {
@@ -781,3 +763,96 @@ describe('UpdateSeason form schema', () => {
 		expect(result.success).toBe(true);
 	});
 });
+
+// describe('createSeasonSchema - ingredients', () => {
+// 	it('accepts valid ingredients array', () => {
+// 		const validData = {
+// 			name: 'Spring Season',
+// 			country: 'US',
+// 			startMonth: 3,
+// 			endMonth: 5,
+// 			createdBy: crypto.randomUUID(),
+// 			ingredients: [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()],
+// 		};
+
+// 		const result = createSeasonSchema.safeParse(validData);
+// 		expect(result.success).toBe(true);
+// 		if (result.success) {
+// 			expect(result.data.ingredients).toHaveLength(3);
+// 		}
+// 	});
+
+// 	it('rejects ingredients with invalid UUIDs', () => {
+// 		const invalidData = {
+// 			name: 'Spring Season',
+// 			country: 'US',
+// 			startMonth: 3,
+// 			endMonth: 5,
+// 			createdBy: crypto.randomUUID(),
+// 			ingredients: ['not-a-uuid', 'also-not-uuid'],
+// 		};
+
+// 		const result = createSeasonSchema.safeParse(invalidData);
+// 		expect(result.success).toBe(false);
+// 		if (!result.success) {
+// 			expect(result.error.issues.some(i => i.path.includes('ingredients'))).toBe(true);
+// 		}
+// 	});
+
+// 	it('defaults ingredients to empty array when not provided', () => {
+// 		const data = {
+// 			name: 'Spring Season',
+// 			country: 'US',
+// 			startMonth: 3,
+// 			endMonth: 5,
+// 			createdBy: crypto.randomUUID(),
+// 			// No ingredients provided
+// 		};
+
+// 		const result = createSeasonSchema.safeParse(data);
+// 		expect(result.success).toBe(true);
+// 		if (result.success) {
+// 			expect(result.data.ingredients).toEqual([]);
+// 		}
+// 	});
+
+// 	it('accepts empty ingredients array', () => {
+// 		const data = {
+// 			name: 'Spring Season',
+// 			country: 'US',
+// 			startMonth: 3,
+// 			endMonth: 5,
+// 			createdBy: crypto.randomUUID(),
+// 			ingredients: [],
+// 		};
+
+// 		const result = createSeasonSchema.safeParse(data);
+// 		expect(result.success).toBe(true);
+// 		if (result.success) {
+// 			expect(result.data.ingredients).toEqual([]);
+// 		}
+// 	});
+
+// 	it('accepts ingredients with optional fields populated', () => {
+// 		const validData = {
+// 			name: 'Summer Season',
+// 			description: 'Hot summer months',
+// 			country: 'US',
+// 			region: 'Southwest',
+// 			startMonth: 6,
+// 			endMonth: 8,
+// 			notes: 'Great for tomatoes',
+// 			createdBy: crypto.randomUUID(),
+// 			ingredients: [crypto.randomUUID(), crypto.randomUUID()],
+// 		};
+
+// 		const result = createSeasonSchema.safeParse(validData);
+// 		expect(result.success).toBe(true);
+// 		if (result.success) {
+// 			expect(result.data.ingredients).toHaveLength(2);
+// 			expect(result.data.description).toBe('Hot summer months');
+// 			expect(result.data.region).toBe('Southwest');
+// 			expect(result.data.notes).toBe('Great for tomatoes');
+// 		}
+// 	});
+// });

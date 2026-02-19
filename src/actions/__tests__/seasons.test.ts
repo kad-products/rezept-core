@@ -17,7 +17,7 @@ interface MockRequestInfo {
 	};
 }
 
-// Mock rwsdk/worker - this is trickier, we'll set it up to be changeable
+// Mock rwsdk/worker
 const mockRequestInfo: MockRequestInfo = {
 	ctx: {
 		user: {
@@ -34,6 +34,7 @@ vi.mock('rwsdk/worker', () => ({
 
 import { randomUUID } from 'node:crypto';
 import { createSeason, updateSeason } from '@/repositories/seasons';
+import type { SeasonFormSave } from '@/types';
 import { saveSeason } from '../seasons';
 
 describe('saveSeason', () => {
@@ -50,10 +51,14 @@ describe('saveSeason', () => {
 		it('rejects unauthenticated requests', async () => {
 			mockRequestInfo.ctx.user = null;
 
-			const formData = new FormData();
-			formData.set('name', 'Test Season');
+			const data = {
+				name: 'Test Season',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toContain('You must be logged in');
@@ -63,14 +68,14 @@ describe('saveSeason', () => {
 
 	describe('create season', () => {
 		it('creates season with valid data', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Spring Season');
-			formData.set('country', 'US');
-			formData.set('startMonth', '3');
-			formData.set('endMonth', '5');
-			formData.set('createdBy', randomUUID());
+			const data = {
+				name: 'Spring Season',
+				country: 'US',
+				startMonth: 3,
+				endMonth: 5,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(createSeason).toHaveBeenCalledTimes(1);
@@ -86,10 +91,9 @@ describe('saveSeason', () => {
 		});
 
 		it('validates required fields', async () => {
-			const formData = new FormData();
-			// Missing name, country, months
+			const data = {} as SeasonFormSave;
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toBeDefined();
@@ -97,118 +101,103 @@ describe('saveSeason', () => {
 		});
 
 		it('validates country code format', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'USA'); // Must be 2 letters
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('createdBy', randomUUID());
+			const data = {
+				name: 'Test',
+				country: 'USA', // Must be 2 letters
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.country).toBeDefined();
 		});
 
 		it('validates invalid country code', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'ZZ'); // Not a real country
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('createdBy', randomUUID());
+			const data = {
+				name: 'Test',
+				country: 'ZZ', // Not a real country
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.country).toBeDefined();
 		});
 
 		it('validates month range minimum', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '0'); // Too low
-			formData.set('endMonth', '3');
-			formData.set('createdBy', randomUUID());
+			const data = {
+				name: 'Test',
+				country: 'US',
+				startMonth: 0, // Too low
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.startMonth).toBeDefined();
 		});
 
 		it('validates month range maximum', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '13'); // Too high
-			formData.set('createdBy', randomUUID());
+			const data = {
+				name: 'Test',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 13, // Too high
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.endMonth).toBeDefined();
 		});
 
-		it('validates createdBy is valid UUID', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('createdBy', 'not-a-uuid');
-
-			const result = await saveSeason(null, formData);
-
-			expect(result.success).toBe(false);
-			expect(result.errors?.createdBy).toBeDefined();
-		});
-
 		it('handles repository errors gracefully', async () => {
 			vi.mocked(createSeason).mockRejectedValueOnce(new Error('Database error'));
 
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('createdBy', randomUUID());
+			const data = {
+				name: 'Test',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
-			expect(result.errors?._form?.[0]).toContain('Failed to save season'); // Test env shows real error
+			expect(result.errors?._form?.[0]).toContain('Failed to save season');
 		});
 
 		it('accepts optional fields', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Minimal Season');
-			formData.set('country', 'CA');
-			formData.set('startMonth', '6');
-			formData.set('endMonth', '8');
-			formData.set('createdBy', randomUUID());
-			// No description, region, notes
+			const data = {
+				name: 'Minimal Season',
+				country: 'CA',
+				startMonth: 6,
+				endMonth: 8,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(true);
 		});
 
 		it('accepts season with all optional fields', async () => {
-			const formData = new FormData();
-			formData.set('name', 'Full Season');
-			formData.set('country', 'FR');
-			formData.set('region', 'Provence');
-			formData.set('startMonth', '4');
-			formData.set('endMonth', '6');
-			formData.set('description', 'Spring in Provence');
-			formData.set('notes', 'Great for lavender');
-			formData.set('createdBy', randomUUID());
+			const data = {
+				name: 'Full Season',
+				country: 'FR',
+				region: 'Provence',
+				startMonth: 4,
+				endMonth: 6,
+				description: 'Spring in Provence',
+				notes: 'Great for lavender',
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(createSeason).toHaveBeenCalledWith(
@@ -222,19 +211,17 @@ describe('saveSeason', () => {
 		});
 
 		it('hides error details in production', async () => {
-			// Simulate a database error with sensitive info
 			vi.mocked(createSeason).mockRejectedValueOnce(new Error('Connection failed: postgres://user:password@db.internal'));
 
-			const formData = new FormData();
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('createdBy', randomUUID());
+			const data = {
+				name: 'Test',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
-			// Should NOT expose the real error
 			expect(result.errors?._form?.[0]).toBe('Failed to save season');
 			expect(result.errors?._form?.[0]).not.toContain('postgres://');
 			expect(result.errors?._form?.[0]).not.toContain('password');
@@ -244,15 +231,15 @@ describe('saveSeason', () => {
 	describe('update season', () => {
 		it('updates season with valid data', async () => {
 			const seasonId = randomUUID();
-			const formData = new FormData();
-			formData.set('id', seasonId);
-			formData.set('name', 'Updated Season');
-			formData.set('country', 'CA');
-			formData.set('startMonth', '6');
-			formData.set('endMonth', '8');
-			formData.set('updatedBy', randomUUID());
+			const data = {
+				id: seasonId,
+				name: 'Updated Season',
+				country: 'CA',
+				startMonth: 6,
+				endMonth: 8,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(updateSeason).toHaveBeenCalledTimes(1);
@@ -268,33 +255,18 @@ describe('saveSeason', () => {
 			);
 		});
 
-		it('requires updatedBy for updates', async () => {
-			const formData = new FormData();
-			formData.set('id', randomUUID());
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			// Missing updatedBy
-
-			const result = await saveSeason(null, formData);
-
-			expect(result.success).toBe(false);
-			expect(result.errors?.updatedBy).toBeDefined();
-		});
-
 		it('handles update repository errors', async () => {
 			vi.mocked(updateSeason).mockRejectedValueOnce(new Error('Update failed'));
 
-			const formData = new FormData();
-			formData.set('id', randomUUID());
-			formData.set('name', 'Test');
-			formData.set('country', 'US');
-			formData.set('startMonth', '1');
-			formData.set('endMonth', '3');
-			formData.set('updatedBy', randomUUID());
+			const data = {
+				id: randomUUID(),
+				name: 'Test',
+				country: 'US',
+				startMonth: 1,
+				endMonth: 3,
+			};
 
-			const result = await saveSeason(null, formData);
+			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
