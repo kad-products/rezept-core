@@ -57,6 +57,13 @@
 			"when": 1769828601454,
 			"tag": "0007_heavy_mysterio",
 			"breakpoints": true
+		},
+		{
+			"idx": 8,
+			"version": "6",
+			"when": 1771700408074,
+			"tag": "0008_numerous_mastermind",
+			"breakpoints": true
 		}
 	]
 }
