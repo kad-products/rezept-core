@@ -16,7 +16,7 @@ export async function updateRecipeIngredients(
 	recipeSectionId: string,
 	ingredientsData: RecipeIngredientFormSave[],
 	userId: string,
-): Promise<void> {
+): Promise<RecipeIngredient[]> {
 	console.log(
 		`Updating recipe ingredients for recipeSectionId ${recipeSectionId} with data: ${JSON.stringify(ingredientsData, null, 4)} `,
 	);
@@ -35,11 +35,11 @@ export async function updateRecipeIngredients(
 	console.log(`Removed ingredient IDs: ${JSON.stringify(removedIngredientIds, null, 4)} `);
 
 	// update or insert ingredients from ingredientsData
-	await Promise.all(
+	const savedIngredients = await Promise.all(
 		ingredientsData.map(async (ingData: RecipeIngredientFormSave) => {
 			if (ingData.id) {
 				// update existing ingredients
-				await db
+				const [updatedIngredient] = await db
 					.update(recipeIngredients)
 					.set({
 						ingredientId: ingData.ingredientId,
@@ -50,25 +50,31 @@ export async function updateRecipeIngredients(
 						order: ingData.order,
 						updatedBy: userId,
 					})
-					.where(eq(recipeIngredients.id, ingData.id));
+					.where(eq(recipeIngredients.id, ingData.id))
+					.returning();
 
 				console.log(`Updated existing ingredient ID ${ingData.id}: ${JSON.stringify(ingData, null, 4)} `);
+
+				return updatedIngredient;
 			} else {
 				// insert new ingredient
-				await db.insert(recipeIngredients).values({
-					recipeSectionId: ingData.recipeSectionId,
-					ingredientId: ingData.ingredientId,
-					quantity: ingData.quantity,
-					unitId: ingData.unitId,
-					preparation: ingData.preparation,
-					modifier: ingData.modifier,
-					order: ingData.order,
-					createdBy: userId,
-				});
+				const [newIngredient] = await db
+					.insert(recipeIngredients)
+					.values({
+						recipeSectionId,
+						ingredientId: ingData.ingredientId,
+						quantity: ingData.quantity,
+						unitId: ingData.unitId,
+						preparation: ingData.preparation,
+						modifier: ingData.modifier,
+						order: ingData.order,
+						createdBy: userId,
+					})
+					.returning();
 
-				console.log(
-					`Inserted new ingredient for recipeSectionId ${ingData.recipeSectionId}: ${JSON.stringify(ingData, null, 4)} `,
-				);
+				console.log(`Inserted new ingredient for recipeSectionId ${recipeSectionId}: ${JSON.stringify(ingData, null, 4)} `);
+
+				return newIngredient;
 			}
 		}),
 	);
@@ -76,4 +82,6 @@ export async function updateRecipeIngredients(
 	console.log(
 		`Updated/Inserted ingredients for recipeSectionId ${recipeSectionId}: ${JSON.stringify(ingredientsData, null, 4)} `,
 	);
+
+	return savedIngredients;
 }

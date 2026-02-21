@@ -126,7 +126,7 @@ export default function Season({
 							<pre>Errors: {JSON.stringify(state.errors, null, 2)}</pre>
 						</div>
 					)}
-				</form.Subscribe>{' '}
+				</form.Subscribe>
 			</form>
 			<TanStackDevtools plugins={[formDevtoolsPlugin()]} />
 		</>

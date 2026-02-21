@@ -9,11 +9,11 @@ export async function getSectionsByRecipeId(recipeId: string): Promise<RecipeSec
 	return sections.sort((a, b) => a.order - b.order);
 }
 
-export async function updateSectionsForRecipe(
+export async function updateRecipeSections(
 	recipeId: string,
 	sectionsData: RecipeSectionFormSave[],
 	userId: string,
-): Promise<void> {
+): Promise<RecipeSection[]> {
 	console.log(`Updating recipe sections for recipeId ${recipeId} with data: ${JSON.stringify(sectionsData, null, 4)} `);
 
 	// get existing sections
@@ -26,36 +26,46 @@ export async function updateSectionsForRecipe(
 
 	console.log(`Removed section IDs: ${JSON.stringify(removedSectionIds, null, 4)} `);
 
+	const returnSections = [];
+
 	// update or insert sections from sectionsData
 	for (const section of sectionsData) {
 		if (section.id) {
 			console.log(`Updating existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
 
 			// update existing section
-			await db
+			const [updatedSection] = await db
 				.update(recipeSections)
 				.set({
 					title: section.title,
 					order: section.order,
 					updatedBy: userId,
 				})
-				.where(eq(recipeSections.id, section.id));
+				.where(eq(recipeSections.id, section.id))
+				.returning();
 
 			console.log(`Updated existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
+			returnSections.push(updatedSection);
 		} else {
 			console.log(`Inserting new section for recipeId ${recipeId}: ${JSON.stringify(section, null, 4)} `);
 
 			// insert new section
-			await db.insert(recipeSections).values({
-				recipeId,
-				title: section.title,
-				order: section.order,
-				createdBy: userId,
-			});
+			const [newSection] = await db
+				.insert(recipeSections)
+				.values({
+					recipeId,
+					title: section.title,
+					order: section.order,
+					createdBy: userId,
+				})
+				.returning();
 
 			console.log(`Inserted new section: ${JSON.stringify(section, null, 4)} `);
+			returnSections.push(newSection);
 		}
 	}
 
 	console.log(`Updated/Inserted sections for recipeId ${recipeId}: ${JSON.stringify(sectionsData, null, 4)} `);
+
+	return returnSections;
 }

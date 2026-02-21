@@ -13,7 +13,7 @@ export async function updateRecipeInstructions(
 	recipeSectionId: string,
 	instructionsData: RecipeInstructionFormSave[],
 	userId: string,
-): Promise<void> {
+): Promise<RecipeInstruction[]> {
 	console.log(
 		`Updating recipe instructions for recipeSectionId ${recipeSectionId} with data: ${JSON.stringify(instructionsData, null, 4)} `,
 	);
@@ -34,32 +34,37 @@ export async function updateRecipeInstructions(
 	console.log(`Removed instruction IDs: ${JSON.stringify(removedInstructionIds, null, 4)} `);
 
 	// update or insert instructions from instructionsData
-	await Promise.all(
+	const savedInstructions = await Promise.all(
 		instructionsData.map(async (instData: RecipeInstructionFormSave) => {
 			if (instData.id) {
 				// update existing instruction
-				await db
+				const [updatedInstruction] = await db
 					.update(recipeInstructions)
 					.set({
 						stepNumber: instData.stepNumber,
 						instruction: instData.instruction,
 						updatedBy: userId,
 					})
-					.where(eq(recipeInstructions.id, instData.id));
+					.where(eq(recipeInstructions.id, instData.id))
+					.returning();
 
 				console.log(`Updated existing instruction ID ${instData.id}: ${JSON.stringify(instData, null, 4)} `);
+				return updatedInstruction;
 			} else {
 				// insert new instruction
-				await db.insert(recipeInstructions).values({
-					recipeSectionId: instData.recipeSectionId,
-					stepNumber: instData.stepNumber,
-					instruction: instData.instruction,
-					createdBy: userId,
-				});
+				const [newInstruction] = await db
+					.insert(recipeInstructions)
+					.values({
+						recipeSectionId,
+						stepNumber: instData.stepNumber,
+						instruction: instData.instruction,
+						createdBy: userId,
+					})
+					.returning();
 
-				console.log(
-					`Inserted new instruction for recipeSectionId ${instData.recipeSectionId}: ${JSON.stringify(instData, null, 4)} `,
-				);
+				console.log(`Inserted new instruction for recipeSectionId ${recipeSectionId}: ${JSON.stringify(instData, null, 4)} `);
+
+				return newInstruction;
 			}
 		}),
 	);
@@ -67,4 +72,6 @@ export async function updateRecipeInstructions(
 	console.log(
 		`Updated/Inserted instructions for recipeSectionId ${recipeSectionId}: ${JSON.stringify(instructionsData, null, 4)} `,
 	);
+
+	return savedInstructions;
 }

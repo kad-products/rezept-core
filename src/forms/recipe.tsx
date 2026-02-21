@@ -1,216 +1,234 @@
 'use client';
-import { Fragment, useActionState } from 'react';
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
+import { useState } from 'react';
 import { saveRecipe } from '@/actions/recipes';
-import FormField from '@/components/client/FormField';
-import type { Ingredient, RecipeIngredient, RecipeInstruction, Recipe as RecipeModel, RecipeSection } from '@/types';
+import { recipeFormSchema } from '@/schemas';
+import type { ActionState, Ingredient, RecipeFormData, RecipeWithSections } from '@/types';
+import { useAppForm } from './context';
 
 export default function Recipe({
 	recipe,
-	sections,
 	allIngredients,
-	recipeIngredients,
-	instructions,
+	currentUserId,
 }: {
-	recipe?: RecipeModel;
-	sections?: RecipeSection[];
+	recipe?: RecipeWithSections;
 	allIngredients?: Ingredient[];
-	recipeIngredients?: RecipeIngredient[][];
-	instructions?: RecipeInstruction[][];
+	currentUserId: string | undefined;
 }) {
-	const [state, formAction] = useActionState(saveRecipe, null);
+	const [formState, setFormState] = useState<ActionState<RecipeFormData>>();
+
+	const newRecipeDefaults = {
+		title: '',
+		sections: [],
+		authorId: currentUserId,
+	};
+
+	const form = useAppForm({
+		formId: 'recipe',
+		defaultValues: (recipe ? recipe : newRecipeDefaults) as RecipeFormData,
+		validators: {
+			onBlur({ value }) {
+				console.log(value);
+				console.log(recipeFormSchema.safeParse(value));
+			},
+			onChange({ value }) {
+				console.log(value);
+				return true;
+			},
+		},
+		onSubmit: async ({ value: formDataObj }) => {
+			setFormState(await saveRecipe(formDataObj));
+		},
+	});
 
 	const buttonText = recipe ? 'Save Recipe' : 'Add Recipe';
 
 	return (
-		<form action={formAction}>
-			<FormField label="Title" name="title" type="text" errors={state?.errors?.title} value={recipe?.title} />
+		<>
+			<form
+				onSubmit={e => {
+					console.log(`Trying to submit the form`);
+					e.preventDefault();
+					e.stopPropagation();
+					console.log(`About to hit the go button`);
 
-			<FormField label="Author" name="authorId" type="text" errors={state?.errors?.authorId} value={recipe?.authorId} />
+					console.log('=== PRE-SUBMISSION STATE ===');
+					console.log('canSubmit:', form.state.canSubmit);
+					console.log('isValid:', form.state.isValid);
+					console.log('Errors:', form.state.errors);
+					console.log('Values:', form.state.values);
+					console.log('Submission attempts:', form.state.submissionAttempts);
+					form.handleSubmit();
+				}}
+			>
+				<form.AppField name="title">{field => <field.TextInput label="Title" required />}</form.AppField>
+				<form.AppField name="authorId">{field => <field.TextInput label="Author" required />}</form.AppField>
+				<form.AppField name="source">{field => <field.TextInput label="Source" />}</form.AppField>
+				<form.AppField name="servings">{field => <field.TextInput label="Servings" />}</form.AppField>
+				<form.AppField name="prepTime">{field => <field.TextInput label="Prep Time (minutes)" />}</form.AppField>
+				<form.AppField name="cookTime">{field => <field.TextInput label="Cook Time (minutes)" />}</form.AppField>
 
-			<FormField label="Source" name="source" type="text" errors={state?.errors?.source} value={recipe?.source} />
+				<form.Field name="sections" mode="array">
+					{sectionsField => (
+						<div>
+							{sectionsField.state.value?.map((section, i) => (
+								<fieldset key={section.id || `new-${i}`}>
+									<form.AppField name={`sections[${i}].title`}>
+										{titleField => (
+											<>
+												<legend>
+													Section <b>{titleField.state.value || 'Untitled'}</b>
+												</legend>
+												<titleField.TextInput label="Section Title" />
+											</>
+										)}
+									</form.AppField>
 
-			<FormField label="Servings" name="servings" type="text" errors={state?.errors?.servings} value={recipe?.servings} />
+									<form.AppField name={`sections[${i}].order`}>{field => <field.NumberInput label="Order" />}</form.AppField>
 
-			<FormField
-				label="Prep Time (minutes)"
-				name="prepTime"
-				type="text"
-				errors={state?.errors?.prepTime}
-				value={recipe?.prepTime}
-			/>
+									<h4>Instructions</h4>
+									<form.Field name={`sections[${i}].instructions`} mode="array">
+										{instructionsField => (
+											<div>
+												<ol>
+													{instructionsField.state.value?.map((instruction, instIdx) => (
+														<li key={instruction.id || `new-inst-${instIdx}`}>
+															<form.AppField name={`sections[${i}].instructions[${instIdx}].stepNumber`}>
+																{field => <field.NumberInput label="Step Number" />}
+															</form.AppField>
 
-			<FormField
-				label="Cook Time (minutes)"
-				name="cookTime"
-				type="text"
-				errors={state?.errors?.cookTime}
-				value={recipe?.cookTime}
-			/>
+															<form.AppField name={`sections[${i}].instructions[${instIdx}].instruction`}>
+																{field => <field.TextareaInput label="Instruction" />}
+															</form.AppField>
 
-			{sections?.map((s, sectionIdx) => {
-				const sectionInstructions = instructions ? instructions[sectionIdx] : [];
-				const sectionIngredients = recipeIngredients ? recipeIngredients[sectionIdx] : [];
-				return (
-					<Fragment key={s.id}>
-						<fieldset>
-							<legend>
-								Section <b>{s.title}</b>
-							</legend>
-							<FormField
-								label="Section Title"
-								name={`sections.${sectionIdx}.title`}
-								type="text"
-								value={s.title}
-								errors={state?.errors?.[`sections.${sectionIdx}.title`]}
-							/>
-							<input type="hidden" name={`sections.${sectionIdx}.id`} value={s.id} />
-							<h4>Instructions</h4>
-							<ol>
-								{sectionInstructions.map((inst: RecipeInstruction, instIdx: number) => {
-									return (
-										<li key={inst.id}>
-											<FormField
-												label="Step Number"
-												name={`instructions.${instIdx}.stepNumber`}
-												type="number"
-												value={inst.stepNumber}
-												errors={state?.errors?.[`instructions.${instIdx}.stepNumber`]}
-											/>
-											<FormField
-												label="Instruction"
-												name={`instructions.${instIdx}.instruction`}
-												type="textarea"
-												value={inst.instruction}
-												errors={state?.errors?.[`instructions.${instIdx}.instruction`]}
-											/>
-											<input type="hidden" name={`instructions.${instIdx}.id`} value={inst.id} />
-											<input type="hidden" name={`instructions.${instIdx}.recipeSectionId`} value={s.id} />
-										</li>
-									);
-								})}
-								<li>
-									<FormField
-										label="Step Number"
-										name={`instructions.${sectionInstructions.length}.stepNumber`}
-										type="number"
-										errors={state?.errors?.[`instructions.${sectionInstructions.length}.stepNumber`]}
-									/>
-									<FormField
-										label="New Instruction"
-										name={`instructions.${sectionInstructions.length}.instruction`}
-										type="textarea"
-										errors={state?.errors?.[`instructions.${sectionInstructions.length}.instruction`]}
-									/>
-									<input type="hidden" name={`instructions.${sectionInstructions.length}.recipeSectionId`} value={s.id} />
-								</li>
-							</ol>
-							<h4>Ingredients</h4>
-							<ul>
-								{sectionIngredients.map((ing: RecipeIngredient, ingIdx: number) => {
-									return (
-										<li key={ing.id}>
-											<FormField
-												label="Order"
-												name={`ingredients.${ingIdx}.order`}
-												type="text"
-												value={ing.order}
-												errors={state?.errors?.[`ingredients.${ingIdx}.order`]}
-											/>
-											<FormField
-												label="Quantity"
-												name={`ingredients.${ingIdx}.quantity`}
-												type="text"
-												value={ing.quantity}
-												errors={state?.errors?.[`ingredients.${ingIdx}.quantity`]}
-											/>
-											<FormField
-												label="Modifier"
-												name={`ingredients.${ingIdx}.modifier`}
-												type="text"
-												value={ing.modifier}
-												errors={state?.errors?.[`ingredients.${ingIdx}.modifier`]}
-											/>
-											<FormField
-												label="Ingredient ID"
-												name={`ingredients.${ingIdx}.ingredientId`}
-												type="select"
-												value={ing.ingredientId}
-												required={true}
-												options={[
-													{ value: '', label: '--- select ingredient ---' },
-													...(allIngredients?.map(i => ({
-														value: i.id,
-														label: i.name,
-													})) || []),
-												]}
-												errors={state?.errors?.[`ingredients.${ingIdx}.ingredientId`]}
-											/>
-											<FormField
-												label="Preparation"
-												name={`ingredients.${ingIdx}.preparation`}
-												type="text"
-												value={ing.preparation}
-												errors={state?.errors?.[`ingredients.${ingIdx}.preparation`]}
-											/>
-											<input type="hidden" name={`ingredients.${ingIdx}.id`} value={ing.id} />
-											<input type="hidden" name={`ingredients.${ingIdx}.recipeSectionId`} value={s.id} />
-										</li>
-									);
-								})}
-								<li>
-									<FormField
-										label="Order"
-										name={`ingredients.${sectionIngredients.length}.order`}
-										type="text"
-										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.order`]}
-									/>
-									<FormField
-										label="Quantity"
-										name={`ingredients.${sectionIngredients.length}.quantity`}
-										type="text"
-										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.quantity`]}
-									/>
-									<FormField
-										label="Modifier"
-										name={`ingredients.${sectionIngredients.length}.modifier`}
-										type="text"
-										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.modifier`]}
-									/>
-									<FormField
-										label="Ingredient ID"
-										name={`ingredients.${sectionIngredients.length}.ingredientId`}
-										type="select"
-										required
-										options={[
-											{ value: '', label: '--- select ingredient ---' },
-											...(allIngredients?.map(i => ({
-												value: i.id,
-												label: i.name,
-											})) || []),
-										]}
-										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.ingredientId`]}
-									/>
-									<FormField
-										label="Preparation"
-										name={`ingredients.${sectionIngredients.length}.preparation`}
-										type="text"
-										errors={state?.errors?.[`ingredients.${sectionIngredients.length}.preparation`]}
-									/>
-									<input type="hidden" name={`ingredients.${sectionIngredients.length}.recipeSectionId`} value={s.id} />
-								</li>
-							</ul>
-						</fieldset>
-					</Fragment>
-				);
-			})}
+															<button type="button" onClick={() => instructionsField.removeValue(instIdx)}>
+																Remove Step
+															</button>
+														</li>
+													))}
+												</ol>
 
-			{state?.errors?._form && <p className="error">{state.errors._form[0]}</p>}
+												<button
+													type="button"
+													onClick={() =>
+														instructionsField.pushValue({
+															stepNumber: instructionsField.state.value ? instructionsField.state.value.length + 1 : 1,
+															instruction: '',
+														})
+													}
+												>
+													Add Instruction
+												</button>
+											</div>
+										)}
+									</form.Field>
 
-			{state?.success && <p className="success">Recipe saved!</p>}
+									<h4>Ingredients</h4>
+									<form.Field name={`sections[${i}].ingredients`} mode="array">
+										{ingredientsField => (
+											<div>
+												<ul>
+													{ingredientsField.state.value?.map((ingredient, ingIdx) => (
+														<li key={ingredient.id || `new-ing-${ingIdx}`}>
+															<form.AppField name={`sections[${i}].ingredients[${ingIdx}].order`}>
+																{field => <field.NumberInput label="Order" />}
+															</form.AppField>
 
-			{recipe?.id && <input type="hidden" name="id" value={recipe.id} />}
+															<form.AppField name={`sections[${i}].ingredients[${ingIdx}].quantity`}>
+																{field => <field.NumberInput label="Quantity" />}
+															</form.AppField>
 
-			<button type="submit">{buttonText}</button>
-		</form>
+															<form.AppField name={`sections[${i}].ingredients[${ingIdx}].modifier`}>
+																{field => <field.TextInput label="Modifier" />}
+															</form.AppField>
+
+															<form.AppField name={`sections[${i}].ingredients[${ingIdx}].ingredientId`}>
+																{field => (
+																	<field.Select
+																		label="Ingredient"
+																		required
+																		options={[
+																			{ value: '', label: '--- select ingredient ---' },
+																			...(allIngredients?.map(ing => ({
+																				value: ing.id,
+																				label: ing.name,
+																			})) || []),
+																		]}
+																	/>
+																)}
+															</form.AppField>
+
+															<form.AppField name={`sections[${i}].ingredients[${ingIdx}].preparation`}>
+																{field => <field.TextInput label="Preparation" />}
+															</form.AppField>
+
+															<button type="button" onClick={() => ingredientsField.removeValue(ingIdx)}>
+																Remove Ingredient
+															</button>
+														</li>
+													))}
+												</ul>
+
+												<button
+													type="button"
+													onClick={() =>
+														ingredientsField.pushValue({
+															quantity: 1,
+															order: ingredientsField.state.value ? ingredientsField.state.value.length : 0,
+															ingredientId: '',
+														})
+													}
+												>
+													Add Ingredient
+												</button>
+											</div>
+										)}
+									</form.Field>
+
+									<button type="button" onClick={() => sectionsField.removeValue(i)}>
+										Remove Section
+									</button>
+								</fieldset>
+							))}
+
+							<button
+								type="button"
+								onClick={() =>
+									sectionsField.pushValue({
+										title: '',
+										order: sectionsField.state.value ? sectionsField.state.value.length : 0,
+										ingredients: [],
+										instructions: [],
+									})
+								}
+							>
+								Add Section
+							</button>
+						</div>
+					)}
+				</form.Field>
+				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
+				{formState?.success && <p className="success">Season saved!</p>}
+				<form.AppForm>
+					<form.Submit label={buttonText} />
+				</form.AppForm>
+				<form.Subscribe
+					key={form.state.submissionAttempts} // Force re-render on each attempt
+					selector={state => ({
+						errors: state.errors,
+						attempts: state.submissionAttempts,
+					})}
+				>
+					{state => (
+						<div>
+							<pre>Submission Attempts: {state.attempts}</pre>
+							<pre>Errors: {JSON.stringify(state.errors, null, 2)}</pre>
+						</div>
+					)}
+				</form.Subscribe>
+			</form>
+			<TanStackDevtools plugins={[formDevtoolsPlugin()]} />
+		</>
 	);
 }

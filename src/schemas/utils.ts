@@ -8,12 +8,12 @@ import { z } from 'zod';
 // );
 
 export const optionalString = z
-	.union([z.string(), z.literal('')])
+	.union([z.string(), z.null()])
 	.transform(val => (val === '' ? undefined : val))
 	.optional();
 
 export const optionalUuid = z
-	.union([z.string().uuid('Must be a valid UUID'), z.literal('')])
+	.union([z.string().uuid('Must be a valid UUID'), z.null(), z.literal('')])
 	.transform(val => (val === '' ? undefined : val))
 	.optional();
 
