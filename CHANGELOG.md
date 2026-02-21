@@ -1,3 +1,15 @@
+## [1.3.1](https://github.com/kad-products/rezept-core/compare/v1.3.0...v1.3.1) (2026-02-21)
+
+### Bug Fixes
+
+* merge season view component into view page ([bd0788f](https://github.com/kad-products/rezept-core/commit/bd0788f982829a08b11378ee0467d24d7647b699))
+* remove debugging from season form ([0ea4dbc](https://github.com/kad-products/rezept-core/commit/0ea4dbc0f17cdc3c9059deaeb26af8de15b7738c))
+* return error if season is not found ([0693bcb](https://github.com/kad-products/rezept-core/commit/0693bcbec002d3a4edd118aecebf88ec9d2e578c))
+
+### Code Refactoring
+
+* move season server components to pages ([364841c](https://github.com/kad-products/rezept-core/commit/364841ccdf72d4c97ec51c70c13be154928bfad6))
+
 ## [1.3.0](https://github.com/kad-products/rezept-core/compare/v1.2.1...v1.3.0) (2026-02-21)
 
 ### Features
