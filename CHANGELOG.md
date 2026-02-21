@@ -1,3 +1,16 @@
+## [1.3.2](https://github.com/kad-products/rezept-core/compare/v1.3.1...v1.3.2) (2026-02-21)
+
+### Bug Fixes
+
+* manual validation of recipe to avoid TS errors for now ([65f1ccc](https://github.com/kad-products/rezept-core/commit/65f1ccca9c9a923ecc7c5e4393aa578c98313d8d))
+* merge user creds table into profile page ([59a1f4a](https://github.com/kad-products/rezept-core/commit/59a1f4aef20641a5e37a55a50a71a799704ac825))
+* remove recipe server components ([72fc21f](https://github.com/kad-products/rezept-core/commit/72fc21f923c9495b3b7876f6361cd24403954b1f))
+* return recipe not found error ([b15711e](https://github.com/kad-products/rezept-core/commit/b15711e2a3ea4f3a3fb04639a7bb03aaa6eb75df))
+
+### Code Refactoring
+
+* remove unused code ([d1eaae3](https://github.com/kad-products/rezept-core/commit/d1eaae365e9d54bb9cf7d9fa6ddab493cea441ea))
+
 ## [1.3.1](https://github.com/kad-products/rezept-core/compare/v1.3.0...v1.3.1) (2026-02-21)
 
 ### Bug Fixes
