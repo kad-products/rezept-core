@@ -27,16 +27,7 @@ export default function Recipe({
 	const form = useAppForm({
 		formId: 'recipe',
 		defaultValues: (recipe ? recipe : newRecipeDefaults) as RecipeFormData,
-		validators: {
-			onBlur({ value }) {
-				console.log(value);
-				console.log(recipeFormSchema.safeParse(value));
-			},
-			onChange({ value }) {
-				console.log(value);
-				return true;
-			},
-		},
+		validators: recipeFormSchema,
 		onSubmit: async ({ value: formDataObj }) => {
 			setFormState(await saveRecipe(formDataObj));
 		},
