@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import UserCredentialsTable from '@/components/client/UserCredentialsTable';
 import StandardLayout from '@/layouts/standard';
 import { getCredentialsByUserId } from '@/repositories/credentials';
 
@@ -26,7 +25,9 @@ export default async function Pages__profile__root({ ctx }: RequestInfo) {
 				<pre>{JSON.stringify(ctx, null, 2)}</pre>
 			</div>
 			<Suspense fallback={<div>Loading credentials...</div>}>
-				<UserCredentialsTable credentials={clientComponentCredentials} />
+				<div>
+					<pre>{JSON.stringify({ clientComponentCredentials }, null, 2)}</pre>
+				</div>
 			</Suspense>
 		</StandardLayout>
 	);
