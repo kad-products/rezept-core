@@ -72,26 +72,6 @@ export default function Season({
 					form.handleSubmit();
 				}}
 			>
-				<div className="border-2 border-red-500 p-4 mb-4">
-					<h3>Debug Info</h3>
-					<p>Can Submit: {String(form.state.canSubmit)}</p>
-					<p>Is Valid: {String(form.state.isValid)}</p>
-					<p>Submission Attempts: {form.state.submissionAttempts}</p>
-					<details>
-						<summary>All State</summary>
-						<pre>
-							{JSON.stringify(
-								{
-									errors: form.state.errors,
-									values: form.state.values,
-									fieldMeta: form.state.fieldMeta,
-								},
-								null,
-								2,
-							)}
-						</pre>
-					</details>
-				</div>
 				<form.AppField name="name">{field => <field.TextInput label="Name" required />}</form.AppField>
 				<form.AppField name="description">{field => <field.TextareaInput label="Description" required />}</form.AppField>
 				<form.AppField name="country">
