@@ -12,7 +12,7 @@ export default async function Pages__seasons__view({ ctx, params }: RequestInfo)
 	]);
 
 	if (!season) {
-		return null;
+		return <p>Season not found</p>;
 	}
 	return (
 		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>

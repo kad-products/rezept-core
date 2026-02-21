@@ -20,7 +20,7 @@ export default async function Pages__seasons__edit({ ctx, params }: RequestInfo)
 	if (!seasonId) {
 		season = {} as SeasonModel;
 	} else if (!season) {
-		return null;
+		return <p>Season not found</p>;
 	}
 
 	const ingredientOptions = allIngredients.map(i => ({
