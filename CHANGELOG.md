@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/kad-products/rezept-core/compare/v1.2.1...v1.3.0) (2026-02-21)
+
+### Features
+
+* remove lists and list items from DB ([f1d0e7a](https://github.com/kad-products/rezept-core/commit/f1d0e7a620e2a8a39cb939ae285aeb30c6c5b95c))
+
 ## [1.2.1](https://github.com/kad-products/rezept-core/compare/v1.2.0...v1.2.1) (2026-02-21)
 
 ### Bug Fixes
