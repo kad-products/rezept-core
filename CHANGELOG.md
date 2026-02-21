@@ -1,3 +1,27 @@
+## [1.2.0](https://github.com/kad-products/rezept-core/compare/v1.1.4...v1.2.0) (2026-02-21)
+
+### Features
+
+* add form context for the TanStack implementation ([4c9faaf](https://github.com/kad-products/rezept-core/commit/4c9faaf02c8564bcaf4a75eadbff4f8ed660ec26))
+* **dx:** enable the tanstack devtools and form plugin ([826628d](https://github.com/kad-products/rezept-core/commit/826628d938596c5a49500d277ec9e813dcf663b9))
+* refactor recipe form into tanstack ([8ffbdd0](https://github.com/kad-products/rezept-core/commit/8ffbdd03a9a9f575f61361fa3ff3c55cf730676a))
+
+### Bug Fixes
+
+* inputs handle on blur ([7fad73b](https://github.com/kad-products/rezept-core/commit/7fad73bb49388eb3cdc598589957b5263cfbabcb))
+* less debugging on form jsx ([023072c](https://github.com/kad-products/rezept-core/commit/023072ceeee2b5c2b016f175379b55567c5bcb77))
+* no audit fields in season schemas ([3d27ccf](https://github.com/kad-products/rezept-core/commit/3d27ccfe8c063366e384f56cace11c488169a19b))
+* simplify the DB mocking approach ([e658efc](https://github.com/kad-products/rezept-core/commit/e658efc1fd8cc32cbfda07ac8b149662e9cefaa4))
+
+### Code Refactoring
+
+* move i18n-iso-countries to a countries data module ([aa212e7](https://github.com/kad-products/rezept-core/commit/aa212e7d8e7de6d0a91f6faaf5835636c388579d))
+* move months to a data file ([ec6fe9c](https://github.com/kad-products/rezept-core/commit/ec6fe9cd946df4945fd1c2878e234050d14b25aa))
+* remove list items form and actions ([bf54111](https://github.com/kad-products/rezept-core/commit/bf5411168a4cf1a625b3d73a972f1d9942b14778))
+* remove lists from nav ([f3ce6b9](https://github.com/kad-products/rezept-core/commit/f3ce6b9f535b5b69d428600316f2ab55aabd06c6))
+* remove more list related items ([32d9d23](https://github.com/kad-products/rezept-core/commit/32d9d2351289233e4ebe9a7605dca624112b5ad4))
+* rename testable DB to better name ([959c1c2](https://github.com/kad-products/rezept-core/commit/959c1c2087da5deaebf96a65c25a41017bfe20ca))
+
 ## [1.1.4](https://github.com/kad-products/rezept-core/compare/v1.1.3...v1.1.4) (2026-02-17)
 
 ### Bug Fixes
