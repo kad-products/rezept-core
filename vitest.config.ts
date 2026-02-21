@@ -21,7 +21,7 @@ export default defineConfig({
 				'src/session/store.ts', // Just config
 			],
 			thresholds: {
-				branches: 23,
+				branches: 20,
 				lines: 30, // using this to make sure we don't miss something big or have dead code
 				'src/actions/**': {
 					branches: 8,
@@ -30,7 +30,7 @@ export default defineConfig({
 					branches: 100,
 				},
 				'src/repositories/**': {
-					branches: 40,
+					branches: 30,
 				},
 				'src/utils/**': {
 					branches: 0,

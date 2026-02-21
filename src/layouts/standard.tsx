@@ -4,7 +4,6 @@ import { CgProfile } from 'react-icons/cg';
 import { CiHome } from 'react-icons/ci';
 import { GiFallingLeaf } from 'react-icons/gi';
 import { IoLogInOutline } from 'react-icons/io5';
-import { MdOutlineChecklistRtl } from 'react-icons/md';
 import type { DefaultAppContext } from 'rwsdk/worker';
 
 export default function StandardLayout({
@@ -22,7 +21,6 @@ export default function StandardLayout({
 		home: { label: 'Home', href: '/', icon: CiHome },
 		seasons: { label: 'Seasons', href: '/seasons', icon: GiFallingLeaf },
 		recipes: { label: 'Recipes', href: '/recipes', icon: BiFoodMenu },
-		lists: { label: 'Lists', href: '/lists', icon: MdOutlineChecklistRtl },
 		profile: { label: 'Profile', href: '/profile', icon: CgProfile },
 	};
 

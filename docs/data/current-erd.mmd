@@ -1,0 +1,175 @@
+erDiagram
+
+    credentials {
+        text id PK "not null"
+        text userId "not null"
+        text createdAt "not null, default: `(datetime('now', 'localtime'))`"
+        text updatedAt
+        text credentialId UK "not null"
+        blob publicKey "not null"
+        integer counter "not null, default: 0"
+        text name
+        text lastUsedAt
+    }
+    ingredient_units {
+        text id PK "not null"
+        text name "not null"
+        text abbreviation "not null"
+        text type "not null"
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    ingredients {
+        text id PK "not null"
+        text name UK "not null"
+        text description
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    list_items {
+        text id PK "not null"
+        text listId "not null"
+        text ingredientId "not null"
+        real quantity
+        text unitId
+        text status "not null, default: 'NEEDED'"
+        text notes
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    lists {
+        text id PK "not null"
+        text userId "not null"
+        text name "not null"
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    recipe_ingredients {
+        text id PK "not null"
+        text recipeSectionId "not null"
+        text ingredientId "not null"
+        real quantity
+        text unitId
+        text preparation
+        text modifier
+        integer order "not null"
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    recipe_instructions {
+        text id PK "not null"
+        text recipeSectionId "not null"
+        integer stepNumber "not null"
+        text instruction "not null"
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    recipe_sections {
+        text id PK "not null"
+        text recipeId "not null"
+        text title
+        integer order "not null"
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    recipes {
+        text id PK "not null"
+        text authorId "not null"
+        text title "not null"
+        text description
+        text source
+        integer servings
+        integer prepTime
+        integer cookTime
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    seasonal_ingredients {
+        text id PK "not null"
+        text ingredientId "not null"
+        text seasonId "not null"
+        text notes
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    seasons {
+        text id PK "not null"
+        text name "not null"
+        text description
+        text country "not null"
+        text region
+        integer startMonth "not null"
+        integer endMonth "not null"
+        text notes
+        text createdAt "not null"
+        text createdBy "not null"
+        text updatedAt
+        text updatedBy
+        text deletedAt
+        text deletedBy
+    }
+    users {
+        text id PK "not null"
+        text username UK "not null"
+        text createdAt "not null, default: `(datetime('now', 'localtime'))`"
+        text updatedAt
+    }
+credentials ||--o{ users : "credentials-users"
+ingredient_units ||--|| users : "ingredient_units-users-unitCreator"
+ingredients ||--|| users : "ingredients-users-ingredientCreator"
+list_items ||--o{ lists : "list_items-lists"
+list_items ||--|| ingredients : "ingredients-list_items"
+list_items ||--|| ingredient_units : "ingredient_units-list_items"
+list_items ||--|| users : "list_items-users-listItemCreator"
+lists ||--|| users : "lists-users-listOwner"
+lists ||--|| users : "lists-users-listCreator"
+recipe_ingredients ||--o{ recipe_sections : "recipe_ingredients-recipe_sections"
+recipe_ingredients ||--o{ ingredients : "ingredients-recipe_ingredients"
+recipe_ingredients ||--o{ ingredient_units : "ingredient_units-recipe_ingredients"
+recipe_ingredients ||--|| users : "recipe_ingredients-users-recipeIngredientCreator"
+recipe_instructions ||--o{ recipe_sections : "recipe_instructions-recipe_sections"
+recipe_instructions ||--|| users : "recipe_instructions-users-instructionCreator"
+recipe_sections ||--o{ recipes : "recipe_sections-recipes"
+recipe_sections ||--|| users : "recipe_sections-users-sectionCreator"
+recipes ||--|| users : "recipes-users-recipeAuthor"
+recipes ||--|| users : "recipes-users-recipeCreator"
+seasonal_ingredients ||--|| ingredients : "ingredients-seasonal_ingredients"
+seasonal_ingredients ||--o{ seasons : "seasonal_ingredients-seasons"
+seasonal_ingredients ||--|| users : "seasonal_ingredients-users-seasonalIngredientCreator"
+seasons ||--|| users : "seasons-users-seasonCreator"

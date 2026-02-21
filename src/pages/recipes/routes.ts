@@ -5,6 +5,7 @@ import Pages__recipes__view from './view';
 
 export default [
 	route('/', Pages__recipes__listing),
+	route('/new', Pages__recipes__edit),
 	route('/:recipeId', Pages__recipes__view),
 	route('/:recipeId/edit', Pages__recipes__edit),
 ];

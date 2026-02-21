@@ -8,6 +8,7 @@ export default async function RecipeListing() {
 
 	return (
 		<Suspense fallback={<div>Loading recipes...</div>}>
+			<a href="/recipes/new">New Recipe</a>
 			<div className="recipes-listing">
 				{recipes.map(r => {
 					return (

@@ -9538,13 +9538,13 @@ import type { DrizzleD1Database } from 'drizzle-orm/d1';
 import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import * as schema from '@/models';
 
-type AnyDrizzleDb = 
+type TestableDB = 
   | DrizzleD1Database<typeof schema>
   | BetterSQLite3Database<typeof schema>;
 
 export async function createUser(
   username: string, 
-  database: AnyDrizzleDb = db
+  database: TestableDB = db
 ): Promise<User> {
   // ... rest of function
 }
@@ -9573,7 +9573,7 @@ export async function createUser(
 **Option 3: Generic (most flexible)**
 
 typescript```
-export async function createUser<TDb extends AnyDrizzleDb>(
+export async function createUser<TDb extends TestableDB>(
   username: string,
   database: TDb = db as TDb
 ): Promise<User> {
@@ -14688,9 +14688,9 @@ Yes but can you change them a little?  Here is what I have in my integration tes
 
 ```
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ActionState, AnyDrizzleDb } from '@/types';
+import type { ActionState, TestableDB } from '@/types';
 
-let testDb: AnyDrizzleDb;
+let testDb: TestableDB;
 
 vi.mock('cloudflare:workers', () => ({
     env: { REZEPT_ENV: 'test' },
@@ -15200,7 +15200,7 @@ mockRequestInfo.ctx.user = null; // Now unauthenticated
 
 Instead of passing `database` parameter everywhere, use a getter:
 ```typescript
-let testDb: AnyDrizzleDb;
+let testDb: TestableDB;
 
 vi.mock('@/db', () => ({
   get default() { return testDb; }
@@ -15275,7 +15275,7 @@ it('rejects unauthenticated requests', async () => {
 Real database, test full stack:
 ```typescript
 // seasons.integration.test.ts
-let testDb: AnyDrizzleDb;
+let testDb: TestableDB;
 
 vi.mock('@/db', () => ({
   get default() { return testDb; }

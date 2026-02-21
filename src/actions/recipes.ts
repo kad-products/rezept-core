@@ -4,20 +4,15 @@ import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
 import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
 import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
-import { updateSectionsForRecipe } from '@/repositories/recipe-sections';
+import { updateRecipeSections } from '@/repositories/recipe-sections';
 import { createRecipe, updateRecipe } from '@/repositories/recipes';
 
-import {
-	createRecipeIngredientSchema,
-	createRecipeInstructionSchema,
-	createRecipeSchema,
-	createRecipeSectionSchema,
-	updateRecipeSchema,
-} from '@/schemas';
+import { recipeFormSchema } from '@/schemas';
 
 import type {
 	ActionState,
 	Recipe,
+	RecipeFormData,
 	RecipeIngredient,
 	RecipeIngredientFormSave,
 	RecipeInstruction,
@@ -25,9 +20,8 @@ import type {
 	RecipeSection,
 	RecipeSectionFormSave,
 } from '@/types';
-import { extractErrors, formDataToObject, validateFormData } from '@/utils/forms';
 
-export async function saveRecipe(_prevState: ActionState | null, formData: FormData): Promise<ActionState> {
+export async function saveRecipe(formData: RecipeFormData): Promise<ActionState<RecipeFormData>> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
@@ -38,7 +32,18 @@ export async function saveRecipe(_prevState: ActionState | null, formData: FormD
 		};
 	}
 
-	console.log(`Form data received: ${JSON.stringify(Object.fromEntries(formData), null, 4)} `);
+	console.log(`Form data received: ${JSON.stringify(formData, null, 4)} `);
+
+	const parsed = recipeFormSchema.safeParse(formData);
+
+	if (parsed.error) {
+		return {
+			success: false,
+			errors: parsed.error.flatten().fieldErrors,
+		};
+	}
+
+	console.log(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
 
 	//   ______ _______ _______ _____  _____  _______
 	//  |_____/ |______ |         |   |_____] |______
@@ -46,31 +51,14 @@ export async function saveRecipe(_prevState: ActionState | null, formData: FormD
 	//
 	let recipe: Recipe;
 	try {
-		if (formData.get('id')) {
-			const parsed = updateRecipeSchema.safeParse(Object.fromEntries(formData));
-			if (!parsed.success) {
-				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
-				return {
-					success: false,
-					errors: parsed.error.flatten().fieldErrors,
-				};
-			}
+		if (parsed.data.id) {
 			recipe = await updateRecipe(parsed.data.id, parsed.data, userId);
 		} else {
-			const parsed = createRecipeSchema.safeParse(Object.fromEntries(formData));
-			if (!parsed.success) {
-				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
-				return {
-					success: false,
-					errors: parsed.error.flatten().fieldErrors,
-				};
-			}
 			recipe = await createRecipe(parsed.data, userId);
 		}
+		console.log(`Recipe ${recipe.id} saved`);
 	} catch (error) {
 		console.log(`Error saving recipe: ${error} `);
-
-		console.log(error);
 
 		const errorMessage =
 			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
@@ -81,90 +69,93 @@ export async function saveRecipe(_prevState: ActionState | null, formData: FormD
 		};
 	}
 
-	// will hopefully be able to remove this once we move to typed input
-	const formDataObj = formDataToObject(formData);
-
 	//  _______ _______ _______ _______ _____  _____  __   _ _______
 	//  |______ |______ |          |      |   |     | | \  | |______
 	//  ______| |______ |_____     |    __|__ |_____| |  \_| ______|
 	//
-	const sectionValidationResults = (formDataObj.sections as RecipeSection[]).map((s: RecipeSection, sectionIdx: number) =>
-		validateFormData({ ...s, recipeId: recipe.id }, createRecipeSectionSchema, `sections.${sectionIdx}.`),
-	);
-	const sectionErrors = extractErrors(sectionValidationResults);
+	let sections: RecipeSection[];
+	try {
+		sections = await updateRecipeSections(recipe.id, parsed.data.sections as RecipeSectionFormSave[], userId);
+		console.log(`Recipe sections saved for ${recipe.id}: ${JSON.stringify(sections, null, 4)}`);
+	} catch (error) {
+		console.log(`Error saving sections: ${error} `);
 
-	console.log(`Section validation results: ${JSON.stringify(sectionValidationResults, null, 4)}`);
+		const errorMessage =
+			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
 
-	if (sectionErrors) {
 		return {
 			success: false,
-			errors: sectionErrors,
+			errors: { _form: [errorMessage] },
 		};
 	}
-
-	const sections: RecipeSectionFormSave[] = sectionValidationResults.map(r => r.data).filter(Boolean) as RecipeSectionFormSave[];
-
-	await updateSectionsForRecipe(recipe.id, sections, userId);
 
 	//  _____ __   _ _______ _______  ______ _     _ _______ _______ _____  _____  __   _ _______
 	//    |   | \  | |______    |    |_____/ |     | |          |      |   |     | | \  | |______
 	//  __|__ |  \_| ______|    |    |    \_ |_____| |_____     |    __|__ |_____| |  \_| ______|
 	//
 	// remove instructions with empty instruction text and no id, we assume that means it is the empty "new instruction" field
-	formDataObj.instructions = (formDataObj.instructions as RecipeInstruction[]).filter(
-		(inst: RecipeInstruction) => inst.instruction.trim() !== '' || inst.id,
-	);
+	const savedInstructions: Record<string, RecipeInstruction[]> = {};
+	for (const [index, section] of (parsed.data.sections || []).entries()) {
+		// use the saved section so we can ensure it has an ID (wouldn't be in the incoming data for a new section)
+		const savedSection = sections[index];
+		try {
+			savedInstructions[savedSection.id] = await updateRecipeInstructions(
+				savedSection.id,
+				section.instructions as RecipeInstructionFormSave[],
+				userId,
+			);
+			console.log(`Recipe instructions saved for recipe ${recipe.id} section ${savedSection.id}`);
+		} catch (error) {
+			console.log(`Error saving section instructions: ${error} `);
 
-	const instructionsValidationResults = (formDataObj.instructions as RecipeInstruction[]).map(
-		(i: RecipeInstruction, instIdx: number) => validateFormData(i, createRecipeInstructionSchema, `instructions.${instIdx}.`),
-	);
-	const instructionErrors = extractErrors(instructionsValidationResults);
+			const errorMessage =
+				env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
 
-	console.log(`Instruction validation results: ${JSON.stringify(instructionsValidationResults, null, 4)}`);
-
-	if (instructionErrors) {
-		return {
-			success: false,
-			errors: instructionErrors,
-		};
+			return {
+				success: false,
+				errors: { _form: [errorMessage] },
+			};
+		}
 	}
-
-	const instructions: RecipeInstructionFormSave[] = instructionsValidationResults
-		.map(r => r.data)
-		.filter(Boolean) as RecipeInstructionFormSave[];
-
-	await updateRecipeInstructions(recipe.id, instructions, userId);
 
 	//  _____ __   _  ______  ______ _______ ______  _____ _______ __   _ _______ _______
 	//    |   | \  | |  ____ |_____/ |______ |     \   |   |______ | \  |    |    |______
 	//  __|__ |  \_| |_____| |    \_ |______ |_____/ __|__ |______ |  \_|    |    ______|
 	//
 	// remove ingredients with empty ingredientId and no id, we assume that means it is the empty "new ingredient" field
-	// TODO: remove the --- select ingredient --- string from this
-	formDataObj.ingredients = (formDataObj.ingredients as RecipeIngredient[]).filter(
-		(ing: RecipeIngredient) => ing.ingredientId !== '--- select ingredient ---' || ing.id,
-	);
+	const savedIngredients: Record<string, RecipeIngredient[]> = {};
+	for (const [index, section] of (parsed.data.sections || []).entries()) {
+		// use the saved section so we can ensure it has an ID (wouldn't be in the incoming data for a new section)
+		const savedSection = sections[index];
+		try {
+			savedIngredients[savedSection.id] = await updateRecipeIngredients(
+				savedSection.id,
+				section.ingredients as RecipeIngredientFormSave[],
+				userId,
+			);
+			console.log(`Recipe ingredients saved for recipe ${recipe.id} section ${section.id}`);
+		} catch (error) {
+			console.log(`Error saving section ingredients: ${error} `);
 
-	const ingredientsValidationResults = (formDataObj.ingredients as RecipeIngredient[]).map(
-		(i: RecipeIngredient, ingIdx: number) => validateFormData(i, createRecipeIngredientSchema, `ingredients.${ingIdx}.`),
-	);
+			const errorMessage =
+				env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
 
-	const ingredientErrors = extractErrors(ingredientsValidationResults);
-
-	console.log(`Ingredient validation results: ${JSON.stringify(ingredientsValidationResults, null, 4)}`);
-
-	if (ingredientErrors) {
-		return {
-			success: false,
-			errors: ingredientErrors,
-		};
+			return {
+				success: false,
+				errors: { _form: [errorMessage] },
+			};
+		}
 	}
 
-	const ingredients: RecipeIngredientFormSave[] = ingredientsValidationResults
-		.map(r => r.data)
-		.filter(Boolean) as RecipeIngredientFormSave[];
-
-	await updateRecipeIngredients(recipe.id, ingredients, userId);
-
-	return { success: true };
+	return {
+		success: true,
+		data: {
+			...recipe,
+			sections: sections?.map(s => ({
+				...s,
+				instructions: savedInstructions[s.id],
+				ingredients: savedIngredients[s.id],
+			})),
+		} as RecipeFormData,
+	};
 }
