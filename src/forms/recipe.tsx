@@ -30,11 +30,9 @@ export default function Recipe({
 		validators: {
 			onBlur({ value }) {
 				console.log(value);
-				console.log(recipeFormSchema.safeParse(value));
-			},
-			onChange({ value }) {
-				console.log(value);
-				return true;
+				const results = recipeFormSchema.safeParse(value);
+				console.log(results);
+				return results.success;
 			},
 		},
 		onSubmit: async ({ value: formDataObj }) => {
