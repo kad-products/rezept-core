@@ -20,7 +20,7 @@ export default async function Pages__recipes__edit({ ctx, params }: RequestInfo)
 	} else {
 		const recipeBase = await getRecipeById(recipeId);
 		if (!recipeBase) {
-			return null;
+			return <p>Recipe not found</p>;
 		}
 		const sections = await getSectionsByRecipeId(recipeId);
 		recipe = {

@@ -12,7 +12,7 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 	const recipe = await getRecipeById(recipeId);
 
 	if (!recipe) {
-		return null;
+		return <p>Recipe not found</p>;
 	}
 
 	const author = await getUserById(recipe.authorId);
