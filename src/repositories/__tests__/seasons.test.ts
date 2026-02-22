@@ -69,6 +69,18 @@ describe('seasons repository', () => {
 			expect(result.id).toBe(season2.id);
 			expect(result.name).toBe('Season 2');
 		});
+
+		it('throws when id is not a valid uuid', async () => {
+			await expect(getSeasonById('not-a-uuid')).rejects.toThrow('Invalid id: not-a-uuid');
+		});
+
+		it('throws when id is an empty string', async () => {
+			await expect(getSeasonById('')).rejects.toThrow('Invalid id: ');
+		});
+
+		it('throws when id contains special characters', async () => {
+			await expect(getSeasonById('<Anonymous code>')).rejects.toThrow('Invalid id: <Anonymous code>');
+		});
 	});
 
 	describe('createSeason', () => {

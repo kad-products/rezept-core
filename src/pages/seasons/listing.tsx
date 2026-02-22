@@ -9,7 +9,7 @@ export default async function Pages__seasons__listing({ ctx }: RequestInfo) {
 	return (
 		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading seasons...</div>}>
-				<a href="/seasons/new">New Season</a>
+				{ctx.permissions?.includes('seasons:create') && <a href="/seasons/new">New Season</a>}
 				<div className="seasons-listing">
 					{seasons.map(s => {
 						return (
