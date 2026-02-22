@@ -1,0 +1,17 @@
+name: Question / Discussion
+description: Ask a question or kick off a discussion.
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question or Topic
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Background / Context
+      description: Any relevant context that would help others respond.

@@ -1,0 +1,35 @@
+name: Tech Debt
+description: Code quality, refactoring, or infrastructure improvements.
+title: "[Tech Debt]: "
+labels: ["tech-debt"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What needs improvement?
+      description: Describe the current state and why it's a problem.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Improvement
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - Low – minor cleanup
+        - Medium – affects maintainability or performance
+        - High – blocking or causes recurring issues
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
