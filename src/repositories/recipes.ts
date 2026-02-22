@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 import db from '@/db';
 import { recipes } from '@/models';
 import type { Recipe, RecipeFormSave } from '@/types';
+import { validateUuid } from '@/utils';
 
 export async function getRecipes(): Promise<Recipe[]> {
 	const allRecipes = await db.select().from(recipes);
@@ -9,6 +10,10 @@ export async function getRecipes(): Promise<Recipe[]> {
 }
 
 export async function getRecipeById(recipeId: string): Promise<Recipe> {
+	if (!validateUuid(recipeId)) {
+		throw new Error(`Invalid id: ${recipeId}`);
+	}
+
 	const matchedRecipes = await db.select().from(recipes).where(eq(recipes.id, recipeId));
 
 	if (matchedRecipes.length !== 1) {
