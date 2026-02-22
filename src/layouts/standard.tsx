@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { StrictMode } from 'react';
 import { BiFoodMenu } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
 import { CiHome } from 'react-icons/ci';
@@ -25,7 +26,7 @@ export default function StandardLayout({
 	};
 
 	return (
-		<>
+		<StrictMode>
 			<header>
 				<nav className="main-nav">
 					{Object.entries(navItems).map(([key, item]) => {
@@ -79,6 +80,6 @@ export default function StandardLayout({
 				<h2 className="page-title">{pageTitle}</h2>
 				{children}
 			</main>
-		</>
+		</StrictMode>
 	);
 }
