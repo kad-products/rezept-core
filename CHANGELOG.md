@@ -1,3 +1,16 @@
+## [1.4.0](https://github.com/kad-products/rezept-core/compare/v1.3.3...v1.4.0) (2026-02-22)
+
+### Features
+
+* add initial roles and permissions to the site ([f34b9c5](https://github.com/kad-products/rezept-core/commit/f34b9c5e361ffaea00a2f07af6df78a765116b74))
+* add permissions and roles for users ([dadbbae](https://github.com/kad-products/rezept-core/commit/dadbbaee5e76dea1e60cfba79a9e7f77f6247fdf))
+* enable strict mode in react ([43394e0](https://github.com/kad-products/rezept-core/commit/43394e0feb71fe3dfce7e4a05f76854cc832e42a))
+
+### Bug Fixes
+
+* handle recipe client-side validation a llittle better ([bd558fc](https://github.com/kad-products/rezept-core/commit/bd558fc39486f1aaa3e2242f3753a9b3d610ffec))
+* have input fields handle null conversion to empty strings ([ed7f31b](https://github.com/kad-products/rezept-core/commit/ed7f31b24e804d9905f45ccf42ee5a1f2bd86bf1))
+
 ## [1.3.3](https://github.com/kad-products/rezept-core/compare/v1.3.2...v1.3.3) (2026-02-21)
 
 ### Code Refactoring
