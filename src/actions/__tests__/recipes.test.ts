@@ -39,6 +39,10 @@ const mockRequestInfo: MockRequestInfo = {
 };
 
 vi.mock('rwsdk/worker', () => ({
+	serverAction: (action: any) => {
+		// If called with middleware array, return the last element (the actual handler)
+		return Array.isArray(action) ? action[action.length - 1] : action;
+	},
 	get requestInfo() {
 		return mockRequestInfo;
 	},
@@ -49,9 +53,9 @@ import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
 import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
 import { updateRecipeSections } from '@/repositories/recipe-sections';
 import { createRecipe, updateRecipe } from '@/repositories/recipes';
-import { saveRecipe } from '../recipes';
+import { _saveRecipe } from '../recipes';
 
-describe('saveRecipe', () => {
+describe('_saveRecipe', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockRequestInfo.ctx.user = { id: 'test-user-id' };
@@ -106,7 +110,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toContain('You must be logged in');
@@ -122,7 +126,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBe('mock-recipe-id');
@@ -147,7 +151,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
 			expect(createRecipe).toHaveBeenCalledWith(
@@ -166,7 +170,7 @@ describe('saveRecipe', () => {
 		it('validates required fields', async () => {
 			const data = {} as any;
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toBeDefined();
@@ -180,7 +184,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.title).toBeDefined();
@@ -193,7 +197,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.title).toBeDefined();
@@ -208,7 +212,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 		});
@@ -222,7 +226,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
@@ -235,7 +239,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data).toBeDefined();
@@ -265,7 +269,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
 			expect(createRecipe).toHaveBeenCalledTimes(1);
@@ -294,7 +298,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data?.sections).toHaveLength(1);
@@ -329,7 +333,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
 			expect(createRecipe).toHaveBeenCalledTimes(1);
@@ -356,7 +360,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 		});
@@ -380,7 +384,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 		});
@@ -403,7 +407,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 		});
@@ -426,7 +430,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 		});
@@ -442,7 +446,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
 			expect(updateRecipe).toHaveBeenCalledTimes(1);
@@ -465,7 +469,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
@@ -482,7 +486,7 @@ describe('saveRecipe', () => {
 				sections: [],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.errors?._form?.[0]).toBe('Failed to save item');
 			expect(result.errors?._form?.[0]).not.toContain('postgres://');
@@ -505,7 +509,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
@@ -532,7 +536,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
@@ -558,7 +562,7 @@ describe('saveRecipe', () => {
 				],
 			};
 
-			const result = await saveRecipe(data);
+			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();

@@ -1,12 +1,12 @@
 'use server';
 
 import { env } from 'cloudflare:workers';
-import { requestInfo } from 'rwsdk/worker';
+import { requestInfo, serverAction } from 'rwsdk/worker';
+import { requirePermissions } from '@/middleware/permissions';
 import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
 import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
 import { updateRecipeSections } from '@/repositories/recipe-sections';
 import { createRecipe, updateRecipe } from '@/repositories/recipes';
-
 import { recipeFormSchema } from '@/schemas';
 
 import type {
@@ -21,7 +21,12 @@ import type {
 	RecipeSectionFormSave,
 } from '@/types';
 
-export async function saveRecipe(formData: RecipeFormData): Promise<ActionState<RecipeFormData>> {
+export const saveRecipe = serverAction([requirePermissions('seasons:create', 'seasons:update'), _saveRecipe]);
+
+/**
+ * @private - exported for testing only, do not use directly
+ */
+export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState<RecipeFormData>> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 

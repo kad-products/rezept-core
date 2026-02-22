@@ -14,7 +14,7 @@ export function NumberInput({ label, required = false }: { label: string; requir
 					id={field.name}
 					type="number"
 					name={field.name}
-					value={field.state.value}
+					value={field.state.value ?? undefined}
 					onBlur={field.handleBlur}
 					onChange={e => field.handleChange(e.target.value)}
 				/>

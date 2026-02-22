@@ -8,6 +8,7 @@ export const users = sqliteTable('users', {
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	username: text().notNull().unique(),
+	role: text({ enum: ['ADMIN', 'BASIC'] }),
 	createdAt: text().notNull().default(sql`(datetime('now', 'localtime'))`),
 	updatedAt: text(),
 });

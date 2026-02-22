@@ -29,10 +29,14 @@ export default function Recipe({
 		defaultValues: (recipe ? recipe : newRecipeDefaults) as RecipeFormData,
 		validators: {
 			onBlur({ value }) {
-				console.log(value);
+				// having to do this manually because typescript didn't like the signature of recipeFormSchema
+				// and the type it expected/returned compared to the shape of the form data
+				console.log(`Form values: ${JSON.stringify(value, null, 4)}`);
 				const results = recipeFormSchema.safeParse(value);
-				console.log(results);
-				return results.success;
+				console.log(`Schema results: ${JSON.stringify(results, null, 4)}`);
+				if (results.success) {
+					return undefined;
+				}
 			},
 		},
 		onSubmit: async ({ value: formDataObj }) => {
