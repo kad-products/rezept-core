@@ -40,14 +40,7 @@ export default function Recipe({
 			},
 		},
 		onSubmit: async ({ value: formDataObj }) => {
-			console.log(`About to submit`);
-			try {
-				const saveResults = await saveRecipe(formDataObj);
-				setFormState(saveResults);
-				console.log(`Just submitted`);
-			} catch (err) {
-				console.log(err);
-			}
+			setFormState(await saveRecipe(formDataObj));
 		},
 	});
 
