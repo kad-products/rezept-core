@@ -24,16 +24,22 @@ export default defineConfig({
 				branches: 20,
 				lines: 30, // using this to make sure we don't miss something big or have dead code
 				'src/actions/**': {
-					branches: 8,
+					branches: 23,
 				},
 				'src/middleware/**': {
 					branches: 100,
 				},
 				'src/repositories/**': {
-					branches: 30,
+					branches: 44,
+				},
+				'src/schemas/**': {
+					branches: 100,
+				},
+				'src/session/**': {
+					branches: 100,
 				},
 				'src/utils/**': {
-					branches: 0,
+					branches: 100,
 				},
 			},
 		},

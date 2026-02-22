@@ -147,6 +147,20 @@ describe('recipeFormSchema', () => {
 			const result = recipeFormSchema.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
+
+		it('transforms empty string id to undefined', () => {
+			const validData = {
+				id: '',
+				authorId: randomUUID(),
+				title: 'Test',
+			};
+
+			const result = recipeFormSchema.safeParse(validData);
+			expect(result.success).toBe(true);
+			if (result.success) {
+				expect(result.data.id).toBeUndefined();
+			}
+		});
 	});
 
 	describe('sections', () => {
