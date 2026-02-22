@@ -9,7 +9,8 @@ export default async function Pages__recipes__listing({ ctx }: RequestInfo) {
 	return (
 		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
 			<Suspense fallback={<div>Loading recipes...</div>}>
-				<a href="/recipes/new">New Recipe</a>
+				{ctx.permissions?.includes('recipes:create') && <a href="/recipes/new">New Recipe</a>}
+
 				<div className="recipes-listing">
 					{recipes.map(r => {
 						return (

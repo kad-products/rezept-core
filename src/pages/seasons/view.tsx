@@ -18,9 +18,12 @@ export default async function Pages__seasons__view({ ctx, params }: RequestInfo)
 		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading season...</div>}>
 				<h3>{season.name}</h3>
-				<nav className="in-page-nav">
-					<a href={`/seasons/${season.id}/edit`}>Edit</a>
-				</nav>
+				{ctx.permissions?.includes('seasons:update') && (
+					<nav className="in-page-nav">
+						<a href={`/seasons/${season.id}/edit`}>Edit</a>
+					</nav>
+				)}
+
 				<p>{season.description}</p>
 				<ul>
 					<li>Country: {season.country}</li>
