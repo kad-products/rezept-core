@@ -51,7 +51,7 @@
 		"react-icons": "^5.5.0",
 		"react-select": "^5.10.2",
 		"react-server-dom-webpack": "19.2.3",
-		"rwsdk": "1.0.0-beta.42",
+		"rwsdk": "1.0.0-beta.54",
 		"ua-parser-js": "^2.0.8",
 		"uuid": "^13.0.0",
 		"zod": "^4.3.6"
@@ -97,7 +97,11 @@
 			"esbuild",
 			"sharp",
 			"workerd"
-		]
+		],
+		"overrides": {
+			"@types/react": "19.2.14",
+			"@types/react-dom": "19.2.3"
+		}
 	},
 	"lint-staged": {
 		"*": [
