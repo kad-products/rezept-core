@@ -1,6 +1,8 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { getRequestInfo } from 'rwsdk/worker';
+import type { Permission } from '@/types';
 
-const permissions = {
+export const permissions = {
 	seasons: {
 		create: ['ADMIN'],
 		read: ['*'],
@@ -39,3 +41,17 @@ export default async function permissionsMiddleware({ ctx }: RequestInfo<Default
 	}
 	ctx.permissions = flattenedPermissions.filter(p => p.roles.includes('*') || p.roles.includes(role)).map(p => p.permission);
 }
+
+export const requirePermissions = (...required: Permission[]) => {
+	return async () => {
+		const { ctx } = getRequestInfo();
+		const missing = required.filter(p => !ctx.permissions?.includes(p));
+
+		if (missing.length > 0) {
+			return new Response(JSON.stringify({ error: 'Forbidden', missing }), {
+				status: 403,
+				headers: { 'Content-Type': 'application/json' },
+			});
+		}
+	};
+};

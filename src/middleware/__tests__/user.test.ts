@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { User } from '@/types';
 
 vi.mock('@/repositories/users', () => ({
 	getUserById: vi.fn(),
@@ -17,9 +18,10 @@ import userMiddleware from '../user';
 const mockUser = {
 	id: 'test-user-id',
 	username: 'testuser',
+	role: 'BASIC',
 	createdAt: new Date().toString(),
 	updatedAt: null,
-};
+} as User;
 
 const mockRequestInfo = {
 	ctx: {} as any,
