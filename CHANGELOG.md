@@ -1,3 +1,14 @@
+## [1.5.0](https://github.com/kad-products/rezept-core/compare/v1.4.0...v1.5.0) (2026-02-22)
+
+### Features
+
+* permissions in the recipe and season page nav ([85c3c83](https://github.com/kad-products/rezept-core/commit/85c3c83d4ae57135253fc975996bdcdbb6c3808e))
+
+### Bug Fixes
+
+* align recipe lookup by id to standard pattern ([f3034a7](https://github.com/kad-products/rezept-core/commit/f3034a79a4641406eda0b1cc20fbb73c24d0c16f))
+* validate uuids in repository methods ([7f623ab](https://github.com/kad-products/rezept-core/commit/7f623ab5f32003adfe1932b16155af1dbfc22ba2))
+
 ## [1.4.0](https://github.com/kad-products/rezept-core/compare/v1.3.3...v1.4.0) (2026-02-22)
 
 ### Features
