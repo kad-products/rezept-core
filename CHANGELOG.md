@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/kad-products/rezept-core/compare/v1.5.0...v1.6.0) (2026-02-23)
+
+### Features
+
+* add initial version of logger middleware ([98b3939](https://github.com/kad-products/rezept-core/commit/98b39396a152fb80b66adb444650b3fac04dcf29))
+
 ## [1.5.0](https://github.com/kad-products/rezept-core/compare/v1.4.0...v1.5.0) (2026-02-22)
 
 ### Features
