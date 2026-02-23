@@ -6,12 +6,15 @@ import { CiHome } from 'react-icons/ci';
 import { GiFallingLeaf } from 'react-icons/gi';
 import { IoLogInOutline } from 'react-icons/io5';
 import type { DefaultAppContext } from 'rwsdk/worker';
+import RzLogger from '@/logger';
 
 export default function StandardLayout({
 	children,
 	currentBasePage,
 	pageTitle,
-	ctx = {},
+	ctx = {
+		logger: new RzLogger(),
+	},
 }: {
 	children: React.ReactNode;
 	currentBasePage: string | undefined;
