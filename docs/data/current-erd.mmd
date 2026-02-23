@@ -34,32 +34,6 @@ erDiagram
         text deletedAt
         text deletedBy
     }
-    list_items {
-        text id PK "not null"
-        text listId "not null"
-        text ingredientId "not null"
-        real quantity
-        text unitId
-        text status "not null, default: 'NEEDED'"
-        text notes
-        text createdAt "not null"
-        text createdBy "not null"
-        text updatedAt
-        text updatedBy
-        text deletedAt
-        text deletedBy
-    }
-    lists {
-        text id PK "not null"
-        text userId "not null"
-        text name "not null"
-        text createdAt "not null"
-        text createdBy "not null"
-        text updatedAt
-        text updatedBy
-        text deletedAt
-        text deletedBy
-    }
     recipe_ingredients {
         text id PK "not null"
         text recipeSectionId "not null"
@@ -147,18 +121,13 @@ erDiagram
     users {
         text id PK "not null"
         text username UK "not null"
+        text role
         text createdAt "not null, default: `(datetime('now', 'localtime'))`"
         text updatedAt
     }
 credentials ||--o{ users : "credentials-users"
 ingredient_units ||--|| users : "ingredient_units-users-unitCreator"
 ingredients ||--|| users : "ingredients-users-ingredientCreator"
-list_items ||--o{ lists : "list_items-lists"
-list_items ||--|| ingredients : "ingredients-list_items"
-list_items ||--|| ingredient_units : "ingredient_units-list_items"
-list_items ||--|| users : "list_items-users-listItemCreator"
-lists ||--|| users : "lists-users-listOwner"
-lists ||--|| users : "lists-users-listCreator"
 recipe_ingredients ||--o{ recipe_sections : "recipe_ingredients-recipe_sections"
 recipe_ingredients ||--o{ ingredients : "ingredients-recipe_ingredients"
 recipe_ingredients ||--o{ ingredient_units : "ingredient_units-recipe_ingredients"
