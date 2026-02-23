@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { recipeIngredients } from '@/models';
 import type { RecipeIngredient, RecipeIngredientFormSave } from '@/types';
@@ -17,7 +18,7 @@ export async function updateRecipeIngredients(
 	ingredientsData: RecipeIngredientFormSave[],
 	userId: string,
 ): Promise<RecipeIngredient[]> {
-	console.log(
+	requestInfo.ctx.logger.info(
 		`Updating recipe ingredients for recipeSectionId ${recipeSectionId} with data: ${JSON.stringify(ingredientsData, null, 4)} `,
 	);
 
@@ -32,7 +33,7 @@ export async function updateRecipeIngredients(
 
 	await Promise.all(removedIngredientIds.map(id => db.delete(recipeIngredients).where(eq(recipeIngredients.id, id))));
 
-	console.log(`Removed ingredient IDs: ${JSON.stringify(removedIngredientIds, null, 4)} `);
+	requestInfo.ctx.logger.info(`Removed ingredient IDs: ${JSON.stringify(removedIngredientIds, null, 4)} `);
 
 	// update or insert ingredients from ingredientsData
 	const savedIngredients = await Promise.all(
@@ -53,7 +54,7 @@ export async function updateRecipeIngredients(
 					.where(eq(recipeIngredients.id, ingData.id))
 					.returning();
 
-				console.log(`Updated existing ingredient ID ${ingData.id}: ${JSON.stringify(ingData, null, 4)} `);
+				requestInfo.ctx.logger.info(`Updated existing ingredient ID ${ingData.id}: ${JSON.stringify(ingData, null, 4)} `);
 
 				return updatedIngredient;
 			} else {
@@ -72,14 +73,16 @@ export async function updateRecipeIngredients(
 					})
 					.returning();
 
-				console.log(`Inserted new ingredient for recipeSectionId ${recipeSectionId}: ${JSON.stringify(ingData, null, 4)} `);
+				requestInfo.ctx.logger.info(
+					`Inserted new ingredient for recipeSectionId ${recipeSectionId}: ${JSON.stringify(ingData, null, 4)} `,
+				);
 
 				return newIngredient;
 			}
 		}),
 	);
 
-	console.log(
+	requestInfo.ctx.logger.info(
 		`Updated/Inserted ingredients for recipeSectionId ${recipeSectionId}: ${JSON.stringify(ingredientsData, null, 4)} `,
 	);
 

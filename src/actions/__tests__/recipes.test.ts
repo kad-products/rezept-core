@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type RzLogger from '@/logger';
+import Logger from '@/logger';
 
 // Mock repositories
 vi.mock('@/repositories/recipes', () => ({
@@ -26,6 +28,7 @@ vi.mock('cloudflare:workers', () => ({
 interface MockRequestInfo {
 	ctx: {
 		user: { id: string } | null;
+		logger: RzLogger;
 	};
 }
 
@@ -35,6 +38,7 @@ const mockRequestInfo: MockRequestInfo = {
 		user: {
 			id: 'test-user-id',
 		},
+		logger: new Logger(),
 	},
 };
 

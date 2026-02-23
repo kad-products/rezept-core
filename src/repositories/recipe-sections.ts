@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { recipeSections } from '@/models';
 import type { RecipeSection, RecipeSectionFormSave } from '@/types';
@@ -14,7 +15,9 @@ export async function updateRecipeSections(
 	sectionsData: RecipeSectionFormSave[],
 	userId: string,
 ): Promise<RecipeSection[]> {
-	console.log(`Updating recipe sections for recipeId ${recipeId} with data: ${JSON.stringify(sectionsData, null, 4)} `);
+	requestInfo.ctx.logger.info(
+		`Updating recipe sections for recipeId ${recipeId} with data: ${JSON.stringify(sectionsData, null, 4)} `,
+	);
 
 	// get existing sections
 	const existingSections = await getSectionsByRecipeId(recipeId);
@@ -24,14 +27,14 @@ export async function updateRecipeSections(
 
 	await Promise.all(removedSectionIds.map(id => db.delete(recipeSections).where(eq(recipeSections.id, id))));
 
-	console.log(`Removed section IDs: ${JSON.stringify(removedSectionIds, null, 4)} `);
+	requestInfo.ctx.logger.info(`Removed section IDs: ${JSON.stringify(removedSectionIds, null, 4)} `);
 
 	const returnSections = [];
 
 	// update or insert sections from sectionsData
 	for (const section of sectionsData) {
 		if (section.id) {
-			console.log(`Updating existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
+			requestInfo.ctx.logger.info(`Updating existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
 
 			// update existing section
 			const [updatedSection] = await db
@@ -44,10 +47,10 @@ export async function updateRecipeSections(
 				.where(eq(recipeSections.id, section.id))
 				.returning();
 
-			console.log(`Updated existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
+			requestInfo.ctx.logger.info(`Updated existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
 			returnSections.push(updatedSection);
 		} else {
-			console.log(`Inserting new section for recipeId ${recipeId}: ${JSON.stringify(section, null, 4)} `);
+			requestInfo.ctx.logger.info(`Inserting new section for recipeId ${recipeId}: ${JSON.stringify(section, null, 4)} `);
 
 			// insert new section
 			const [newSection] = await db
@@ -60,12 +63,12 @@ export async function updateRecipeSections(
 				})
 				.returning();
 
-			console.log(`Inserted new section: ${JSON.stringify(section, null, 4)} `);
+			requestInfo.ctx.logger.info(`Inserted new section: ${JSON.stringify(section, null, 4)} `);
 			returnSections.push(newSection);
 		}
 	}
 
-	console.log(`Updated/Inserted sections for recipeId ${recipeId}: ${JSON.stringify(sectionsData, null, 4)} `);
+	requestInfo.ctx.logger.info(`Updated/Inserted sections for recipeId ${recipeId}: ${JSON.stringify(sectionsData, null, 4)} `);
 
 	return returnSections;
 }

@@ -129,12 +129,12 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
 	const { request, response } = requestInfo;
 	const { origin } = new URL(request.url);
 
-	console.log(`Login: ${JSON.stringify(login, null, 4)}`);
+	requestInfo.ctx.logger.info(`Login: ${JSON.stringify(login, null, 4)}`);
 
 	const session = await sessions.load(request);
 	const challenge = session?.challenge;
 
-	console.log(`Challenge: ${JSON.stringify(challenge, null, 4)}`);
+	requestInfo.ctx.logger.info(`Challenge: ${JSON.stringify(challenge, null, 4)}`);
 
 	if (!challenge) {
 		return false;
@@ -142,7 +142,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
 
 	const credential = await getCredentialById(login.id);
 
-	console.log(`Credential: ${JSON.stringify(credential, null, 4)}`);
+	requestInfo.ctx.logger.info(`Credential: ${JSON.stringify(credential, null, 4)}`);
 
 	if (!credential) {
 		return false;
@@ -161,7 +161,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
 		},
 	});
 
-	console.log(`Verification: ${JSON.stringify(verification, null, 4)}`);
+	requestInfo.ctx.logger.info(`Verification: ${JSON.stringify(verification, null, 4)}`);
 
 	if (!verification.verified) {
 		return false;
@@ -171,7 +171,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
 
 	const user = await getUserById(credential.userId);
 
-	console.log(`User: ${JSON.stringify(user, null, 4)}`);
+	requestInfo.ctx.logger.info(`User: ${JSON.stringify(user, null, 4)}`);
 
 	if (!user) {
 		return false;

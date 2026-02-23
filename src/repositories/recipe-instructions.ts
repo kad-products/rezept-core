@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { recipeInstructions } from '@/models';
 import type { RecipeInstruction, RecipeInstructionFormSave } from '@/types';
@@ -14,7 +15,7 @@ export async function updateRecipeInstructions(
 	instructionsData: RecipeInstructionFormSave[],
 	userId: string,
 ): Promise<RecipeInstruction[]> {
-	console.log(
+	requestInfo.ctx.logger.info(
 		`Updating recipe instructions for recipeSectionId ${recipeSectionId} with data: ${JSON.stringify(instructionsData, null, 4)} `,
 	);
 
@@ -31,7 +32,7 @@ export async function updateRecipeInstructions(
 
 	await Promise.all(removedInstructionIds.map(id => db.delete(recipeInstructions).where(eq(recipeInstructions.id, id))));
 
-	console.log(`Removed instruction IDs: ${JSON.stringify(removedInstructionIds, null, 4)} `);
+	requestInfo.ctx.logger.info(`Removed instruction IDs: ${JSON.stringify(removedInstructionIds, null, 4)} `);
 
 	// update or insert instructions from instructionsData
 	const savedInstructions = await Promise.all(
@@ -48,7 +49,7 @@ export async function updateRecipeInstructions(
 					.where(eq(recipeInstructions.id, instData.id))
 					.returning();
 
-				console.log(`Updated existing instruction ID ${instData.id}: ${JSON.stringify(instData, null, 4)} `);
+				requestInfo.ctx.logger.info(`Updated existing instruction ID ${instData.id}: ${JSON.stringify(instData, null, 4)} `);
 				return updatedInstruction;
 			} else {
 				// insert new instruction
@@ -62,14 +63,16 @@ export async function updateRecipeInstructions(
 					})
 					.returning();
 
-				console.log(`Inserted new instruction for recipeSectionId ${recipeSectionId}: ${JSON.stringify(instData, null, 4)} `);
+				requestInfo.ctx.logger.info(
+					`Inserted new instruction for recipeSectionId ${recipeSectionId}: ${JSON.stringify(instData, null, 4)} `,
+				);
 
 				return newInstruction;
 			}
 		}),
 	);
 
-	console.log(
+	requestInfo.ctx.logger.info(
 		`Updated/Inserted instructions for recipeSectionId ${recipeSectionId}: ${JSON.stringify(instructionsData, null, 4)} `,
 	);
 

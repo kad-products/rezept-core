@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type RzLogger from '@/logger';
+import Logger from '@/logger';
 import { getSeasonById, getSeasons } from '@/repositories/seasons';
 import { createUser } from '@/repositories/users';
 import { resetDb } from '../../../tests/mocks/db';
@@ -11,12 +13,14 @@ vi.mock('cloudflare:workers', () => ({
 interface MockRequestInfo {
 	ctx: {
 		user: { id: string } | null;
+		logger: RzLogger;
 	};
 }
 
 const mockRequestInfo: MockRequestInfo = {
 	ctx: {
 		user: { id: 'test-user-id' },
+		logger: new Logger(),
 	},
 };
 

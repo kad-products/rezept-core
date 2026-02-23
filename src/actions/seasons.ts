@@ -17,13 +17,13 @@ export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<
 		};
 	}
 
-	console.log(`Form data received: ${JSON.stringify(formData, null, 4)} `);
+	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
 
 	try {
 		if (formData.id) {
 			const parsed = updateSeasonSchema.safeParse(formData);
 			if (!parsed.success) {
-				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
+				requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 				return {
 					success: false,
 					errors: parsed.error.flatten().fieldErrors,
@@ -34,7 +34,7 @@ export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<
 		} else {
 			const parsed = createSeasonSchema.safeParse(formData);
 			if (!parsed.success) {
-				console.log(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
+				requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 				return {
 					success: false,
 					errors: parsed.error.flatten().fieldErrors,
@@ -44,7 +44,7 @@ export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<
 			return { success: true, data: createdSeason };
 		}
 	} catch (error) {
-		console.log(`Error saving season: ${error} `);
+		requestInfo.ctx.logger.info(`Error saving season: ${error} `);
 
 		const errorMessage =
 			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save season';
