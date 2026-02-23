@@ -1,3 +1,9 @@
+## [1.6.1](https://github.com/kad-products/rezept-core/compare/v1.6.0...v1.6.1) (2026-02-23)
+
+### Bug Fixes
+
+* align erd to latest table models ([0884d53](https://github.com/kad-products/rezept-core/commit/0884d533549803731eb07a8c91c3c7680b0ef057))
+
 ## [1.6.0](https://github.com/kad-products/rezept-core/compare/v1.5.0...v1.6.0) (2026-02-23)
 
 ### Features
