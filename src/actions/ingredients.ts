@@ -14,7 +14,7 @@ export async function addIngredient(ingredientName: string) {
 		};
 	}
 
-	console.log(`Received on the server: ${ingredientName}`);
+	requestInfo.ctx.logger.info(`Received on the server: ${ingredientName}`);
 
 	return await createIngredient({ name: ingredientName }, userId);
 }

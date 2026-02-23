@@ -37,7 +37,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 		};
 	}
 
-	console.log(`Form data received: ${JSON.stringify(formData, null, 4)} `);
+	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
 
 	const parsed = recipeFormSchema.safeParse(formData);
 
@@ -48,7 +48,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 		};
 	}
 
-	console.log(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
+	requestInfo.ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
 
 	//   ______ _______ _______ _____  _____  _______
 	//  |_____/ |______ |         |   |_____] |______
@@ -61,9 +61,9 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 		} else {
 			recipe = await createRecipe(parsed.data, userId);
 		}
-		console.log(`Recipe ${recipe.id} saved`);
+		requestInfo.ctx.logger.info(`Recipe ${recipe.id} saved`);
 	} catch (error) {
-		console.log(`Error saving recipe: ${error} `);
+		requestInfo.ctx.logger.info(`Error saving recipe: ${error} `);
 
 		const errorMessage =
 			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
@@ -81,9 +81,9 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	let sections: RecipeSection[];
 	try {
 		sections = await updateRecipeSections(recipe.id, parsed.data.sections as RecipeSectionFormSave[], userId);
-		console.log(`Recipe sections saved for ${recipe.id}: ${JSON.stringify(sections, null, 4)}`);
+		requestInfo.ctx.logger.info(`Recipe sections saved for ${recipe.id}: ${JSON.stringify(sections, null, 4)}`);
 	} catch (error) {
-		console.log(`Error saving sections: ${error} `);
+		requestInfo.ctx.logger.info(`Error saving sections: ${error} `);
 
 		const errorMessage =
 			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
@@ -109,9 +109,9 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 				section.instructions as RecipeInstructionFormSave[],
 				userId,
 			);
-			console.log(`Recipe instructions saved for recipe ${recipe.id} section ${savedSection.id}`);
+			requestInfo.ctx.logger.info(`Recipe instructions saved for recipe ${recipe.id} section ${savedSection.id}`);
 		} catch (error) {
-			console.log(`Error saving section instructions: ${error} `);
+			requestInfo.ctx.logger.info(`Error saving section instructions: ${error} `);
 
 			const errorMessage =
 				env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
@@ -138,9 +138,9 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 				section.ingredients as RecipeIngredientFormSave[],
 				userId,
 			);
-			console.log(`Recipe ingredients saved for recipe ${recipe.id} section ${section.id}`);
+			requestInfo.ctx.logger.info(`Recipe ingredients saved for recipe ${recipe.id} section ${section.id}`);
 		} catch (error) {
-			console.log(`Error saving section ingredients: ${error} `);
+			requestInfo.ctx.logger.info(`Error saving section ingredients: ${error} `);
 
 			const errorMessage =
 				env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
