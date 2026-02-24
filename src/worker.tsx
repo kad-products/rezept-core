@@ -9,6 +9,7 @@ import authRoutes from '@/pages/auth/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
+import botMiddleware from './middleware/bot';
 import loggerMiddleware from './middleware/logger';
 import permissionsMiddleware from './middleware/permissions';
 import Pages__root from './pages/root';
@@ -16,6 +17,7 @@ import Pages__root from './pages/root';
 export { SessionDurableObject } from '@/session/durable-object';
 
 export default defineApp([
+	botMiddleware,
 	loggerMiddleware,
 	headersMiddleware,
 	authMiddleware,
