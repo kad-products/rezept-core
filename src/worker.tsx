@@ -1,6 +1,6 @@
 import { prefix, render, route } from 'rwsdk/router';
 import { defineApp } from 'rwsdk/worker';
-
+import apiRoutes from '@/api/routes';
 import { Document } from '@/Document';
 import authMiddleware from '@/middleware/auth';
 import headersMiddleware from '@/middleware/headers';
@@ -25,6 +25,7 @@ export default defineApp([
 	permissionsMiddleware,
 	render(Document, [
 		route('/', Pages__root),
+		prefix('/api', apiRoutes),
 		prefix('/auth', authRoutes),
 		prefix('/profile', profileRoutes),
 		prefix('/recipes', recipeRoutes),
