@@ -71,6 +71,13 @@
 			"when": 1771725423962,
 			"tag": "0009_lovely_omega_sentinel",
 			"breakpoints": true
+		},
+		{
+			"idx": 10,
+			"version": "6",
+			"when": 1771905158034,
+			"tag": "0010_lovely_network",
+			"breakpoints": true
 		}
 	]
 }

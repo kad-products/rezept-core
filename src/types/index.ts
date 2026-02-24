@@ -4,6 +4,7 @@ export * from './form-validation-response';
 export * from './ingredient-units';
 export * from './ingredients';
 export * from './permissions';
+export * from './recipe-imports';
 export * from './recipe-ingredients';
 export * from './recipe-instructions';
 export * from './recipe-sections';

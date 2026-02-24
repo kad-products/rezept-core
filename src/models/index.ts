@@ -1,6 +1,7 @@
 export * from './credentials';
 export * from './ingredient-units';
 export * from './ingredients';
+export * from './recipe-imports';
 export * from './recipe-ingredients';
 export * from './recipe-instructions';
 export * from './recipe-sections';
