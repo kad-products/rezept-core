@@ -1,21 +1,7 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { getRequestInfo } from 'rwsdk/worker';
+import permissions from '@/data/permissions';
 import type { Permission } from '@/types';
-
-export const permissions = {
-	seasons: {
-		create: ['ADMIN'],
-		read: ['*'],
-		update: ['ADMIN'],
-		delete: ['ADMIN'],
-	},
-	recipes: {
-		create: ['ADMIN', 'BASIC'],
-		read: ['*'],
-		update: ['ADMIN', 'BASIC'],
-		delete: ['ADMIN', 'BASIC'],
-	},
-};
 
 export function flattenPermissions(perms: typeof permissions) {
 	const flattened: Array<{ permission: string; roles: string[] }> = [];
