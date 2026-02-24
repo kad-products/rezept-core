@@ -1,3 +1,17 @@
+## [1.7.0](https://github.com/kad-products/rezept-core/compare/v1.6.1...v1.7.0) (2026-02-24)
+
+### Features
+
+* add recipe imports model, types, and migration ([9e2876f](https://github.com/kad-products/rezept-core/commit/9e2876f3a25282a33e518ca9a6697aead91c136a))
+* break up permissions to allow for non-cyclical dependencies ([71e4eb4](https://github.com/kad-products/rezept-core/commit/71e4eb487e9a32f8b1de001e472b8bc9907890f6))
+* initial API for uploading recipe imports ([5115918](https://github.com/kad-products/rezept-core/commit/51159182ba2c869bb7ceee945d339ff8d90e40ec))
+* recipe import form ([5c5f46a](https://github.com/kad-products/rezept-core/commit/5c5f46a307d08df082505de7f344d28405d813d2))
+
+### Bug Fixes
+
+* added "bot detection" middleware that mostly just stop react devtools ([916d917](https://github.com/kad-products/rezept-core/commit/916d91701ee55109511055026e7c4cd0446d512e))
+* adjustments for CSP blob handling for file upload processing/preview ([24bd46a](https://github.com/kad-products/rezept-core/commit/24bd46a402aeb79d2da9b94d54f691c249d431c8))
+
 ## [1.6.1](https://github.com/kad-products/rezept-core/compare/v1.6.0...v1.6.1) (2026-02-23)
 
 ### Bug Fixes
