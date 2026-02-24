@@ -1,6 +1,6 @@
 import { prefix, render, route } from 'rwsdk/router';
 import { defineApp } from 'rwsdk/worker';
-
+import apiRoutes from '@/api/routes';
 import { Document } from '@/Document';
 import authMiddleware from '@/middleware/auth';
 import headersMiddleware from '@/middleware/headers';
@@ -9,6 +9,7 @@ import authRoutes from '@/pages/auth/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
+import botMiddleware from './middleware/bot';
 import loggerMiddleware from './middleware/logger';
 import permissionsMiddleware from './middleware/permissions';
 import Pages__root from './pages/root';
@@ -16,6 +17,7 @@ import Pages__root from './pages/root';
 export { SessionDurableObject } from '@/session/durable-object';
 
 export default defineApp([
+	botMiddleware,
 	loggerMiddleware,
 	headersMiddleware,
 	authMiddleware,
@@ -23,6 +25,7 @@ export default defineApp([
 	permissionsMiddleware,
 	render(Document, [
 		route('/', Pages__root),
+		prefix('/api', apiRoutes),
 		prefix('/auth', authRoutes),
 		prefix('/profile', profileRoutes),
 		prefix('/recipes', recipeRoutes),

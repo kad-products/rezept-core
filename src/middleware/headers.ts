@@ -1,8 +1,21 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 
-// (alias) type RouteMiddleware<T extends RequestInfo = RequestInfo<any, DefaultAppContext>> = (requestInfo: T) => MaybePromise<void | React.JSX.Element | Response>
-
 export default function headerMiddleware({ response, rw: { nonce } }: RequestInfo<DefaultAppContext>) {
+	const cspClaims = {
+		'default-src': `'self'`,
+		'script-src': `'self' 'unsafe-eval' 'nonce-${nonce}' https://challenges.cloudflare.com`,
+		'style-src': `'self' 'unsafe-inline' https://fonts.googleapis.com`,
+		'font-src': `'self' https://fonts.gstatic.com`,
+		'img-src': `'self' data: blob:`,
+		'frame-ancestors': `'self'`,
+		'frame-src': `'self' https://challenges.cloudflare.com`,
+		'object-src': `'none'`,
+	};
+
+	const csp = Object.entries(cspClaims)
+		.map(([type, val]) => `${type} ${val}`)
+		.join('; ');
+
 	if (!import.meta.env.VITE_IS_DEV_SERVER) {
 		// Forces browsers to always use HTTPS for a specified time period (2 years)
 		response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
@@ -18,8 +31,5 @@ export default function headerMiddleware({ response, rw: { nonce } }: RequestInf
 	response.headers.set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
 
 	// Defines trusted sources for content loading and script execution:
-	response.headers.set(
-		'Content-Security-Policy',
-		`default-src 'self'; script-src 'self' 'unsafe-eval' 'nonce-${nonce}' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; frame-ancestors 'self'; frame-src 'self' https://challenges.cloudflare.com; object-src 'none';`,
-	);
+	response.headers.set('Content-Security-Policy', csp);
 }
