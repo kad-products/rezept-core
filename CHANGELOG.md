@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/kad-products/rezept-core/compare/v1.7.0...v1.8.0) (2026-02-25)
+
+### Features
+
+* view recipe import details ([a1e13a7](https://github.com/kad-products/rezept-core/commit/a1e13a7f5e827a18c7c4f068253c598c27019916))
+
 ## [1.7.0](https://github.com/kad-products/rezept-core/compare/v1.6.1...v1.7.0) (2026-02-24)
 
 ### Features
