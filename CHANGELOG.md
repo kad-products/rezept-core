@@ -1,3 +1,18 @@
+## [1.9.0](https://github.com/kad-products/rezept-core/compare/v1.8.0...v1.9.0) (2026-02-25)
+
+### Features
+
+* add the TF for provisioning integration environment ([e0663a0](https://github.com/kad-products/rezept-core/commit/e0663a0b4f4667a48c51982e42ad6ad773125411))
+* release setup and docs for integration environment ([41ca4a6](https://github.com/kad-products/rezept-core/commit/41ca4a6510d32c051c945cb4919f62f2549c2a55))
+
+### Bug Fixes
+
+* ignore tf vars files ([df100b1](https://github.com/kad-products/rezept-core/commit/df100b13e72e37291246e200974f47c1bb60275a))
+
+### Code Refactoring
+
+* prep wrangler file for the integration release ([0120b3e](https://github.com/kad-products/rezept-core/commit/0120b3e32f7f5057969d097cd3877c9df5780a36))
+
 ## [1.8.0](https://github.com/kad-products/rezept-core/compare/v1.7.0...v1.8.0) (2026-02-25)
 
 ### Features
