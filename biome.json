@@ -28,7 +28,7 @@
 		}
 	},
 	"files": {
-		"includes": ["**", "!coverage", "!worker-configuration.d.ts"]
+		"includes": ["**", "!coverage", "!worker-configuration.d.ts", "!**/.terraform"]
 	},
 	"overrides": [
 		{
