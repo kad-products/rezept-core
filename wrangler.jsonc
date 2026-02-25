@@ -10,14 +10,6 @@
 	"observability": {
 		"enabled": true
 	},
-	"durable_objects": {
-		"bindings": [
-			{
-				"name": "SESSION_DURABLE_OBJECT",
-				"class_name": "SessionDurableObject"
-			}
-		]
-	},
 	"vars": {
 		"WEBAUTHN_APP_NAME": "rezept"
 	},
@@ -27,18 +19,54 @@
 			"new_sqlite_classes": ["SessionDurableObject"]
 		}
 	],
+	// Top-level bindings used by wrangler dev (local/miniflare)
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "SESSION_DURABLE_OBJECT",
+				"class_name": "SessionDurableObject"
+			}
+		]
+	},
 	"d1_databases": [
 		{
 			"binding": "rezept_core",
-			"database_name": "rezept-core",
-			"database_id": "3500413b-0c56-4bb5-b3f1-9590c91846c8",
+			"database_name": "rezept-core-local",
+			"database_id": "local",
 			"migrations_dir": "drizzle"
 		}
 	],
 	"r2_buckets": [
 		{
-			"bucket_name": "rezept-recipe-imports-integration",
-			"binding": "rezept_recipe_imports"
+			"binding": "rezept_recipe_imports",
+			"bucket_name": "rezept-recipe-imports-local"
 		}
-	]
+	],
+	"env": {
+		"integration": {
+			"d1_databases": [
+				{
+					"binding": "rezept_core",
+					"database_id": "1ea3d2e0-e4fe-4cd6-8469-2ab23bd51558",
+					"database_name": "rezept-core-integration",
+					"migrations_dir": "drizzle"
+				}
+			],
+			"durable_objects": {
+				"bindings": [
+					{
+						"class_name": "SessionDurableObject",
+						"name": "SESSION_DURABLE_OBJECT"
+					}
+				]
+			},
+			"r2_buckets": [
+				{
+					"binding": "rezept_recipe_imports",
+					"bucket_name": "rezept-recipe-imports-integration"
+				}
+			],
+			"workers_dev": true
+		}
+	}
 }

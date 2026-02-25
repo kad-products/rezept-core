@@ -66,6 +66,9 @@ jobs:
             https://api.github.com/repos/kad-products/rezept-core/branches/main/protection \
             -d '{"restrictions":{"users":["arsdehnel"],"teams":[]},"required_status_checks":{"strict":true,"contexts":["commitlint / commitlint"]},"enforce_admins":false,"required_pull_request_reviews":{"dismiss_stale_reviews":false,"require_code_owner_reviews":false,"required_approving_review_count":0},"allow_deletions":false,"allow_force_pushes":false,"block_creations":false}'
 
-      - name: Trigger Integration Deploy
+      - name: Integration Deploy
         if: success()
-        run: echo "Integration deploy would trigger here"
+        env: 
+          CLOUDFLARE_ENV: integration
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: pnpm release
