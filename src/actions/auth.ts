@@ -15,7 +15,7 @@ import { createUser, getUserById } from '@/repositories/users';
 import { sessions } from '@/session/store';
 
 function getWebAuthnConfig(request: Request) {
-	const rpID = env.WEBAUTHN_RP_ID ?? new URL(request.url).hostname;
+	const rpID = new URL(request.url).hostname;
 	const rpName = import.meta.env.VITE_IS_DEV_SERVER ? 'Development App' : env.WEBAUTHN_APP_NAME;
 	return {
 		rpName,
@@ -74,7 +74,7 @@ export async function finishPasskeyRegistration(username: string, registration: 
 		response: registration,
 		expectedChallenge: challenge,
 		expectedOrigin: origin,
-		expectedRPID: env.WEBAUTHN_RP_ID || new URL(request.url).hostname,
+		expectedRPID: new URL(request.url).hostname,
 	});
 
 	if (!verification.verified || !verification.registrationInfo) {
@@ -152,7 +152,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
 		response: login,
 		expectedChallenge: challenge,
 		expectedOrigin: origin,
-		expectedRPID: env.WEBAUTHN_RP_ID || new URL(request.url).hostname,
+		expectedRPID: new URL(request.url).hostname,
 		requireUserVerification: false,
 		credential: {
 			id: credential.credentialId,
