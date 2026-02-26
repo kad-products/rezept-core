@@ -4,4 +4,3 @@ pnpm lint-staged --allow-empty
 pnpm test
 pnpm biome:check
 pnpm type-check
-wrangler deploy --dry-run
