@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/kad-products/rezept-core/compare/v1.9.1...v1.9.2) (2026-02-26)
+
+### Bug Fixes
+
+* conditionally render tanstack devtools ([7d7c6bd](https://github.com/kad-products/rezept-core/commit/7d7c6bdb9c1503efb88c54905de7b9379808c1e5))
+* do iso country codes without importing the package ([92eb02b](https://github.com/kad-products/rezept-core/commit/92eb02b527f450ea6172433829b7dc53a5a0601f))
+
 ## [1.9.1](https://github.com/kad-products/rezept-core/compare/v1.9.0...v1.9.1) (2026-02-26)
 
 ### Bug Fixes
