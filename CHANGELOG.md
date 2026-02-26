@@ -1,3 +1,27 @@
+## [1.10.0](https://github.com/kad-products/rezept-core/compare/v1.9.2...v1.10.0) (2026-02-26)
+
+### Features
+
+* use a more accurate variable name for session encryption ([aff2343](https://github.com/kad-products/rezept-core/commit/aff2343c02472bf04bf915ea20baf6fee8fa11e1))
+
+### Bug Fixes
+
+* remove references to old web authn RP ID ([66eb225](https://github.com/kad-products/rezept-core/commit/66eb225e98eede9b74dc2a22288ffc95014bbd53))
+
+## [1.9.2](https://github.com/kad-products/rezept-core/compare/v1.9.1...v1.9.2) (2026-02-26)
+
+### Bug Fixes
+
+* conditionally render tanstack devtools ([7d7c6bd](https://github.com/kad-products/rezept-core/commit/7d7c6bdb9c1503efb88c54905de7b9379808c1e5))
+* do iso country codes without importing the package ([92eb02b](https://github.com/kad-products/rezept-core/commit/92eb02b527f450ea6172433829b7dc53a5a0601f))
+
+## [1.9.1](https://github.com/kad-products/rezept-core/compare/v1.9.0...v1.9.1) (2026-02-26)
+
+### Bug Fixes
+
+* environment structure in wrangler config ([b57a7a1](https://github.com/kad-products/rezept-core/commit/b57a7a109129d5c5d5003acfde41e723ad796165))
+* remove wrangler dry run ([d364e46](https://github.com/kad-products/rezept-core/commit/d364e4671c9eafb9f9f1955eb6f7754347cb994d))
+
 ## [1.9.0](https://github.com/kad-products/rezept-core/compare/v1.8.0...v1.9.0) (2026-02-25)
 
 ### Features
