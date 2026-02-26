@@ -1,3 +1,9 @@
+## [1.10.1](https://github.com/kad-products/rezept-core/compare/v1.10.0...v1.10.1) (2026-02-26)
+
+### Bug Fixes
+
+* **ci:** run migrations in release process ([57e9744](https://github.com/kad-products/rezept-core/commit/57e9744079b4c90099f1d3111be64dd8e66d6fbc))
+
 ## [1.10.0](https://github.com/kad-products/rezept-core/compare/v1.9.2...v1.10.0) (2026-02-26)
 
 ### Features
