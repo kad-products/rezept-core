@@ -28,7 +28,15 @@
 		}
 	},
 	"files": {
-		"includes": ["**", "!coverage", "!worker-configuration.d.ts", "!**/.terraform", "!**/node_modules", "!**/dist"]
+		"includes": [
+			"**",
+			"!coverage",
+			"!worker-configuration.d.ts",
+			"!**/.terraform",
+			"!**/node_modules",
+			"!**/dist",
+			"!**/.wrangler"
+		]
 	},
 	"overrides": [
 		{
