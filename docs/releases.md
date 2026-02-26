@@ -18,6 +18,11 @@ The `wrangler.jsonc` manages mapping details but it doesn't actually do the prov
 4. `terraform output -raw wrangler_env | jq` to get the outputs
 5. Paste them into the appropriate environment within the `wrangler.json`
 
+### Secret
+
+1. `openssl rand -base64 32` for a random string
+2. `npx wrangler secret put SESSION_SECRET_KEY --env <env name>` and it'll prompt you for the secret action
+
 ### Deploy
 
 - `integration`: merge to `main`
