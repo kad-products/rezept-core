@@ -11,7 +11,8 @@
 		"enabled": true
 	},
 	"vars": {
-		"WEBAUTHN_APP_NAME": "rezept"
+		"WEBAUTHN_APP_NAME": "rezept",
+		"REZEPT_ENV": "development"
 	},
 	"migrations": [
 		{
@@ -67,7 +68,8 @@
 				}
 			],
 			"vars": {
-				"WEBAUTHN_APP_NAME": "rezept"
+				"WEBAUTHN_APP_NAME": "rezept",
+				"REZEPT_ENV": "integration"
 			},
 			"workers_dev": true
 		}
