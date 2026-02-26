@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/kad-products/rezept-core/compare/v1.9.0...v1.9.1) (2026-02-26)
+
+### Bug Fixes
+
+* environment structure in wrangler config ([b57a7a1](https://github.com/kad-products/rezept-core/commit/b57a7a109129d5c5d5003acfde41e723ad796165))
+* remove wrangler dry run ([d364e46](https://github.com/kad-products/rezept-core/commit/d364e4671c9eafb9f9f1955eb6f7754347cb994d))
+
 ## [1.9.0](https://github.com/kad-products/rezept-core/compare/v1.8.0...v1.9.0) (2026-02-25)
 
 ### Features
