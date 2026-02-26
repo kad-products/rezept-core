@@ -66,6 +66,9 @@
 					"bucket_name": "rezept-recipe-imports-integration"
 				}
 			],
+			"vars": {
+				"WEBAUTHN_APP_NAME": "rezept"
+			},
 			"workers_dev": true
 		}
 	}
