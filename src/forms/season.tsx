@@ -108,7 +108,7 @@ export default function Season({
 					)}
 				</form.Subscribe>
 			</form>
-			<TanStackDevtools plugins={[formDevtoolsPlugin()]} />
+			{import.meta.env.DEV && <TanStackDevtools plugins={[formDevtoolsPlugin()]} />}
 		</>
 	);
 }

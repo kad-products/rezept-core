@@ -1,4 +1,4 @@
-import { getAlpha2Codes } from 'i18n-iso-countries';
+// import { getAlpha2Codes } from 'i18n-iso-countries';
 
 // this won't work in rwsdk because it's static json
 // import en from 'i18n-iso-countries/langs/en.json';
@@ -269,7 +269,7 @@ const countryNames = Object.entries(en.countries).map(([value, labels]) => {
 	};
 });
 
-export const validCountryCodes = Object.keys(getAlpha2Codes());
+export const validCountryCodes = Object.keys(en.countries);
 export const countryOptions = countryNames.map(({ code, label }) => ({
 	value: code, // "US", "NO", "NG"
 	label, // "United States", "Norway", "Nigeria"
