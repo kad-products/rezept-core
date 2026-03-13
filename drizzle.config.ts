@@ -6,6 +6,6 @@ export default defineConfig({
 	dialect: 'sqlite',
 	casing: 'snake_case',
 	dbCredentials: {
-		url: './.wrangler/state/v3/d1/miniflare-D1DatabaseObject/5cd4690a3ebd411ce7bf9d0fc46e2595bb794d77377c2e21c6406975507964d6.sqlite',
+		url: './.wrangler/state/v3/d1/miniflare-D1DatabaseObject/2b35d4d42e3c9f6b5ad5b5579a7b1470c66e69f6b33a31e3f5a0095cc6d18656.sqlite',
 	},
 });
