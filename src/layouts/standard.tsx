@@ -1,12 +1,16 @@
+import { ArchiveIcon, ColorWheelIcon, EnterIcon, ExitIcon, HomeIcon, PersonIcon } from '@radix-ui/react-icons';
 import classNames from 'classnames';
 import { StrictMode } from 'react';
-import { BiFoodMenu } from 'react-icons/bi';
-import { CgProfile } from 'react-icons/cg';
-import { CiHome } from 'react-icons/ci';
-import { GiFallingLeaf } from 'react-icons/gi';
-import { IoLogInOutline } from 'react-icons/io5';
 import type { DefaultAppContext } from 'rwsdk/worker';
 import RzLogger from '@/logger';
+
+type NavItem = {
+	label: string;
+	href: string;
+	icon: React.ComponentType;
+	permCheck?: (permissions: string[]) => boolean;
+	basePage?: string; // Optional base page for active state
+};
 
 export default function StandardLayout({
 	children,
@@ -21,25 +25,49 @@ export default function StandardLayout({
 	pageTitle: string;
 	ctx: DefaultAppContext;
 }) {
-	const navItems = {
-		home: { label: 'Home', href: '/', icon: CiHome },
-		seasons: { label: 'Seasons', href: '/seasons', icon: GiFallingLeaf },
-		recipes: { label: 'Recipes', href: '/recipes', icon: BiFoodMenu },
-		profile: { label: 'Profile', href: '/profile', icon: CgProfile },
+	const navItems: Record<string, NavItem> = {
+		home: { label: 'Home', href: '/', icon: HomeIcon },
+		seasons: { label: 'Seasons', href: '/seasons', icon: ColorWheelIcon, permCheck: (p: string[]) => p.includes('seasons:read') },
+		recipes: { label: 'Recipes', href: '/recipes', icon: ArchiveIcon, permCheck: (p: string[]) => p.includes('recipes:read') },
+		profile: { label: 'Profile', href: '/profile', icon: PersonIcon, permCheck: (p: string[]) => p.includes('profile:read') },
+		login: {
+			label: 'Login',
+			href: '/auth/login',
+			icon: EnterIcon,
+			permCheck: (p: string[]) => p.includes('auth:login'),
+			basePage: 'auth',
+		},
+		logout: {
+			label: 'Logout',
+			href: '/auth/logout',
+			icon: ExitIcon,
+			permCheck: (p: string[]) => p.includes('auth:logout'),
+			basePage: 'auth',
+		},
 	};
+
+	const userPerms = ctx.permissions || [];
+
+	// Filter nav items based on permissions
+	const filteredNavItems = Object.entries(navItems)
+		.filter(([_, item]) => {
+			if (!item.permCheck) return true; // No permission check means it's always visible
+			return item.permCheck(userPerms);
+		})
+		.map(([key, item]) => ({ ...item, key }));
 
 	return (
 		<StrictMode>
 			<header>
 				<nav className="main-nav">
-					{Object.entries(navItems).map(([key, item]) => {
+					{filteredNavItems.map(item => {
 						const Icon = item.icon;
 						return (
 							<a
-								key={key}
+								key={item.key}
 								className={classNames({
 									'nav-item': true,
-									'nav-item-active': currentBasePage === key,
+									'nav-item-active': currentBasePage === item.key,
 								})}
 								href={item.href}
 							>
@@ -50,33 +78,6 @@ export default function StandardLayout({
 							</a>
 						);
 					})}
-					{ctx.user ? (
-						<a
-							className={classNames({
-								'nav-item': true,
-								'nav-item-active': currentBasePage === 'auth',
-							})}
-							href="/auth/logout"
-						>
-							<span className="nav-item-icon">
-								<IoLogInOutline />
-							</span>
-							<span className="nav-item-label">Logout</span>
-						</a>
-					) : (
-						<a
-							className={classNames({
-								'nav-item': true,
-								'nav-item-active': currentBasePage === 'auth',
-							})}
-							href="/auth/login"
-						>
-							<span className="nav-item-icon">
-								<IoLogInOutline />
-							</span>
-							<span className="nav-item-label">Login</span>
-						</a>
-					)}
 				</nav>
 			</header>
 			<main>

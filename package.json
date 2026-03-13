@@ -35,6 +35,7 @@
 		"erd:render": "npx -p @mermaid-js/mermaid-cli mmdc -i docs/data/current-erd.mmd -o docs/data/current-erd.png -t forest -w 3000 -H 2000"
 	},
 	"dependencies": {
+		"@radix-ui/react-icons": "^1.3.2",
 		"@simplewebauthn/browser": "^13.2.2",
 		"@simplewebauthn/server": "^13.2.2",
 		"@tanstack/react-devtools": "^0.9.5",
@@ -49,7 +50,6 @@
 		"object-path": "^0.11.8",
 		"react": "19.2.3",
 		"react-dom": "19.2.3",
-		"react-icons": "^5.5.0",
 		"react-select": "^5.10.2",
 		"react-server-dom-webpack": "19.2.3",
 		"rwsdk": "1.0.0-beta.54",
