@@ -1,3 +1,13 @@
+## [1.12.0](https://github.com/kad-products/rezept-core/compare/v1.11.5...v1.12.0) (2026-03-14)
+
+### Features
+
+* custom cookie to enable bookmarklet calls ([0e013ee](https://github.com/kad-products/rezept-core/commit/0e013eed79f99cf6ee3390e520d53842fa448ee2))
+
+### Bug Fixes
+
+* permission for profile viewing ([9fe04de](https://github.com/kad-products/rezept-core/commit/9fe04de811f47ddd82e865a3c37a0c8754b2c941))
+
 ## [1.11.5](https://github.com/kad-products/rezept-core/compare/v1.11.4...v1.11.5) (2026-03-14)
 
 ## [1.11.4](https://github.com/kad-products/rezept-core/compare/v1.11.3...v1.11.4) (2026-03-14)
