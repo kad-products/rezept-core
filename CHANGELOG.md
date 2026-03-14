@@ -1,3 +1,27 @@
+## [1.11.4](https://github.com/kad-products/rezept-core/compare/v1.11.3...v1.11.4) (2026-03-14)
+
+### Bug Fixes
+
+* remove middleware for bookmarklet ([8f8fc71](https://github.com/kad-products/rezept-core/commit/8f8fc71a1b160605867394584480d384e3128470))
+
+## [1.11.3](https://github.com/kad-products/rezept-core/compare/v1.11.2...v1.11.3) (2026-03-14)
+
+### Bug Fixes
+
+* adding logging for the middleware on options ([60c8c2a](https://github.com/kad-products/rezept-core/commit/60c8c2a913e2f99ff2a62a6a98ef1df034ecb98f))
+
+## [1.11.2](https://github.com/kad-products/rezept-core/compare/v1.11.1...v1.11.2) (2026-03-14)
+
+### Bug Fixes
+
+* adding more bookmarklet logic ([11c45d2](https://github.com/kad-products/rezept-core/commit/11c45d2ffee40bc57da1041686499ca679ac3b81))
+
+## [1.11.1](https://github.com/kad-products/rezept-core/compare/v1.11.0...v1.11.1) (2026-03-14)
+
+### Bug Fixes
+
+* typo in bookmarklet import path ([f861e15](https://github.com/kad-products/rezept-core/commit/f861e15df8c6942bff3a175c259e3b761ff98a22))
+
 ## [1.11.0](https://github.com/kad-products/rezept-core/compare/v1.10.1...v1.11.0) (2026-03-14)
 
 ### Features
