@@ -30,7 +30,7 @@ describe('permissionsMiddleware', () => {
 		expect(mockRequestInfo.ctx.permissions.length).toBeGreaterThan(0);
 
 		// Should only have read permissions
-		expect(mockRequestInfo.ctx.permissions.every(p => p.endsWith(':read'))).toBe(true);
+		expect(mockRequestInfo.ctx.permissions.every(p => p.endsWith(':read') || p.endsWith(':login'))).toBe(true);
 	});
 
 	it('sets permissions for BASIC role users', () => {
@@ -62,7 +62,7 @@ describe('permissionsMiddleware', () => {
 		permissionsMiddleware(mockRequestInfo as any);
 
 		expect(mockRequestInfo.ctx.permissions).toBeDefined();
-		expect(mockRequestInfo.ctx.permissions.every(p => p.endsWith(':read'))).toBe(true);
+		expect(mockRequestInfo.ctx.permissions.every(p => p.endsWith(':read') || p.endsWith(':login'))).toBe(true);
 	});
 
 	it('handles users with undefined role', () => {
@@ -71,7 +71,7 @@ describe('permissionsMiddleware', () => {
 		permissionsMiddleware(mockRequestInfo as any);
 
 		expect(mockRequestInfo.ctx.permissions).toBeDefined();
-		expect(mockRequestInfo.ctx.permissions.every(p => p.endsWith(':read'))).toBe(true);
+		expect(mockRequestInfo.ctx.permissions.every(p => p.endsWith(':read') || p.endsWith(':login'))).toBe(true);
 	});
 
 	it('handles users with unknown role', () => {

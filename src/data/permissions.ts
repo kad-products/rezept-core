@@ -1,4 +1,8 @@
 export default {
+	auth: {
+		login: ['PUBLIC'],
+		logout: ['ADMIN', 'BASIC'],
+	},
 	seasons: {
 		create: ['ADMIN'],
 		read: ['*'],
