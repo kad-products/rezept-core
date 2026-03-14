@@ -1,3 +1,9 @@
+## [1.11.1](https://github.com/kad-products/rezept-core/compare/v1.11.0...v1.11.1) (2026-03-14)
+
+### Bug Fixes
+
+* typo in bookmarklet import path ([f861e15](https://github.com/kad-products/rezept-core/commit/f861e15df8c6942bff3a175c259e3b761ff98a22))
+
 ## [1.11.0](https://github.com/kad-products/rezept-core/compare/v1.10.1...v1.11.0) (2026-03-14)
 
 ### Features
