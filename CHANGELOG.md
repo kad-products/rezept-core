@@ -1,3 +1,5 @@
+## [1.11.5](https://github.com/kad-products/rezept-core/compare/v1.11.4...v1.11.5) (2026-03-14)
+
 ## [1.11.4](https://github.com/kad-products/rezept-core/compare/v1.11.3...v1.11.4) (2026-03-14)
 
 ### Bug Fixes
