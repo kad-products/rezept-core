@@ -1,3 +1,17 @@
+## [1.11.0](https://github.com/kad-products/rezept-core/compare/v1.10.1...v1.11.0) (2026-03-14)
+
+### Features
+
+* default users to BASIC role ([10d63b1](https://github.com/kad-products/rezept-core/commit/10d63b188b3ec9d52b85421fa114e769cf5014a6))
+* initial bookmarklet endpoint ([7fea249](https://github.com/kad-products/rezept-core/commit/7fea249687a570274250e4a8137f85c71194c77e))
+* move recipe listing and imports into tabs ([3e49972](https://github.com/kad-products/rezept-core/commit/3e49972541a07f36e20ca1890564902b72b5a369))
+* move to radix icons ([0540905](https://github.com/kad-products/rezept-core/commit/0540905366ef34fd348070223247acfc42f2e2f0))
+* radix theme and light/dark modes ([b50ec3a](https://github.com/kad-products/rezept-core/commit/b50ec3ad755d44b6f06f121cd51efc5b025c7521))
+
+### Bug Fixes
+
+* add auth perms ([4ad47f6](https://github.com/kad-products/rezept-core/commit/4ad47f60b48a7737d74e55907e608e26bb02eeee))
+
 ## [1.10.1](https://github.com/kad-products/rezept-core/compare/v1.10.0...v1.10.1) (2026-02-26)
 
 ### Bug Fixes
