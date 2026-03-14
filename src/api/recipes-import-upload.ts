@@ -3,7 +3,7 @@ import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { createRecipeImport } from '@/repositories/recipe-imports';
 import type { RecipeImport } from '@/types';
 
-export default async function API__recipes__import({ request, ctx }: RequestInfo<DefaultAppContext>) {
+export default async function API__recipes__import_upload({ request, ctx }: RequestInfo<DefaultAppContext>) {
 	const userId = ctx.user?.id;
 
 	if (!userId) {
