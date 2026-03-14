@@ -1,3 +1,9 @@
+## [1.11.3](https://github.com/kad-products/rezept-core/compare/v1.11.2...v1.11.3) (2026-03-14)
+
+### Bug Fixes
+
+* adding logging for the middleware on options ([60c8c2a](https://github.com/kad-products/rezept-core/commit/60c8c2a913e2f99ff2a62a6a98ef1df034ecb98f))
+
 ## [1.11.2](https://github.com/kad-products/rezept-core/compare/v1.11.1...v1.11.2) (2026-03-14)
 
 ### Bug Fixes
