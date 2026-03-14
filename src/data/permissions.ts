@@ -3,6 +3,9 @@ export default {
 		login: ['PUBLIC'],
 		logout: ['ADMIN', 'BASIC'],
 	},
+	profile: {
+		read: ['ADMIN', 'BASIC'],
+	},
 	seasons: {
 		create: ['ADMIN'],
 		read: ['*'],
