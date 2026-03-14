@@ -31,7 +31,11 @@ async function handler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 }
 
 function optionsHandler({ request }: RequestInfo<DefaultAppContext>) {
+	console.log('optionsHandler handling OPTIONS');
 	return new Response(null, { status: 204, headers: getCorsHeaders(request) });
 }
 
-export default { post: handler, options: optionsHandler };
+export default {
+	post: handler,
+	options: optionsHandler,
+};
