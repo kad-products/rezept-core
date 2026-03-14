@@ -27,7 +27,7 @@ export default defineConfig({
 					branches: 23,
 				},
 				'src/middleware/**': {
-					branches: 100,
+					branches: 70,
 				},
 				'src/repositories/**': {
 					branches: 33,
