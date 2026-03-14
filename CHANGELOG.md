@@ -1,3 +1,9 @@
+## [1.11.4](https://github.com/kad-products/rezept-core/compare/v1.11.3...v1.11.4) (2026-03-14)
+
+### Bug Fixes
+
+* remove middleware for bookmarklet ([8f8fc71](https://github.com/kad-products/rezept-core/commit/8f8fc71a1b160605867394584480d384e3128470))
+
 ## [1.11.3](https://github.com/kad-products/rezept-core/compare/v1.11.2...v1.11.3) (2026-03-14)
 
 ### Bug Fixes
