@@ -1,3 +1,9 @@
+## [1.11.2](https://github.com/kad-products/rezept-core/compare/v1.11.1...v1.11.2) (2026-03-14)
+
+### Bug Fixes
+
+* adding more bookmarklet logic ([11c45d2](https://github.com/kad-products/rezept-core/commit/11c45d2ffee40bc57da1041686499ca679ac3b81))
+
 ## [1.11.1](https://github.com/kad-products/rezept-core/compare/v1.11.0...v1.11.1) (2026-03-14)
 
 ### Bug Fixes
