@@ -1,4 +1,5 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { parseJsonLd } from '@/utils/parse-jsonld';
 
 function getCorsHeaders(request: Request) {
 	return {
@@ -25,7 +26,13 @@ async function handler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 		return Response.json({ success: false, errors: { _form: ['Invalid JSON body'] } }, { status: 400, headers: corsHeaders });
 	}
 
-	ctx.logger.info(`Bookmarklet import payload: ${JSON.stringify(body, null, 2)}`);
+	try {
+		const parsedPayload = parseJsonLd(body as { url: string; jsonld: unknown[] });
+		ctx.logger.info(`Parsed payload: ${JSON.stringify(parsedPayload, null, 2)}`);
+	} catch (err) {
+		ctx.logger.warn(`Error parsing JSON-LD payload: ${err}`);
+		ctx.logger.info(`Original import payload: ${JSON.stringify(body, null, 2)}`);
+	}
 
 	return Response.json({ success: true }, { headers: corsHeaders });
 }
