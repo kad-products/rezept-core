@@ -24,13 +24,13 @@ export default defineConfig({
 				branches: 20,
 				lines: 30, // using this to make sure we don't miss something big or have dead code
 				'src/actions/**': {
-					branches: 23,
+					branches: 30,
 				},
 				'src/middleware/**': {
-					branches: 70,
+					branches: 100,
 				},
 				'src/repositories/**': {
-					branches: 33,
+					branches: 43,
 				},
 				'src/schemas/**': {
 					branches: 100,

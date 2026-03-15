@@ -9,6 +9,7 @@ import authRoutes from '@/pages/auth/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
+import apiKeyMiddleware from './middleware/api-key';
 import botMiddleware from './middleware/bot';
 import loggerMiddleware from './middleware/logger';
 import permissionsMiddleware from './middleware/permissions';
@@ -21,6 +22,7 @@ export default defineApp([
 	loggerMiddleware,
 	headersMiddleware,
 	authMiddleware,
+	apiKeyMiddleware,
 	userMiddleware,
 	permissionsMiddleware,
 	render(Document, [

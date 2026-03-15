@@ -4,6 +4,7 @@ const mockRequestInfo = {
 	ctx: {
 		user: null as { id: string; role?: string | null } | null,
 		permissions: [] as string[],
+		apiKey: undefined as { permissions: string[] } | undefined,
 	},
 };
 
@@ -20,6 +21,7 @@ describe('permissionsMiddleware', () => {
 	beforeEach(() => {
 		mockRequestInfo.ctx.user = null;
 		mockRequestInfo.ctx.permissions = [];
+		mockRequestInfo.ctx.apiKey = undefined;
 	});
 
 	it('sets permissions on context for unauthenticated users', () => {
@@ -94,12 +96,59 @@ describe('permissionsMiddleware', () => {
 			expect(permission).toMatch(/^[\w]+:[\w]+$/);
 		});
 	});
+
+	describe('api key permissions', () => {
+		it('uses api key permissions when ctx.apiKey is set', () => {
+			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import'] };
+
+			permissionsMiddleware(mockRequestInfo as any);
+
+			expect(mockRequestInfo.ctx.permissions).toEqual(['recipes:import']);
+		});
+
+		it('uses api key permissions even when user is also set', () => {
+			mockRequestInfo.ctx.user = { id: 'user-123', role: 'ADMIN' };
+			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import'] };
+
+			permissionsMiddleware(mockRequestInfo as any);
+
+			expect(mockRequestInfo.ctx.permissions).toEqual(['recipes:import']);
+			expect(mockRequestInfo.ctx.permissions).not.toContain('seasons:create');
+		});
+
+		it('sets empty permissions when api key has no permissions', () => {
+			mockRequestInfo.ctx.apiKey = { permissions: [] };
+
+			permissionsMiddleware(mockRequestInfo as any);
+
+			expect(mockRequestInfo.ctx.permissions).toEqual([]);
+		});
+
+		it('sets multiple permissions from api key', () => {
+			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import', 'recipes:read'] };
+
+			permissionsMiddleware(mockRequestInfo as any);
+
+			expect(mockRequestInfo.ctx.permissions).toContain('recipes:import');
+			expect(mockRequestInfo.ctx.permissions).toContain('recipes:read');
+		});
+
+		it('falls back to role-based permissions when ctx.apiKey is undefined', () => {
+			mockRequestInfo.ctx.user = { id: 'user-123', role: 'ADMIN' };
+			mockRequestInfo.ctx.apiKey = undefined;
+
+			permissionsMiddleware(mockRequestInfo as any);
+
+			expect(mockRequestInfo.ctx.permissions).toContain('seasons:create');
+		});
+	});
 });
 
 describe('requirePermissions', () => {
 	beforeEach(() => {
 		mockRequestInfo.ctx.user = null;
 		mockRequestInfo.ctx.permissions = [];
+		mockRequestInfo.ctx.apiKey = undefined;
 	});
 
 	it('returns undefined when user has all required permissions', async () => {
@@ -143,6 +192,27 @@ describe('requirePermissions', () => {
 		mockRequestInfo.ctx.permissions = undefined as any;
 
 		const middleware = requirePermissions('recipes:create');
+		const result = await middleware();
+
+		expect(result).toBeInstanceOf(Response);
+		expect(result?.status).toBe(403);
+	});
+
+	it('allows api key request with sufficient permissions', async () => {
+		mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import'] };
+		mockRequestInfo.ctx.permissions = ['recipes:import'];
+
+		const middleware = requirePermissions('recipes:import');
+		const result = await middleware();
+
+		expect(result).toBeUndefined();
+	});
+
+	it('blocks api key request with insufficient permissions', async () => {
+		mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import'] };
+		mockRequestInfo.ctx.permissions = ['recipes:import'];
+
+		const middleware = requirePermissions('recipes:delete');
 		const result = await middleware();
 
 		expect(result).toBeInstanceOf(Response);

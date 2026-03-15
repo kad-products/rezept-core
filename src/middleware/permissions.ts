@@ -21,6 +21,11 @@ export function flattenPermissions(perms: typeof permissions) {
 const flattenedPermissions = flattenPermissions(permissions);
 
 export default async function permissionsMiddleware({ ctx }: RequestInfo<DefaultAppContext>) {
+	if (ctx.apiKey) {
+		ctx.permissions = ctx.apiKey.permissions;
+		return;
+	}
+
 	let role = 'PUBLIC';
 	if (ctx.user?.role) {
 		role = ctx.user.role;
