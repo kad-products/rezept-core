@@ -55,7 +55,7 @@ describe('corsMiddleware', () => {
 				makeRequestInfo('OPTIONS', 'https://example.com/api/recipes/import/bookmarklet', 'https://www.allrecipes.com'),
 			) as Response;
 
-			expect(result.headers.get('Access-Control-Allow-Headers')).toBe('Content-Type');
+			expect(result.headers.get('Access-Control-Allow-Headers')).toBe('Content-Type, Authorization');
 		});
 	});
 
