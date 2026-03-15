@@ -1,3 +1,9 @@
+## [1.15.1](https://github.com/kad-products/rezept-core/compare/v1.15.0...v1.15.1) (2026-03-15)
+
+### Bug Fixes
+
+* cors middleware allow auth header ([218298f](https://github.com/kad-products/rezept-core/commit/218298fa3a042a91b7301671be138a8713cbaa92))
+
 ## [1.15.0](https://github.com/kad-products/rezept-core/compare/v1.14.0...v1.15.0) (2026-03-15)
 
 ### Features
