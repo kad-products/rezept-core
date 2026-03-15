@@ -1,3 +1,15 @@
+## [1.14.0](https://github.com/kad-products/rezept-core/compare/v1.13.0...v1.14.0) (2026-03-15)
+
+### Features
+
+* add getApiKeyByKey for handling API key-based calls ([d46fa74](https://github.com/kad-products/rezept-core/commit/d46fa74af6430f0cb2c689e1a3f2b7c25265a963))
+* adding api call handling to the request path ([8f6d0c6](https://github.com/kad-products/rezept-core/commit/8f6d0c6c19a84a571e2a30290b311389f36d3831))
+* enable copying of API keys from profile ([204d02f](https://github.com/kad-products/rezept-core/commit/204d02f3d913a478709dd4b8e4d30d2a4ea0e711))
+
+### Bug Fixes
+
+* changing APIKey to ApiKey for consistency ([6b8e5e9](https://github.com/kad-products/rezept-core/commit/6b8e5e955784705db69a130968b8caa2414af017))
+
 ## [1.13.0](https://github.com/kad-products/rezept-core/compare/v1.12.0...v1.13.0) (2026-03-15)
 
 ### Features
