@@ -1,3 +1,9 @@
+## [1.16.0](https://github.com/kad-products/rezept-core/compare/v1.15.1...v1.16.0) (2026-03-15)
+
+### Features
+
+* initial parsing of bookmarklet recipe data ([916ddfd](https://github.com/kad-products/rezept-core/commit/916ddfd09b288985153428c591d6c06f58549e6a))
+
 ## [1.15.1](https://github.com/kad-products/rezept-core/compare/v1.15.0...v1.15.1) (2026-03-15)
 
 ### Bug Fixes
