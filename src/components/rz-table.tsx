@@ -22,7 +22,7 @@ export default function RzTable<T extends Record<string, unknown>>({
 					return (
 						<tr key={d[rowIndex] as string}>
 							{columns.map(c => {
-								return <td key={c.key}>{c.render ? c.render(String(d[c.key])) : String(d[c.key])}</td>;
+								return <td key={c.key}>{c.render ? c.render(String(d[c.key]), d) : String(d[c.key])}</td>;
 							})}
 						</tr>
 					);
