@@ -1,3 +1,13 @@
+## [1.13.0](https://github.com/kad-products/rezept-core/compare/v1.12.0...v1.13.0) (2026-03-15)
+
+### Features
+
+* adding api keys for users ([2130ecd](https://github.com/kad-products/rezept-core/commit/2130ecd87717c53a52a46bcb74f9dd0e4ee77d55))
+
+### Bug Fixes
+
+* remove all the bookmarklet stuff ([57d9a07](https://github.com/kad-products/rezept-core/commit/57d9a074ee5a3890b9a077b13c49381f344edb49))
+
 ## [1.12.0](https://github.com/kad-products/rezept-core/compare/v1.11.5...v1.12.0) (2026-03-14)
 
 ### Features
