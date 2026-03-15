@@ -98,7 +98,7 @@ describe('api-keys repository', () => {
 		});
 
 		it('throws when api key does not exist', async () => {
-			await expect(getApiKeyById(crypto.randomUUID())).rejects.toThrow('getApiKeyById: matchedAPIKeys length is 0 for id');
+			await expect(getApiKeyById(crypto.randomUUID())).rejects.toThrow('getApiKeyById: matchedApiKeys length is 0 for id');
 		});
 
 		it('returns correct key when multiple exist', async () => {

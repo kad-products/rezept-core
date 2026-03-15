@@ -38,7 +38,7 @@ vi.mock('rwsdk/worker', () => ({
 
 import { randomUUID } from 'node:crypto';
 import { createApiKey, updateApiKey } from '@/repositories/api-keys';
-import { _saveAPIKey } from '../api-keys';
+import { _saveApiKey } from '../api-keys';
 
 const baseApiKeyData = {
 	name: 'Test API Key',
@@ -55,7 +55,7 @@ const mockApiKey = {
 	deletedAt: null,
 };
 
-describe('_saveAPIKey', () => {
+describe('_saveApiKey', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockRequestInfo.ctx.user = { id: 'test-user-id' };
@@ -68,7 +68,7 @@ describe('_saveAPIKey', () => {
 		it('rejects unauthenticated requests', async () => {
 			mockRequestInfo.ctx.user = null;
 
-			const result = await _saveAPIKey(baseApiKeyData);
+			const result = await _saveApiKey(baseApiKeyData);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toContain('You must be logged in');
@@ -78,7 +78,7 @@ describe('_saveAPIKey', () => {
 
 	describe('create api key', () => {
 		it('creates api key with valid data', async () => {
-			const result = await _saveAPIKey(baseApiKeyData);
+			const result = await _saveApiKey(baseApiKeyData);
 
 			expect(result.success).toBe(true);
 			expect(createApiKey).toHaveBeenCalledTimes(1);
@@ -92,7 +92,7 @@ describe('_saveAPIKey', () => {
 		});
 
 		it('validates required fields', async () => {
-			const result = await _saveAPIKey({} as any);
+			const result = await _saveApiKey({} as any);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toBeDefined();
@@ -100,7 +100,7 @@ describe('_saveAPIKey', () => {
 		});
 
 		it('creates api key with multiple permissions', async () => {
-			const result = await _saveAPIKey({
+			const result = await _saveApiKey({
 				...baseApiKeyData,
 				permissions: ['recipes:import', 'recipes:read'],
 			});
@@ -115,7 +115,7 @@ describe('_saveAPIKey', () => {
 		it('creates api key with revokeAt', async () => {
 			const revokeAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
 
-			const result = await _saveAPIKey({ ...baseApiKeyData, revokeAt });
+			const result = await _saveApiKey({ ...baseApiKeyData, revokeAt });
 
 			expect(result.success).toBe(true);
 			expect(createApiKey).toHaveBeenCalledWith(expect.objectContaining({ revokeAt }), 'test-user-id');
@@ -124,7 +124,7 @@ describe('_saveAPIKey', () => {
 		it('handles repository errors gracefully', async () => {
 			vi.mocked(createApiKey).mockRejectedValueOnce(new Error('Database error'));
 
-			const result = await _saveAPIKey(baseApiKeyData);
+			const result = await _saveApiKey(baseApiKeyData);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
@@ -133,7 +133,7 @@ describe('_saveAPIKey', () => {
 		it('hides error details in non-development environments', async () => {
 			vi.mocked(createApiKey).mockRejectedValueOnce(new Error('Connection failed: postgres://user:password@db.internal'));
 
-			const result = await _saveAPIKey(baseApiKeyData);
+			const result = await _saveApiKey(baseApiKeyData);
 
 			expect(result.errors?._form?.[0]).toBe('Failed to save item');
 			expect(result.errors?._form?.[0]).not.toContain('postgres://');
@@ -141,7 +141,7 @@ describe('_saveAPIKey', () => {
 		});
 
 		it('returns created api key on success', async () => {
-			const result = await _saveAPIKey(baseApiKeyData);
+			const result = await _saveApiKey(baseApiKeyData);
 
 			expect(result.success).toBe(true);
 			expect(result.data).toMatchObject({ id: 'mock-api-key-id' });
@@ -153,7 +153,7 @@ describe('_saveAPIKey', () => {
 			const apiKeyId = randomUUID();
 			const data = { ...baseApiKeyData, id: apiKeyId };
 
-			const result = await _saveAPIKey(data);
+			const result = await _saveApiKey(data);
 
 			expect(result.success).toBe(true);
 			expect(updateApiKey).toHaveBeenCalledTimes(1);
@@ -170,7 +170,7 @@ describe('_saveAPIKey', () => {
 		it('does not call createApiKey when updating', async () => {
 			const data = { ...baseApiKeyData, id: randomUUID() };
 
-			await _saveAPIKey(data);
+			await _saveApiKey(data);
 
 			expect(createApiKey).not.toHaveBeenCalled();
 		});
@@ -182,7 +182,7 @@ describe('_saveAPIKey', () => {
 				permissions: ['recipes:import', 'recipes:read'],
 			};
 
-			const result = await _saveAPIKey(data);
+			const result = await _saveApiKey(data);
 
 			expect(result.success).toBe(true);
 			expect(updateApiKey).toHaveBeenCalledWith(
@@ -195,14 +195,14 @@ describe('_saveAPIKey', () => {
 		it('handles update repository errors', async () => {
 			vi.mocked(updateApiKey).mockRejectedValueOnce(new Error('Update failed'));
 
-			const result = await _saveAPIKey({ ...baseApiKeyData, id: randomUUID() });
+			const result = await _saveApiKey({ ...baseApiKeyData, id: randomUUID() });
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
 		});
 
 		it('returns updated api key on success', async () => {
-			const result = await _saveAPIKey({ ...baseApiKeyData, id: randomUUID() });
+			const result = await _saveApiKey({ ...baseApiKeyData, id: randomUUID() });
 
 			expect(result.success).toBe(true);
 			expect(result.data).toMatchObject({ id: 'mock-api-key-id' });

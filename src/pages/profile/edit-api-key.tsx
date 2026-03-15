@@ -4,13 +4,13 @@ import { requestInfo } from 'rwsdk/worker';
 import FormApiKey from '@/forms/api-key';
 import StandardLayout from '@/layouts/standard';
 import { getApiKeyById } from '@/repositories/api-keys';
-import type { APIKey } from '@/types';
+import type { ApiKey } from '@/types';
 
 export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo) {
 	const apiKeyId = params.apiKeyId;
 	const userId = requestInfo.ctx.user?.id;
 
-	let apiKey: APIKey | undefined;
+	let apiKey: ApiKey | undefined;
 
 	if (!apiKeyId) {
 		apiKey = undefined;

@@ -30,7 +30,7 @@ vi.mock('rwsdk/worker', () => ({
 	serverAction: (handlers: any[]) => handlers[handlers.length - 1],
 }));
 
-import { _saveAPIKey } from '../api-keys';
+import { _saveApiKey } from '../api-keys';
 
 const baseApiKeyData = {
 	name: 'Test API Key',
@@ -38,7 +38,7 @@ const baseApiKeyData = {
 	permissions: ['recipes:import'],
 };
 
-describe('saveAPIKey integration', () => {
+describe('saveApiKey integration', () => {
 	let testUserId: string;
 
 	beforeEach(async () => {
@@ -50,7 +50,7 @@ describe('saveAPIKey integration', () => {
 
 	describe('create api key', () => {
 		it('creates api key and persists to database', async () => {
-			const result = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId });
+			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -65,14 +65,14 @@ describe('saveAPIKey integration', () => {
 		});
 
 		it('generates a properly formatted api key', async () => {
-			const result = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId });
+			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
 
 			expect(result.success).toBe(true);
 			expect(result.data?.apiKey).toMatch(/^rz_std_[0-9a-f]{64}$/);
 		});
 
 		it('validates data before saving', async () => {
-			const result = await _saveAPIKey({} as any);
+			const result = await _saveApiKey({} as any);
 
 			expect(result.success).toBe(false);
 			expect(result.data).toBeUndefined();
@@ -82,7 +82,7 @@ describe('saveAPIKey integration', () => {
 		});
 
 		it('sets audit fields correctly', async () => {
-			const result = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId });
+			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -98,7 +98,7 @@ describe('saveAPIKey integration', () => {
 
 		it('creates api key with revokeAt', async () => {
 			const revokeAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
-			const result = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId, revokeAt });
+			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId, revokeAt });
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -110,7 +110,7 @@ describe('saveAPIKey integration', () => {
 		});
 
 		it('creates api key without revokeAt', async () => {
-			const result = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId });
+			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -124,7 +124,7 @@ describe('saveAPIKey integration', () => {
 		it('requires authentication', async () => {
 			mockRequestInfo.ctx.user = null;
 
-			const result = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId });
+			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
 
 			expect(result.success).toBe(false);
 
@@ -134,7 +134,7 @@ describe('saveAPIKey integration', () => {
 
 		it('generates unique keys for concurrent creates', async () => {
 			const promises = Array.from({ length: 5 }, (_, i) =>
-				_saveAPIKey({ ...baseApiKeyData, userId: testUserId, name: `Key ${i}` }),
+				_saveApiKey({ ...baseApiKeyData, userId: testUserId, name: `Key ${i}` }),
 			);
 
 			const results = await Promise.all(promises);
@@ -149,7 +149,7 @@ describe('saveAPIKey integration', () => {
 
 	describe('update api key', () => {
 		it('updates existing api key in database', async () => {
-			const createResult = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId });
+			const createResult = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -157,7 +157,7 @@ describe('saveAPIKey integration', () => {
 			if (createResult.data?.id) {
 				const apiKeyId = createResult.data.id;
 
-				const updateResult = await _saveAPIKey({
+				const updateResult = await _saveApiKey({
 					...baseApiKeyData,
 					userId: testUserId,
 					id: apiKeyId,
@@ -175,7 +175,7 @@ describe('saveAPIKey integration', () => {
 		});
 
 		it('sets audit fields on update', async () => {
-			const createResult = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId });
+			const createResult = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -185,7 +185,7 @@ describe('saveAPIKey integration', () => {
 
 				await new Promise(resolve => setTimeout(resolve, 10));
 
-				await _saveAPIKey({
+				await _saveApiKey({
 					...baseApiKeyData,
 					userId: testUserId,
 					id: apiKeyId,
@@ -200,7 +200,7 @@ describe('saveAPIKey integration', () => {
 		});
 
 		it('does not change the api key value on update', async () => {
-			const createResult = await _saveAPIKey({ ...baseApiKeyData, userId: testUserId });
+			const createResult = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -209,7 +209,7 @@ describe('saveAPIKey integration', () => {
 				const apiKeyId = createResult.data.id;
 				const originalKey = createResult.data.apiKey;
 
-				await _saveAPIKey({
+				await _saveApiKey({
 					...baseApiKeyData,
 					userId: testUserId,
 					id: apiKeyId,

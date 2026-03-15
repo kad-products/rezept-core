@@ -5,14 +5,14 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requirePermissions } from '@/middleware/permissions';
 import { createApiKey, updateApiKey } from '@/repositories/api-keys';
 import { apiKeyFormSchema } from '@/schemas';
-import type { ActionState, APIKey, APIKeyFormData } from '@/types';
+import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
 
-export const saveAPIKey = serverAction([requirePermissions('apiKeys:create', 'apiKeys:update'), _saveAPIKey]);
+export const saveApiKey = serverAction([requirePermissions('apiKeys:create', 'apiKeys:update'), _saveApiKey]);
 
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _saveAPIKey(formData: APIKeyFormData): Promise<ActionState<APIKeyFormData>> {
+export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState<ApiKeyFormData>> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
@@ -36,7 +36,7 @@ export async function _saveAPIKey(formData: APIKeyFormData): Promise<ActionState
 
 	requestInfo.ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
 
-	let apiKey: APIKey;
+	let apiKey: ApiKey;
 	try {
 		if (parsed.data.id) {
 			apiKey = await updateApiKey(parsed.data.id, parsed.data, userId);
