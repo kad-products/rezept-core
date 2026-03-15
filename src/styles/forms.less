@@ -1,20 +1,28 @@
-form {
+.rz-form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     max-width: 600px;
     margin: 1rem auto 3rem;
-    .form-field {        
-        .form-inputs {
-            display: flex;
-            gap: 0.5rem;
-            > * {
-                flex: 1;
-            }
+    .rz-form-field {        
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        .rz-form-label,
+        .rz-form-field-error,
+        .rz-form-field-controls {
+            width: 100%;
         }
-        .form-field-error {
+        .rz-form-message {
             color: red;
-            font-size: 0.875rem;
         }
+    }
+    .rz-form-field-controls-checkboxes {
+        display: grid;
+        padding: 1rem;
+        border: 1px solid var(--accent-9);
+        border-radius: 1rem;
+        grid-gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 }
