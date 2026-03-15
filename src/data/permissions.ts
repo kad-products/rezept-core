@@ -1,4 +1,10 @@
 export default {
+	apiKeys: {
+		create: ['BASIC', 'ADMIN'],
+		read: ['BASIC', 'ADMIN'],
+		update: ['BASIC', 'ADMIN'],
+		delete: ['BASIC', 'ADMIN'],
+	},
 	auth: {
 		login: ['PUBLIC'],
 		logout: ['ADMIN', 'BASIC'],
