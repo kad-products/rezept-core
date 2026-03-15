@@ -1,0 +1,457 @@
+{
+	"url": "https://www.allrecipes.com/recipe/86096/grandmas-corn-chowder/",
+	"jsonld": [
+		[
+			{
+				"@context": "http://schema.org",
+				"@type": ["Recipe", "NewsArticle"],
+				"headline": "Grandma&#39;s Corn Chowder",
+				"keywords": ["publisher-tested"],
+				"datePublished": "2019-04-03T23:33:53-04:00",
+				"dateModified": "2025-11-07T08:56:34-05:00",
+				"author": [
+					{
+						"@type": "Person",
+						"name": "CKINCAID1"
+					}
+				],
+				"description": "Try grandma&#39;s corn chowder recipe for a creamy, delicious bowl of comforting soup made with creamed corn, potatoes, half-and-half, and bacon.",
+				"image": {
+					"@type": "ImageObject",
+					"url": "https://www.allrecipes.com/thmb/QyKPyejIZeSt1YchzQwJ_yA3PWI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/86096-grandmas-corn-chowder-ddmfs-3x4_9570-3c93413e70c840c6b061a2bd47ca677d.jpg",
+					"height": 1125,
+					"width": 1500
+				},
+				"video": {
+					"@type": "VideoObject",
+					"contentUrl": "https://content.jwplatform.com/videos/VPYM2CmB-K3AjnAEN.mp4",
+					"description": "With fall weather around the corner, this flavorful dinner will warm you up on a cold day. In this video, learn how to make a grandmother’s special corn chowder recipe with smoky bacon and creamy corn. This popular and comforting dish combines delicious chopped potatoes, bacon, onion, and cream style corn into a pot. After adding the seasoning and bringing the soup to a boil, add in warmed half and half to complete the chowder.",
+					"duration": "PT49S",
+					"name": "How to Make Grandma’s Corn Chowder",
+					"thumbnailUrl": "https://cdn.jwplayer.com/v2/media/VPYM2CmB/thumbnails/1ylv8LpN.jpg?width=1280",
+					"uploadDate": "2023-09-22T11:43:57-04:00"
+				},
+				"publisher": {
+					"@type": "Organization",
+					"name": "Allrecipes",
+					"url": "https://www.allrecipes.com",
+					"logo": {
+						"@type": "ImageObject",
+						"url": "https://www.allrecipes.com/thmb/Z9lwz1y0B5aX-cemPiTgpn5YB0k=/112x112/filters:no_upscale():max_bytes(150000):strip_icc()/allrecipes_logo_schema-867c69d2999b439a9eba923a445ccfe3.png",
+						"width": 112,
+						"height": 112
+					},
+					"brand": "Allrecipes",
+					"publishingPrinciples": "https://www.allrecipes.com/about-us-6648102#toc-editorial-guidelines",
+					"sameAs": [
+						"https://www.facebook.com/allrecipes",
+						"https://www.instagram.com/allrecipes/",
+						"https://www.pinterest.com/allrecipes/",
+						"https://www.tiktok.com/@allrecipes",
+						"https://www.youtube.com/user/allrecipes/videos",
+						"https://flipboard.com/@Allrecipes",
+						"https://en.wikipedia.org/wiki/Allrecipes.com",
+						"http://linkedin.com/company/allrecipes.com"
+					]
+				},
+				"name": "Grandma&#39;s Corn Chowder",
+				"aggregateRating": {
+					"@type": "AggregateRating",
+					"ratingValue": "4.7",
+					"ratingCount": "834"
+				},
+				"cookTime": "PT35M",
+				"nutrition": {
+					"@type": "NutritionInformation",
+					"calories": "255 kcal",
+					"carbohydrateContent": "40 g",
+					"cholesterolContent": "26 mg",
+					"fiberContent": "4 g",
+					"proteinContent": "7 g",
+					"saturatedFatContent": "5 g",
+					"sodiumContent": "972 mg",
+					"sugarContent": "5 g",
+					"fatContent": "9 g",
+					"unsaturatedFatContent": "0 g"
+				},
+				"prepTime": "PT15M",
+				"recipeCategory": ["Dinner"],
+				"recipeCuisine": ["American"],
+				"recipeIngredient": [
+					"0.5 cup diced bacon",
+					"4 medium potatoes, peeled and chopped",
+					"1 medium onion, chopped",
+					"3 cups cream-style corn",
+					"2 cups water",
+					"2 teaspoons salt",
+					"ground black pepper to taste",
+					"2 cups half-and-half"
+				],
+				"recipeInstructions": [
+					{
+						"@type": "HowToStep",
+						"image": [
+							{
+								"@type": "ImageObject",
+								"url": "https://www.allrecipes.com/thmb/_lMyMlS3FIkn7zQVs1yCUb5vlwA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/86096-grandmas-corn-chowder-ddmfs-step-01-3x4_9528-c6493e129ae841c287eab44e3433757d.jpg"
+							}
+						],
+						"text": "Gather all ingredients."
+					},
+					{
+						"@type": "HowToStep",
+						"image": [
+							{
+								"@type": "ImageObject",
+								"url": "https://www.allrecipes.com/thmb/uVZLbP69ZIGh814uLvvkFQn9Kb4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/86096-grandmas-corn-chowder-ddmfs-step-03.1-3x4_9538-8d2629503839403e9ef4481981dc345c.jpg"
+							}
+						],
+						"text": "Cook bacon in a large pot over medium-high heat until crisp, 5 to 7 minutes. Drain, leaving bacon and 2 tablespoons grease in the pot."
+					},
+					{
+						"@type": "HowToStep",
+						"image": [
+							{
+								"@type": "ImageObject",
+								"url": "https://www.allrecipes.com/thmb/a3XSVf1SV295CFEXQqK4VUs0AzQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/86096-grandmas-corn-chowder-ddmfs-step-05-3x4_9542-1b68b1144f0f48acb0f685f448c72bf0.jpg"
+							}
+						],
+						"text": "Add potatoes and onion to the pot; cook, stirring occasionally, for 5 minutes. Add corn, water, salt, and pepper; bring to a boil. Reduce the heat to low, cover the pot and simmer, stirring frequently, until potatoes are tender, about 20 minutes."
+					},
+					{
+						"@type": "HowToStep",
+						"image": [
+							{
+								"@type": "ImageObject",
+								"url": "https://www.allrecipes.com/thmb/RNOSq0P1Wbj9Oa2wAB40fnUUgz8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/86096-grandmas-corn-chowder-ddmfs-step-07-3x4_9552-aafaffdd413a42208a816c68046211b0.jpg"
+							}
+						],
+						"text": "Warm half-and-half in a small saucepan until it bubbles; remove from the heat just before it boils. Mix into chowder."
+					},
+					{
+						"@type": "HowToStep",
+						"image": [
+							{
+								"@type": "ImageObject",
+								"url": "https://www.allrecipes.com/thmb/QyKPyejIZeSt1YchzQwJ_yA3PWI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/86096-grandmas-corn-chowder-ddmfs-3x4_9570-3c93413e70c840c6b061a2bd47ca677d.jpg"
+							}
+						],
+						"text": "Serve immediately."
+					}
+				],
+				"recipeYield": "8",
+				"totalTime": "PT50M",
+				"review": [
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Jimmy G"
+						},
+						"reviewBody": "This chowder was a big hit at a church dinner! I modified the recipe by mixing everything together in a large crock pot and cooked overnight. I followed the directions of adding the half and half at the end. Great recipe."
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Chell"
+						},
+						"reviewBody": "Wow! This soup was so good. My husband is a big fan of corn chowder, as he orders it every time we go eat out. He said that this was the best he had ever had, and that this recipe was a keeper. I only made a few small adjustments. While cooking I left a bit more bacon grease in, and I also added chiken bouillon to the 2 cups of water. To top it off I sprinkled shredded chedder cheese on the top and let it melt a little before serving. I will not be looking for another corn chowder recipe, this is the best.",
+						"datePublished": "2007-01-15T10:27:36.933Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "3"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "nyangel1203"
+						},
+						"reviewBody": "This was a great starter recipe for me. I didn't use bacon. I substituted chicken stock for the water. I added chicken, green bell peppers, and substituted fresh corn for canned. I made a roux with butter and flour to thicken it. After adding the heavy cream and a pinch of nutmeg, I had a soup that got rave reviews.",
+						"datePublished": "2006-03-02T20:38:32.140Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "4"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Sweet Pickles Mom"
+						},
+						"reviewBody": "This is an excellent \"starter\" recipe and very similar to my own. I brown an entire lb of bacon cut into 1/2 inch pieces and drained. I use one can of cream corn and then 1 1/2 cups frozen extra sweet corn. I also brown in with the bacon and onion 1 cup diced celery and add 1/2 tsp dehydrated, minced garlic. When the potatoes have cooked I add color by adding 1 tbsp chopped parsley and one small jar of diced pimentoes. Another trick is to grate about 1/4 tsp fresh nutmeg on the bacon as it is browning. I put nutmeg in almost everything I cook as it is a \"flavor enhancer.\" I also add about 1/2 stick of butter; what's chowder without butter? You end up with the a most colorful chowder that not only tastes great, but looks great too.",
+						"datePublished": "2009-11-03T07:22:25.547Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Lynne"
+						},
+						"reviewBody": "Yummy! My Grandma also made this. Instead of bacon, try frying a little old fashioned salt pork cubes to sprinkle on the top and thicken the soup with instant mashed potatoes.",
+						"datePublished": "2007-07-15T11:53:00.743Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "4"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "shelteredrose"
+						},
+						"reviewBody": "Great basic recipe. I omit the half and half, but puree one of the cans of creamed corn so it is smooth. This makes the texture silky without adding all the fat. I also use packaged REAL bacon bits (from Costso) to save time and mess--just add the potatoes and onion to them in a pan and crisp up a bit. There is far less bacon fat this way and we dont notice a diference in the taste. That said, however, I do add about a cup of leftover diced chickn at the end of cooking and also about an ounce of grated cheddar on top. This makes it seem like more of a \"real\" meal to us. I have also used some smoked ham to punch up the flavor and ALWAYS use chicken stock rather than water.",
+						"datePublished": "2009-11-03T09:26:24.700Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "4"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "beylia"
+						},
+						"reviewBody": "This corn chowder is pretty great with a few very minor changes. Definitely substitute chicken stock for the water. I also used 2 cans of cream corn and 1 can regular corn otherwise I find it too sweet. I did find that I had to thicken it at the end because it was thinner than I like for chowder (good consistency for a basic cream soup however). At the end I put in a little bit of nutmeg as per a previous reviewer's suggestion and it was perfect with it. It wasn't really noticeable but it was enough to make you say \"Mmmm what is that?\". After cooking it, I left the bacon out until the end and sprinkled it on top in order to keep some of the crunchy texture. It tasted even better the second day. Overall, this was a fabulous recipe and I will be making it often! Thank you for the lovely recipe. It reminds me of when I was a child.",
+						"datePublished": "2010-10-15T07:31:21.570Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "sprtsracer"
+						},
+						"reviewBody": "Made this with minimal modifications. I used low sodium chicken broth in place of the water, and used fresh corn cut from the cob and the cobs scraped for their milkiness. Also added 1/2 t. of dried thyme and 4 slices of American cheese. Additionally, I used non-fat half and half (how do they get the fat out???) This was absolutely FANTASTIC! I'm certain it would be just as great as written! Next time, maybe I'll try adding some sherry, and/or a little dash of tabasco as well! I'll be making this again and again! Thanks for the recipe, and many thanks to \"Grandma\" also!!!",
+						"datePublished": "2011-05-06T10:16:06.990Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "North Van food fan"
+						},
+						"reviewBody": "Made this as part of an effort to use up pantry staples and was rewarded. I never make soup without doubling the recipe, as I like to have leftovers for lunch or to freeze. Changes (many of them inspired by other reviewers) included: included diced celery and carrot at the sautee stage, used chicken stock instead of water (mine happened to be unsalted), used a combination of creamed corn and kernal corn, used evaporated milk instead of cream and a bit less than the amount of cream called for due to the can size (didn't heat separately - just slowly heated in the soup), added about 1 tsp dried thyme leaves, used less salt than called for (suggest you start with half the amount and taste and add from there as needed), added a generous handful of chopped parsley and freshly ground pepper to finish. Thought thickness was just perfect (both potatoes and corn contributed to the consistency) and didn't feel the need for flour. A great base recipe that I will definitely use again.",
+						"datePublished": "2012-10-28T18:11:53.927Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Lisa Hippard"
+						},
+						"reviewBody": "I've made this several times making slight alterations to the recipe each time. I made it last night using cream style corn and fresh corn off the cob, chopped the potatoes fine and fried them on the bacon grease, substituted half and half for 1 block of cream cheese and 1.5 cups of milk. Also added shredded chicken breast that was cooked tender in chicken bouillon. Excellent!",
+						"datePublished": "2023-09-02T14:34:57.309Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "4"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "JollySoda4318"
+						},
+						"reviewBody": "Flavor was great, texture was too thin.Used a cup of the chowder stock and made a roux with some flour. Once it was sufficiently thick, I added it back to the chowder, resulting in the desired creaminess. I reserved the cooked bacon and introduced it as a garnish",
+						"datePublished": "2024-11-21T15:40:02.375Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Sheryl"
+						},
+						"reviewBody": "Great soup for Fridays in Lent. If you do, you render the fat from the bacon (that's allowed I checked). DO NOT ADD THE BACON TO THE CHOWDER. You can eat the bacon on Saturday.",
+						"datePublished": "2026-03-06T19:07:19.112Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "seoulgirl"
+						},
+						"reviewBody": "I used only 1 1/2 onions, 4 cups of cream-style corn, chicken stock instead of water and only 3 cups of half-and-half when I doubled the recipe. Was really good soup!",
+						"datePublished": "2026-03-03T16:09:12.536Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Lawrence Safranek"
+						},
+						"reviewBody": "I used more corn and more bacon.",
+						"datePublished": "2026-02-25T18:39:25.502Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Mo"
+						},
+						"reviewBody": "Made the recipe exactly and it was amazing! Flavorful, hearty and filling . Will def make again!",
+						"datePublished": "2026-02-07T22:14:17.808Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Reuben Ganaway"
+						},
+						"reviewBody": "I used chicken stock instead of water and one packet of Goya jamon seasoning, more bacon, more Vidalia onions. Cut your potatoes small because they keep heat longer than everything else.",
+						"datePublished": "2026-01-31T21:47:22.626Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "4"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Trudy Glover"
+						},
+						"reviewBody": "The recipe sounds good and I haven’t made it yet, but just looking at it I’m planning on adding some onion and garlic powder, salt and ground pepper and some minced garlic, also more bacon. I like lots of flavor, also If it is too thin, I may make some roux to thicken it up a bit . Looks good though ~",
+						"datePublished": "2026-01-31T21:26:05.853Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "HonestPho1649"
+						},
+						"reviewBody": "I made this over the holidays and everyone that had a chance to try. It has asked me to make it again!",
+						"datePublished": "2026-01-27T23:37:24.429Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "Michelle Mellema"
+						},
+						"reviewBody": "This was the best. Only changed water to broth and 3 cups of it..had to use it up. I added a 1tsp of red pepper flakes and 1 tbsp of taco seasoning. Just a little spice to break up sweetness. Fantastic!!!",
+						"datePublished": "2026-01-19T02:06:13.871Z"
+					},
+					{
+						"@type": "Review",
+						"reviewRating": {
+							"@type": "Rating",
+							"ratingValue": "5"
+						},
+						"author": {
+							"@type": "Person",
+							"name": "GMaAK53"
+						},
+						"reviewBody": "I didn’t have creamed corn so I used frozen corn. I thickened with instant potatoes and cream.",
+						"datePublished": "2026-01-15T18:32:33.554Z"
+					}
+				],
+				"mainEntityOfPage": {
+					"@type": ["WebPage"],
+					"@id": "https://www.allrecipes.com/recipe/86096/grandmas-corn-chowder/",
+					"breadcrumb": {
+						"@type": "BreadcrumbList",
+						"itemListElement": [
+							{
+								"@type": "ListItem",
+								"position": 1,
+								"item": {
+									"@id": "https://www.allrecipes.com/recipes/",
+									"name": "Recipes"
+								}
+							},
+							{
+								"@type": "ListItem",
+								"position": 2,
+								"item": {
+									"@id": "https://www.allrecipes.com/recipes/94/soups-stews-and-chili/",
+									"name": "Soups, Stews and Chili Recipes"
+								}
+							},
+							{
+								"@type": "ListItem",
+								"position": 3,
+								"item": {
+									"@id": "https://www.allrecipes.com/recipes/174/soups-stews-and-chili/chowders/",
+									"name": "Chowders"
+								}
+							},
+							{
+								"@type": "ListItem",
+								"position": 4,
+								"item": {
+									"@id": "https://www.allrecipes.com/recipes/14770/soups-stews-and-chili/chowders/corn-chowder/",
+									"name": "Corn Chowder Recipes"
+								}
+							}
+						]
+					},
+					"reviewedBy": [
+						{
+							"@type": "Person",
+							"name": "Allrecipes Test Kitchen",
+							"url": "https://www.allrecipes.com/allrecipes-test-kitchen-7553892"
+						}
+					],
+					"lastReviewed": "2025-11-07T08:56:34-05:00"
+				}
+			}
+		]
+	]
+}
