@@ -1,3 +1,9 @@
+## [1.15.0](https://github.com/kad-products/rezept-core/compare/v1.14.0...v1.15.0) (2026-03-15)
+
+### Features
+
+* adding cors middleware ([b263704](https://github.com/kad-products/rezept-core/commit/b26370431f4e19f7b95e1211a40892967fa8809e))
+
 ## [1.14.0](https://github.com/kad-products/rezept-core/compare/v1.13.0...v1.14.0) (2026-03-15)
 
 ### Features
