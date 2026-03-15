@@ -11,6 +11,7 @@ import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
 import apiKeyMiddleware from './middleware/api-key';
 import botMiddleware from './middleware/bot';
+import corsMiddleware from './middleware/cors';
 import loggerMiddleware from './middleware/logger';
 import permissionsMiddleware from './middleware/permissions';
 import Pages__root from './pages/root';
@@ -21,6 +22,7 @@ export default defineApp([
 	botMiddleware,
 	loggerMiddleware,
 	headersMiddleware,
+	corsMiddleware,
 	authMiddleware,
 	apiKeyMiddleware,
 	userMiddleware,
