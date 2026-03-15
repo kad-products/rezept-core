@@ -3,14 +3,14 @@ import { TanStackDevtools } from '@tanstack/react-devtools';
 import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { Form } from 'radix-ui';
 import { useState } from 'react';
-import { saveAPIKey } from '@/actions/api-keys';
+import { saveApiKey } from '@/actions/api-keys';
 import permissions from '@/data/permissions';
 import { apiKeyFormSchema } from '@/schemas';
-import type { ActionState, APIKey, APIKeyFormData } from '@/types';
+import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
 import { useAppForm } from './context';
 
-export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: APIKey; currentUserId: string | undefined }) {
-	const [formState, setFormState] = useState<ActionState<APIKeyFormData>>();
+export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: ApiKey; currentUserId: string | undefined }) {
+	const [formState, setFormState] = useState<ActionState<ApiKeyFormData>>();
 
 	const newApiKeyDefaults = {
 		permissions: [],
@@ -18,12 +18,12 @@ export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: APIKey;
 	};
 
 	const form = useAppForm({
-		defaultValues: (apiKey ? apiKey : newApiKeyDefaults) as APIKeyFormData,
+		defaultValues: (apiKey ? apiKey : newApiKeyDefaults) as ApiKeyFormData,
 		validators: {
 			onBlur: apiKeyFormSchema,
 		},
 		onSubmit: async ({ value: formDataObj }) => {
-			setFormState(await saveAPIKey(formDataObj));
+			setFormState(await saveApiKey(formDataObj));
 		},
 	});
 

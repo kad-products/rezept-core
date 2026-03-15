@@ -1,8 +1,8 @@
 'use client';
-import type { APIKey, RzTableColumn } from '@/types';
+import type { ApiKey, RzTableColumn } from '@/types';
 import RzTable from './rz-table';
 
-export default function ApiKeysTable({ apiKeys }: { apiKeys: APIKey[] }) {
+export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKey[] }) {
 	const apiColumns: RzTableColumn[] = [
 		{ label: 'API Key', key: 'apiKey', render: apiKey => apiKey.substring(0, 12) },
 		{ label: 'Name', key: 'name' },
