@@ -1,4 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { requirePermissions } from '@/middleware/permissions';
+import { recipeFormSchema } from '@/schemas';
 import { parseJsonLd } from '@/utils/parse-jsonld';
 
 function getCorsHeaders(request: Request) {
@@ -10,7 +12,7 @@ function getCorsHeaders(request: Request) {
 	};
 }
 
-async function handler({ request, ctx }: RequestInfo<DefaultAppContext>) {
+async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 	const userId = ctx.user?.id;
 
 	const corsHeaders = getCorsHeaders(request);
@@ -29,6 +31,16 @@ async function handler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 	try {
 		const parsedPayload = parseJsonLd(body as { url: string; jsonld: unknown[] });
 		ctx.logger.info(`Parsed payload: ${JSON.stringify(parsedPayload, null, 2)}`);
+		const parsed = recipeFormSchema.safeParse(parsedPayload);
+
+		if (parsed.error) {
+			return {
+				success: false,
+				errors: parsed.error.flatten().fieldErrors,
+			};
+		}
+
+		ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
 	} catch (err) {
 		ctx.logger.warn(`Error parsing JSON-LD payload: ${err}`);
 		ctx.logger.info(`Original import payload: ${JSON.stringify(body, null, 2)}`);
@@ -43,6 +55,6 @@ function optionsHandler({ request }: RequestInfo<DefaultAppContext>) {
 }
 
 export default {
-	post: handler,
+	post: [requirePermissions('recipes:import'), postHandler],
 	options: optionsHandler,
 };
