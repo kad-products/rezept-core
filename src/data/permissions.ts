@@ -23,6 +23,7 @@ export default {
 		read: ['*'],
 		update: ['ADMIN', 'BASIC'],
 		delete: ['ADMIN', 'BASIC'],
-		import: ['ADMIN', 'BASIC'],
+		scrape: ['ADMIN', 'BASIC'],
+		upload: ['ADMIN', 'BASIC'],
 	},
 } as const;

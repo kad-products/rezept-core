@@ -1,11 +1,11 @@
 import type { RequestInfo } from 'rwsdk/worker';
-import RecipeImport from '@/forms/recipe-import';
+import RecipeUpload from '@/forms/recipe-upload';
 import StandardLayout from '@/layouts/standard';
 
-export default async function Pages__recipes__import({ ctx }: RequestInfo) {
+export default async function Pages__recipes__upload({ ctx }: RequestInfo) {
 	return (
 		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
-			<RecipeImport />
+			<RecipeUpload />
 		</StandardLayout>
 	);
 }

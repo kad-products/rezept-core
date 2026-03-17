@@ -6,8 +6,8 @@ describe('Create API Key form schema', () => {
 	it('accepts valid api key with all fields', () => {
 		const validData = {
 			userId: randomUUID(),
-			permissions: ['recipes:import'],
-			name: 'key for the import booklet',
+			permissions: ['recipes:upload'],
+			name: 'key for the upload booklet',
 			revokeAt: new Date().toISOString(),
 		};
 
@@ -18,8 +18,8 @@ describe('Create API Key form schema', () => {
 	it('accepts valid api key with required fields', () => {
 		const validData = {
 			userId: randomUUID(),
-			permissions: ['recipes:import'],
-			name: 'key for the import booklet',
+			permissions: ['recipes:upload'],
+			name: 'key for the upload booklet',
 		};
 
 		const result = apiKeyFormSchema.safeParse(validData);
@@ -30,8 +30,8 @@ describe('Create API Key form schema', () => {
 		const validData = {
 			id: '',
 			userId: randomUUID(),
-			permissions: ['recipes:import'],
-			name: 'key for the import booklet',
+			permissions: ['recipes:upload'],
+			name: 'key for the upload booklet',
 		};
 
 		const result = apiKeyFormSchema.safeParse(validData);
@@ -41,7 +41,7 @@ describe('Create API Key form schema', () => {
 	it('rejects missing required fields', () => {
 		const invalidData = {
 			userId: randomUUID(),
-			name: 'key for the import booklet',
+			name: 'key for the upload booklet',
 		};
 
 		const result = apiKeyFormSchema.safeParse(invalidData);
@@ -58,8 +58,8 @@ describe('Update API Key form schema', () => {
 		const validData = {
 			id: randomUUID(),
 			userId: randomUUID(),
-			permissions: ['recipes:import'],
-			name: 'key for the import booklet',
+			permissions: ['recipes:upload'],
+			name: 'key for the upload booklet',
 			revokeAt: new Date().toISOString(),
 		};
 
@@ -72,7 +72,7 @@ describe('Update API Key form schema', () => {
 			id: randomUUID(),
 			userId: randomUUID(),
 			name: 'name for some new keys',
-			permissions: ['recipes:import'],
+			permissions: ['recipes:upload'],
 		};
 
 		const result = apiKeyFormSchema.safeParse(validData);
@@ -82,7 +82,7 @@ describe('Update API Key form schema', () => {
 	it('rejects missing required fields', () => {
 		const invalidData = {
 			userId: randomUUID(),
-			name: 'key for the import booklet',
+			name: 'key for the upload booklet',
 		};
 
 		const result = apiKeyFormSchema.safeParse(invalidData);

@@ -39,8 +39,8 @@
 	],
 	"r2_buckets": [
 		{
-			"binding": "rezept_recipe_imports",
-			"bucket_name": "rezept-recipe-imports-local"
+			"binding": "rezept_recipe_uploads",
+			"bucket_name": "rezept-recipe-uploads-local"
 		}
 	],
 	"env": {

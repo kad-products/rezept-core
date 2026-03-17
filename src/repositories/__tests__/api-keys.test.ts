@@ -39,7 +39,7 @@ vi.mock('rwsdk/worker', () => ({
 
 const baseApiKeyData = {
 	name: 'Test API Key',
-	permissions: ['recipes:import'],
+	permissions: ['recipes:upload'],
 };
 
 describe('api-keys repository', () => {
@@ -82,7 +82,7 @@ describe('api-keys repository', () => {
 			const result = await getApiKeysByUserId(testUserId);
 			expect(result[0]).toMatchObject({
 				name: 'Test API Key',
-				permissions: ['recipes:import'],
+				permissions: ['recipes:upload'],
 				userId: testUserId,
 			});
 		});
@@ -125,7 +125,7 @@ describe('api-keys repository', () => {
 
 			expect(result.id).toBeDefined();
 			expect(result.name).toBe('Test API Key');
-			expect(result.permissions).toEqual(['recipes:import']);
+			expect(result.permissions).toEqual(['recipes:upload']);
 			expect(result.userId).toBe(testUserId);
 		});
 
@@ -139,11 +139,11 @@ describe('api-keys repository', () => {
 
 		it('creates key with multiple permissions', async () => {
 			const result = await createApiKey(
-				{ ...baseApiKeyData, userId: testUserId, permissions: ['recipes:import', 'recipes:read'] },
+				{ ...baseApiKeyData, userId: testUserId, permissions: ['recipes:upload', 'recipes:read'] },
 				testUserId,
 			);
 
-			expect(result.permissions).toEqual(['recipes:import', 'recipes:read']);
+			expect(result.permissions).toEqual(['recipes:upload', 'recipes:read']);
 		});
 
 		it('creates key with empty permissions', async () => {
@@ -199,11 +199,11 @@ describe('api-keys repository', () => {
 
 			const result = await updateApiKey(
 				created.id,
-				{ ...baseApiKeyData, userId: testUserId, permissions: ['recipes:import', 'recipes:read'] },
+				{ ...baseApiKeyData, userId: testUserId, permissions: ['recipes:upload', 'recipes:read'] },
 				testUserId,
 			);
 
-			expect(result.permissions).toEqual(['recipes:import', 'recipes:read']);
+			expect(result.permissions).toEqual(['recipes:upload', 'recipes:read']);
 		});
 
 		it('sets updatedBy to userId', async () => {

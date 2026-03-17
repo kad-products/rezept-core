@@ -3,10 +3,10 @@ import { relations } from 'drizzle-orm';
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { users } from './users';
 
-export const recipeImportStatus = ['UPLOADED', 'PROCESSING', 'PROCESSED', 'FAILED'] as const;
+export const recipeUploadStatus = ['UPLOADED', 'PROCESSING', 'PROCESSED', 'FAILED'] as const;
 
-export const recipeImports = sqliteTable(
-	'recipe_imports',
+export const recipeUploads = sqliteTable(
+	'recipe_uploads',
 	{
 		id: text()
 			.primaryKey()
@@ -18,7 +18,7 @@ export const recipeImports = sqliteTable(
 		r2Key: text().notNull(),
 		mimeType: text().notNull(),
 		fileSize: integer().notNull(), // bytes
-		status: text({ enum: recipeImportStatus }).notNull().default('UPLOADED'),
+		status: text({ enum: recipeUploadStatus }).notNull().default('UPLOADED'),
 		createdAt: text()
 			.notNull()
 			.$defaultFn(() => new Date().toISOString()),
@@ -30,18 +30,18 @@ export const recipeImports = sqliteTable(
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
 	},
-	table => [index('recipe_imports_user_id_idx').on(table.userId)],
+	table => [index('recipe_uploads_user_id_idx').on(table.userId)],
 );
 
-export const recipeImportsRelations = relations(recipeImports, ({ one }) => ({
+export const recipeUploadsRelations = relations(recipeUploads, ({ one }) => ({
 	user: one(users, {
-		fields: [recipeImports.userId],
+		fields: [recipeUploads.userId],
 		references: [users.id],
-		relationName: 'recipeImportUser',
+		relationName: 'recipeUploadUser',
 	}),
 	creator: one(users, {
-		fields: [recipeImports.createdBy],
+		fields: [recipeUploads.createdBy],
 		references: [users.id],
-		relationName: 'recipeImportCreator',
+		relationName: 'recipeUploadCreator',
 	}),
 }));

@@ -23,7 +23,7 @@ CREATE TABLE `__new_recipe_ingredients` (
 	FOREIGN KEY (`deleted_by`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-INSERT INTO `__new_recipe_ingredients`("id", "recipe_section_id", "raw", "ingredient_id", "quantity", "unit_id", "preparation", "modifier", "order", "created_at", "created_by", "updated_at", "updated_by", "deleted_at", "deleted_by") SELECT "id", "recipe_section_id", "raw", "ingredient_id", "quantity", "unit_id", "preparation", "modifier", "order", "created_at", "created_by", "updated_at", "updated_by", "deleted_at", "deleted_by" FROM `recipe_ingredients`;--> statement-breakpoint
+INSERT INTO `__new_recipe_ingredients`("id", "recipe_section_id", "raw", "ingredient_id", "quantity", "unit_id", "preparation", "modifier", "order", "created_at", "created_by", "updated_at", "updated_by", "deleted_at", "deleted_by") SELECT "id", "recipe_section_id", null, "ingredient_id", "quantity", "unit_id", "preparation", "modifier", "order", "created_at", "created_by", "updated_at", "updated_by", "deleted_at", "deleted_by" FROM `recipe_ingredients`;--> statement-breakpoint
 DROP TABLE `recipe_ingredients`;--> statement-breakpoint
 ALTER TABLE `__new_recipe_ingredients` RENAME TO `recipe_ingredients`;--> statement-breakpoint
 PRAGMA foreign_keys=ON;--> statement-breakpoint

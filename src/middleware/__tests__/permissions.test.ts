@@ -99,20 +99,20 @@ describe('permissionsMiddleware', () => {
 
 	describe('api key permissions', () => {
 		it('uses api key permissions when ctx.apiKey is set', () => {
-			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import'] };
+			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:upload'] };
 
 			permissionsMiddleware(mockRequestInfo as any);
 
-			expect(mockRequestInfo.ctx.permissions).toEqual(['recipes:import']);
+			expect(mockRequestInfo.ctx.permissions).toEqual(['recipes:upload']);
 		});
 
 		it('uses api key permissions even when user is also set', () => {
 			mockRequestInfo.ctx.user = { id: 'user-123', role: 'ADMIN' };
-			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import'] };
+			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:upload'] };
 
 			permissionsMiddleware(mockRequestInfo as any);
 
-			expect(mockRequestInfo.ctx.permissions).toEqual(['recipes:import']);
+			expect(mockRequestInfo.ctx.permissions).toEqual(['recipes:upload']);
 			expect(mockRequestInfo.ctx.permissions).not.toContain('seasons:create');
 		});
 
@@ -125,11 +125,11 @@ describe('permissionsMiddleware', () => {
 		});
 
 		it('sets multiple permissions from api key', () => {
-			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import', 'recipes:read'] };
+			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:upload', 'recipes:read'] };
 
 			permissionsMiddleware(mockRequestInfo as any);
 
-			expect(mockRequestInfo.ctx.permissions).toContain('recipes:import');
+			expect(mockRequestInfo.ctx.permissions).toContain('recipes:upload');
 			expect(mockRequestInfo.ctx.permissions).toContain('recipes:read');
 		});
 
@@ -199,18 +199,18 @@ describe('requirePermissions', () => {
 	});
 
 	it('allows api key request with sufficient permissions', async () => {
-		mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import'] };
-		mockRequestInfo.ctx.permissions = ['recipes:import'];
+		mockRequestInfo.ctx.apiKey = { permissions: ['recipes:upload'] };
+		mockRequestInfo.ctx.permissions = ['recipes:upload'];
 
-		const middleware = requirePermissions('recipes:import');
+		const middleware = requirePermissions('recipes:upload');
 		const result = await middleware();
 
 		expect(result).toBeUndefined();
 	});
 
 	it('blocks api key request with insufficient permissions', async () => {
-		mockRequestInfo.ctx.apiKey = { permissions: ['recipes:import'] };
-		mockRequestInfo.ctx.permissions = ['recipes:import'];
+		mockRequestInfo.ctx.apiKey = { permissions: ['recipes:upload'] };
+		mockRequestInfo.ctx.permissions = ['recipes:upload'];
 
 		const middleware = requirePermissions('recipes:delete');
 		const result = await middleware();

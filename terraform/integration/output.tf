@@ -19,8 +19,8 @@ output "wrangler_env" {
     ]
     r2_buckets = [
         {
-            binding = "rezept_recipe_imports"
-            bucket_name = module.cloudflare_env.recipe_imports_bucket_name
+            binding = "rezept_recipe_uploads"
+            bucket_name = module.cloudflare_env.recipe_uploads_bucket_name
         }
     ]
   })

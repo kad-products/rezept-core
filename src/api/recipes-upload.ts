@@ -1,9 +1,9 @@
 import { env } from 'cloudflare:workers';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
-import { createRecipeImport } from '@/repositories/recipe-imports';
-import type { RecipeImport } from '@/types';
+import { createRecipeUpload } from '@/repositories/recipe-uploads';
+import type { RecipeUpload } from '@/types';
 
-export default async function API__recipes__import_upload({ request, ctx }: RequestInfo<DefaultAppContext>) {
+export default async function API__recipes__upload({ request, ctx }: RequestInfo<DefaultAppContext>) {
 	const userId = ctx.user?.id;
 
 	if (!userId) {
@@ -24,15 +24,15 @@ export default async function API__recipes__import_upload({ request, ctx }: Requ
 
 	// Stream the file directly to R2
 	const r2ObjectKey = `/raw/${file.name}`;
-	const results = await env.rezept_recipe_imports.put(r2ObjectKey, file.stream(), {
+	const results = await env.rezept_recipe_uploads.put(r2ObjectKey, file.stream(), {
 		httpMetadata: {
 			contentType: file.type,
 		},
 	});
 
-	let importedRecipe: RecipeImport;
+	let uploadedRecipe: RecipeUpload;
 	try {
-		importedRecipe = await createRecipeImport(
+		uploadedRecipe = await createRecipeUpload(
 			{
 				originalFilename: file.name,
 				r2Key: r2ObjectKey,
@@ -59,7 +59,7 @@ export default async function API__recipes__import_upload({ request, ctx }: Requ
 
 	console.log(results);
 
-	return new Response(JSON.stringify(importedRecipe), {
+	return new Response(JSON.stringify(uploadedRecipe), {
 		status: 200,
 		headers: {
 			'Content-Type': 'application/json',

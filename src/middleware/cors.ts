@@ -1,11 +1,13 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 
 const allowedCorsPaths: Record<string, string[]> = {
-	OPTIONS: ['/api/recipes/import/bookmarklet'],
+	OPTIONS: ['/api/recipes/scrape'],
 };
 
 export default function corsMiddleware({ request }: RequestInfo<DefaultAppContext>) {
 	const allowedPaths = allowedCorsPaths[request.method];
+
+	console.log(request.method, allowedPaths);
 
 	if (allowedPaths) {
 		if (allowedPaths.includes(new URL(request.url).pathname)) {

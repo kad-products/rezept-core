@@ -37,7 +37,7 @@ const mockApiKey = {
 	userId: 'test-user-id',
 	name: 'Test Key',
 	apiKey: 'rz_std_abc123',
-	permissions: ['recipes:import'],
+	permissions: ['recipes:upload'],
 	revokeAt: null,
 	createdAt: new Date().toISOString(),
 	updatedAt: null,

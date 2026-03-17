@@ -34,16 +34,19 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 		const parsed = recipeFormSchema.safeParse(parsedPayload);
 
 		if (parsed.error) {
-			return {
-				success: false,
-				errors: parsed.error.flatten().fieldErrors,
-			};
+			return Response.json(
+				{
+					success: false,
+					errors: parsed.error.flatten().fieldErrors,
+				},
+				{ status: 400, headers: corsHeaders },
+			);
 		}
 
 		ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
 	} catch (err) {
 		ctx.logger.warn(`Error parsing JSON-LD payload: ${err}`);
-		ctx.logger.info(`Original import payload: ${JSON.stringify(body, null, 2)}`);
+		ctx.logger.info(`Original scrape payload: ${JSON.stringify(body, null, 2)}`);
 	}
 
 	return Response.json({ success: true }, { headers: corsHeaders });
@@ -55,6 +58,6 @@ function optionsHandler({ request }: RequestInfo<DefaultAppContext>) {
 }
 
 export default {
-	post: [requirePermissions('recipes:import'), postHandler],
+	post: [requirePermissions('recipes:scrape'), postHandler] as const,
 	options: optionsHandler,
 };
