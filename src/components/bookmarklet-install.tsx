@@ -5,14 +5,14 @@ import { saveApiKey } from '@/actions/api-keys';
 import type { ApiKey } from '@/types';
 
 const SCRAPE_PERMISSION = 'recipes:scrape';
-const BASE_URL = 'https://6620-207-153-41-172.ngrok-free.app';
 
 function buildBookmarklet(apiKey: string) {
+	const baseUrl = import.meta.env.VITE_BASE_URL;
 	const code = `(function(){
   const scripts=[...document.querySelectorAll('script[type="application/ld+json"]')];
   const data=scripts.map(s=>{try{return JSON.parse(s.innerHTML)}catch(e){return null}}).filter(Boolean);
   if(!data.length)return alert('No JSON-LD found on this page');
-  fetch('${BASE_URL}/api/recipes/scrape',{
+  fetch('${baseUrl}/api/recipes/scrape',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer ${apiKey}'},
     body:JSON.stringify({url:location.href,jsonld:data})
@@ -99,6 +99,8 @@ export default function BookmarkletInstall({ apiKeys, userId }: { apiKeys: ApiKe
 					)}
 
 					<div className="bookmarklet-install__instructions">
+						<p>{import.meta.env.VITE_BASE_URL}</p>
+
 						<h3>Desktop Installation</h3>
 						<ol>
 							<li>Make sure your bookmarks bar is visible (View → Show Bookmarks Bar)</li>

@@ -17,9 +17,15 @@ import { sessions } from '@/session/store';
 function getWebAuthnConfig(request: Request) {
 	const rpID = new URL(request.url).hostname;
 	const rpName = import.meta.env.VITE_IS_DEV_SERVER ? 'Development App' : env.WEBAUTHN_APP_NAME;
+
+	// origin handling that works with cloudflare tunnels for local development
+	const url = new URL(import.meta.env.VITE_BASE_URL);
+	const origin = url.origin;
+
 	return {
 		rpName,
 		rpID,
+		origin,
 	};
 }
 
@@ -61,7 +67,7 @@ export async function startPasskeyLogin() {
 
 export async function finishPasskeyRegistration(username: string, registration: RegistrationResponseJSON) {
 	const { request, response } = requestInfo;
-	const { origin } = new URL(request.url);
+	const { origin } = getWebAuthnConfig(requestInfo.request);
 
 	const session = await sessions.load(request);
 	const challenge = session?.challenge;
@@ -127,7 +133,7 @@ function deviceNameFromUA(uaString: string) {
 
 export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
 	const { request, response } = requestInfo;
-	const { origin } = new URL(request.url);
+	const { origin } = getWebAuthnConfig(requestInfo.request);
 
 	requestInfo.ctx.logger.info(`Login: ${JSON.stringify(login, null, 4)}`);
 

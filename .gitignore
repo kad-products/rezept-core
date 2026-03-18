@@ -7,8 +7,11 @@ logs
 npm-debug.log*
 pnpm-debug.log*
 
-# Environment variables
-.env
+# Vite Environment variables
+# https://vite.dev/guide/env-and-mode#env-files
+.env*.local
+
+# Wrangler / Cloudflare local env file
 .dev.vars
 
 # Vite build output
