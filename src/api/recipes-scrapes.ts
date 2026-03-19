@@ -1,6 +1,8 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { requirePermissions } from '@/middleware/permissions';
+import { createRecipeScrape, updateRecipeScrapeStatus } from '@/repositories/recipe-scrapes';
 import { recipeFormSchema } from '@/schemas';
+import type { RecipeScrape } from '@/types';
 import { parseJsonLd } from '@/utils/parse-jsonld';
 
 function getCorsHeaders(request: Request) {
@@ -28,12 +30,28 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 		return Response.json({ success: false, errors: { _form: ['Invalid JSON body'] } }, { status: 400, headers: corsHeaders });
 	}
 
+	let recipeScrape: RecipeScrape;
+	try {
+		recipeScrape = await createRecipeScrape(JSON.stringify(body), userId);
+	} catch (err) {
+		return Response.json(
+			{
+				success: false,
+				errors: [(err as Error).message],
+			},
+			{ status: 400, headers: corsHeaders },
+		);
+	}
+
 	try {
 		const parsedPayload = parseJsonLd(body as { url: string; jsonld: unknown[] });
 		ctx.logger.info(`Parsed payload: ${JSON.stringify(parsedPayload, null, 2)}`);
 		const parsed = recipeFormSchema.safeParse(parsedPayload);
 
 		if (parsed.error) {
+			ctx.logger.warn(`Schema parsing found error in JSON-LD payload: ${JSON.stringify(parsed.error.flatten().fieldErrors)}`);
+			ctx.logger.info(`Original scrape payload: ${JSON.stringify(body, null, 2)}`);
+			await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', JSON.stringify(parsed.error.flatten().fieldErrors), userId);
 			return Response.json(
 				{
 					success: false,
@@ -44,9 +62,11 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 		}
 
 		ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'PROCESSING', 'Parsed recipe JSON successfully', userId);
 	} catch (err) {
-		ctx.logger.warn(`Error parsing JSON-LD payload: ${err}`);
+		ctx.logger.warn(`Unexpected error during parsing JSON-LD payload: ${err}`);
 		ctx.logger.info(`Original scrape payload: ${JSON.stringify(body, null, 2)}`);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', (err as Error).message, userId);
 	}
 
 	return Response.json({ success: true }, { headers: corsHeaders });

@@ -1,0 +1,1 @@
+ALTER TABLE `recipe_scrapes` ADD `status_text` text;

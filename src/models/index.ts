@@ -4,6 +4,7 @@ export * from './ingredient-units';
 export * from './ingredients';
 export * from './recipe-ingredients';
 export * from './recipe-instructions';
+export * from './recipe-scrapes';
 export * from './recipe-sections';
 export * from './recipe-uploads';
 export * from './recipes';
