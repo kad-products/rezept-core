@@ -12,7 +12,7 @@ function buildBookmarklet(apiKey: string) {
   const scripts=[...document.querySelectorAll('script[type="application/ld+json"]')];
   const data=scripts.map(s=>{try{return JSON.parse(s.innerHTML)}catch(e){return null}}).filter(Boolean);
   if(!data.length)return alert('No JSON-LD found on this page');
-  fetch('${baseUrl}/api/recipes/scrape',{
+  fetch('${baseUrl}/api/recipes/imports/scrapes',{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer ${apiKey}'},
     body:JSON.stringify({url:location.href,jsonld:data})

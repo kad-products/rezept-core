@@ -1,7 +1,7 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 
 const allowedCorsPaths: Record<string, string[]> = {
-	OPTIONS: ['/api/recipes/scrape'],
+	OPTIONS: ['/api/recipes/imports/scrapes'],
 };
 
 export default function corsMiddleware({ request }: RequestInfo<DefaultAppContext>) {
