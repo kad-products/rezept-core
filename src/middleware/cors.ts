@@ -12,6 +12,8 @@ export default function corsMiddleware({ request, response }: RequestInfo<Defaul
 
 	if (originHeader && Object.keys(corsConfig).includes(path)) {
 		if (method === 'OPTIONS') {
+			// this one has to be a Response rather than Response.json
+			// because the body has to be empty for a 204 to be valid
 			return new Response(null, {
 				status: 204,
 				headers: {

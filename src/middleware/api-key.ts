@@ -13,10 +13,13 @@ export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<Def
 		const apiKey = await getApiKeyByKey(key);
 
 		if (apiKey.revokeAt && new Date(apiKey.revokeAt) < new Date()) {
-			return new Response(JSON.stringify({ success: false, errors: { _form: ['API key has been revoked'] } }), {
-				status: 403,
-				headers: { 'Content-Type': 'application/json' },
-			});
+			return Response.json(
+				{ success: false, errors: { _form: ['API key has been revoked'] } },
+				{
+					status: 403,
+					headers: { 'Content-Type': 'application/json' },
+				},
+			);
 		}
 
 		const now = Date.now();
@@ -24,9 +27,12 @@ export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<Def
 		ctx.apiKey = apiKey;
 	} catch (err) {
 		requestInfo.ctx.logger.warn(`Error in API middleware: ${err}`);
-		return new Response(JSON.stringify({ success: false, errors: { _form: ['Invalid API key'] } }), {
-			status: 403,
-			headers: { 'Content-Type': 'application/json' },
-		});
+		return Response.json(
+			{ success: false, errors: { _form: ['Invalid API key'] } },
+			{
+				status: 403,
+				headers: { 'Content-Type': 'application/json' },
+			},
+		);
 	}
 }

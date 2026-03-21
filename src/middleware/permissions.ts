@@ -39,10 +39,13 @@ export const requirePermissions = (...required: Permission[]) => {
 		const missing = required.filter(p => !ctx.permissions?.includes(p));
 
 		if (missing.length > 0) {
-			return new Response(JSON.stringify({ error: 'Forbidden', missing }), {
-				status: 403,
-				headers: { 'Content-Type': 'application/json' },
-			});
+			return Response.json(
+				{ error: 'Forbidden', missing },
+				{
+					status: 403,
+					headers: { 'Content-Type': 'application/json' },
+				},
+			);
 		}
 	};
 };

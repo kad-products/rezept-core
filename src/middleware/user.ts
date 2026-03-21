@@ -12,10 +12,15 @@ export default async function userMiddleware({ ctx, request }: RequestInfo<Defau
 			await sessions.remove(request, headers);
 			headers.set('Location', '/');
 
-			return new Response(null, {
-				status: 302,
-				headers,
-			});
+			return Response.json(
+				{
+					message: 'User found on session but could not be retrieved',
+				},
+				{
+					status: 302,
+					headers,
+				},
+			);
 		}
 	}
 }
