@@ -7,32 +7,20 @@ import { parseJsonLd } from '@/utils/parse-jsonld';
 
 export default {
 	post: [requirePermissions('recipes:scrape'), postHandler] as const,
-	options: optionsHandler,
 };
-
-function getCorsHeaders(request: Request) {
-	return {
-		'Access-Control-Allow-Origin': request.headers.get('Origin') ?? '*',
-		'Access-Control-Allow-Credentials': 'true',
-		'Access-Control-Allow-Methods': 'POST, OPTIONS',
-		'Access-Control-Allow-Headers': 'Content-Type',
-	};
-}
 
 async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 	const userId = ctx.user?.id;
 
-	const corsHeaders = getCorsHeaders(request);
-
 	if (!userId) {
-		return Response.json({ success: false, errors: { _form: ['You must be logged in'] } }, { status: 401, headers: corsHeaders });
+		return Response.json({ success: false, errors: { _form: ['You must be logged in'] } }, { status: 401 });
 	}
 
 	let body: unknown;
 	try {
 		body = await request.json();
 	} catch {
-		return Response.json({ success: false, errors: { _form: ['Invalid JSON body'] } }, { status: 400, headers: corsHeaders });
+		return Response.json({ success: false, errors: { _form: ['Invalid JSON body'] } }, { status: 400 });
 	}
 
 	//  _____ __   _ _____ _______ _____ _______        _____ ______ _______      _______ _______  ______ _______  _____  _______
@@ -48,7 +36,7 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 				success: false,
 				errors: [(err as Error).message],
 			},
-			{ status: 400, headers: corsHeaders },
+			{ status: 400 },
 		);
 	}
 
@@ -70,7 +58,7 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 					success: false,
 					errors: parsed.error.flatten().fieldErrors,
 				},
-				{ status: 400, headers: corsHeaders },
+				{ status: 400 },
 			);
 		}
 
@@ -87,10 +75,5 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 	// ingredients
 	// instructions
 
-	return Response.json({ success: true }, { headers: corsHeaders });
-}
-
-function optionsHandler({ request }: RequestInfo<DefaultAppContext>) {
-	console.log('optionsHandler handling OPTIONS');
-	return new Response(null, { status: 204, headers: getCorsHeaders(request) });
+	return Response.json({ success: true });
 }

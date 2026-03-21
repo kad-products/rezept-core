@@ -28,12 +28,6 @@ describe('corsMiddleware', () => {
 			expect(result.headers.get('Access-Control-Allow-Origin')).toBe('https://www.allrecipes.com');
 		});
 
-		it('falls back to * when no Origin header is present', () => {
-			const result = corsMiddleware(makeRequestInfo('OPTIONS', 'https://example.com/api/recipes/imports/scrapes')) as Response;
-
-			expect(result.headers.get('Access-Control-Allow-Origin')).toBe('*');
-		});
-
 		it('sets Access-Control-Allow-Credentials to true', () => {
 			const result = corsMiddleware(
 				makeRequestInfo('OPTIONS', 'https://example.com/api/recipes/imports/scrapes', 'https://www.allrecipes.com'),
@@ -60,34 +54,50 @@ describe('corsMiddleware', () => {
 	});
 
 	describe('passes through for non-matching requests', () => {
+		it('fails to set origin header when no Origin header is present', () => {
+			const result = corsMiddleware(makeRequestInfo('OPTIONS', 'https://example.com/api/recipes/imports/scrapes')) as Response;
+
+			expect(result).toBeUndefined();
+		});
+
 		it('passes through for OPTIONS on unlisted path', () => {
 			const result = corsMiddleware(makeRequestInfo('OPTIONS', 'https://example.com/api/other', 'https://www.allrecipes.com'));
 
 			expect(result).toBeUndefined();
 		});
 
-		it('passes through for POST on bookmarklet endpoint', () => {
-			const result = corsMiddleware(
-				makeRequestInfo('POST', 'https://example.com/api/recipes/imports/scrapes', 'https://www.allrecipes.com'),
-			);
+		it('adds CORS headers for POST on bookmarklet endpoint', () => {
+			const response = new Response(null);
+			const result = corsMiddleware({
+				...makeRequestInfo('POST', 'https://example.com/api/recipes/imports/scrapes', 'https://www.allrecipes.com'),
+				response,
+			});
 
 			expect(result).toBeUndefined();
+			expect(response.headers.get('Access-Control-Allow-Origin')).toBe('https://www.allrecipes.com');
 		});
 
 		it('passes through for GET requests', () => {
-			const result = corsMiddleware(
-				makeRequestInfo('GET', 'https://example.com/api/recipes/imports/scrapes', 'https://www.allrecipes.com'),
-			);
+			const response = new Response(null);
+			const result = corsMiddleware({
+				...makeRequestInfo('GET', 'https://example.com/api/recipes/imports/scrapes', 'https://www.allrecipes.com'),
+				response,
+			});
 
 			expect(result).toBeUndefined();
+			expect(response.headers.get('Access-Control-Allow-Origin')).toBe('https://www.allrecipes.com');
 		});
 
 		it('passes through for requests with no method match in allowedCorsPaths', () => {
-			const result = corsMiddleware(
-				makeRequestInfo('DELETE', 'https://example.com/api/recipes/imports/scrapes', 'https://www.allrecipes.com'),
-			);
+			const response = new Response(null);
+			const result = corsMiddleware({
+				...makeRequestInfo('DELETE', 'https://example.com/api/recipes/imports/scrapes', 'https://www.allrecipes.com'),
+				response,
+			});
 
 			expect(result).toBeUndefined();
+			expect(response.headers.get('Access-Control-Allow-Origin')).toBe('https://www.allrecipes.com');
+			expect(response.headers.get('Access-Control-Allow-Methods')).not.toContain('DELETE');
 		});
 	});
 });
