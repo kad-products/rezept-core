@@ -7,7 +7,7 @@ Some features require testing from an external origin — most notably the bookm
 ### 1. Install cloudflared
 
 ```bash
-brew install cloudflare/cloudflare/cloudflared
+brew install cloudflared
 ```
 
 ### 2. Start the tunnel

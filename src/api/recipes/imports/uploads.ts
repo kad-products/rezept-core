@@ -1,9 +1,17 @@
 import { env } from 'cloudflare:workers';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { requirePermissions } from '@/middleware/permissions';
 import { createRecipeUpload } from '@/repositories/recipe-uploads';
 import type { RecipeUpload } from '@/types';
 
-export default async function API__recipes__upload({ request, ctx }: RequestInfo<DefaultAppContext>) {
+export default {
+	post: [requirePermissions('recipes:upload'), postHandler] as const,
+};
+
+/**
+ * @private - exported for testing only, do not use directly
+ */
+export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 	const userId = ctx.user?.id;
 
 	if (!userId) {
