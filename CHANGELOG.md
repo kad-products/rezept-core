@@ -1,3 +1,9 @@
+## [1.17.1](https://github.com/kad-products/rezept-core/compare/v1.17.0...v1.17.1) (2026-03-22)
+
+### Bug Fixes
+
+* use mode to find the right base url setting in builds ([8089355](https://github.com/kad-products/rezept-core/commit/8089355c3e3d6266e9559e0acfbe59dca43ff2b4))
+
 ## [1.17.0](https://github.com/kad-products/rezept-core/compare/v1.16.0...v1.17.0) (2026-03-22)
 
 ### Features
