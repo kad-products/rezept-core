@@ -1,3 +1,32 @@
+## [1.17.0](https://github.com/kad-products/rezept-core/compare/v1.16.0...v1.17.0) (2026-03-22)
+
+### Features
+
+* add code to handle raw vs explicit props for ingredients ([a96f239](https://github.com/kad-products/rezept-core/commit/a96f23967885e99ab7a44f2201b7cfd1cc368a74))
+* add initial scrapes table and related processing logic ([9fb87c6](https://github.com/kad-products/rezept-core/commit/9fb87c64931f722239613006d1934e392f4543a8))
+* add raw record in db table for recipe ingredient ([5e48ec2](https://github.com/kad-products/rezept-core/commit/5e48ec281368b49fdb06e48d73c5d7f3128c2915))
+* add require auth interrupter ([9ef1196](https://github.com/kad-products/rezept-core/commit/9ef1196c61a818003a63e7c4ed0992c537b1a729))
+* add validation to bookmarklet import data ([d0421a4](https://github.com/kad-products/rezept-core/commit/d0421a4a867617668011306a405c09d8a97182f1))
+* adding initial functioning scrape api and flow ([142323a](https://github.com/kad-products/rezept-core/commit/142323a23e0854c16fb2d1e9ac6a7ef6cd9fdc5d))
+* break up recipe imports to uploads and scrapes ([1ea67eb](https://github.com/kad-products/rezept-core/commit/1ea67eb6c88bf7eb1e2d463d0345bb9023142db4))
+* logger can handle objects now ([9194319](https://github.com/kad-products/rezept-core/commit/919431921bf308190e7e9658eb91373a826b658d))
+* make cors middleware handle more cors things ([9e4b141](https://github.com/kad-products/rezept-core/commit/9e4b141d6203ee34ce652ad6cb3dbc30362f334c))
+* working local tunnel setup for bookmarklet testing ([9a31ec7](https://github.com/kad-products/rezept-core/commit/9a31ec77850f09b521b3ade4ccf6c34b3b36a000))
+
+### Bug Fixes
+
+* fail step when branch protection can't be disabled ([9a0ce43](https://github.com/kad-products/rezept-core/commit/9a0ce4377cd26792a8f8b916d24753b7aa2505a3))
+* get cors middleware working again ([5d833e0](https://github.com/kad-products/rezept-core/commit/5d833e058fb0b155702feb2a973c5d8b06e0b4e8))
+* optional uuid handle nulls ([6ddaf6f](https://github.com/kad-products/rezept-core/commit/6ddaf6f731c1b8a970b785ee632ebcdbc9eaab0d))
+* recipe schema remove nulls for id type ([20cde84](https://github.com/kad-products/rezept-core/commit/20cde84598d009e7a5b21d7bfde82b7d22ea622c))
+* rename API files and define a clearer pattern ([404c7ef](https://github.com/kad-products/rezept-core/commit/404c7ef99e5b1291a8b70d4b5df898c36886b472))
+* use response.json for most handlers ([02c170f](https://github.com/kad-products/rezept-core/commit/02c170f561ebfbf6159d779260b4a196eacefe81))
+
+### Code Refactoring
+
+* move recipe uploads and scrapes to live under imports namespace ([de66c45](https://github.com/kad-products/rezept-core/commit/de66c45761856f59af7a1c4d466ba138e02435bc))
+* rename auth middleware to session middleware ([6004362](https://github.com/kad-products/rezept-core/commit/6004362fd350cc7f66bf349fbd0817b42ec15395))
+
 ## [1.16.0](https://github.com/kad-products/rezept-core/compare/v1.15.1...v1.16.0) (2026-03-15)
 
 ### Features
