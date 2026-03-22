@@ -1,29 +1,35 @@
 import { z } from 'zod';
 import { optionalString, optionalUuid, requiredUuid } from './utils';
 
+const ingredientRawSchema = z.object({
+	id: optionalUuid,
+	raw: z.string().min(1),
+	order: z.coerce.number().int().min(0) as z.ZodNumber,
+});
+
+const ingredientStructuredSchema = z.object({
+	id: optionalUuid,
+	ingredientId: requiredUuid,
+	quantity: z.coerce.number().positive().multipleOf(0.01).optional() as unknown as z.ZodNumber,
+	unitId: optionalUuid,
+	preparation: optionalString
+		.transform(val => val?.trim())
+		.pipe(z.string().max(100, 'Preparation must be 100 characters or less').optional()),
+	modifier: optionalString
+		.transform(val => val?.trim())
+		.pipe(z.string().max(100, 'Modifier must be 100 characters or less').optional()),
+	order: z.coerce.number().int().min(0) as z.ZodNumber,
+});
+
+export const recipeIngredientSchema = z.union([ingredientRawSchema, ingredientStructuredSchema]);
+
 export const recipeSectionSchema = z.object({
 	id: optionalUuid, // Present for updates, absent for creates
 	title: optionalString
 		.transform(val => val?.trim())
 		.pipe(z.string().max(200, 'Title must be 200 characters or less').optional()),
 	order: z.coerce.number().int().min(0) as z.ZodNumber,
-	ingredients: z
-		.array(
-			z.object({
-				id: optionalUuid,
-				ingredientId: requiredUuid,
-				quantity: z.coerce.number().positive().multipleOf(0.01).optional() as unknown as z.ZodNumber,
-				unitId: optionalUuid,
-				preparation: optionalString
-					.transform(val => val?.trim())
-					.pipe(z.string().max(100, 'Preparation must be 100 characters or less').optional()),
-				modifier: optionalString
-					.transform(val => val?.trim())
-					.pipe(z.string().max(100, 'Modifier must be 100 characters or less').optional()),
-				order: z.coerce.number().int().min(0) as z.ZodNumber,
-			}),
-		)
-		.optional(),
+	ingredients: z.array(recipeIngredientSchema).optional(),
 	instructions: z
 		.array(
 			z.object({
@@ -59,4 +65,8 @@ export const recipeFormSchema = z.object({
 	prepTime: z.coerce.number().int().min(0).optional() as z.ZodOptional<z.ZodNumber>,
 	cookTime: z.coerce.number().int().min(0).optional() as z.ZodOptional<z.ZodNumber>,
 	sections: z.array(recipeSectionSchema).optional(),
+});
+
+export const recipeScrapeSchema = recipeFormSchema.extend({
+	sections: z.array(recipeSectionSchema).min(1, 'At least one section is required'),
 });

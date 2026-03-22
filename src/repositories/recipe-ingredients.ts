@@ -49,6 +49,7 @@ export async function updateRecipeIngredients(
 						preparation: ingData.preparation,
 						modifier: ingData.modifier,
 						order: ingData.order,
+						raw: ingData.raw,
 						updatedBy: userId,
 					})
 					.where(eq(recipeIngredients.id, ingData.id))
@@ -69,6 +70,7 @@ export async function updateRecipeIngredients(
 						preparation: ingData.preparation,
 						modifier: ingData.modifier,
 						order: ingData.order,
+						raw: ingData.raw,
 						createdBy: userId,
 					})
 					.returning();
