@@ -43,10 +43,7 @@ export const recipeSectionSchema = z.object({
 
 // One flexible schema for forms/actions
 export const recipeFormSchema = z.object({
-	id: z
-		.union([z.string().uuid('Must be a valid UUID'), z.literal('')])
-		.transform(val => (val === '' ? undefined : val))
-		.optional(), // Present for update, absent for create
+	id: optionalUuid, // Present for update, absent for create
 	authorId: z.string().uuid('Must be a valid UUID'),
 	title: z.string().trim().min(1, 'Title is required').max(200, 'Title must be 200 characters or less'),
 	description: z
