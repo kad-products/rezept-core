@@ -69,7 +69,8 @@
 			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
-				"REZEPT_ENV": "integration"
+				"REZEPT_ENV": "integration",
+				"VITE_BASE_URL": "https://rezept-integration.arsdehnel.workers.dev"
 			},
 			"workers_dev": true
 		}
