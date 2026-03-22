@@ -14,7 +14,7 @@ export const optionalString = z
 
 export const optionalUuid = z
 	.union([z.string().uuid('Must be a valid UUID'), z.null(), z.literal('')])
-	.transform(val => (val === '' ? undefined : val))
+	.transform(val => (val === '' || val === null ? undefined : val))
 	.optional();
 
 export const requiredUuid = z.string().uuid('Must be a valid UUID');
