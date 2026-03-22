@@ -3,7 +3,17 @@ import { relations } from 'drizzle-orm';
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { users } from './users';
 
-export const recipeScrapeStatus = ['SCRAPED', 'PROCESSING', 'PROCESSED', 'FAILED'] as const;
+export const recipeScrapeStatus = [
+	'SCRAPED',
+	'TRANSFORMED',
+	'VALIDATED',
+	'RECIPE_SAVED',
+	'SECTIONS_SAVED',
+	'INGREDIENTS_SAVED',
+	'INSTRUCTIONS_SAVED',
+	'COMPLETED',
+	'FAILED',
+] as const;
 
 export const recipeScrapes = sqliteTable(
 	'recipe_scrapes',

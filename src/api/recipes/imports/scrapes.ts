@@ -1,79 +1,79 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { requireAuthentication } from '@/interrupters';
 import { requirePermissions } from '@/middleware/permissions';
-import { createRecipeScrape, updateRecipeScrapeStatus } from '@/repositories/recipe-scrapes';
-import { recipeFormSchema } from '@/schemas';
-import type { RecipeScrape } from '@/types';
-import { parseJsonLd } from '@/utils/parse-jsonld';
+import { updateRecipeScrapeStatus } from '@/repositories/recipe-scrapes';
+import {
+	initializeScrape,
+	parseBodyJson,
+	saveRecipe,
+	saveRecipeIngredients,
+	saveRecipeInstructions,
+	saveRecipeSections,
+	transformScrapeToRecipe,
+	validateAsRecipe,
+} from '@/steps';
+import rzStepErrorToJsonResponse from '@/utils/rz-step-error-to-json-response';
 
 export default {
-	post: [requirePermissions('recipes:scrape'), postHandler] as const,
+	post: [requireAuthentication, requirePermissions('recipes:scrape'), postHandler] as const,
 };
 
 async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
-	const userId = ctx.user?.id;
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication interrupter
+	const userId = ctx.user!.id;
 
-	if (!userId) {
-		return Response.json({ success: false, errors: { _form: ['You must be logged in'] } }, { status: 401 });
-	}
-
-	let body: unknown;
+	let recipeScrapeId: string | undefined;
 	try {
-		body = await request.json();
-	} catch {
-		return Response.json({ success: false, errors: { _form: ['Invalid JSON body'] } }, { status: 400 });
-	}
+		const parsedBodyJson = await parseBodyJson(request);
 
-	//  _____ __   _ _____ _______ _____ _______        _____ ______ _______      _______ _______  ______ _______  _____  _______
-	//    |   | \  |   |      |      |   |_____| |        |    ____/ |______      |______ |       |_____/ |_____| |_____] |______
-	//  __|__ |  \_| __|__    |    __|__ |     | |_____ __|__ /_____ |______      ______| |_____  |    \_ |     | |       |______
-	//
-	let recipeScrape: RecipeScrape;
-	try {
-		recipeScrape = await createRecipeScrape(JSON.stringify(body), userId);
-	} catch (err) {
-		return Response.json(
-			{
-				success: false,
-				errors: [(err as Error).message],
-			},
-			{ status: 400 },
+		recipeScrapeId = await initializeScrape(parsedBodyJson, userId);
+
+		const transformedRecipe = await transformScrapeToRecipe(parsedBodyJson, ctx.logger);
+		await updateRecipeScrapeStatus(recipeScrapeId, 'TRANSFORMED', 'Transformed payload to recipe', userId);
+
+		const validatedRecipe = await validateAsRecipe(transformedRecipe, userId, ctx.logger);
+		await updateRecipeScrapeStatus(recipeScrapeId, 'VALIDATED', 'Validated transformed payload as saveable recipe', userId);
+
+		const savedRecipe = await saveRecipe(validatedRecipe, userId, ctx.logger);
+		await updateRecipeScrapeStatus(recipeScrapeId, 'RECIPE_SAVED', 'Saved base recipe entity successfully', userId);
+
+		const savedSections = await saveRecipeSections(
+			savedRecipe.id,
+			validatedRecipe.sections, // as RecipeSectionFormSave[], // ignores the ingredients and instructions data that doesn't match types
+			userId,
+			ctx.logger,
 		);
-	}
+		await updateRecipeScrapeStatus(recipeScrapeId, 'SECTIONS_SAVED', 'Saved recipe sections successfully', userId);
 
-	//  ______   _____  ______  __   __      _______  _____        ______ _______ _______ _____  _____  _______
-	//  |_____] |     | |     \   \_/           |    |     |      |_____/ |______ |         |   |_____] |______
-	//  |_____] |_____| |_____/    |            |    |_____|      |    \_ |______ |_____  __|__ |       |______
-	//
-	try {
-		const parsedPayload = parseJsonLd(body as { url: string; jsonld: unknown[] });
-		ctx.logger.info(`Parsed payload: ${JSON.stringify(parsedPayload, null, 2)}`);
-		const parsed = recipeFormSchema.safeParse({ authorId: userId, ...parsedPayload });
+		const instructionsData = Array.from(
+			validatedRecipe.sections.entries().map(([index, section]) => {
+				const savedSection = savedSections[index];
+				return {
+					sectionId: savedSection.id,
+					instructions: section.instructions,
+				};
+			}),
+		);
+		await saveRecipeInstructions(savedRecipe.id, instructionsData, userId, ctx.logger);
+		await updateRecipeScrapeStatus(recipeScrapeId, 'INSTRUCTIONS_SAVED', 'Saved recipe sections successfully', userId);
 
-		if (parsed.error) {
-			ctx.logger.warn(`Schema parsing found error in JSON-LD payload: ${JSON.stringify(parsed.error.flatten().fieldErrors)}`);
-			ctx.logger.info(`Original scrape payload: ${JSON.stringify(body, null, 2)}`);
-			await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', JSON.stringify(parsed.error.flatten().fieldErrors), userId);
-			return Response.json(
-				{
-					success: false,
-					errors: parsed.error.flatten().fieldErrors,
-				},
-				{ status: 400 },
-			);
-		}
-
-		ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'PROCESSING', 'Parsed recipe JSON successfully', userId);
+		const ingredientsData = Array.from(
+			validatedRecipe.sections.entries().map(([index, section]) => {
+				const savedSection = savedSections[index];
+				return {
+					sectionId: savedSection.id,
+					ingredients: section.ingredients,
+				};
+			}),
+		);
+		await saveRecipeIngredients(savedRecipe.id, ingredientsData, userId, ctx.logger);
+		await updateRecipeScrapeStatus(recipeScrapeId, 'INGREDIENTS_SAVED', 'Saved recipe sections successfully', userId);
 	} catch (err) {
-		ctx.logger.warn(`Unexpected error during parsing JSON-LD payload: ${err}`);
-		ctx.logger.info(`Original scrape payload: ${JSON.stringify(body, null, 2)}`);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', (err as Error).message, userId);
+		if (recipeScrapeId) {
+			await updateRecipeScrapeStatus(recipeScrapeId, 'FAILED', (err as Error).message, userId);
+		}
+		return rzStepErrorToJsonResponse(err);
 	}
-
-	// save recipe
-	// sections
-	// ingredients
-	// instructions
 
 	return Response.json({ success: true });
 }

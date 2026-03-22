@@ -24,10 +24,7 @@ export default function corsMiddleware({ request, response }: RequestInfo<Defaul
 				},
 			});
 		} else {
-			const allowedMethods: string[] = ['OPTIONS'];
-			if (corsConfig[path]) {
-				allowedMethods.push(...corsConfig[path]);
-			}
+			const allowedMethods: string[] = ['OPTIONS', ...corsConfig[path]];
 			response.headers.append('Access-Control-Allow-Origin', originHeader);
 			response.headers.append('Access-Control-Allow-Credentials', 'true');
 			response.headers.append('Access-Control-Allow-Methods', allowedMethods.join(', '));

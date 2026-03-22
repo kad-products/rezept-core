@@ -1,6 +1,16 @@
 import type { recipeScrapes } from '@/models';
 
-export type RecipeScrapeStatus = 'SCRAPED' | 'PROCESSING' | 'PROCESSED' | 'FAILED';
+// should match the model's enum
+export type RecipeScrapeStatus =
+	| 'SCRAPED'
+	| 'TRANSFORMED'
+	| 'VALIDATED'
+	| 'RECIPE_SAVED'
+	| 'SECTIONS_SAVED'
+	| 'INGREDIENTS_SAVED'
+	| 'INSTRUCTIONS_SAVED'
+	| 'COMPLETED'
+	| 'FAILED';
 export type RecipeScrape = typeof recipeScrapes.$inferSelect;
 export type RecipeScrapeFormData = Omit<
 	typeof recipeScrapes.$inferInsert,
