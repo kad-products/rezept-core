@@ -51,6 +51,9 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 							<h4>Ingredients</h4>
 							<ul>
 								{sectionIngredients.map(ing => {
+									if (ing.raw) {
+										return <li key={ing.id}>{ing.raw}</li>;
+									}
 									return (
 										<li key={ing.id}>
 											{ing.quantity} {ing.modifier}

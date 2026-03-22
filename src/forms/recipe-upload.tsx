@@ -34,7 +34,7 @@ export default function FileUploadForm() {
 			const formData = new FormData();
 			formData.append('file', file);
 
-			const res = await fetch('/api/recipes/import', {
+			const res = await fetch('/api/recipes/upload', {
 				method: 'POST',
 				body: formData,
 			});

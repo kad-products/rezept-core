@@ -612,5 +612,54 @@ describe('recipeFormSchema', () => {
 			// expect(result).toBe({});
 			expect(result.success).toBe(true);
 		});
+		it('should handle a scraped and transformed recipe', () => {
+			const recipeData = {
+				title: "Grandma's Corn Chowder",
+				description:
+					"Try grandma's corn chowder recipe for a creamy, delicious bowl of comforting soup made with creamed corn, potatoes, half-and-half, and bacon.",
+				authorId: '2a137e54-6886-4116-afbe-fdd61c991c91',
+				source: 'https://www.allrecipes.com/recipe/86096/grandmas-corn-chowder/',
+				servings: 8,
+				prepTime: 15,
+				cookTime: 35,
+				sections: [
+					{
+						order: 0,
+						ingredients: [
+							{ order: 1, raw: '0.5 cup diced bacon' },
+							{ order: 2, raw: '4 medium potatoes, peeled and chopped' },
+							{ order: 3, raw: '1 medium onion, chopped' },
+							{ order: 4, raw: '3 cups cream-style corn' },
+							{ order: 5, raw: '2 cups water' },
+							{ order: 6, raw: '2 teaspoons salt' },
+							{ order: 7, raw: 'ground black pepper to taste' },
+							{ order: 8, raw: '2 cups half-and-half' },
+						],
+						instructions: [
+							{ stepNumber: 1, instruction: 'Gather all ingredients.' },
+							{
+								stepNumber: 2,
+								instruction:
+									'Cook bacon in a large pot over medium-high heat until crisp, 5 to 7 minutes. Drain, leaving bacon and 2 tablespoons grease in the pot.',
+							},
+							{
+								stepNumber: 3,
+								instruction:
+									'Add potatoes and onion to the pot; cook, stirring occasionally, for 5 minutes. Add corn, water, salt, and pepper; bring to a boil. Reduce the heat to low, cover the pot and simmer, stirring frequently, until potatoes are tender, about 20 minutes.',
+							},
+							{
+								stepNumber: 4,
+								instruction:
+									'Warm half-and-half in a small saucepan until it bubbles; remove from the heat just before it boils. Mix into chowder.',
+							},
+							{ stepNumber: 5, instruction: 'Serve immediately.' },
+						],
+					},
+				],
+			};
+
+			const result = recipeFormSchema.safeParse(recipeData);
+			expect(result.success).toBe(true);
+		});
 	});
 });

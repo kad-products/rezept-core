@@ -1,15 +1,20 @@
 'use client';
 import { Tabs } from 'radix-ui';
 import Card from '@/components/client/Card';
-import type { Recipe, RecipeImport } from '@/types';
+import type { ApiKey, Recipe, RecipeUpload } from '@/types';
+import BookmarkletInstall from './bookmarklet-install';
 
 export default function RecipesTabs({
+	apiKeys,
+	userId,
 	recipes,
-	recipeImports,
+	recipeUploads,
 	permissions = [],
 }: {
+	apiKeys: ApiKey[];
+	userId: string | undefined;
 	recipes: Recipe[];
-	recipeImports: RecipeImport[];
+	recipeUploads: RecipeUpload[];
 	permissions?: string[];
 }) {
 	return (
@@ -18,8 +23,11 @@ export default function RecipesTabs({
 				<Tabs.Trigger className="rz-tabs-trigger" value="listing">
 					Recipes
 				</Tabs.Trigger>
-				<Tabs.Trigger className="rz-tabs-trigger" value="imports">
-					Imports
+				<Tabs.Trigger className="rz-tabs-trigger" value="uploads">
+					Uploads
+				</Tabs.Trigger>
+				<Tabs.Trigger className="rz-tabs-trigger" value="scrapes">
+					Scrapes
 				</Tabs.Trigger>
 			</Tabs.List>
 			<Tabs.Content className="rz-tabs-content" value="listing">
@@ -47,9 +55,9 @@ export default function RecipesTabs({
 					})}
 				</div>
 			</Tabs.Content>
-			<Tabs.Content className="rz-tabs-content" value="imports">
-				{permissions?.includes('recipes:import') && <a href="/recipes/import">Import Recipe</a>}
-				<div className="recipe-imports-listing">
+			<Tabs.Content className="rz-tabs-content" value="uploads">
+				{permissions?.includes('recipes:upload') && <a href="/recipes/uploads/new">Upload Recipe</a>}
+				<div className="recipe-uploads-listing">
 					<table>
 						<thead>
 							<tr>
@@ -64,7 +72,7 @@ export default function RecipesTabs({
 							</tr>
 						</thead>
 						<tbody>
-							{recipeImports.map(rI => {
+							{recipeUploads.map(rI => {
 								return (
 									<tr key={rI.id}>
 										<td>{rI.id}</td>
@@ -75,13 +83,22 @@ export default function RecipesTabs({
 										<td>{rI.status}</td>
 										<td>{rI.createdAt}</td>
 										<td>
-											<a href={`/recipes/imports/${rI.id}`}>View</a>
+											<a href={`/recipes/uploads/${rI.id}`}>View</a>
 										</td>
 									</tr>
 								);
 							})}
 						</tbody>
 					</table>
+				</div>
+			</Tabs.Content>
+			<Tabs.Content className="rz-tabs-content" value="scrapes">
+				<div>
+					<code>
+						<pre>
+							<BookmarkletInstall apiKeys={apiKeys} userId={userId} />
+						</pre>
+					</code>
 				</div>
 			</Tabs.Content>
 		</Tabs.Root>

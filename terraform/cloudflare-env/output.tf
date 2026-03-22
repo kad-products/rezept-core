@@ -1,5 +1,5 @@
-output "recipe_imports_bucket_name" {
-  value = cloudflare_r2_bucket.recipe_imports.name
+output "recipe_uploads_bucket_name" {
+  value = cloudflare_r2_bucket.recipe_uploads.name
 }
 
 output "core_database_name" {

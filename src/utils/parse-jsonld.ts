@@ -1,5 +1,5 @@
-// Intermediate type representing a parsed import before ingredient/unit resolution
-export type ParsedRecipeImport = {
+// Intermediate type representing a parsed scrape before ingredient/unit resolution
+export type ParsedRecipeScrape = {
 	title: string;
 	description?: string;
 	source?: string;
@@ -95,7 +95,7 @@ function parseServings(raw: unknown): number | undefined {
 	return Number.isNaN(num) ? undefined : num;
 }
 
-export function parseJsonLd(payload: { url: string; jsonld: unknown[] }): ParsedRecipeImport {
+export function parseJsonLd(payload: { url: string; jsonld: unknown[] }): ParsedRecipeScrape {
 	const recipe = findRecipeNode(payload.jsonld);
 
 	if (!recipe) {

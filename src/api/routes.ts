@@ -1,8 +1,8 @@
 import { route } from 'rwsdk/router';
-import API__recipes__import_bookmarklet from './recipes-import-bookmarklet';
-import API__recipes__import_upload from './recipes-import-upload';
+import recipesImportsScrapes from './recipes/imports/scrapes';
+import recipesImportsUploads from './recipes/imports/uploads';
 
 export default [
-	route('/recipes/import', API__recipes__import_upload),
-	route('/recipes/import/bookmarklet', API__recipes__import_bookmarklet),
+	route('/recipes/imports/scrapes', recipesImportsScrapes),
+	route('/recipes/imports/uploads', recipesImportsUploads),
 ];

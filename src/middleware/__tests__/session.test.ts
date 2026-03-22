@@ -1,6 +1,6 @@
 import { ErrorResponse } from 'rwsdk/worker';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import authMiddleware from '../auth';
+import sessionMiddleware from '../session';
 
 // Mock the dependencies
 vi.mock('@/session/store', () => ({
@@ -62,7 +62,7 @@ describe('setupPasskeyAuth', () => {
 		};
 		vi.mocked(sessions.load).mockResolvedValue(mockSession);
 
-		await authMiddleware(mockRequestInfo);
+		await sessionMiddleware(mockRequestInfo);
 
 		expect(sessions.load).toHaveBeenCalledWith(mockRequestInfo.request);
 		expect(mockRequestInfo.ctx.session).toBe(mockSession);
@@ -71,10 +71,10 @@ describe('setupPasskeyAuth', () => {
 	it('redirects to login on 401 error', async () => {
 		vi.mocked(sessions.load).mockRejectedValue(new ErrorResponse(401, 'Unauthorized'));
 
-		await expect(authMiddleware(mockRequestInfo)).rejects.toThrow(Response);
+		await expect(sessionMiddleware(mockRequestInfo)).rejects.toThrow(Response);
 
 		try {
-			await authMiddleware(mockRequestInfo);
+			await sessionMiddleware(mockRequestInfo);
 		} catch (error) {
 			expect(error).toBeInstanceOf(Response);
 			expect((error as Response).status).toBe(302);
@@ -88,7 +88,7 @@ describe('setupPasskeyAuth', () => {
 		vi.mocked(sessions.load).mockRejectedValue(new ErrorResponse(401, 'Unauthorized'));
 
 		try {
-			await authMiddleware(mockRequestInfo);
+			await sessionMiddleware(mockRequestInfo);
 		} catch {
 			// Expected
 		}
@@ -100,7 +100,7 @@ describe('setupPasskeyAuth', () => {
 		const error = new ErrorResponse(403, 'Forbidden');
 		vi.mocked(sessions.load).mockRejectedValue(error);
 
-		await expect(authMiddleware(mockRequestInfo)).rejects.toThrow(error);
+		await expect(sessionMiddleware(mockRequestInfo)).rejects.toThrow(error);
 		expect(sessions.remove).not.toHaveBeenCalled();
 	});
 
@@ -108,7 +108,7 @@ describe('setupPasskeyAuth', () => {
 		const error = new Error('Something went wrong');
 		vi.mocked(sessions.load).mockRejectedValue(error);
 
-		await expect(authMiddleware(mockRequestInfo)).rejects.toThrow(error);
+		await expect(sessionMiddleware(mockRequestInfo)).rejects.toThrow(error);
 		expect(sessions.remove).not.toHaveBeenCalled();
 	});
 
@@ -116,7 +116,7 @@ describe('setupPasskeyAuth', () => {
 		vi.mocked(sessions.load).mockRejectedValue(new ErrorResponse(401, 'Unauthorized'));
 
 		try {
-			await authMiddleware(mockRequestInfo);
+			await sessionMiddleware(mockRequestInfo);
 		} catch (error) {
 			const response = error as Response;
 			expect(response.headers.get('Location')).toBe('/auth/login');

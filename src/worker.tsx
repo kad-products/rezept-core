@@ -2,8 +2,8 @@ import { prefix, render, route } from 'rwsdk/router';
 import { defineApp } from 'rwsdk/worker';
 import apiRoutes from '@/api/routes';
 import { Document } from '@/Document';
-import authMiddleware from '@/middleware/auth';
 import headersMiddleware from '@/middleware/headers';
+import sessionMiddleware from '@/middleware/session';
 import userMiddleware from '@/middleware/user';
 import authRoutes from '@/pages/auth/routes';
 import profileRoutes from '@/pages/profile/routes';
@@ -23,7 +23,7 @@ export default defineApp([
 	loggerMiddleware,
 	headersMiddleware,
 	corsMiddleware,
-	authMiddleware,
+	sessionMiddleware,
 	apiKeyMiddleware,
 	userMiddleware,
 	permissionsMiddleware,

@@ -35,7 +35,7 @@ import { _saveApiKey } from '../api-keys';
 const baseApiKeyData = {
 	name: 'Test API Key',
 	userId: 'test-user-id',
-	permissions: ['recipes:import'],
+	permissions: ['recipes:upload'],
 };
 
 describe('saveApiKey integration', () => {
@@ -59,7 +59,7 @@ describe('saveApiKey integration', () => {
 				const apiKey = await getApiKeyById(result.data.id);
 				expect(apiKey).toBeDefined();
 				expect(apiKey.name).toBe('Test API Key');
-				expect(apiKey.permissions).toEqual(['recipes:import']);
+				expect(apiKey.permissions).toEqual(['recipes:upload']);
 				expect(apiKey.userId).toBe(testUserId);
 			}
 		});
@@ -162,7 +162,7 @@ describe('saveApiKey integration', () => {
 					userId: testUserId,
 					id: apiKeyId,
 					name: 'Updated Name',
-					permissions: ['recipes:import', 'recipes:read'],
+					permissions: ['recipes:upload', 'recipes:read'],
 				});
 
 				expect(updateResult.success).toBe(true);
@@ -170,7 +170,7 @@ describe('saveApiKey integration', () => {
 
 				const apiKey = await getApiKeyById(apiKeyId);
 				expect(apiKey.name).toBe('Updated Name');
-				expect(apiKey.permissions).toEqual(['recipes:import', 'recipes:read']);
+				expect(apiKey.permissions).toEqual(['recipes:upload', 'recipes:read']);
 			}
 		});
 

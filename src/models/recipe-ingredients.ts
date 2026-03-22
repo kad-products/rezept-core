@@ -15,9 +15,8 @@ export const recipeIngredients = sqliteTable(
 		recipeSectionId: text()
 			.notNull()
 			.references(() => recipeSections.id, { onDelete: 'cascade' }),
-		ingredientId: text()
-			.notNull()
-			.references(() => ingredients.id),
+		raw: text(),
+		ingredientId: text().references(() => ingredients.id),
 		quantity: real(), // nullable for "to taste"
 		unitId: text().references(() => ingredientUnits.id),
 		preparation: text(), // chopped, diced, etc.

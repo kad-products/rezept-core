@@ -1,4 +1,4 @@
-resource "cloudflare_r2_bucket" "recipe_imports" {
+resource "cloudflare_r2_bucket" "recipe_uploads" {
   account_id = var.account_id
-  name = "rezept-recipe-imports-${var.environment}"
+  name = "rezept-recipe-uploads-${var.environment}"
 }

@@ -43,7 +43,7 @@ import { _saveApiKey } from '../api-keys';
 const baseApiKeyData = {
 	name: 'Test API Key',
 	userId: randomUUID(),
-	permissions: ['recipes:import'],
+	permissions: ['recipes:upload'],
 };
 
 const mockApiKey = {
@@ -85,7 +85,7 @@ describe('_saveApiKey', () => {
 			expect(createApiKey).toHaveBeenCalledWith(
 				expect.objectContaining({
 					name: 'Test API Key',
-					permissions: ['recipes:import'],
+					permissions: ['recipes:upload'],
 				}),
 				'test-user-id',
 			);
@@ -102,12 +102,12 @@ describe('_saveApiKey', () => {
 		it('creates api key with multiple permissions', async () => {
 			const result = await _saveApiKey({
 				...baseApiKeyData,
-				permissions: ['recipes:import', 'recipes:read'],
+				permissions: ['recipes:upload', 'recipes:read'],
 			});
 
 			expect(result.success).toBe(true);
 			expect(createApiKey).toHaveBeenCalledWith(
-				expect.objectContaining({ permissions: ['recipes:import', 'recipes:read'] }),
+				expect.objectContaining({ permissions: ['recipes:upload', 'recipes:read'] }),
 				'test-user-id',
 			);
 		});
@@ -161,7 +161,7 @@ describe('_saveApiKey', () => {
 				apiKeyId,
 				expect.objectContaining({
 					name: 'Test API Key',
-					permissions: ['recipes:import'],
+					permissions: ['recipes:upload'],
 				}),
 				'test-user-id',
 			);
@@ -179,7 +179,7 @@ describe('_saveApiKey', () => {
 			const data = {
 				...baseApiKeyData,
 				id: randomUUID(),
-				permissions: ['recipes:import', 'recipes:read'],
+				permissions: ['recipes:upload', 'recipes:read'],
 			};
 
 			const result = await _saveApiKey(data);
@@ -187,7 +187,7 @@ describe('_saveApiKey', () => {
 			expect(result.success).toBe(true);
 			expect(updateApiKey).toHaveBeenCalledWith(
 				data.id,
-				expect.objectContaining({ permissions: ['recipes:import', 'recipes:read'] }),
+				expect.objectContaining({ permissions: ['recipes:upload', 'recipes:read'] }),
 				'test-user-id',
 			);
 		});
