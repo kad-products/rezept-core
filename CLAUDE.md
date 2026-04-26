@@ -90,6 +90,9 @@ Prefer server actions (`src/actions/`) for mutations. Simpler, type-safe, no RES
 
 Do **not** add `database` parameters to production functions just to make testing easier — use the proxy pattern instead (see `dev-guidelines.md`).
 
+### Types
+All shared types live in `src/types` and are barrel-exported from there. Types are never defined inline in step, action, repository, or schema files — always define in `src/types` and import from `@/types`. Co-locating type definitions makes it easier to spot duplicates.
+
 ### Forms
 Currently using native `FormData`. Migrating to TanStack Form for type safety and client-side validation (see `docs/decisions/0001-form-management-library.md`).
 
