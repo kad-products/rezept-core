@@ -19,6 +19,7 @@ See [ADR-0005](../../docs/decisions/0005-repository-sync-operations.md) for the 
 ## Guidelines
 
 - **Named exports** — one file per entity, functions exported by name.
+- **Set audit fields** — repositories are responsible for setting `createdBy` and `updatedBy` from the `userId` passed by the caller. Actions and API handlers do not set these directly.
 - **Throw on not-found for ID lookups** — if a caller has an ID and the record doesn't exist, that's an unexpected state worth surfacing as an error. Return `undefined` for search or existence-check operations where absence is a valid result.
 - **Logging** — approach is unresolved, see #122. Do not introduce new `console.log` calls; do not add new `requestInfo.ctx.logger` dependencies.
 - **No `db` parameters in function signatures** — test concerns should not leak into production code. Use the database proxy pattern for testing.
