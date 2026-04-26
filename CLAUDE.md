@@ -61,8 +61,9 @@ src/
   models/         Drizzle ORM schema definitions (source of truth for migrations)
   pages/          Route-level page components
   repositories/   Data access layer — all DB queries live here
-  schemas/        Zod validation schemas
+  schemas/        Zod input validation schemas
   session/        Durable Object session management
+  steps/          Shared data processing logic for actions and API handlers
 
 drizzle/          Generated SQL migrations (committed)
 docs/
@@ -77,18 +78,23 @@ dev-guidelines.md Architecture decisions and coding patterns
 
 ## Architecture Patterns
 
-### Repository pattern
-All database access goes through `src/repositories/`. Actions call repositories — never query the DB directly in actions or pages. This enables testing actions with mocked repositories for fast unit tests, and integration testing repositories against real in-memory SQLite.
+Each `src/` directory has a `readme.md` defining the pattern for that type. Read those first when working in a given area.
 
-### Server actions over API routes
-Prefer server actions (`src/actions/`) for mutations. Simpler, type-safe, no REST boilerplate. See `dev-guidelines.md`.
+### Type boundaries (brief)
+- **Middleware** — global, enriches `ctx`, runs before route matching
+- **Interrupters** — per-route guards, halt with `return`, never `throw`
+- **Actions** — form entry points; `serverAction()` wrapper + `_fn` private impl; return `ActionState<T>`
+- **API handlers** — HTTP entry points; default export `{ method: [...chain, _handler] }`; return `Response.json()`
+- **Steps** — shared pipeline logic called by actions and API handlers; throw `RzStepError`; accept `logger` as argument
+- **Repositories** — only place that imports `db` and `@/models`; handles sync operations for multi-table entities
+- **Schemas** — standalone Zod input validators; namespace export per entity (`recipeSchemas.form`)
 
 ### Testing layers
-- **Schema tests** (`src/schemas/__tests__/`) — validate Zod schema rules
-- **Unit tests** (`*.test.ts`) — test actions/middleware with mocked repositories
-- **Integration tests** (`*.integration.test.ts`) — test with real in-memory SQLite
+- **Schema tests** (`src/schemas/__tests__/`) — 100% coverage required
+- **Unit tests** (`*.test.ts`) — actions/middleware with mocked repositories
+- **Integration tests** (`*.integration.test.ts`) — real in-memory SQLite
 
-Do **not** add `database` parameters to production functions just to make testing easier — use the proxy pattern instead (see `dev-guidelines.md`).
+Do **not** add `database` parameters to production functions — use the proxy pattern for testing.
 
 ### Types
 All shared types live in `src/types` and are barrel-exported from there. Types are never defined inline in step, action, repository, or schema files — always define in `src/types` and import from `@/types`. Co-locating type definitions makes it easier to spot duplicates.
