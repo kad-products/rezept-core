@@ -1,6 +1,6 @@
 # Interrupters
 
-Interrupters are a first-class rwsdk concept — this directory is the project's implementation of that pattern. See the [rwsdk routing docs](https://docs.rwsdk.com/core/routing) for the framework-level definition and [project architecture](../../docs/project-architecture.md) for where interrupters fit relative to other types in this project.
+Interrupters are a first-class rwsdk concept — this directory is the project's implementation of that pattern. See the [rwsdk routing docs](https://docs.rwsdk.com/core/routing) for the framework-level definition and [project architecture](../../docs/development/project-architecture.md) for where interrupters fit relative to other types in this project.
 
 ## What they do
 
