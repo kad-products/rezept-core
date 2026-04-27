@@ -1,8 +1,28 @@
 # Types
 
-Any shared type.  Some are from DB entities and some are just shared types.
+All shared TypeScript types live here. See [project architecture](../../docs/development/project-architecture.md) for the project-wide types convention.
 
-## Areas of Responsibility
+## What belongs here
 
-- ✅ Type definition for `<TableName>Select`
-- ✅ Type definition for `<TableName>FormSave`: Covers Insert and Update, essentially it is all the data we would expect to get from an online form (as opposed to an API call or a batch call we invoke).  Usually this means using the `inferInsert` and omitting the audit fields but some tables could vary a little.
+Every type used by more than one file in the project — entity types, form data shapes, action states, utility types. Types are never defined inline in step, action, repository, schema, or form files.
+
+## Structure
+
+One file per entity or concern, barrel-exported from `index.ts`. Consumers always import from `@/types`:
+
+```ts
+import type { Recipe, ActionState } from '@/types';
+```
+
+Never import from individual files:
+
+```ts
+// wrong
+import type { Recipe } from '@/types/recipes';
+```
+
+## Conventions
+
+- **Named exports** — no default exports
+- **`type` keyword on imports** — always `import type`, never `import`
+- **No runtime code** — types only; no functions, constants, or classes
