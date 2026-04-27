@@ -1,3 +1,9 @@
+## [1.18.1](https://github.com/kad-products/rezept-core/compare/v1.18.0...v1.18.1) (2026-04-27)
+
+### Bug Fixes
+
+* import to upload change in wrangler for integration ([2ae0957](https://github.com/kad-products/rezept-core/commit/2ae095789c46ea259a8d40c24dcdaf1c9d3cb61a))
+
 ## [1.18.0](https://github.com/kad-products/rezept-core/compare/v1.17.1...v1.18.0) (2026-04-27)
 
 ### Features
