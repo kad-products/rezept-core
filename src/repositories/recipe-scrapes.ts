@@ -3,7 +3,7 @@ import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { recipeScrapes } from '@/models';
 import type { RecipeScrapeStatus } from '@/types';
-import { validateUuid } from '@/utils';
+import { validateUuid } from './utils';
 
 export async function createRecipeScrape(stringifiedRawJson: string, userId: string) {
 	const bodySize = stringifiedRawJson.length;

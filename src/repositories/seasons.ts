@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import db from '@/db';
 import { seasons } from '@/models';
 import type { Season, SeasonFormSave } from '@/types';
-import { validateUuid } from '@/utils';
+import { validateUuid } from './utils';
 
 export async function getSeasons(): Promise<Season[]> {
 	const allSeasons = await db.select().from(seasons);

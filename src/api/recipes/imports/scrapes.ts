@@ -1,4 +1,5 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { rzStepErrorToJsonResponse } from '@/api/utils';
 import { requireAuthentication } from '@/interrupters';
 import { requirePermissions } from '@/middleware/permissions';
 import { updateRecipeScrapeStatus } from '@/repositories/recipe-scrapes';
@@ -12,7 +13,6 @@ import {
 	transformScrapeToRecipe,
 	validateAsRecipe,
 } from '@/steps';
-import rzStepErrorToJsonResponse from '@/utils/rz-step-error-to-json-response';
 
 export default {
 	post: [requireAuthentication, requirePermissions('recipes:scrape'), postHandler] as const,
