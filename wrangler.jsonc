@@ -63,8 +63,8 @@
 			},
 			"r2_buckets": [
 				{
-					"binding": "rezept_recipe_imports",
-					"bucket_name": "rezept-recipe-imports-integration"
+					"binding": "rezept_recipe_uploads",
+					"bucket_name": "rezept-recipe-uploads-integration"
 				}
 			],
 			"vars": {
