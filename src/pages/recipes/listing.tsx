@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import RecipesTabs from '@/components/recipe-tabs';
+import RecipesTabs from '@/components/RecipesTabs';
 import StandardLayout from '@/layouts/standard';
 import { getApiKeysByUserId } from '@/repositories/api-keys';
 import { getRecipeUploads } from '@/repositories/recipe-uploads';
