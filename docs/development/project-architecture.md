@@ -4,14 +4,99 @@ This document describes how the application is structured — what each `src/` d
 
 ## Request lifecycle
 
+**Browser navigation and API calls** flow through the full server stack:
+
 ```
-Request
-  └── Middleware (global, every request)
+HTTP Request
+  └── Middleware (global, every request — enriches ctx)
         └── Route matching
-              └── Interruptors (per-route guards)
-                    └── Page / API handler / Action
+              └── Interruptors (per-route guards — halt with return)
+                    └── Page / API handler
                           ├── Steps (shared pipeline logic)
                           └── Repositories (data access)
+```
+
+**Form mutations** are invoked as server actions from client components:
+
+```
+Client component
+  └── Server action (Actions — validate, orchestrate, return ActionState)
+        ├── Schemas (validate input)
+        ├── Steps (shared pipeline logic)
+        └── Repositories (data access)
+```
+
+## Import/usage diagram
+
+```mermaid
+flowchart TD
+    REQ([HTTP Request])
+
+    subgraph infra["Infrastructure"]
+        MW[middleware/]
+        DO[durable-objects/]
+        INT[interrupters/]
+    end
+
+    subgraph entry["Entry Points"]
+        PG[pages/]
+        API[api/]
+        ACT[actions/]
+    end
+
+    subgraph logic["Logic"]
+        ST[steps/]
+        SCH[schemas/]
+    end
+
+    subgraph data["Data"]
+        REPO[repositories/]
+        MDL[models/]
+    end
+
+    subgraph ui["UI"]
+        LAY[layouts/]
+        COMP[components/]
+        FORMS[forms/]
+    end
+
+    subgraph foundation["Foundation"]
+        TYPES[types/]
+        DATA[data/]
+    end
+
+    REQ --> MW
+    MW --> DO
+    MW --> INT
+
+    INT -.->|guards| PG
+    INT -.->|guards| API
+
+    PG --> REPO
+    PG --> LAY
+    PG --> COMP
+
+    API --> SCH
+    API --> ST
+    API --> REPO
+
+    ACT --> SCH
+    ACT --> ST
+    ACT --> REPO
+
+    FORMS -->|server action| ACT
+    COMP -->|server action| ACT
+
+    ST --> REPO
+    REPO --> MDL
+
+    DATA -->|static data| FORMS
+    DATA -->|static data| PG
+
+    TYPES -.->|imported by all| entry
+    TYPES -.->|imported by all| logic
+    TYPES -.->|imported by all| data
+    TYPES -.->|imported by all| ui
 ```
 
 ## Type map
@@ -32,7 +117,15 @@ Request
 | `src/types/` | Types | All shared TypeScript types; barrel-exported from `index.ts` |
 | `src/models/` | Models | Drizzle table schemas and relations; source of truth for migrations |
 | `src/durable-objects/` | Durable Objects | Cloudflare Durable Object classes (currently: session management) |
-| `src/data/` | Static data | Reference data used by forms and pages (countries, months, permissions) — no README, no pattern to enforce |
+| `src/data/` | Static data | Reference data used by forms and pages (countries, months, permissions) |
+
+## Internal utilities
+
+Utilities live close to their consumers — there is no shared `src/utils/` directory:
+
+- `src/api/utils.ts` — API handler utilities (`rzStepErrorToJsonResponse`)
+- `src/repositories/utils.ts` — repository utilities (`validateUuid`)
+- `src/schemas/utils.ts` — schema utilities (`requiredUuid`, `optionalString`, etc.)
 
 ## Key rules
 
@@ -42,6 +135,7 @@ Request
 - **Actions and API handlers call repositories or steps** — not each other
 - **Steps are for shared logic only** — if only one caller uses it, it doesn't need to be a step
 - **Interruptors never throw** — use `return` to halt; throwing is for middleware only
+- **Utilities live near their consumers** — no shared utils grab-bag
 
 ## Each type in detail
 
