@@ -1,3 +1,19 @@
+## [1.18.0](https://github.com/kad-products/rezept-core/compare/v1.17.1...v1.18.0) (2026-04-27)
+
+### Features
+
+* claude command for an audit ([0833929](https://github.com/kad-products/rezept-core/commit/0833929e66cbdd2ba3cc2365647281d9be1daa75))
+
+### Bug Fixes
+
+* remove old claude notes ([af04b0d](https://github.com/kad-products/rezept-core/commit/af04b0de3d288bd1da7fe3d0b2f1ede5e24eaf3b))
+
+### Code Refactoring
+
+* clean up components structure ([79c40c5](https://github.com/kad-products/rezept-core/commit/79c40c5f0e596fe9eee8491eee89aea88629d4ba))
+* move session to durable-storage ([8647ea1](https://github.com/kad-products/rezept-core/commit/8647ea11831aa5b85bf39f8a3320acb4c2be6dd1))
+* put utils in specific use case directories ([7f54472](https://github.com/kad-products/rezept-core/commit/7f5447224b44580cb9d11b8f6bb5ca586425f714))
+
 ## [1.17.1](https://github.com/kad-products/rezept-core/compare/v1.17.0...v1.17.1) (2026-03-22)
 
 ### Bug Fixes
