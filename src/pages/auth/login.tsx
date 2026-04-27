@@ -1,6 +1,6 @@
 import type { DefaultAppContext } from 'rwsdk/worker';
-import PasskeyLogin from '@/components/client/PasskeyLogin';
-import PasskeyRegistration from '@/components/client/PasskeyRegistration';
+import PasskeyLogin from '@/components/PasskeyLogin';
+import PasskeyRegistration from '@/components/PasskeyRegistration';
 import StandardLayout from '@/layouts/standard';
 
 export default function Pages__auth__login({ ctx }: { ctx: DefaultAppContext }) {

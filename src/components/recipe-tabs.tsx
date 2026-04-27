@@ -1,6 +1,6 @@
 'use client';
 import { Tabs } from 'radix-ui';
-import Card from '@/components/client/Card';
+import Card from '@/components/Card';
 import type { ApiKey, Recipe, RecipeUpload } from '@/types';
 import BookmarkletInstall from './bookmarklet-install';
 
