@@ -100,7 +100,7 @@ Do **not** add `database` parameters to production functions — use the proxy p
 All shared types live in `src/types` and are barrel-exported from there. Types are never defined inline in step, action, repository, or schema files — always define in `src/types` and import from `@/types`. Co-locating type definitions makes it easier to spot duplicates.
 
 ### Forms
-Currently using native `FormData`. Migrating to TanStack Form for type safety and client-side validation (see `docs/decisions/0001-form-management-library.md`).
+TanStack Form for state management and validation, Radix Form for accessibility structure. See `src/forms/readme.md` and `docs/decisions/0001-form-management-library.md`.
 
 ---
 

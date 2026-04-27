@@ -2,7 +2,7 @@ Review recent changes to this project and sync any new learnings into Claude's p
 
 ## Steps
 
-1. **Scan for what's changed** — run `git log --oneline -20` and `git diff HEAD~5..HEAD --stat` to get a sense of recent activity. Also check `git log --oneline -- docs/ dev-guidelines.md CLAUDE.md` for doc-specific changes.
+1. **Scan for what's changed** — run `git log --oneline -20` and `git diff HEAD~5..HEAD --stat` to get a sense of recent activity. Also check `git log --oneline -- docs/ dev-guidelines.md .claude/CLAUDE.md` for doc-specific changes.
 
 2. **Read relevant changed files** — for any new or updated files in `docs/decisions/`, `dev-guidelines.md`, `docs/testing.md`, or architectural areas of `src/`, read the current content.
 
@@ -12,9 +12,9 @@ Review recent changes to this project and sync any new learnings into Claude's p
    - Changes to testing approach
    - New dependencies or tech stack additions
    - Anything in `dev-guidelines.md` that wasn't there before
-   - Changes to `CLAUDE.md` itself made by the team
+   - Changes to `.claude/CLAUDE.md` itself made by the team
 
-4. **Update CLAUDE.md** — if `CLAUDE.md` at the project root is missing or out of date relative to what you've found, update it to reflect current reality. Focus on things derivable from docs and code, not ephemeral state.
+4. **Update CLAUDE.md** — if `.claude/CLAUDE.md` is out of date relative to what you've found, update it to reflect current reality. Focus on things derivable from docs and code, not ephemeral state.
 
 5. **Update persistent memory** — write or update files in the memory directory at:
    `~/.claude/projects/-Users-adamdehnel-Projects-kad-products-rezept-core/memory/`
