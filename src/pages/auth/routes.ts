@@ -1,5 +1,5 @@
 import { route } from 'rwsdk/router';
-import { sessions } from '@/session/store';
+import { sessions } from '@/durable-objects/store';
 import Pages__auth__login from './login';
 
 export default [

@@ -1,6 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { sessions } from '@/durable-objects/store';
 import { getUserById } from '@/repositories/users';
-import { sessions } from '@/session/store';
 
 export default async function userMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>) {
 	if (ctx.session?.userId) {

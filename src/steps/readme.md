@@ -1,16 +1,29 @@
 # Steps
 
-The "step" name came from AWS Step Functions.  While those can technically do almost anything these steps are a bit more narrowly focused.  These are steps in data processing pipelines.  The original use case is sharing code between the recipe form processing and the recipe scrape processing.  They both have their entrypoints and they share repositoriy methods but these steps are the small streamline purpose-built pieces that come together in the full pipeline.
+See [ADR-0004](../../docs/decisions/0004-steps-abstraction.md) for why this abstraction exists and [project architecture](../../docs/development/project-architecture.md) for where steps fit relative to other types.
 
-## Difference from middleware and interruptors
+## What they do
 
-Things like `requirePermission()` might seem like a step rather than middleware/interruptor.  The difference is in the scope and specificity.  Just about every action and API will have a required permission so that should be middleware.  Only a couple things will need to take an array of recipe sections, try to save it, and handle the results. 
+Steps are purpose-built units of data processing logic, composed by orchestrators (actions and API handlers) into pipelines. The original use case is the recipe import flow, where the same processing logic is shared between a form-based action and a bookmarklet API handler.
 
-Also middleware always has to return a Response whereas steps return raw error and let the orchestrator determine the appropriate way to get back to the caller. 
+## When to add one
 
-That all being said if there is a way to streamline something like the CORS check or permissions check for other things having one central method for things is certainly favorable over these steps that are built for just one purpose. 
+- Logic is shared between two or more actions or API handlers
+- A single-use pipeline grows complex enough that keeping all of it inline would make the orchestrator hard to follow
+
+There is no requirement to extract logic to a step — simple actions and handlers can do the work themselves.
+
+## Error contract
+
+Steps always throw `RzStepError` on failure. Never return an error value — throw it. This lets the orchestrator decide how to translate the error into the appropriate response format (`ActionState` for actions, `Response.json` for API handlers).
+
+## Logging
+
+Steps accept a `logger: RzLogger` argument. The caller is responsible for passing the logger down — steps never reach for the request context themselves. This keeps steps usable outside of request contexts.
 
 ## Guidelines
 
-- Throw the same typed error object so higher-level orchestrators (server actions, API handlers, etc) can easily deal with it as appropriate
-- Expect the same or similar function signatures so it's easy to streamline the orchestrators
+- **Named exports** — re-exported from `index.ts` so consumers import from `@/steps`.
+- **Types belong in `src/types`** — step input and output types are not defined in step files. Import from `@/types`.
+- **Consistent function signatures** — steps that do similar things should accept similar arguments, making orchestrators easier to read and compose.
+- **One purpose per function** — a step does one thing. Compose them in the orchestrator rather than bundling multiple concerns into one step.

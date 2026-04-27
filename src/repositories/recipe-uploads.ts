@@ -3,7 +3,7 @@ import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { recipeUploads } from '@/models';
 import type { RecipeUpload, RecipeUploadFormData } from '@/types';
-import { validateUuid } from '@/utils';
+import { validateUuid } from './utils';
 
 export async function createRecipeUpload(recipeUpload: RecipeUploadFormData, userId: string) {
 	requestInfo.ctx.logger.info(`Form data in createRecipeUpload: ${JSON.stringify(recipeUpload, null, 4)} `);

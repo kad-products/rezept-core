@@ -3,7 +3,7 @@ import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { apiKeys } from '@/models';
 import type { ApiKey, ApiKeyFormData } from '@/types';
-import { validateUuid } from '@/utils';
+import { validateUuid } from './utils';
 
 export async function getApiKeysByUserId(userId: string): Promise<ApiKey[]> {
 	const matchedApiKeys = await db.select().from(apiKeys).where(eq(apiKeys.userId, userId));

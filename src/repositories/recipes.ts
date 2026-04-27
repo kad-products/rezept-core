@@ -3,7 +3,7 @@ import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { recipes } from '@/models';
 import type { Recipe, RecipeFormSave } from '@/types';
-import { validateUuid } from '@/utils';
+import { validateUuid } from './utils';
 
 export async function getRecipes(): Promise<Recipe[]> {
 	requestInfo.ctx.logger.info(`Getting recipes`);

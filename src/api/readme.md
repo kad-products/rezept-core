@@ -1,5 +1,48 @@
-# APIs
+# API Handlers
 
-- File paths match the API path
-- Each TS file exports a default object that is the Worker API handler (whatever methods are supported, etc)
-- Export individual handlers privately (JSDoc annotation and _-prefixed) as needed for testing
+API handlers are rwsdk route handlers for HTTP endpoints. See [project architecture](../../docs/development/project-architecture.md) for where API handlers fit relative to other types.
+
+## What they do
+
+API handlers receive HTTP requests, orchestrate steps and repositories to fulfil them, and return `Response` objects. They are the entry point for non-form callers — currently the bookmarklet import flow.
+
+## Structure
+
+One file per endpoint. The file path mirrors the URL path: `src/api/recipes/imports/scrapes.ts` handles `/api/recipes/imports/scrapes`.
+
+Each file exports a default object keyed by HTTP method, with authentication and permission checks in the handler array, and a private implementation function:
+
+```ts
+export default {
+    post: [requireAuthentication, requirePermissions('recipes:scrape'), _postHandler] as const,
+};
+
+/** @private — exported for testing only, do not call directly */
+export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
+    // ...
+}
+```
+
+All routes are registered in `routes.ts` via `route()`.
+
+## Responsibilities
+
+- **Orchestrate** — call steps for complex pipelines, repositories directly for simple operations
+- **Return `Response.json()`** always — use `Response.json()`, never construct responses manually
+- **Handle step errors** — catch `RzStepError` via the `rzStepErrorToJsonResponse` utility from `./utils`
+
+## Error handling
+
+```ts
+} catch (err) {
+    return rzStepErrorToJsonResponse(err);
+}
+```
+
+## Guidelines
+
+- **No `'use server'`** — API handlers are HTTP route handlers, not server functions
+- **`requireAuthentication` in every handler array** — never check `ctx.user` manually inside the handler
+- **`ctx.logger` for logging** — API handlers always run in a request context
+- **No type definitions** — types live in `@/types`
+- **Do not add an `options` key** — CORS preflight (`OPTIONS`) requests are handled automatically by `corsMiddleware`. Adding an `options` key to a handler object will conflict with this.

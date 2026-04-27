@@ -16,7 +16,7 @@ import loggerMiddleware from './middleware/logger';
 import permissionsMiddleware from './middleware/permissions';
 import Pages__root from './pages/root';
 
-export { SessionDurableObject } from '@/session/durable-object';
+export { SessionDurableObject } from '@/durable-objects/durable-object';
 
 export default defineApp([
 	botMiddleware,

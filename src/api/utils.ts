@@ -1,6 +1,6 @@
 import type { RzStepError } from '@/types';
 
-export default function rzStepErrorToJsonResponse(err: unknown) {
+export function rzStepErrorToJsonResponse(err: unknown) {
 	const stepError = err as RzStepError;
 	return Response.json(
 		{

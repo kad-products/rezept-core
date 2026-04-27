@@ -50,6 +50,9 @@ dist
 # pnpm store directory
 .pnpm-store
 
+# Claude Code local settings (personal permissions/preferences — not team config)
+.claude/settings.local.json
+
 # dotenv environment variables file
 .env.local
 .env.development.local

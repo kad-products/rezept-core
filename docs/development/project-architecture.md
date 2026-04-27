@@ -1,0 +1,142 @@
+# Project Architecture
+
+This document describes how the application is structured — what each `src/` directory is for, where each type fits in the request lifecycle, and how types relate to each other.
+
+## Request lifecycle
+
+**Browser navigation and API calls** flow through the full server stack:
+
+```
+HTTP Request
+  └── Middleware (global, every request — enriches ctx)
+        └── Route matching
+              └── Interruptors (per-route guards — halt with return)
+                    └── Page / API handler
+                          ├── Steps (shared pipeline logic)
+                          └── Repositories (data access)
+```
+
+**Form mutations** are invoked as server actions from client components:
+
+```
+Client component
+  └── Server action (Actions — validate, orchestrate, return ActionState)
+        ├── Schemas (validate input)
+        ├── Steps (shared pipeline logic)
+        └── Repositories (data access)
+```
+
+## Import/usage diagram
+
+```mermaid
+flowchart TD
+    REQ([HTTP Request])
+
+    subgraph infra["Infrastructure"]
+        MW[middleware/]
+        DO[durable-objects/]
+        INT[interrupters/]
+    end
+
+    subgraph entry["Entry Points"]
+        PG[pages/]
+        API[api/]
+        ACT[actions/]
+    end
+
+    subgraph logic["Logic"]
+        ST[steps/]
+        SCH[schemas/]
+    end
+
+    subgraph data["Data"]
+        REPO[repositories/]
+        MDL[models/]
+    end
+
+    subgraph ui["UI"]
+        LAY[layouts/]
+        COMP[components/]
+        FORMS[forms/]
+    end
+
+    subgraph foundation["Foundation"]
+        TYPES[types/]
+        DATA[data/]
+    end
+
+    REQ --> MW
+    MW --> DO
+    MW --> INT
+
+    INT -.->|guards| PG
+    INT -.->|guards| API
+
+    PG --> REPO
+    PG --> LAY
+    PG --> COMP
+
+    API --> SCH
+    API --> ST
+    API --> REPO
+
+    ACT --> SCH
+    ACT --> ST
+    ACT --> REPO
+
+    FORMS -->|server action| ACT
+    COMP -->|server action| ACT
+
+    ST --> REPO
+    REPO --> MDL
+
+    DATA -->|static data| FORMS
+    DATA -->|static data| PG
+
+    TYPES -.->|imported by all| entry
+    TYPES -.->|imported by all| logic
+    TYPES -.->|imported by all| data
+    TYPES -.->|imported by all| ui
+```
+
+## Type map
+
+| Directory | Type | Role |
+|---|---|---|
+| `src/middleware/` | Middleware | Global request enrichment and guards; runs before route matching |
+| `src/interrupters/` | Interruptors | Per-route guards; halt with `return`, never `throw` |
+| `src/pages/` | Pages | Route handlers for browser navigation; async RSCs that fetch from repositories |
+| `src/api/` | API handlers | Route handlers for HTTP endpoints; return `Response.json()` |
+| `src/actions/` | Actions | Server functions for form mutations; return `ActionState<T>` |
+| `src/steps/` | Steps | Shared pipeline logic called by actions and API handlers; throw `RzStepError` |
+| `src/repositories/` | Repositories | Data access layer; the only place that imports `db` and `@/models` |
+| `src/schemas/` | Schemas | Zod input validation; called by actions and API handlers before repository access |
+| `src/forms/` | Forms | Client-side form components; call server actions on submit |
+| `src/components/` | Components | Reusable React components; receive data as props |
+| `src/layouts/` | Layouts | Page-level wrapper components providing consistent navigation chrome |
+| `src/types/` | Types | All shared TypeScript types; barrel-exported from `index.ts` |
+| `src/models/` | Models | Drizzle table schemas and relations; source of truth for migrations |
+| `src/durable-objects/` | Durable Objects | Cloudflare Durable Object classes (currently: session management) |
+| `src/data/` | Static data | Reference data used by forms and pages (countries, months, permissions) |
+
+## Internal utilities
+
+Utilities live close to their consumers — there is no shared `src/utils/` directory:
+
+- `src/api/utils.ts` — API handler utilities (`rzStepErrorToJsonResponse`)
+- `src/repositories/utils.ts` — repository utilities (`validateUuid`)
+- `src/schemas/utils.ts` — schema utilities (`requiredUuid`, `optionalString`, etc.)
+
+## Key rules
+
+- **Repositories are the only DB gateway** — nothing outside `src/repositories/` imports from `@/db` or `@/models`
+- **Types are centralised** — all shared types live in `src/types/`, barrel-exported, imported as `@/types`
+- **Pages call repositories directly** — not steps or actions
+- **Actions and API handlers call repositories or steps** — not each other
+- **Steps are for shared logic only** — if only one caller uses it, it doesn't need to be a step
+- **Interruptors never throw** — use `return` to halt; throwing is for middleware only
+- **Utilities live near their consumers** — no shared utils grab-bag
+
+## Each type in detail
+
+Each `src/` directory has its own `readme.md` with structure, patterns, and guidelines for that type. Read the relevant README before working in a given area.
