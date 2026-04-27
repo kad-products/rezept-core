@@ -10,9 +10,9 @@ import {
 } from '@simplewebauthn/server';
 import { requestInfo } from 'rwsdk/worker';
 import { UAParser as uap } from 'ua-parser-js';
+import { sessions } from '@/durable-objects/store';
 import { createCredential, getCredentialById, updateCredentialCounter } from '@/repositories/credentials';
 import { createUser, getUserById } from '@/repositories/users';
-import { sessions } from '@/session/store';
 
 function getWebAuthnConfig(request: Request) {
 	const rpID = new URL(request.url).hostname;

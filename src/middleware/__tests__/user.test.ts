@@ -5,14 +5,14 @@ vi.mock('@/repositories/users', () => ({
 	getUserById: vi.fn(),
 }));
 
-vi.mock('@/session/store', () => ({
+vi.mock('@/durable-objects/store', () => ({
 	sessions: {
 		remove: vi.fn(),
 	},
 }));
 
+import { sessions } from '@/durable-objects/store';
 import { getUserById } from '@/repositories/users';
-import { sessions } from '@/session/store';
 import userMiddleware from '../user';
 
 const mockUser = {

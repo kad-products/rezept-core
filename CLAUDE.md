@@ -62,7 +62,7 @@ src/
   pages/          Route-level page components
   repositories/   Data access layer — all DB queries live here
   schemas/        Zod input validation schemas
-  session/        Durable Object session management
+  durable-objects/ Cloudflare Durable Objects (session management)
   steps/          Shared data processing logic for actions and API handlers
 
 drizzle/          Generated SQL migrations (committed)
