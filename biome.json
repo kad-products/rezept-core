@@ -30,6 +30,7 @@
 	"files": {
 		"includes": [
 			"**",
+			"!.claude",
 			"!coverage",
 			"!worker-configuration.d.ts",
 			"!**/.terraform",
