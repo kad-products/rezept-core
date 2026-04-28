@@ -1,3 +1,12 @@
+## [1.18.4](https://github.com/kad-products/rezept-core/compare/v1.18.3...v1.18.4) (2026-04-28)
+
+### Bug Fixes
+
+* remove default context for standard layout ([c1afeb4](https://github.com/kad-products/rezept-core/commit/c1afeb4c7ce376e5be19f13bcd9fe2c78ceda974))
+* remove unused FormValidationResponse ([a8456b3](https://github.com/kad-products/rezept-core/commit/a8456b31019c78d86931e63068c566d6fab75ccc))
+* rule for no console.log in most server-side code ([78e01af](https://github.com/kad-products/rezept-core/commit/78e01af20be8ae303279aedc982b6c232ad17a74))
+* use RequestInfo on login page for consistency ([fa33b5c](https://github.com/kad-products/rezept-core/commit/fa33b5c6e9cdac1656595d3a7f43cbf5d6045989))
+
 ## [1.18.3](https://github.com/kad-products/rezept-core/compare/v1.18.2...v1.18.3) (2026-04-28)
 
 ### Bug Fixes
