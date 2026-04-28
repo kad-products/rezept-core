@@ -1,5 +1,6 @@
+import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
-import { type JsonLdPayload, RzStepError } from '@/types';
+import type { JsonLdPayload } from '@/types';
 
 type ParsedRecipeScrapeSection = {
 	order: number;

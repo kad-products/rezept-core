@@ -4,7 +4,7 @@ import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveRecipe } from '@/actions/recipes';
-import { recipeFormSchema } from '@/schemas';
+import { recipesSchemas } from '@/schemas';
 import type { ActionState, Ingredient, RecipeFormData, RecipeWithSections } from '@/types';
 import { useAppForm } from './context';
 
@@ -33,7 +33,7 @@ export default function Recipe({
 				// having to do this manually because typescript didn't like the signature of recipeFormSchema
 				// and the type it expected/returned compared to the shape of the form data
 				console.log(`Form values: ${JSON.stringify(value, null, 4)}`);
-				const results = recipeFormSchema.safeParse(value);
+				const results = recipesSchemas.form.safeParse(value);
 				console.log(`Schema results: ${JSON.stringify(results, null, 4)}`);
 				if (results.success) {
 					return undefined;

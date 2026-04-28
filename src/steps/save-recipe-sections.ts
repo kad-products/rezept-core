@@ -1,7 +1,8 @@
 import { env } from 'cloudflare:workers';
+import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { updateRecipeSections } from '@/repositories/recipe-sections';
-import { type RecipeSection, type RecipeSectionFormSave, RzStepError } from '@/types';
+import type { RecipeSection, RecipeSectionFormSave } from '@/types';
 
 export async function saveRecipeSections(
 	recipeId: string,

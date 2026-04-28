@@ -1,7 +1,8 @@
 import { env } from 'cloudflare:workers';
+import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
-import { type RecipeInstruction, type RecipeInstructionFormSave, RzStepError } from '@/types';
+import type { RecipeInstruction, RecipeInstructionFormSave } from '@/types';
 
 type IncomingInstructionsData = {
 	sectionId: string;

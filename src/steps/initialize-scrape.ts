@@ -1,5 +1,6 @@
+import { RzStepError } from '@/classes';
 import { createRecipeScrape } from '@/repositories/recipe-scrapes';
-import { type RecipeScrape, RzStepError } from '@/types';
+import type { RecipeScrape } from '@/types';
 
 export async function initializeScrape(parsedBody: unknown, userId: string) {
 	let recipeScrape: RecipeScrape;
