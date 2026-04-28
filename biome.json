@@ -13,6 +13,9 @@
 			"recommended": true,
 			"suspicious": {
 				"noConsole": "error"
+			},
+			"nursery": {
+				"useExplicitType": "error"
 			}
 		}
 	},
@@ -44,9 +47,12 @@
 	},
 	"overrides": [
 		{
-			"includes": ["**/__tests__/**"],
+			"includes": ["**/__tests__/**", "tests/**", "scripts/**", "src/models/**"],
 			"linter": {
 				"rules": {
+					"nursery": {
+						"useExplicitType": "off"
+					},
 					"suspicious": {
 						"noExplicitAny": "off"
 					}
