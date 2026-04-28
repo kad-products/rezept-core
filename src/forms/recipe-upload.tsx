@@ -1,5 +1,5 @@
 'use client';
-
+import { Form } from 'radix-ui';
 import { useRef, useState } from 'react';
 
 type CFR2PutResponse = {
@@ -58,7 +58,7 @@ export default function FileUploadForm() {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<Form.Root className="rz-form" onSubmit={handleSubmit}>
 			<input ref={inputRef} type="file" onChange={handleChange} />
 
 			{preview && <img src={preview} alt="Preview" style={{ maxWidth: 300, marginTop: 8 }} />}
@@ -66,6 +66,6 @@ export default function FileUploadForm() {
 			<button type="submit" disabled={!file || uploading}>
 				{uploading ? 'Uploading...' : 'Upload'}
 			</button>
-		</form>
+		</Form.Root>
 	);
 }

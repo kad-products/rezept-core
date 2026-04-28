@@ -1,6 +1,7 @@
 'use client';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
+import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveRecipe } from '@/actions/recipes';
 import { recipeFormSchema } from '@/schemas';
@@ -48,7 +49,8 @@ export default function Recipe({
 
 	return (
 		<>
-			<form
+			<Form.Root
+				className="rz-form"
 				onSubmit={e => {
 					console.log(`Trying to submit the form`);
 					e.preventDefault();
@@ -229,7 +231,7 @@ export default function Recipe({
 						</div>
 					)}
 				</form.Subscribe>
-			</form>
+			</Form.Root>
 			{import.meta.env.DEV && <TanStackDevtools plugins={[formDevtoolsPlugin()]} />}{' '}
 		</>
 	);
