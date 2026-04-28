@@ -73,6 +73,22 @@
 				"VITE_BASE_URL": "https://rezept-integration.arsdehnel.workers.dev"
 			},
 			"workers_dev": true
+		},
+		"staging": {
+			"vars": {
+				"WEBAUTHN_APP_NAME": "rezept",
+				"REZEPT_ENV": "staging",
+				"VITE_BASE_URL": "https://rezept-staging.arsdehnel.workers.dev"
+			},
+			"workers_dev": true
+		},
+		"production": {
+			"vars": {
+				"WEBAUTHN_APP_NAME": "rezept",
+				"REZEPT_ENV": "production",
+				"VITE_BASE_URL": "https://rezept.arsdehnel.workers.dev"
+			},
+			"workers_dev": false
 		}
 	}
 }
