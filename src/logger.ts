@@ -15,6 +15,7 @@ export default class RzLogger {
 		if (levels[lvl] > levels[defaultLevel]) {
 			return;
 		}
+		// biome-ignore lint/suspicious/noConsole: is disabled in some files, so we use console.log directly here to avoid lint errors, but in the future we may want to implement different log levels or outputs
 		console.log({ level, message, ...meta });
 	}
 

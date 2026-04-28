@@ -7,7 +7,7 @@ export default async function userMiddleware({ ctx, request }: RequestInfo<Defau
 		try {
 			ctx.user = await getUserById(ctx.session.userId);
 		} catch (err) {
-			console.log(`Error fetching current user: ${err}`);
+			ctx.logger.error(`Error fetching current user: ${err}`);
 			const headers = new Headers();
 			await sessions.remove(request, headers);
 			headers.set('Location', '/');

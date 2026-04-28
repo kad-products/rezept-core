@@ -2,7 +2,6 @@ import { ArchiveIcon, ColorWheelIcon, EnterIcon, ExitIcon, HomeIcon, PersonIcon 
 import classNames from 'classnames';
 import { StrictMode } from 'react';
 import type { DefaultAppContext } from 'rwsdk/worker';
-import RzLogger from '@/logger';
 
 type NavItem = {
 	label: string;
@@ -16,9 +15,7 @@ export default function StandardLayout({
 	children,
 	currentBasePage,
 	pageTitle,
-	ctx = {
-		logger: new RzLogger(),
-	},
+	ctx,
 }: {
 	children: React.ReactNode;
 	currentBasePage: string | undefined;

@@ -10,7 +10,10 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"suspicious": {
+				"noConsole": "error"
+			}
 		}
 	},
 	"javascript": {
@@ -46,6 +49,16 @@
 				"rules": {
 					"suspicious": {
 						"noExplicitAny": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["src/components/**", "src/forms/**", "src/layouts/**", "src/repositories/**", "scripts/**"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noConsole": "off"
 					}
 				}
 			}

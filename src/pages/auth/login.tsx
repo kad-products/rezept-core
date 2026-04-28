@@ -1,9 +1,9 @@
-import type { DefaultAppContext } from 'rwsdk/worker';
+import type { RequestInfo } from 'rwsdk/worker';
 import PasskeyLogin from '@/components/PasskeyLogin';
 import PasskeyRegistration from '@/components/PasskeyRegistration';
 import StandardLayout from '@/layouts/standard';
 
-export default function Pages__auth__login({ ctx }: { ctx: DefaultAppContext }) {
+export default function Pages__auth__login({ ctx }: RequestInfo) {
 	return (
 		<StandardLayout currentBasePage="auth" pageTitle="Login" ctx={ctx}>
 			{ctx.user ? (
