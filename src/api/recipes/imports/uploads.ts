@@ -27,8 +27,8 @@ export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContex
 	const formData = await request.formData();
 	const file = formData.get('file') as File;
 
-	console.log(formData);
-	console.log(file);
+	ctx.logger.info(formData);
+	ctx.logger.info(file);
 
 	// Stream the file directly to R2
 	const r2ObjectKey = `/raw/${file.name}`;
@@ -65,7 +65,7 @@ export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContex
 		);
 	}
 
-	console.log(results);
+	ctx.logger.info(results);
 
 	return new Response(JSON.stringify(uploadedRecipe), {
 		status: 200,
