@@ -10,15 +10,20 @@ const baseIngredientFields = {
 };
 
 // Create schema - no id, requires createdBy
-export const createIngredientSchema = z.object({
+const createSchema = z.object({
 	...baseIngredientFields,
 	createdBy: requiredUuid,
 });
 
 // Update schema - requires id and updatedBy
-export const updateIngredientSchema = z.object({
+const updateSchema = z.object({
 	...baseIngredientFields,
 	id: requiredUuid,
 	updatedBy: requiredUuid,
 	deletedBy: optionalUuid,
 });
+
+export const ingredientsSchemas = {
+	create: createSchema,
+	update: updateSchema,
+};

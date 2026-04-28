@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { createIngredientSchema, updateIngredientSchema } from '../ingredients';
+import { ingredientsSchemas } from '../ingredients';
 
 describe('CreateIngredient form schema', () => {
 	it('accepts valid ingredient with all fields', () => {
@@ -10,7 +10,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -20,7 +20,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -41,7 +41,7 @@ describe('CreateIngredient form schema', () => {
 				createdBy: randomUUID(),
 			};
 
-			const result = createIngredientSchema.safeParse(validData);
+			const result = ingredientsSchemas.create.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 	});
@@ -52,7 +52,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.name).toBe('Basil');
@@ -66,7 +66,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.description).toBe('Dried oregano leaves');
@@ -80,7 +80,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.description).toBeUndefined();
@@ -92,7 +92,7 @@ describe('CreateIngredient form schema', () => {
 			description: 'Test description',
 		};
 
-		const result = createIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -107,7 +107,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -121,7 +121,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -135,7 +135,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -149,7 +149,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -160,7 +160,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -175,7 +175,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -185,7 +185,7 @@ describe('CreateIngredient form schema', () => {
 			createdBy: 'not-a-uuid',
 		};
 
-		const result = createIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -203,7 +203,7 @@ describe('UpdateIngredient form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -214,7 +214,7 @@ describe('UpdateIngredient form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -226,7 +226,7 @@ describe('UpdateIngredient form schema', () => {
 			deletedBy: randomUUID(),
 		};
 
-		const result = updateIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -236,7 +236,7 @@ describe('UpdateIngredient form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -250,7 +250,7 @@ describe('UpdateIngredient form schema', () => {
 			name: 'Test',
 		};
 
-		const result = updateIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -265,7 +265,7 @@ describe('UpdateIngredient form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -280,7 +280,7 @@ describe('UpdateIngredient form schema', () => {
 			updatedBy: 'invalid-uuid',
 		};
 
-		const result = updateIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -296,7 +296,7 @@ describe('UpdateIngredient form schema', () => {
 			deletedBy: 'not-valid',
 		};
 
-		const result = updateIngredientSchema.safeParse(invalidData);
+		const result = ingredientsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -312,7 +312,7 @@ describe('UpdateIngredient form schema', () => {
 			deletedBy: '',
 		};
 
-		const result = updateIngredientSchema.safeParse(validData);
+		const result = ingredientsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.deletedBy).toBeUndefined();
@@ -326,7 +326,7 @@ describe('UpdateIngredient form schema', () => {
 			name: '   ',
 			updatedBy: randomUUID(),
 		};
-		expect(updateIngredientSchema.safeParse(emptyName).success).toBe(false);
+		expect(ingredientsSchemas.update.safeParse(emptyName).success).toBe(false);
 
 		// Name too long
 		const longName = {
@@ -334,7 +334,7 @@ describe('UpdateIngredient form schema', () => {
 			name: 'a'.repeat(101),
 			updatedBy: randomUUID(),
 		};
-		expect(updateIngredientSchema.safeParse(longName).success).toBe(false);
+		expect(ingredientsSchemas.update.safeParse(longName).success).toBe(false);
 
 		// Description too long
 		const longDescription = {
@@ -343,7 +343,7 @@ describe('UpdateIngredient form schema', () => {
 			description: 'a'.repeat(501),
 			updatedBy: randomUUID(),
 		};
-		expect(updateIngredientSchema.safeParse(longDescription).success).toBe(false);
+		expect(ingredientsSchemas.update.safeParse(longDescription).success).toBe(false);
 
 		// Valid with trim
 		const withWhitespace = {
@@ -352,7 +352,7 @@ describe('UpdateIngredient form schema', () => {
 			description: '  Trimmed description  ',
 			updatedBy: randomUUID(),
 		};
-		const result = updateIngredientSchema.safeParse(withWhitespace);
+		const result = ingredientsSchemas.update.safeParse(withWhitespace);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.name).toBe('Trimmed Ingredient');

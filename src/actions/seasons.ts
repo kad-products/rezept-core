@@ -3,7 +3,7 @@
 import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
 import { createSeason, updateSeason } from '@/repositories/seasons';
-import { createSeasonSchema, updateSeasonSchema } from '@/schemas';
+import { seasonsSchemas } from '@/schemas';
 import type { ActionState, SeasonFormSave } from '@/types';
 
 export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<SeasonFormSave>> {
@@ -21,7 +21,7 @@ export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<
 
 	try {
 		if (formData.id) {
-			const parsed = updateSeasonSchema.safeParse(formData);
+			const parsed = seasonsSchemas.update.safeParse(formData);
 			if (!parsed.success) {
 				requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 				return {
@@ -32,7 +32,7 @@ export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<
 			const updatedSeason = await updateSeason(parsed.data.id, parsed.data, userId);
 			return { success: true, data: updatedSeason };
 		} else {
-			const parsed = createSeasonSchema.safeParse(formData);
+			const parsed = seasonsSchemas.create.safeParse(formData);
 			if (!parsed.success) {
 				requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 				return {

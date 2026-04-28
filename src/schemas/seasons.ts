@@ -23,10 +23,15 @@ const baseSeasonFields = {
 };
 
 // Create schema - used in form and validated again on server
-export const createSeasonSchema = z.object(baseSeasonFields);
+const createSchema = z.object(baseSeasonFields);
 
 // Update schema - requires id
-export const updateSeasonSchema = z.object({
+const updateSchema = z.object({
 	...baseSeasonFields,
 	id: requiredUuid,
 });
+
+export const seasonsSchemas = {
+	create: createSchema,
+	update: updateSchema,
+};

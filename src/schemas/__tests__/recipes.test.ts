@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { recipeFormSchema } from '../recipes';
+import { recipesSchemas } from '../recipes';
 
-describe('recipeFormSchema', () => {
+describe('recipesSchemas.form', () => {
 	describe('basic recipe fields', () => {
 		it('accepts valid recipe with all fields', () => {
 			const validData = {
@@ -15,7 +15,7 @@ describe('recipeFormSchema', () => {
 				cookTime: 15,
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -25,7 +25,7 @@ describe('recipeFormSchema', () => {
 				title: 'Simple Salad',
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -36,7 +36,7 @@ describe('recipeFormSchema', () => {
 				title: 'Updated Recipe',
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -48,7 +48,7 @@ describe('recipeFormSchema', () => {
 				source: '  Test source  ',
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result.data.title).toBe('Chicken Soup');
@@ -65,7 +65,7 @@ describe('recipeFormSchema', () => {
 				source: '',
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result.data.description).toBeUndefined();
@@ -82,7 +82,7 @@ describe('recipeFormSchema', () => {
 				cookTime: '30' as any,
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result.data.servings).toBe(6);
@@ -96,7 +96,7 @@ describe('recipeFormSchema', () => {
 				description: 'Test',
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 			if (!result.success) {
 				const paths = result.error.issues.map(i => i.path[0]);
@@ -111,7 +111,7 @@ describe('recipeFormSchema', () => {
 				title: '   ',
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 
@@ -121,7 +121,7 @@ describe('recipeFormSchema', () => {
 				title: 'a'.repeat(201),
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 
@@ -132,7 +132,7 @@ describe('recipeFormSchema', () => {
 				description: 'a'.repeat(1001),
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 
@@ -144,7 +144,7 @@ describe('recipeFormSchema', () => {
 				cookTime: -10,
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 
@@ -155,7 +155,7 @@ describe('recipeFormSchema', () => {
 				title: 'Test',
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result.data.id).toBeUndefined();
@@ -171,7 +171,7 @@ describe('recipeFormSchema', () => {
 				sections: [],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -187,7 +187,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -204,7 +204,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -219,7 +219,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result.data.sections).toHaveLength(3);
@@ -250,7 +250,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -271,7 +271,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -293,7 +293,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -313,7 +313,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result?.data?.sections?.length).toBe(1);
@@ -341,7 +341,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -363,7 +363,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 
@@ -385,7 +385,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 	});
@@ -408,7 +408,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -430,7 +430,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 
@@ -450,7 +450,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result?.data?.sections?.length).toBe(1);
@@ -477,7 +477,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 
@@ -498,7 +498,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 
@@ -519,7 +519,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(invalidData);
+			const result = recipesSchemas.form.safeParse(invalidData);
 			expect(result.success).toBe(false);
 		});
 	});
@@ -555,7 +555,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result.data.sections).toHaveLength(2);
@@ -584,7 +584,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(validData);
+			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 	});
@@ -608,7 +608,7 @@ describe('recipeFormSchema', () => {
 				sections: [],
 			};
 
-			const result = recipeFormSchema.safeParse(recipeData);
+			const result = recipesSchemas.form.safeParse(recipeData);
 			// expect(result).toBe({});
 			expect(result.success).toBe(true);
 		});
@@ -658,7 +658,7 @@ describe('recipeFormSchema', () => {
 				],
 			};
 
-			const result = recipeFormSchema.safeParse(recipeData);
+			const result = recipesSchemas.form.safeParse(recipeData);
 			expect(result.success).toBe(true);
 		});
 	});

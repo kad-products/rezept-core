@@ -1,7 +1,7 @@
 // src/schemas/__tests__/season.test.ts
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { createSeasonSchema, updateSeasonSchema } from '../seasons';
+import { seasonsSchemas } from '../seasons';
 
 describe('CreateSeason form schema', () => {
 	it('accepts valid season with all fields', () => {
@@ -16,7 +16,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -29,7 +29,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -43,7 +43,7 @@ describe('CreateSeason form schema', () => {
 				createdBy: randomUUID(),
 			};
 
-			const result = createSeasonSchema.safeParse(validData);
+			const result = seasonsSchemas.create.safeParse(validData);
 			expect(result.success).toBe(true);
 		}
 	});
@@ -58,7 +58,7 @@ describe('CreateSeason form schema', () => {
 				createdBy: randomUUID(),
 			};
 
-			const result = createSeasonSchema.safeParse(validData);
+			const result = seasonsSchemas.create.safeParse(validData);
 			expect(result.success).toBe(true);
 		}
 	});
@@ -72,7 +72,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -88,7 +88,7 @@ describe('CreateSeason form schema', () => {
 				createdBy: randomUUID(),
 			};
 
-			const result = createSeasonSchema.safeParse(validData);
+			const result = seasonsSchemas.create.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 	});
@@ -102,7 +102,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.name).toBe('Spring Season');
@@ -119,7 +119,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.description).toBe('Test description');
@@ -136,7 +136,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.region).toBe('Pacific Northwest');
@@ -153,7 +153,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.notes).toBe('Test notes');
@@ -170,7 +170,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.description).toBeUndefined();
@@ -187,7 +187,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.region).toBeUndefined();
@@ -204,7 +204,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.notes).toBeUndefined();
@@ -220,7 +220,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.startMonth).toBe(3);
@@ -235,7 +235,7 @@ describe('CreateSeason form schema', () => {
 			description: 'Test',
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -255,7 +255,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -272,7 +272,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -289,7 +289,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -306,7 +306,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -323,7 +323,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -340,7 +340,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -357,7 +357,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -374,7 +374,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -392,7 +392,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -410,7 +410,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -424,7 +424,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -442,7 +442,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -456,7 +456,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -470,7 +470,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -483,7 +483,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.ingredients).toEqual([]);
@@ -500,7 +500,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			// Check that error is for ingredients array
@@ -519,7 +519,7 @@ describe('CreateSeason form schema', () => {
 			createdBy: randomUUID(),
 		};
 
-		const result = createSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -542,7 +542,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -556,7 +556,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -571,7 +571,7 @@ describe('UpdateSeason form schema', () => {
 			deletedBy: randomUUID(),
 		};
 
-		const result = updateSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -584,7 +584,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -602,7 +602,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateSeasonSchema.safeParse(invalidData);
+		const result = seasonsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -621,7 +621,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		expect(updateSeasonSchema.safeParse(invalidMonth).success).toBe(false);
+		expect(seasonsSchemas.update.safeParse(invalidMonth).success).toBe(false);
 
 		// Invalid country
 		const invalidCountry = {
@@ -633,7 +633,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		expect(updateSeasonSchema.safeParse(invalidCountry).success).toBe(false);
+		expect(seasonsSchemas.update.safeParse(invalidCountry).success).toBe(false);
 
 		// Description too long
 		const longDescription = {
@@ -646,7 +646,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		expect(updateSeasonSchema.safeParse(longDescription).success).toBe(false);
+		expect(seasonsSchemas.update.safeParse(longDescription).success).toBe(false);
 
 		// Notes too long
 		const longNotes = {
@@ -659,7 +659,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		expect(updateSeasonSchema.safeParse(longNotes).success).toBe(false);
+		expect(seasonsSchemas.update.safeParse(longNotes).success).toBe(false);
 	});
 	it('accepts update with ingredients', () => {
 		const validData = {
@@ -672,7 +672,7 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -687,12 +687,12 @@ describe('UpdateSeason form schema', () => {
 			updatedBy: randomUUID(),
 		};
 
-		const result = updateSeasonSchema.safeParse(validData);
+		const result = seasonsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 });
 
-// describe('createSeasonSchema - ingredients', () => {
+// describe('seasonsSchemas.create - ingredients', () => {
 // 	it('accepts valid ingredients array', () => {
 // 		const validData = {
 // 			name: 'Spring Season',
@@ -703,7 +703,7 @@ describe('UpdateSeason form schema', () => {
 // 			ingredients: [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()],
 // 		};
 
-// 		const result = createSeasonSchema.safeParse(validData);
+// 		const result = seasonsSchemas.create.safeParse(validData);
 // 		expect(result.success).toBe(true);
 // 		if (result.success) {
 // 			expect(result.data.ingredients).toHaveLength(3);
@@ -720,7 +720,7 @@ describe('UpdateSeason form schema', () => {
 // 			ingredients: ['not-a-uuid', 'also-not-uuid'],
 // 		};
 
-// 		const result = createSeasonSchema.safeParse(invalidData);
+// 		const result = seasonsSchemas.create.safeParse(invalidData);
 // 		expect(result.success).toBe(false);
 // 		if (!result.success) {
 // 			expect(result.error.issues.some(i => i.path.includes('ingredients'))).toBe(true);
@@ -737,7 +737,7 @@ describe('UpdateSeason form schema', () => {
 // 			// No ingredients provided
 // 		};
 
-// 		const result = createSeasonSchema.safeParse(data);
+// 		const result = seasonsSchemas.create.safeParse(data);
 // 		expect(result.success).toBe(true);
 // 		if (result.success) {
 // 			expect(result.data.ingredients).toEqual([]);
@@ -754,7 +754,7 @@ describe('UpdateSeason form schema', () => {
 // 			ingredients: [],
 // 		};
 
-// 		const result = createSeasonSchema.safeParse(data);
+// 		const result = seasonsSchemas.create.safeParse(data);
 // 		expect(result.success).toBe(true);
 // 		if (result.success) {
 // 			expect(result.data.ingredients).toEqual([]);
@@ -774,7 +774,7 @@ describe('UpdateSeason form schema', () => {
 // 			ingredients: [crypto.randomUUID(), crypto.randomUUID()],
 // 		};
 
-// 		const result = createSeasonSchema.safeParse(validData);
+// 		const result = seasonsSchemas.create.safeParse(validData);
 // 		expect(result.success).toBe(true);
 // 		if (result.success) {
 // 			expect(result.data.ingredients).toHaveLength(2);
