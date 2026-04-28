@@ -1,8 +1,8 @@
 'use client';
 import { Tabs } from 'radix-ui';
-import Card from '@/components/Card';
+import RzCard from '@/components/RzCard';
 import type { ApiKey, Recipe, RecipeUpload } from '@/types';
-import BookmarkletInstall from './bookmarklet-install';
+import BookmarkletInstall from './BookmarkletInstall';
 
 export default function RecipesTabs({
 	apiKeys,
@@ -36,7 +36,7 @@ export default function RecipesTabs({
 				<div className="recipes-listing">
 					{recipes.map(r => {
 						return (
-							<Card
+							<RzCard
 								key={r.id}
 								title={r.title}
 								body={r.description || ''}

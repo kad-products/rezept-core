@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import ApiKeysTable from '@/components/api-keys-table';
+import ApiKeysTable from '@/components/ApiKeysTable';
 import StandardLayout from '@/layouts/standard';
 import { getApiKeysByUserId } from '@/repositories/api-keys';
 import { getCredentialsByUserId } from '@/repositories/credentials';

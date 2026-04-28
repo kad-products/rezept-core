@@ -31,12 +31,6 @@ src/components/
 
 A domain subdirectory is the right call when a domain has three or more components. Before that threshold, components can sit at the top level.
 
-## Server vs client
-
-Components are either server or client components, signalled by the `'use client'` directive — not by directory. Server components are the default; client components declare `'use client'` as the first line.
-
-There is no `client/` subdirectory. The directive is the only signal needed.
-
 ## Guidelines
 
 - **Default export** — one component per file
