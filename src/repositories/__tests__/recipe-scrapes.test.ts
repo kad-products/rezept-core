@@ -6,7 +6,7 @@ import { resetDb } from '../../../tests/mocks/db';
 import { createRecipeScrape, updateRecipeScrapeStatus } from '../recipe-scrapes';
 
 vi.mock('cloudflare:workers', () => ({
-	env: { REZEPT_ENV: 'test' },
+	env: { REZEPT_ENV: 'development' },
 }));
 
 interface MockRequestInfo {
