@@ -1,3 +1,9 @@
+## [1.18.6](https://github.com/kad-products/rezept-core/compare/v1.18.5...v1.18.6) (2026-04-28)
+
+### Bug Fixes
+
+* add response utils for actions ([c91e52f](https://github.com/kad-products/rezept-core/commit/c91e52faec782401447ec2e0df7ac394dc0b786d))
+
 ## [1.18.5](https://github.com/kad-products/rezept-core/compare/v1.18.4...v1.18.5) (2026-04-28)
 
 ### Bug Fixes
