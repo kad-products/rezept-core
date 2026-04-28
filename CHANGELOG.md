@@ -1,3 +1,10 @@
+## [1.18.2](https://github.com/kad-products/rezept-core/compare/v1.18.1...v1.18.2) (2026-04-28)
+
+### Bug Fixes
+
+* card component no more async ([61ce7c7](https://github.com/kad-products/rezept-core/commit/61ce7c7c36109317047c00bacbc0429d13ccc66c))
+* rename component files to match component names ([4c88cfc](https://github.com/kad-products/rezept-core/commit/4c88cfc3e25caeec320caec9a8b60d0a3327317f))
+
 ## [1.18.1](https://github.com/kad-products/rezept-core/compare/v1.18.0...v1.18.1) (2026-04-27)
 
 ### Bug Fixes
