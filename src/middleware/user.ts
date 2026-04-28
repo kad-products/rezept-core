@@ -2,7 +2,7 @@ import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { sessions } from '@/durable-objects/store';
 import { getUserById } from '@/repositories/users';
 
-export default async function userMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>) {
+export default async function userMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>): Promise<Response | undefined> {
 	if (ctx.session?.userId) {
 		try {
 			ctx.user = await getUserById(ctx.session.userId);

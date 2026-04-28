@@ -4,7 +4,7 @@ const corsConfig: Record<string, string[]> = {
 	'/api/recipes/imports/scrapes': ['POST'],
 };
 
-export default function corsMiddleware({ request, response }: RequestInfo<DefaultAppContext>) {
+export default function corsMiddleware({ request, response }: RequestInfo<DefaultAppContext>): Response | undefined {
 	const method = request.method;
 	const path = new URL(request.url).pathname;
 

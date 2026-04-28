@@ -14,7 +14,7 @@ import { sessions } from '@/durable-objects/store';
 import { createCredential, getCredentialById, updateCredentialCounter } from '@/repositories/credentials';
 import { createUser, getUserById } from '@/repositories/users';
 
-function getWebAuthnConfig(request: Request) {
+function getWebAuthnConfig(request: Request): { rpName: string; rpID: string; origin: string } {
 	const rpID = new URL(request.url).hostname;
 	const rpName = import.meta.env.VITE_IS_DEV_SERVER ? 'Development App' : env.WEBAUTHN_APP_NAME;
 
@@ -29,7 +29,7 @@ function getWebAuthnConfig(request: Request) {
 	};
 }
 
-export async function startPasskeyRegistration(username: string) {
+export async function startPasskeyRegistration(username: string): ReturnType<typeof generateRegistrationOptions> {
 	const { rpName, rpID } = getWebAuthnConfig(requestInfo.request);
 	const { response } = requestInfo;
 
@@ -50,7 +50,7 @@ export async function startPasskeyRegistration(username: string) {
 	return options;
 }
 
-export async function startPasskeyLogin() {
+export async function startPasskeyLogin(): ReturnType<typeof generateAuthenticationOptions> {
 	const { rpID } = getWebAuthnConfig(requestInfo.request);
 	const { response } = requestInfo;
 
@@ -65,7 +65,7 @@ export async function startPasskeyLogin() {
 	return options;
 }
 
-export async function finishPasskeyRegistration(username: string, registration: RegistrationResponseJSON) {
+export async function finishPasskeyRegistration(username: string, registration: RegistrationResponseJSON): Promise<boolean> {
 	const { request, response } = requestInfo;
 	const { origin } = getWebAuthnConfig(requestInfo.request);
 
@@ -102,7 +102,7 @@ export async function finishPasskeyRegistration(username: string, registration: 
 	return true;
 }
 
-function deviceNameFromUA(uaString: string) {
+function deviceNameFromUA(uaString: string): string {
 	const ua = new uap(uaString);
 	const device = ua.getDevice();
 	const os = ua.getOS();
@@ -131,7 +131,7 @@ function deviceNameFromUA(uaString: string) {
 	return nameParts.join(' | ') || 'Unknown Device';
 }
 
-export async function finishPasskeyLogin(login: AuthenticationResponseJSON) {
+export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Promise<boolean> {
 	const { request, response } = requestInfo;
 	const { origin } = getWebAuthnConfig(requestInfo.request);
 

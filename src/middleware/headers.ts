@@ -1,6 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 
-export default function headerMiddleware({ response, rw: { nonce } }: RequestInfo<DefaultAppContext>) {
+export default function headerMiddleware({ response, rw: { nonce } }: RequestInfo<DefaultAppContext>): void {
 	const cspClaims = {
 		'default-src': `'self'`,
 		'script-src': `'self' 'unsafe-eval' 'nonce-${nonce}' https://challenges.cloudflare.com`,
