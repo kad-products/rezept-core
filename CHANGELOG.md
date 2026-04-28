@@ -1,3 +1,15 @@
+## [1.18.5](https://github.com/kad-products/rezept-core/compare/v1.18.4...v1.18.5) (2026-04-28)
+
+### Bug Fixes
+
+* api key call return API error structure ([c1ddfa5](https://github.com/kad-products/rezept-core/commit/c1ddfa539abbe7899e97d4c4ba460fcd033802f3))
+* more schema namespace-related changes ([493d957](https://github.com/kad-products/rezept-core/commit/493d957f02fc2f2ecccddc126d4fc4ba553aa874))
+* throw original error ([c6eae7f](https://github.com/kad-products/rezept-core/commit/c6eae7f4a6403378bf91392b2e8c0dd1f17c85c7))
+
+### Code Refactoring
+
+* schemas managed under namespaces ([186c374](https://github.com/kad-products/rezept-core/commit/186c374ffb1f517291dab4ae38411528ec31e153))
+
 ## [1.18.4](https://github.com/kad-products/rezept-core/compare/v1.18.3...v1.18.4) (2026-04-28)
 
 ### Bug Fixes
