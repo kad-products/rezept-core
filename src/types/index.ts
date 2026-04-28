@@ -11,7 +11,6 @@ export * from './recipe-scrapes';
 export * from './recipe-sections';
 export * from './recipe-uploads';
 export * from './recipes';
-export * from './rz-step-error';
 export * from './rz-table';
 export * from './seasons';
 export * from './users';

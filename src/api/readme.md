@@ -28,16 +28,39 @@ All routes are registered in `routes.ts` via `route()`.
 ## Responsibilities
 
 - **Orchestrate** — call steps for complex pipelines, repositories directly for simple operations
-- **Return `Response.json()`** always — use `Response.json()`, never construct responses manually
+- **Return a consistent response shape** — always use the `successResponse` and `errorResponse` utilities from `./utils`
 - **Handle step errors** — catch `RzStepError` via the `rzStepErrorToJsonResponse` utility from `./utils`
 
-## Error handling
+## Response shape
+
+All API responses use one of two shapes:
 
 ```ts
+// Success
+{ success: true, data: T }
+
+// Error
+{ success: false, error: string }
+```
+
+Use the utilities from `./utils` — never call `Response.json()` directly or construct `Response` objects manually:
+
+```ts
+import { errorResponse, successResponse } from '@/api/utils';
+
+// success
+return successResponse(savedRecord);
+
+// error with explicit status
+return errorResponse('API key has been revoked', 403);
+
+// step errors (RzStepError thrown by steps)
 } catch (err) {
     return rzStepErrorToJsonResponse(err);
 }
 ```
+
+The `error` field is always a single string. Field-level error arrays belong to `ActionState` (the form/action layer) — they have no place in HTTP API responses where clients need a simple, unambiguous message.
 
 ## Guidelines
 

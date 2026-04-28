@@ -1,4 +1,5 @@
 import { type DefaultAppContext, type RequestInfo, requestInfo } from 'rwsdk/worker';
+import { errorResponse } from '@/api/utils';
 import { getApiKeyByKey } from '@/repositories/api-keys';
 
 export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>) {
@@ -13,13 +14,7 @@ export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<Def
 		const apiKey = await getApiKeyByKey(key);
 
 		if (apiKey.revokeAt && new Date(apiKey.revokeAt) < new Date()) {
-			return Response.json(
-				{ success: false, errors: { _form: ['API key has been revoked'] } },
-				{
-					status: 403,
-					headers: { 'Content-Type': 'application/json' },
-				},
-			);
+			return errorResponse('API key has been revoked', 403);
 		}
 
 		const now = Date.now();
@@ -27,12 +22,6 @@ export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<Def
 		ctx.apiKey = apiKey;
 	} catch (err) {
 		requestInfo.ctx.logger.warn(`Error in API middleware: ${err}`);
-		return Response.json(
-			{ success: false, errors: { _form: ['Invalid API key'] } },
-			{
-				status: 403,
-				headers: { 'Content-Type': 'application/json' },
-			},
-		);
+		return errorResponse('Invalid API key', 403);
 	}
 }
