@@ -1,3 +1,11 @@
+## [1.18.3](https://github.com/kad-products/rezept-core/compare/v1.18.2...v1.18.3) (2026-04-28)
+
+### Bug Fixes
+
+* swap out react-select for radix select ([1ddbe7e](https://github.com/kad-products/rezept-core/commit/1ddbe7e15d8c6e056e236ceb597f35df62c55915))
+* update number and textarea to radix ([4d962e9](https://github.com/kad-products/rezept-core/commit/4d962e90a9f5a338f78afaae4c0a41a3789b2359))
+* use form.root in all forms ([53d6286](https://github.com/kad-products/rezept-core/commit/53d62867b510541f3ef42e09c174cd03ab3ce4d5))
+
 ## [1.18.2](https://github.com/kad-products/rezept-core/compare/v1.18.1...v1.18.2) (2026-04-28)
 
 ### Bug Fixes
