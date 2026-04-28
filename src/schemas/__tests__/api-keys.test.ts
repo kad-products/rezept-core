@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { apiKeyFormSchema } from '@/schemas';
+import { apiKeysSchemas } from '@/schemas';
 
 describe('Create API Key form schema', () => {
 	it('accepts valid api key with all fields', () => {
@@ -11,7 +11,7 @@ describe('Create API Key form schema', () => {
 			revokeAt: new Date().toISOString(),
 		};
 
-		const result = apiKeyFormSchema.safeParse(validData);
+		const result = apiKeysSchemas.form.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -22,7 +22,7 @@ describe('Create API Key form schema', () => {
 			name: 'key for the upload booklet',
 		};
 
-		const result = apiKeyFormSchema.safeParse(validData);
+		const result = apiKeysSchemas.form.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -34,7 +34,7 @@ describe('Create API Key form schema', () => {
 			name: 'key for the upload booklet',
 		};
 
-		const result = apiKeyFormSchema.safeParse(validData);
+		const result = apiKeysSchemas.form.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -44,7 +44,7 @@ describe('Create API Key form schema', () => {
 			name: 'key for the upload booklet',
 		};
 
-		const result = apiKeyFormSchema.safeParse(invalidData);
+		const result = apiKeysSchemas.form.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -63,7 +63,7 @@ describe('Update API Key form schema', () => {
 			revokeAt: new Date().toISOString(),
 		};
 
-		const result = apiKeyFormSchema.safeParse(validData);
+		const result = apiKeysSchemas.form.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -75,7 +75,7 @@ describe('Update API Key form schema', () => {
 			permissions: ['recipes:upload'],
 		};
 
-		const result = apiKeyFormSchema.safeParse(validData);
+		const result = apiKeysSchemas.form.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -85,7 +85,7 @@ describe('Update API Key form schema', () => {
 			name: 'key for the upload booklet',
 		};
 
-		const result = apiKeyFormSchema.safeParse(invalidData);
+		const result = apiKeysSchemas.form.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);

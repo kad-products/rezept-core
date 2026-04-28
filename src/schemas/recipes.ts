@@ -21,9 +21,9 @@ const ingredientStructuredSchema = z.object({
 	order: z.coerce.number().int().min(0) as z.ZodNumber,
 });
 
-export const recipeIngredientSchema = z.union([ingredientRawSchema, ingredientStructuredSchema]);
+const recipeIngredientSchema = z.union([ingredientRawSchema, ingredientStructuredSchema]);
 
-export const recipeSectionSchema = z.object({
+const recipeSectionSchema = z.object({
 	id: optionalUuid, // Present for updates, absent for creates
 	title: optionalString
 		.transform(val => val?.trim())
@@ -42,7 +42,7 @@ export const recipeSectionSchema = z.object({
 });
 
 // One flexible schema for forms/actions
-export const recipeFormSchema = z.object({
+const recipeFormSchema = z.object({
 	id: optionalUuid, // Present for update, absent for create
 	authorId: z.string().uuid('Must be a valid UUID'),
 	title: z.string().trim().min(1, 'Title is required').max(200, 'Title must be 200 characters or less'),
@@ -64,6 +64,11 @@ export const recipeFormSchema = z.object({
 	sections: z.array(recipeSectionSchema).optional(),
 });
 
-export const recipeScrapeSchema = recipeFormSchema.extend({
+const recipeScrapeSchema = recipeFormSchema.extend({
 	sections: z.array(recipeSectionSchema).min(1, 'At least one section is required'),
 });
+
+export const recipesSchemas = {
+	form: recipeFormSchema,
+	scrape: recipeScrapeSchema,
+};

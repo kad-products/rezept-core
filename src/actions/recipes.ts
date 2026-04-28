@@ -7,7 +7,7 @@ import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
 import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
 import { updateRecipeSections } from '@/repositories/recipe-sections';
 import { createRecipe, updateRecipe } from '@/repositories/recipes';
-import { recipeFormSchema } from '@/schemas';
+import { recipesSchemas } from '@/schemas';
 
 import type {
 	ActionState,
@@ -39,7 +39,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 
 	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
 
-	const parsed = recipeFormSchema.safeParse(formData);
+	const parsed = recipesSchemas.form.safeParse(formData);
 
 	if (parsed.error) {
 		return {

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { createCredentialSchema, updateCredentialSchema } from '../credentials';
+import { credentialsSchemas } from '@/schemas';
 
 describe('CreateCredential form schema', () => {
 	it('accepts valid credential with all fields', () => {
@@ -12,7 +12,7 @@ describe('CreateCredential form schema', () => {
 			name: 'My Security Key',
 		};
 
-		const result = createCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -23,7 +23,7 @@ describe('CreateCredential form schema', () => {
 			publicKey: new Uint8Array([255, 254, 253]),
 		};
 
-		const result = createCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.counter).toBe(0); // Default value
@@ -37,7 +37,7 @@ describe('CreateCredential form schema', () => {
 			publicKey: new Uint8Array([10, 20, 30]),
 		};
 
-		const result = createCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.counter).toBe(0);
@@ -55,7 +55,7 @@ describe('CreateCredential form schema', () => {
 				counter,
 			};
 
-			const result = createCredentialSchema.safeParse(validData);
+			const result = credentialsSchemas.create.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 	});
@@ -67,7 +67,7 @@ describe('CreateCredential form schema', () => {
 			publicKey: new Uint8Array([1, 2, 3]),
 		};
 
-		const result = createCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.credentialId).toBe('cred-123');
@@ -82,7 +82,7 @@ describe('CreateCredential form schema', () => {
 			name: '  My Yubikey  ',
 		};
 
-		const result = createCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.name).toBe('My Yubikey');
@@ -97,7 +97,7 @@ describe('CreateCredential form schema', () => {
 			name: '',
 		};
 
-		const result = createCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.name).toBeUndefined();
@@ -112,7 +112,7 @@ describe('CreateCredential form schema', () => {
 			counter: '42' as any,
 		};
 
-		const result = createCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.counter).toBe(42);
@@ -125,7 +125,7 @@ describe('CreateCredential form schema', () => {
 			name: 'Test Key',
 		};
 
-		const result = createCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -142,7 +142,7 @@ describe('CreateCredential form schema', () => {
 			publicKey: new Uint8Array([1]),
 		};
 
-		const result = createCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -157,7 +157,7 @@ describe('CreateCredential form schema', () => {
 			publicKey: new Uint8Array([1]),
 		};
 
-		const result = createCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -172,7 +172,7 @@ describe('CreateCredential form schema', () => {
 			publicKey: new Uint8Array([1]),
 		};
 
-		const result = createCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -187,7 +187,7 @@ describe('CreateCredential form schema', () => {
 			publicKey: [1, 2, 3] as any, // Regular array, not Uint8Array
 		};
 
-		const result = createCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -203,7 +203,7 @@ describe('CreateCredential form schema', () => {
 			counter: -1,
 		};
 
-		const result = createCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -219,7 +219,7 @@ describe('CreateCredential form schema', () => {
 			counter: 5.5,
 		};
 
-		const result = createCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -240,7 +240,7 @@ describe('UpdateCredential form schema', () => {
 			lastUsedAt: new Date().toISOString(),
 		};
 
-		const result = updateCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -252,7 +252,7 @@ describe('UpdateCredential form schema', () => {
 			publicKey: new Uint8Array([1]),
 		};
 
-		const result = updateCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -265,7 +265,7 @@ describe('UpdateCredential form schema', () => {
 			lastUsedAt: '2024-01-15T10:30:00.000Z',
 		};
 
-		const result = updateCredentialSchema.safeParse(validData);
+		const result = credentialsSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -276,7 +276,7 @@ describe('UpdateCredential form schema', () => {
 			publicKey: new Uint8Array([1]),
 		};
 
-		const result = updateCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -292,7 +292,7 @@ describe('UpdateCredential form schema', () => {
 			publicKey: new Uint8Array([1]),
 		};
 
-		const result = updateCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -309,7 +309,7 @@ describe('UpdateCredential form schema', () => {
 			lastUsedAt: 'not-a-datetime',
 		};
 
-		const result = updateCredentialSchema.safeParse(invalidData);
+		const result = credentialsSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -326,7 +326,7 @@ describe('UpdateCredential form schema', () => {
 			publicKey: new Uint8Array([1]),
 			counter: -5,
 		};
-		expect(updateCredentialSchema.safeParse(negativeCounter).success).toBe(false);
+		expect(credentialsSchemas.update.safeParse(negativeCounter).success).toBe(false);
 
 		// Invalid publicKey
 		const invalidKey = {
@@ -335,7 +335,7 @@ describe('UpdateCredential form schema', () => {
 			credentialId: 'test-cred',
 			publicKey: 'not-uint8array' as any,
 		};
-		expect(updateCredentialSchema.safeParse(invalidKey).success).toBe(false);
+		expect(credentialsSchemas.update.safeParse(invalidKey).success).toBe(false);
 
 		// Empty credentialId
 		const emptyCredId = {
@@ -344,6 +344,6 @@ describe('UpdateCredential form schema', () => {
 			credentialId: '   ',
 			publicKey: new Uint8Array([1]),
 		};
-		expect(updateCredentialSchema.safeParse(emptyCredId).success).toBe(false);
+		expect(credentialsSchemas.update.safeParse(emptyCredId).success).toBe(false);
 	});
 });

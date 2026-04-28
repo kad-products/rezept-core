@@ -1,4 +1,5 @@
-import { type JsonLdPayload, RzStepError } from '@/types';
+import { RzStepError } from '@/classes';
+import type { JsonLdPayload } from '@/types';
 
 export async function parseBodyJson(request: Request): Promise<JsonLdPayload> {
 	let body: unknown;

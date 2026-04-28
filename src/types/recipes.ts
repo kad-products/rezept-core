@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 import type { recipes } from '@/models';
-import type { recipeFormSchema } from '@/schemas';
+import type { recipesSchemas } from '@/schemas';
 import type { RecipeIngredient, RecipeInstruction, RecipeSection } from '@/types';
 
 export type Recipe = typeof recipes.$inferSelect;
@@ -10,7 +10,7 @@ export type RecipeFormSave = Omit<
 >;
 
 // One type for everything
-export type RecipeFormData = z.infer<typeof recipeFormSchema>;
+export type RecipeFormData = z.infer<typeof recipesSchemas.form>;
 
 export type RecipeWithSections = Recipe & {
 	sections: Array<

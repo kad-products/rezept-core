@@ -5,7 +5,7 @@ import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveApiKey } from '@/actions/api-keys';
 import permissions from '@/data/permissions';
-import { apiKeyFormSchema } from '@/schemas';
+import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
 import { useAppForm } from './context';
 
@@ -20,7 +20,7 @@ export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: ApiKey;
 	const form = useAppForm({
 		defaultValues: (apiKey ? apiKey : newApiKeyDefaults) as ApiKeyFormData,
 		validators: {
-			onBlur: apiKeyFormSchema,
+			onBlur: apiKeysSchemas.form,
 		},
 		onSubmit: async ({ value: formDataObj }) => {
 			setFormState(await saveApiKey(formDataObj));

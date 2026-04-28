@@ -4,7 +4,7 @@ import { env } from 'cloudflare:workers';
 import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requirePermissions } from '@/middleware/permissions';
 import { createApiKey, updateApiKey } from '@/repositories/api-keys';
-import { apiKeyFormSchema } from '@/schemas';
+import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
 
 export const saveApiKey = serverAction([requirePermissions('apiKeys:create', 'apiKeys:update'), _saveApiKey]);
@@ -25,7 +25,7 @@ export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState
 
 	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
 
-	const parsed = apiKeyFormSchema.safeParse(formData);
+	const parsed = apiKeysSchemas.form.safeParse(formData);
 
 	if (parsed.error) {
 		return {

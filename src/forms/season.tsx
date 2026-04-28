@@ -5,7 +5,7 @@ import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveSeason } from '@/actions/seasons';
 import type { SeasonalIngredientWithRelations } from '@/repositories/seasonal-ingredients';
-import { createSeasonSchema, updateSeasonSchema } from '@/schemas';
+import { seasonsSchemas } from '@/schemas';
 import type { ActionState, Season as SeasonModel } from '@/types';
 import { useAppForm } from './context';
 
@@ -36,7 +36,7 @@ export default function Season({
 }) {
 	const [formState, setFormState] = useState<ActionState<SeasonFormData>>();
 
-	const schema = season?.id ? updateSeasonSchema : createSeasonSchema;
+	const schema = season?.id ? seasonsSchemas.update : seasonsSchemas.create;
 
 	const form = useAppForm({
 		defaultValues: season

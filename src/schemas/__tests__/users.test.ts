@@ -1,7 +1,7 @@
 // src/schemas/__tests__/user.test.ts
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { createUserSchema, updateUserSchema } from '../users';
+import { usersSchemas } from '../users';
 
 describe('CreateUser form schema', () => {
 	it('accepts valid user with username', () => {
@@ -9,7 +9,7 @@ describe('CreateUser form schema', () => {
 			username: 'johndoe',
 		};
 
-		const result = createUserSchema.safeParse(validData);
+		const result = usersSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -18,7 +18,7 @@ describe('CreateUser form schema', () => {
 
 		validUsernames.forEach(username => {
 			const validData = { username };
-			const result = createUserSchema.safeParse(validData);
+			const result = usersSchemas.create.safeParse(validData);
 			expect(result.success).toBe(true);
 		});
 	});
@@ -28,7 +28,7 @@ describe('CreateUser form schema', () => {
 			username: '  johndoe  ',
 		};
 
-		const result = createUserSchema.safeParse(validData);
+		const result = usersSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.username).toBe('johndoe');
@@ -38,7 +38,7 @@ describe('CreateUser form schema', () => {
 	it('rejects missing username', () => {
 		const invalidData = {};
 
-		const result = createUserSchema.safeParse(invalidData);
+		const result = usersSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -51,7 +51,7 @@ describe('CreateUser form schema', () => {
 			username: '',
 		};
 
-		const result = createUserSchema.safeParse(invalidData);
+		const result = usersSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -64,7 +64,7 @@ describe('CreateUser form schema', () => {
 			username: '   ',
 		};
 
-		const result = createUserSchema.safeParse(invalidData);
+		const result = usersSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -77,7 +77,7 @@ describe('CreateUser form schema', () => {
 			username: 'a'.repeat(51),
 		};
 
-		const result = createUserSchema.safeParse(invalidData);
+		const result = usersSchemas.create.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -90,7 +90,7 @@ describe('CreateUser form schema', () => {
 			username: 'a'.repeat(50),
 		};
 
-		const result = createUserSchema.safeParse(validData);
+		const result = usersSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -99,7 +99,7 @@ describe('CreateUser form schema', () => {
 			username: 'a',
 		};
 
-		const result = createUserSchema.safeParse(validData);
+		const result = usersSchemas.create.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 });
@@ -111,7 +111,7 @@ describe('UpdateUser form schema', () => {
 			username: 'updated_username',
 		};
 
-		const result = updateUserSchema.safeParse(validData);
+		const result = usersSchemas.update.safeParse(validData);
 		expect(result.success).toBe(true);
 	});
 
@@ -120,7 +120,7 @@ describe('UpdateUser form schema', () => {
 			username: 'johndoe',
 		};
 
-		const result = updateUserSchema.safeParse(invalidData);
+		const result = usersSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -133,7 +133,7 @@ describe('UpdateUser form schema', () => {
 			id: randomUUID(),
 		};
 
-		const result = updateUserSchema.safeParse(invalidData);
+		const result = usersSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -147,7 +147,7 @@ describe('UpdateUser form schema', () => {
 			username: 'johndoe',
 		};
 
-		const result = updateUserSchema.safeParse(invalidData);
+		const result = usersSchemas.update.safeParse(invalidData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			const paths = result.error.issues.map(i => i.path[0]);
@@ -161,21 +161,21 @@ describe('UpdateUser form schema', () => {
 			id: randomUUID(),
 			username: '   ',
 		};
-		expect(updateUserSchema.safeParse(emptyUsername).success).toBe(false);
+		expect(usersSchemas.update.safeParse(emptyUsername).success).toBe(false);
 
 		// Too long username
 		const longUsername = {
 			id: randomUUID(),
 			username: 'a'.repeat(51),
 		};
-		expect(updateUserSchema.safeParse(longUsername).success).toBe(false);
+		expect(usersSchemas.update.safeParse(longUsername).success).toBe(false);
 
 		// Valid with trim
 		const withWhitespace = {
 			id: randomUUID(),
 			username: '  validuser  ',
 		};
-		const result = updateUserSchema.safeParse(withWhitespace);
+		const result = usersSchemas.update.safeParse(withWhitespace);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.username).toBe('validuser');

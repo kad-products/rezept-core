@@ -134,9 +134,9 @@ describe('apiKeyMiddleware', () => {
 			expect(result).toBeInstanceOf(Response);
 			expect(result.status).toBe(403);
 
-			const body = (await result.json()) as { success: boolean; errors: { _form: string[] } };
+			const body = (await result.json()) as { success: boolean; error: string };
 			expect(body.success).toBe(false);
-			expect(body.errors._form).toContain('Invalid API key');
+			expect(body.error).toContain('Invalid API key');
 		});
 
 		it('does not set session or apiKey on invalid key', async () => {
@@ -167,9 +167,9 @@ describe('apiKeyMiddleware', () => {
 			expect(result).toBeInstanceOf(Response);
 			expect(result.status).toBe(403);
 
-			const body = (await result.json()) as { success: boolean; errors: { _form: string[] } };
+			const body = (await result.json()) as { success: boolean; error: string };
 			expect(body.success).toBe(false);
-			expect(body.errors._form).toContain('API key has been revoked');
+			expect(body.error).toContain('API key has been revoked');
 		});
 
 		it('does not set session or apiKey on revoked key', async () => {

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { optionalString, requiredUuid } from './utils';
 
 // Shared base fields
-const baseCredentialFields = {
+const baseSchema = {
 	userId: requiredUuid,
 	credentialId: z.string().trim().min(1, 'Credential ID is required'),
 	publicKey: z.instanceof(Uint8Array, { message: 'Public key must be a Uint8Array' }),
@@ -11,13 +11,18 @@ const baseCredentialFields = {
 };
 
 // Create schema - no id
-export const createCredentialSchema = z.object({
-	...baseCredentialFields,
+const createSchema = z.object({
+	...baseSchema,
 });
 
 // Update schema - requires id
-export const updateCredentialSchema = z.object({
-	...baseCredentialFields,
+const updateSchema = z.object({
+	...baseSchema,
 	id: requiredUuid,
 	lastUsedAt: z.string().datetime().optional(),
 });
+
+export const credentialsSchemas = {
+	create: createSchema,
+	update: updateSchema,
+};

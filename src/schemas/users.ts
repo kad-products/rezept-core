@@ -7,12 +7,17 @@ const baseUserFields = {
 };
 
 // Create schema - no id or timestamps
-export const createUserSchema = z.object({
+const createSchema = z.object({
 	...baseUserFields,
 });
 
 // Update schema - requires id
-export const updateUserSchema = z.object({
+const updateSchema = z.object({
 	...baseUserFields,
 	id: requiredUuid,
 });
+
+export const usersSchemas = {
+	create: createSchema,
+	update: updateSchema,
+};
