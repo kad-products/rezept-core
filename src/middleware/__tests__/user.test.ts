@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import Logger from '@/logger';
 import type { User } from '@/types';
 
 vi.mock('@/repositories/users', () => ({
@@ -24,14 +25,18 @@ const mockUser = {
 } as User;
 
 const mockRequestInfo = {
-	ctx: {} as any,
+	ctx: {
+		logger: new Logger(),
+	} as any,
 	request: new Request('https://example.com/test'),
 };
 
 describe('userMiddleware', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
-		mockRequestInfo.ctx = {};
+		mockRequestInfo.ctx = {
+			logger: new Logger(),
+		};
 		mockRequestInfo.request = new Request('https://example.com/test');
 	});
 
