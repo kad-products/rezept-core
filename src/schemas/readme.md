@@ -32,6 +32,46 @@ export const recipeSchemas = {
 
 Use `create`/`update` when the shapes genuinely differ. Use a purpose-based name (`form`, `scrape`) when one schema covers multiple operations or serves a specific use case. Sub-schemas that are only referenced internally within the file don't belong on the namespace.
 
+## Nullable vs optional fields
+
+Zod `.optional()` produces `T | undefined`. Drizzle infers nullable DB columns as `T | null`. These are different types and will cause TypeScript errors when schema output is assigned to a Drizzle-inferred type.
+
+**Rule: for fields that map to nullable DB columns, use `.optional()` on the validator and `.transform(val => val?.trim() || null)` at the end.** This keeps the key optional in the input shape while producing `string | null` as the output — exactly what Drizzle expects.
+
+```ts
+// Wrong — output is string | undefined, not assignable to string | null
+title: z.string().max(200).optional(),
+
+// Also wrong — .nullable() makes the key required in the input shape, breaking tests that omit it
+title: optionalString.transform(val => val?.trim() ?? null).pipe(z.string().max(200).nullable()),
+
+// Correct — key can be omitted (optional), output is always string | null
+title: z.string().max(200).optional().transform(val => val?.trim() || null),
+```
+
+Using `||` rather than `??` in the transform means empty strings also become `null`, which is usually correct for form text fields.
+
+Required fields (those with `.notNull()` in the model) don't need this treatment — they should remain required in the schema with no nullable transform.
+
+## Input vs output types
+
+Zod schemas have two distinct TypeScript types: `z.input<typeof schema>` (what callers pass in, before transforms) and `z.output<typeof schema>` / `z.infer<typeof schema>` (what comes out after transforms). These differ whenever a schema uses `.transform()`.
+
+**Rule: use `z.input` when typing action parameters and form data.** Actions receive raw form data, not post-transform values. Using the output type (`z.infer`) causes TypeScript errors in tests and callers because the transformed fields (e.g. `string | null` after a nullable transform) don't match what they actually send.
+
+```ts
+// Wrong — z.infer gives the post-transform output type, so optional fields that
+// go through .transform(val => val || null) become required `string | null` in
+// the type, breaking callers that omit them
+export type RecipeFormData = z.infer<typeof recipesSchemas.form>;
+
+// Correct — z.input gives the pre-transform input type; optional fields stay
+// optional, matching what actions receive and tests pass
+export type RecipeFormData = z.input<typeof recipesSchemas.form>;
+```
+
+`parsed.data` inside the action is the output type and is used for DB operations where `string | null` is needed. The parameter type just needs to match what callers send.
+
 ## Utils
 
 `utils.ts` holds reusable Zod primitives where a named function clarifies intent better than the raw Zod equivalent. The canonical examples are things like `optionalString` and `requiredUuid` — the Zod definitions for these are non-obvious enough that naming them adds real value. If a pattern appears across more than one schema file, it belongs in utils. If it's already in utils, use it — don't inline the equivalent pattern.

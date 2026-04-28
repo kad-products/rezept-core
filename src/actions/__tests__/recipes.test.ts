@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
+const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
+
 // Mock repositories
 vi.mock('@/repositories/recipes', () => ({
 	createRecipe: vi.fn(),
@@ -22,7 +24,7 @@ vi.mock('@/repositories/recipe-instructions', () => ({
 
 // Mock env
 vi.mock('cloudflare:workers', () => ({
-	env: { REZEPT_ENV: 'development' },
+	env: mockEnv,
 }));
 
 interface MockRequestInfo {
@@ -63,6 +65,7 @@ describe('_saveRecipe', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockRequestInfo.ctx.user = { id: 'test-user-id' };
+		mockEnv.REZEPT_ENV = 'development';
 
 		// Set default mock returns
 		vi.mocked(createRecipe).mockResolvedValue({
@@ -117,7 +120,7 @@ describe('_saveRecipe', () => {
 			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(false);
-			expect(result.errors?._form).toContain('You must be logged in');
+			expect(result.errors?._form?.[0]).toContain('You must be logged in');
 			expect(createRecipe).not.toHaveBeenCalled();
 		});
 	});
@@ -356,7 +359,6 @@ describe('_saveRecipe', () => {
 				title: 'Test',
 				sections: [
 					{
-						title: 'Main',
 						order: -1, // Invalid
 						ingredients: [],
 						instructions: [],
@@ -375,6 +377,7 @@ describe('_saveRecipe', () => {
 				title: 'Test',
 				sections: [
 					{
+						title: 'Main',
 						order: 0,
 						ingredients: [
 							{
@@ -483,7 +486,7 @@ describe('_saveRecipe', () => {
 	describe('error handling', () => {
 		it('hides sensitive error details in production', async () => {
 			vi.mocked(createRecipe).mockRejectedValueOnce(new Error('Connection failed: postgres://user:password@db.internal'));
-
+			mockEnv.REZEPT_ENV = 'production';
 			const data = {
 				authorId: randomUUID(),
 				title: 'Test',
@@ -492,7 +495,7 @@ describe('_saveRecipe', () => {
 
 			const result = await _saveRecipe(data);
 
-			expect(result.errors?._form?.[0]).toBe('Failed to save item');
+			expect(result.errors?._form?.[0]).toBe('Failed to save recipe');
 			expect(result.errors?._form?.[0]).not.toContain('postgres://');
 			expect(result.errors?._form?.[0]).not.toContain('password');
 		});

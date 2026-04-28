@@ -25,9 +25,11 @@ const recipeIngredientSchema = z.union([ingredientRawSchema, ingredientStructure
 
 const recipeSectionSchema = z.object({
 	id: optionalUuid, // Present for updates, absent for creates
-	title: optionalString
-		.transform(val => val?.trim())
-		.pipe(z.string().max(200, 'Title must be 200 characters or less').optional()),
+	title: z
+		.string()
+		.max(200, 'Title must be 200 characters or less')
+		.optional()
+		.transform(val => val?.trim() || null),
 	order: z.coerce.number().int().min(0) as z.ZodNumber,
 	ingredients: z.array(recipeIngredientSchema).optional(),
 	instructions: z
