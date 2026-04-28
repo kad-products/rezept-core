@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
+const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
+
 // Mock repositories
 vi.mock('@/repositories/api-keys', () => ({
 	createApiKey: vi.fn(),
@@ -10,7 +12,7 @@ vi.mock('@/repositories/api-keys', () => ({
 
 // Mock env
 vi.mock('cloudflare:workers', () => ({
-	env: { REZEPT_ENV: 'test' },
+	env: mockEnv,
 }));
 
 interface MockRequestInfo {
@@ -59,6 +61,7 @@ describe('_saveApiKey', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockRequestInfo.ctx.user = { id: 'test-user-id' };
+		mockEnv.REZEPT_ENV = 'development';
 
 		vi.mocked(createApiKey).mockResolvedValue(mockApiKey as any);
 		vi.mocked(updateApiKey).mockResolvedValue(mockApiKey as any);
@@ -71,7 +74,7 @@ describe('_saveApiKey', () => {
 			const result = await _saveApiKey(baseApiKeyData);
 
 			expect(result.success).toBe(false);
-			expect(result.errors?._form).toContain('You must be logged in');
+			expect(result.errors?._form).toContain('You must be logged in to perform this action');
 			expect(createApiKey).not.toHaveBeenCalled();
 		});
 	});
@@ -132,7 +135,7 @@ describe('_saveApiKey', () => {
 
 		it('hides error details in non-development environments', async () => {
 			vi.mocked(createApiKey).mockRejectedValueOnce(new Error('Connection failed: postgres://user:password@db.internal'));
-
+			mockEnv.REZEPT_ENV = 'production';
 			const result = await _saveApiKey(baseApiKeyData);
 
 			expect(result.errors?._form?.[0]).toBe('Failed to save item');

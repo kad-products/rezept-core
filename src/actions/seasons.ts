@@ -1,20 +1,17 @@
 'use server';
 
-import { env } from 'cloudflare:workers';
 import { requestInfo } from 'rwsdk/worker';
 import { createSeason, updateSeason } from '@/repositories/seasons';
 import { seasonsSchemas } from '@/schemas';
 import type { ActionState, SeasonFormSave } from '@/types';
+import { errorResponse, successResponse } from './utils';
 
 export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<SeasonFormSave>> {
 	const { ctx } = requestInfo;
 	const userId = ctx.user?.id;
 
 	if (!userId) {
-		return {
-			success: false,
-			errors: { _form: ['You must be logged in'] },
-		};
+		return errorResponse<SeasonFormSave>('You must be logged in to perform this action', 401);
 	}
 
 	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
@@ -24,34 +21,21 @@ export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<
 			const parsed = seasonsSchemas.update.safeParse(formData);
 			if (!parsed.success) {
 				requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
-				return {
-					success: false,
-					errors: parsed.error.flatten().fieldErrors,
-				};
+				return errorResponse<SeasonFormSave>(parsed.error.flatten().fieldErrors, 400);
 			}
 			const updatedSeason = await updateSeason(parsed.data.id, parsed.data, userId);
-			return { success: true, data: updatedSeason };
+			return successResponse<SeasonFormSave>(updatedSeason);
 		} else {
 			const parsed = seasonsSchemas.create.safeParse(formData);
 			if (!parsed.success) {
 				requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
-				return {
-					success: false,
-					errors: parsed.error.flatten().fieldErrors,
-				};
+				return errorResponse<SeasonFormSave>(parsed.error.flatten().fieldErrors, 400);
 			}
 			const createdSeason = await createSeason(parsed.data, userId);
-			return { success: true, data: createdSeason };
+			return successResponse<SeasonFormSave>(createdSeason);
 		}
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error saving season: ${error} `);
-
-		const errorMessage =
-			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save season';
-
-		return {
-			success: false,
-			errors: { _form: [errorMessage] },
-		};
+		return errorResponse<SeasonFormSave>(error, 500, 'Failed to save season');
 	}
 }

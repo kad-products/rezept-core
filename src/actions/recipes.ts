@@ -1,6 +1,4 @@
 'use server';
-
-import { env } from 'cloudflare:workers';
 import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requirePermissions } from '@/middleware/permissions';
 import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
@@ -8,7 +6,6 @@ import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
 import { updateRecipeSections } from '@/repositories/recipe-sections';
 import { createRecipe, updateRecipe } from '@/repositories/recipes';
 import { recipesSchemas } from '@/schemas';
-
 import type {
 	ActionState,
 	Recipe,
@@ -20,6 +17,7 @@ import type {
 	RecipeSection,
 	RecipeSectionFormSave,
 } from '@/types';
+import { errorResponse, successResponse } from './utils';
 
 export const saveRecipe = serverAction([requirePermissions('seasons:create', 'seasons:update'), _saveRecipe]);
 
@@ -31,10 +29,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	const userId = ctx.user?.id;
 
 	if (!userId) {
-		return {
-			success: false,
-			errors: { _form: ['You must be logged in'] },
-		};
+		return errorResponse<RecipeFormData>('You must be logged in to perform this action', 401);
 	}
 
 	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
@@ -42,10 +37,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	const parsed = recipesSchemas.form.safeParse(formData);
 
 	if (parsed.error) {
-		return {
-			success: false,
-			errors: parsed.error.flatten().fieldErrors,
-		};
+		return errorResponse<RecipeFormData>(parsed.error.flatten().fieldErrors, 400);
 	}
 
 	requestInfo.ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
@@ -64,14 +56,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 		requestInfo.ctx.logger.info(`Recipe ${recipe.id} saved`);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error saving recipe: ${error} `);
-
-		const errorMessage =
-			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
-
-		return {
-			success: false,
-			errors: { _form: [errorMessage] },
-		};
+		return errorResponse<RecipeFormData>(error, 400, 'Failed to save recipe');
 	}
 
 	//  _______ _______ _______ _______ _____  _____  __   _ _______
@@ -84,14 +69,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 		requestInfo.ctx.logger.info(`Recipe sections saved for ${recipe.id}: ${JSON.stringify(sections, null, 4)}`);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error saving sections: ${error} `);
-
-		const errorMessage =
-			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
-
-		return {
-			success: false,
-			errors: { _form: [errorMessage] },
-		};
+		return errorResponse<RecipeFormData>(error, 400, 'Failed to save recipe sections');
 	}
 
 	//  _____ __   _ _______ _______  ______ _     _ _______ _______ _____  _____  __   _ _______
@@ -112,14 +90,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 			requestInfo.ctx.logger.info(`Recipe instructions saved for recipe ${recipe.id} section ${savedSection.id}`);
 		} catch (error) {
 			requestInfo.ctx.logger.info(`Error saving section instructions: ${error} `);
-
-			const errorMessage =
-				env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
-
-			return {
-				success: false,
-				errors: { _form: [errorMessage] },
-			};
+			return errorResponse<RecipeFormData>(error, 400, 'Failed to save recipe instructions');
 		}
 	}
 
@@ -141,26 +112,19 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 			requestInfo.ctx.logger.info(`Recipe ingredients saved for recipe ${recipe.id} section ${section.id}`);
 		} catch (error) {
 			requestInfo.ctx.logger.info(`Error saving section ingredients: ${error} `);
-
-			const errorMessage =
-				env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
-
-			return {
-				success: false,
-				errors: { _form: [errorMessage] },
-			};
+			return errorResponse<RecipeFormData>(error, 400, 'Failed to save recipe ingredients');
 		}
 	}
 
-	return {
-		success: true,
-		data: {
+	return successResponse<RecipeFormData>(
+		{
 			...recipe,
 			sections: sections?.map(s => ({
 				...s,
 				instructions: savedInstructions[s.id],
 				ingredients: savedIngredients[s.id],
 			})),
-		} as RecipeFormData,
-	};
+		} as unknown as RecipeFormData,
+		200,
+	);
 }

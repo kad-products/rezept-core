@@ -7,7 +7,7 @@ import { createApiKey, getApiKeyById, getApiKeysByUserId, updateApiKey } from '.
 
 // Mock env
 vi.mock('cloudflare:workers', () => ({
-	env: { REZEPT_ENV: 'test' },
+	env: { REZEPT_ENV: 'development' },
 }));
 
 interface MockRequestInfo {

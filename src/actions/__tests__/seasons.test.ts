@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
+const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
+
 // Mock repositories
 vi.mock('@/repositories/seasons', () => ({
 	createSeason: vi.fn(),
@@ -10,7 +12,7 @@ vi.mock('@/repositories/seasons', () => ({
 
 // Mock env
 vi.mock('cloudflare:workers', () => ({
-	env: { REZEPT_ENV: 'test' },
+	env: mockEnv,
 }));
 
 interface MockRequestInfo {
@@ -45,6 +47,7 @@ describe('saveSeason', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockRequestInfo.ctx.user = { id: 'test-user-id' };
+		mockEnv.REZEPT_ENV = 'development';
 
 		// Set default mock returns
 		vi.mocked(createSeason).mockResolvedValue({ id: 'mock-season-id' } as any);
@@ -65,7 +68,7 @@ describe('saveSeason', () => {
 			const result = await saveSeason(data);
 
 			expect(result.success).toBe(false);
-			expect(result.errors?._form).toContain('You must be logged in');
+			expect(result.errors?._form?.[0]).toContain('You must be logged in');
 			expect(createSeason).not.toHaveBeenCalled();
 		});
 	});
@@ -162,7 +165,7 @@ describe('saveSeason', () => {
 
 		it('handles repository errors gracefully', async () => {
 			vi.mocked(createSeason).mockRejectedValueOnce(new Error('Database error'));
-
+			mockEnv.REZEPT_ENV = 'production';
 			const data = {
 				name: 'Test',
 				country: 'US',
@@ -216,7 +219,7 @@ describe('saveSeason', () => {
 
 		it('hides error details in production', async () => {
 			vi.mocked(createSeason).mockRejectedValueOnce(new Error('Connection failed: postgres://user:password@db.internal'));
-
+			mockEnv.REZEPT_ENV = 'production';
 			const data = {
 				name: 'Test',
 				country: 'US',

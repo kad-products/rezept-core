@@ -1,11 +1,11 @@
 'use server';
 
-import { env } from 'cloudflare:workers';
 import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requirePermissions } from '@/middleware/permissions';
 import { createApiKey, updateApiKey } from '@/repositories/api-keys';
 import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
+import { errorResponse, successResponse } from './utils';
 
 export const saveApiKey = serverAction([requirePermissions('apiKeys:create', 'apiKeys:update'), _saveApiKey]);
 
@@ -17,10 +17,7 @@ export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState
 	const userId = ctx.user?.id;
 
 	if (!userId) {
-		return {
-			success: false,
-			errors: { _form: ['You must be logged in'] },
-		};
+		return errorResponse<ApiKeyFormData>('You must be logged in to perform this action', 401);
 	}
 
 	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
@@ -28,10 +25,7 @@ export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState
 	const parsed = apiKeysSchemas.form.safeParse(formData);
 
 	if (parsed.error) {
-		return {
-			success: false,
-			errors: parsed.error.flatten().fieldErrors,
-		};
+		return errorResponse<ApiKeyFormData>(parsed.error.flatten().fieldErrors, 400);
 	}
 
 	requestInfo.ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
@@ -45,19 +39,9 @@ export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState
 		}
 		requestInfo.ctx.logger.info(`API Key ${apiKey.id} saved`);
 
-		return {
-			success: true,
-			data: apiKey,
-		};
+		return successResponse<ApiKeyFormData>(apiKey, 200);
 	} catch (error) {
-		requestInfo.ctx.logger.info(`Error saving recipe: ${error} `);
-
-		const errorMessage =
-			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
-
-		return {
-			success: false,
-			errors: { _form: [errorMessage] },
-		};
+		requestInfo.ctx.logger.info(`Error saving API Key: ${error} `);
+		return errorResponse<ApiKeyFormData>(error, 400, 'Failed to save item');
 	}
 }
