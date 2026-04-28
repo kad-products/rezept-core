@@ -1,11 +1,11 @@
 import type RzLogger from '@/logger';
-import { recipeScrapeSchema } from '@/schemas';
+import { recipesSchemas } from '@/schemas';
 import { RzStepError } from '@/types';
 import type { ParsedRecipeScrape } from './transform-scrape-to-recipe';
 
 export async function validateAsRecipe(transformedRecipe: ParsedRecipeScrape, userId: string, logger: RzLogger) {
 	try {
-		const parsed = recipeScrapeSchema.safeParse({ authorId: userId, ...transformedRecipe });
+		const parsed = recipesSchemas.scrape.safeParse({ authorId: userId, ...transformedRecipe });
 
 		if (parsed.error) {
 			logger.warn(`Schema parsing found error in JSON-LD payload: ${JSON.stringify(parsed.error.flatten().fieldErrors)}`);
@@ -16,6 +16,7 @@ export async function validateAsRecipe(transformedRecipe: ParsedRecipeScrape, us
 		logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
 		return parsed.data;
 	} catch (err) {
+		if (err instanceof RzStepError) throw err;
 		throw new RzStepError(400, `Unexpected error validating payload as recipe: ${(err as Error).message}`);
 	}
 }
