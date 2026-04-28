@@ -1,6 +1,6 @@
 import type { RzStepError } from '@/classes';
 
-export function rzStepErrorToJsonResponse(err: unknown) {
+export function rzStepErrorToJsonResponse(err: unknown): Response {
 	const stepError = err as RzStepError;
 	return Response.json(
 		{
@@ -11,10 +11,10 @@ export function rzStepErrorToJsonResponse(err: unknown) {
 	);
 }
 
-export function errorResponse(error: string, status = 400): Response {
+export function errorResponse(error: string, status: number = 400): Response {
 	return Response.json({ success: false, error }, { status });
 }
 
-export function successResponse<T>(data: T, status = 200): Response {
+export function successResponse<T>(data: T, status: number = 200): Response {
 	return Response.json({ success: true, data }, { status });
 }

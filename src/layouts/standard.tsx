@@ -21,7 +21,7 @@ export default function StandardLayout({
 	currentBasePage: string | undefined;
 	pageTitle: string;
 	ctx: DefaultAppContext;
-}) {
+}): React.ReactNode {
 	const navItems: Record<string, NavItem> = {
 		home: { label: 'Home', href: '/', icon: HomeIcon },
 		seasons: { label: 'Seasons', href: '/seasons', icon: ColorWheelIcon, permCheck: (p: string[]) => p.includes('seasons:read') },

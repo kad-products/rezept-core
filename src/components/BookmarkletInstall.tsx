@@ -6,7 +6,7 @@ import type { ApiKey } from '@/types';
 
 const SCRAPE_PERMISSION = 'recipes:scrape';
 
-function buildBookmarklet(apiKey: string) {
+function buildBookmarklet(apiKey: string): string {
 	const baseUrl = import.meta.env.VITE_BASE_URL;
 	const code = `(function(){
   const scripts=[...document.querySelectorAll('script[type="application/ld+json"]')];
@@ -24,7 +24,13 @@ function buildBookmarklet(apiKey: string) {
 	return `javascript:${encodeURIComponent(code)}`;
 }
 
-export default function BookmarkletInstall({ apiKeys, userId }: { apiKeys: ApiKey[]; userId: string | undefined }) {
+export default function BookmarkletInstall({
+	apiKeys,
+	userId,
+}: {
+	apiKeys: ApiKey[];
+	userId: string | undefined;
+}): React.ReactNode {
 	const scrapeKeys = apiKeys.filter(k => k.permissions.includes(SCRAPE_PERMISSION) && !k.deletedAt);
 
 	const [selectedKey, setSelectedKey] = useState<ApiKey | null>(scrapeKeys.length === 1 ? scrapeKeys[0] : null);
@@ -42,7 +48,7 @@ export default function BookmarkletInstall({ apiKeys, userId }: { apiKeys: ApiKe
 		return <p>No user ID provided, this page expects you to be logged in.</p>;
 	}
 
-	async function handleAutoCreate() {
+	async function handleAutoCreate(): Promise<void> {
 		setIsCreating(true);
 		setError(null);
 		try {
@@ -81,7 +87,7 @@ export default function BookmarkletInstall({ apiKeys, userId }: { apiKeys: ApiKe
 					<ul>
 						{scrapeKeys.map(k => (
 							<li key={k.id}>
-								<button type="button" onClick={() => setSelectedKey(k)}>
+								<button type="button" onClick={(): void => setSelectedKey(k)}>
 									{k.name}
 								</button>
 							</li>
@@ -112,7 +118,7 @@ export default function BookmarkletInstall({ apiKeys, userId }: { apiKeys: ApiKe
 							ref={linkRef}
 							href="about:blank"
 							className="bookmarklet-install__button"
-							onClick={e => e.preventDefault()}
+							onClick={(e: React.MouseEvent): void => e.preventDefault()}
 							draggable
 						>
 							Import to Rezept
@@ -127,14 +133,19 @@ export default function BookmarkletInstall({ apiKeys, userId }: { apiKeys: ApiKe
 
 						<div className="bookmarklet-install__code">
 							<code>{buildBookmarklet(selectedKey.apiKey)}</code>
-							<button type="button" onClick={() => navigator.clipboard.writeText(buildBookmarklet(selectedKey.apiKey))}>
+							<button
+								type="button"
+								onClick={(): void => {
+									void navigator.clipboard.writeText(buildBookmarklet(selectedKey.apiKey));
+								}}
+							>
 								Copy
 							</button>
 						</div>
 					</div>
 
 					{scrapeKeys.length > 1 && (
-						<button type="button" onClick={() => setSelectedKey(null)}>
+						<button type="button" onClick={(): void => setSelectedKey(null)}>
 							Use a different key
 						</button>
 					)}

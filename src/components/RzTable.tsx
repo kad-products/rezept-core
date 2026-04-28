@@ -9,7 +9,7 @@ export default function RzTable<T extends Record<string, unknown>>({
 	columns: RzTableColumn[];
 	data: T[];
 	rowIndex?: keyof T;
-}) {
+}): React.ReactNode {
 	return (
 		<table className="rz-table">
 			<thead>

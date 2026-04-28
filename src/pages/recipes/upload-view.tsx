@@ -3,7 +3,7 @@ import type { RequestInfo } from 'rwsdk/worker';
 import StandardLayout from '@/layouts/standard';
 import { getRecipeUploadById } from '@/repositories/recipe-uploads';
 
-export default async function Pages__recipes__uploadView({ ctx, params }: RequestInfo) {
+export default async function Pages__recipes__uploadView({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const recipeUploadId = params.recipeUploadId;
 	const recipeUpload = await getRecipeUploadById(recipeUploadId);
 

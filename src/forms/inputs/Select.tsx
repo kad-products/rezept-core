@@ -9,7 +9,7 @@ interface SelectProps<T = string> {
 	required?: boolean;
 }
 
-export function Select<T = string>({ label, options, required }: SelectProps<T>) {
+export function Select<T = string>({ label, options, required }: SelectProps<T>): React.ReactNode {
 	const field = useFieldContext<T>();
 
 	return (
@@ -28,7 +28,10 @@ export function Select<T = string>({ label, options, required }: SelectProps<T>)
 				</div>
 			)}
 			<Form.Control asChild>
-				<RadixSelect.Root onValueChange={value => field.handleChange(value as T)} value={field.state.value as unknown as string}>
+				<RadixSelect.Root
+					onValueChange={(value: string): void => field.handleChange(value as T)}
+					value={field.state.value as unknown as string}
+				>
 					<RadixSelect.Trigger className="rz-select-trigger">
 						<RadixSelect.Value placeholder="Select an option" />
 						<RadixSelect.Icon className="rz-select-icon">

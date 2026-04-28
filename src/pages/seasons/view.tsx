@@ -4,7 +4,7 @@ import StandardLayout from '@/layouts/standard';
 import { getIngredientsBySeasonId } from '@/repositories/seasonal-ingredients';
 import { getSeasonById } from '@/repositories/seasons';
 
-export default async function Pages__seasons__view({ ctx, params }: RequestInfo) {
+export default async function Pages__seasons__view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;
 	const [season, seasonalIngredients] = await Promise.all([
 		seasonId ? getSeasonById(seasonId) : Promise.resolve(undefined),

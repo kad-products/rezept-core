@@ -3,9 +3,9 @@ import { CopyIcon } from '@radix-ui/react-icons';
 import type { ApiKey, RzTableColumn } from '@/types';
 import RzTable from './RzTable';
 
-export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKey[] }) {
+export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKey[] }): React.ReactNode {
 	const apiColumns: RzTableColumn[] = [
-		{ label: 'API Key', key: 'apiKey', render: apiKey => apiKey.substring(0, 12) },
+		{ label: 'API Key', key: 'apiKey', render: (apiKey: string): string => apiKey.substring(0, 12) },
 		{ label: 'Name', key: 'name' },
 		{ label: 'Permissions', key: 'permissions' },
 		{ label: 'Revoke At', key: 'revokeAt' },
@@ -13,7 +13,7 @@ export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKey[] }) {
 		{
 			label: 'Actions',
 			key: 'actions',
-			render: (_, apiKey) => (
+			render: (_: string, apiKey: Record<string, unknown>) => (
 				<button type="button" onClick={() => navigator.clipboard.writeText(String(apiKey.apiKey))}>
 					<CopyIcon />
 				</button>

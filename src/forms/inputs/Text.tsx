@@ -2,7 +2,7 @@
 import { Form } from 'radix-ui';
 import { useFieldContext } from '../context';
 
-export function TextInput({ label, required = false }: { label: string; required?: boolean }) {
+export function TextInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
 	const field = useFieldContext<string>();
 	return (
 		<Form.Field className="rz-form-field" name={field.name}>
@@ -26,7 +26,7 @@ export function TextInput({ label, required = false }: { label: string; required
 					name={field.name}
 					value={field.state.value ?? ''}
 					onBlur={field.handleBlur}
-					onChange={e => field.handleChange(e.target.value)}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => field.handleChange(e.target.value)}
 				/>
 			</Form.Control>
 		</Form.Field>

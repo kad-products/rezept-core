@@ -3,7 +3,7 @@ type LogLevel = keyof typeof levels;
 const defaultLevel = (process.env.LOG_LEVEL || 'info') as LogLevel;
 
 export default class RzLogger {
-	_logMessage(level: string, message: string | unknown | null, meta: object) {
+	_logMessage(level: string, message: string | unknown | null, meta: object): void {
 		if (!message) {
 			return;
 		}
@@ -19,23 +19,23 @@ export default class RzLogger {
 		console.log({ level, message, ...meta });
 	}
 
-	debug(msg: string | unknown | null, meta: object = {}) {
+	debug(msg: string | unknown | null, meta: object = {}): void {
 		this._logMessage('debug', msg, meta);
 	}
 
-	info(msg: string | unknown | null, meta: object = {}) {
+	info(msg: string | unknown | null, meta: object = {}): void {
 		this._logMessage('info', msg, meta);
 	}
 
-	warn(msg: string | unknown | null, meta: object = {}) {
+	warn(msg: string | unknown | null, meta: object = {}): void {
 		this._logMessage('warn', msg, meta);
 	}
 
-	error(msg: string | unknown | null, meta: object = {}) {
+	error(msg: string | unknown | null, meta: object = {}): void {
 		this._logMessage('error', msg, meta);
 	}
 
-	fatal(msg: string | unknown | null, meta: object = {}) {
+	fatal(msg: string | unknown | null, meta: object = {}): void {
 		this._logMessage('fatal', msg, meta);
 	}
 }
