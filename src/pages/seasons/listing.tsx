@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import Card from '@/components/Card';
+import RzCard from '@/components/RzCard';
 import StandardLayout from '@/layouts/standard';
 import { getSeasons } from '@/repositories/seasons';
 
@@ -13,7 +13,7 @@ export default async function Pages__seasons__listing({ ctx }: RequestInfo) {
 				<div className="seasons-listing">
 					{seasons.map(s => {
 						return (
-							<Card
+							<RzCard
 								key={s.id}
 								title={s.name}
 								actions={[

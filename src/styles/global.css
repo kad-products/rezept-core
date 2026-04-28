@@ -1,4 +1,3 @@
-@import "./cards.less";
 @import "./colors-dark.css";
 @import "./colors-light.css";
 @import "./forms.less";
@@ -6,6 +5,7 @@
 @import "./main.less";
 @import "./nav.less";
 @import "./recipes.less";
+@import "./rz-card.less";
 @import "./rz-table.less";
 @import "./rz-tabs.less";
 @import "./typography.less";
