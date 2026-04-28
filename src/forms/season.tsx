@@ -33,7 +33,7 @@ export default function Season({
 	seasonalIngredients?: SeasonalIngredientWithRelations[];
 	countryOptions: { value: string; label: string }[];
 	monthOptions: { value: number; label: string }[];
-}) {
+}): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<SeasonFormData>>();
 
 	const schema = season?.id ? seasonsSchemas.update : seasonsSchemas.create;
@@ -48,7 +48,7 @@ export default function Season({
 		validators: {
 			onBlur: schema,
 		},
-		onSubmit: async ({ value: formDataObj }) => {
+		onSubmit: async ({ value: formDataObj }: { value: SeasonFormData }): Promise<void> => {
 			setFormState(await saveSeason(formDataObj));
 		},
 	});
@@ -59,7 +59,7 @@ export default function Season({
 		<>
 			<Form.Root
 				className="rz-form"
-				onSubmit={e => {
+				onSubmit={(e: React.FormEvent): void => {
 					console.log(`Trying to submit the form`);
 					e.preventDefault();
 					e.stopPropagation();
@@ -74,22 +74,26 @@ export default function Season({
 					form.handleSubmit();
 				}}
 			>
-				<form.AppField name="name">{field => <field.TextInput label="Name" required />}</form.AppField>
-				<form.AppField name="description">{field => <field.TextareaInput label="Description" required />}</form.AppField>
-				<form.AppField name="country">
-					{field => <field.Select label="Country" options={countryOptions} required />}
+				{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
+				<form.AppField name="name">{(field): React.ReactNode => <field.TextInput label="Name" required />}</form.AppField>
+				<form.AppField name="description">
+					{(field): React.ReactNode => <field.TextareaInput label="Description" required />}
 				</form.AppField>
-				<form.AppField name="region">{field => <field.TextInput label="Region" required />}</form.AppField>
+				<form.AppField name="country">
+					{(field): React.ReactNode => <field.Select label="Country" options={countryOptions} required />}
+				</form.AppField>
+				<form.AppField name="region">{(field): React.ReactNode => <field.TextInput label="Region" required />}</form.AppField>
 				<form.AppField name="startMonth">
-					{field => <field.Select<number> label="Start Month" options={monthOptions} required />}
+					{(field): React.ReactNode => <field.Select<number> label="Start Month" options={monthOptions} required />}
 				</form.AppField>
 				<form.AppField name="endMonth">
-					{field => <field.Select<number> label="End Month" options={monthOptions} required />}
+					{(field): React.ReactNode => <field.Select<number> label="End Month" options={monthOptions} required />}
 				</form.AppField>
-				<form.AppField name="notes">{field => <field.TextareaInput label="Notes" />}</form.AppField>
+				<form.AppField name="notes">{(field): React.ReactNode => <field.TextareaInput label="Notes" />}</form.AppField>
 				<form.AppField name="ingredients">
-					{field => <field.CheckboxGroup label="Ingredients" required options={ingredientOptions} />}
+					{(field): React.ReactNode => <field.CheckboxGroup label="Ingredients" required options={ingredientOptions} />}
 				</form.AppField>
+				{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 				{formState?.success && <p className="success">Season saved!</p>}
 				<form.AppForm>
@@ -97,12 +101,12 @@ export default function Season({
 				</form.AppForm>
 				<form.Subscribe
 					key={form.state.submissionAttempts} // Force re-render on each attempt
-					selector={state => ({
+					selector={(state: { errors: unknown[]; submissionAttempts: number }): { errors: unknown[]; attempts: number } => ({
 						errors: state.errors,
 						attempts: state.submissionAttempts,
 					})}
 				>
-					{state => (
+					{(state: { errors: unknown[]; attempts: number }): React.ReactNode => (
 						<div>
 							<pre>Submission Attempts: {state.attempts}</pre>
 							<pre>Errors: {JSON.stringify(state.errors, null, 2)}</pre>

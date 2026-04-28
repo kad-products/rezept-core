@@ -6,13 +6,13 @@ type CFR2PutResponse = {
 	key: string;
 };
 
-export default function FileUploadForm() {
+export default function FileUploadForm(): React.ReactNode {
 	const [preview, setPreview] = useState<string | null>(null);
 	const [file, setFile] = useState<File | null>(null);
 	const [uploading, setUploading] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+	function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
 		const selected = e.target.files?.[0];
 		if (!selected) return;
 
@@ -25,7 +25,7 @@ export default function FileUploadForm() {
 		setPreview(objectUrl);
 	}
 
-	async function handleSubmit(e: React.FormEvent) {
+	async function handleSubmit(e: React.FormEvent): Promise<void> {
 		e.preventDefault();
 		if (!file) return;
 
