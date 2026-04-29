@@ -1,4 +1,3 @@
-// biome-ignore lint/suspicious/noExplicitAny: drizzle-seed doesn't export generator types
 export type GeneratorAPI = Record<string, (...args: any[]) => any>;
 
 type TableRefinement = {

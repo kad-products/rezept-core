@@ -9,7 +9,6 @@ export async function resetDb() {
 
 export default new Proxy({} as TestableDB, {
 	get(_, prop) {
-		// biome-ignore lint/suspicious/noExplicitAny: the export is typed, this is just the proxy and it is just for tests
 		return (db as any)[prop];
 	},
 }) as TestableDB;
