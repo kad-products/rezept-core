@@ -8,7 +8,7 @@ interface CheckboxGroupProps {
 	required?: boolean;
 }
 
-export function CheckboxGroup({ label, options, required = false }: CheckboxGroupProps) {
+export function CheckboxGroup({ label, options, required = false }: CheckboxGroupProps): React.ReactNode {
 	const field = useFieldContext<string[]>();
 	return (
 		<Form.Field className="rz-form-field" name={field.name}>
@@ -34,7 +34,7 @@ export function CheckboxGroup({ label, options, required = false }: CheckboxGrou
 								value={option.value}
 								checked={field.state.value?.includes(option.value) ?? false}
 								onBlur={field.handleBlur}
-								onChange={e => {
+								onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
 									if (e.target.checked) {
 										field.pushValue(option.value);
 									} else {

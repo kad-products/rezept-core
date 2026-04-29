@@ -11,7 +11,7 @@ export default {
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
+export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
 	const userId = ctx.user?.id;
 
 	if (!userId) {

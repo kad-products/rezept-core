@@ -2,7 +2,7 @@ import type { DocumentProps } from 'rwsdk/router';
 import type { RequestInfo } from 'rwsdk/worker';
 import styles from './styles/global.css?url';
 
-export const Document: React.FC<DocumentProps<RequestInfo<never>>> = ({ children }) => (
+export const Document: React.FC<DocumentProps<RequestInfo<never>>> = ({ children }: DocumentProps<RequestInfo<never>>) => (
 	<html lang="en">
 		<head>
 			<meta charSet="utf-8" />

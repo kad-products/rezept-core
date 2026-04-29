@@ -4,12 +4,12 @@ import { startRegistration } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
 import { finishPasskeyRegistration, startPasskeyRegistration } from '@/actions/auth';
 
-export default function PasskeyRegistration() {
+export default function PasskeyRegistration(): React.ReactNode {
 	const [username, setUsername] = useState('');
 	const [result, setResult] = useState('');
 	const [isPending, startTransition] = useTransition();
 
-	const passkeyRegister = async () => {
+	const passkeyRegister = async (): Promise<void> => {
 		if (!username.trim()) {
 			setResult('Please enter a username');
 			return;
@@ -34,11 +34,11 @@ export default function PasskeyRegistration() {
 		}
 	};
 
-	const handlePerformPasskeyRegister = () => {
+	const handlePerformPasskeyRegister = (): void => {
 		startTransition(() => void passkeyRegister());
 	};
 
-	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		const newUsername = e.currentTarget.value;
 		setUsername(newUsername);
 	};

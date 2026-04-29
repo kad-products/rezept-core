@@ -4,7 +4,7 @@ import RzCard from '@/components/RzCard';
 import StandardLayout from '@/layouts/standard';
 import { getSeasons } from '@/repositories/seasons';
 
-export default async function Pages__seasons__listing({ ctx }: RequestInfo) {
+export default async function Pages__seasons__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const seasons = await getSeasons();
 	return (
 		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>

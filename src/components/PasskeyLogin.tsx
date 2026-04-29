@@ -4,11 +4,11 @@ import { useState, useTransition } from 'react';
 import { navigate } from 'rwsdk/client';
 import { finishPasskeyLogin, startPasskeyLogin } from '@/actions/auth';
 
-export default function PasskeyLogin() {
+export default function PasskeyLogin(): React.ReactNode {
 	const [result, setResult] = useState('');
 	const [isPending, startTransition] = useTransition();
 
-	const passkeyLogin = async () => {
+	const passkeyLogin = async (): Promise<void> => {
 		try {
 			// 1. Get a challenge from the worker
 			const options = await startPasskeyLogin();
@@ -34,7 +34,7 @@ export default function PasskeyLogin() {
 		}
 	};
 
-	const handlePerformPasskeyLogin = () => {
+	const handlePerformPasskeyLogin = (): void => {
 		startTransition(() => void passkeyLogin());
 	};
 

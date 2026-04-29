@@ -14,9 +14,9 @@ export async function saveRecipeIngredients(
 	ingredientsData: IncomingIngredientsData[] | undefined,
 	userId: string,
 	logger: RzLogger,
-) {
+): Promise<Record<string, RecipeIngredient[]>> {
 	if (!ingredientsData) {
-		return [];
+		return {};
 	}
 	const savedIngredients: Record<string, RecipeIngredient[]> = {};
 	for (const section of ingredientsData) {

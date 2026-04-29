@@ -72,7 +72,7 @@ export class SessionDurableObject extends DurableObject {
 		return { value: session };
 	}
 
-	async revokeSession() {
+	async revokeSession(): Promise<void> {
 		await this.ctx.storage.delete('session');
 		this.session = undefined;
 	}

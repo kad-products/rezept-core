@@ -13,29 +13,30 @@ import {
 	transformScrapeToRecipe,
 	validateAsRecipe,
 } from '@/steps';
+import type { RecipeScrape } from '@/types';
 
 export default {
 	post: [requireAuthentication, requirePermissions('recipes:scrape'), postHandler] as const,
 };
 
-async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
+async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication interrupter
 	const userId = ctx.user!.id;
 
-	let recipeScrapeId: string | undefined;
+	let recipeScrape: RecipeScrape | undefined;
 	try {
 		const parsedBodyJson = await parseBodyJson(request);
 
-		recipeScrapeId = await initializeScrape(parsedBodyJson, userId);
+		recipeScrape = await initializeScrape(parsedBodyJson, userId);
 
 		const transformedRecipe = await transformScrapeToRecipe(parsedBodyJson, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrapeId, 'TRANSFORMED', 'Transformed payload to recipe', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'TRANSFORMED', 'Transformed payload to recipe', userId);
 
 		const validatedRecipe = await validateAsRecipe(transformedRecipe, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrapeId, 'VALIDATED', 'Validated transformed payload as saveable recipe', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'VALIDATED', 'Validated transformed payload as saveable recipe', userId);
 
 		const savedRecipe = await saveRecipe(validatedRecipe, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrapeId, 'RECIPE_SAVED', 'Saved base recipe entity successfully', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'RECIPE_SAVED', 'Saved base recipe entity successfully', userId);
 
 		const savedSections = await saveRecipeSections(
 			savedRecipe.id,
@@ -43,7 +44,7 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 			userId,
 			ctx.logger,
 		);
-		await updateRecipeScrapeStatus(recipeScrapeId, 'SECTIONS_SAVED', 'Saved recipe sections successfully', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'SECTIONS_SAVED', 'Saved recipe sections successfully', userId);
 
 		const instructionsData = Array.from(
 			validatedRecipe.sections.entries().map(([index, section]) => {
@@ -55,7 +56,7 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 			}),
 		);
 		await saveRecipeInstructions(savedRecipe.id, instructionsData, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrapeId, 'INSTRUCTIONS_SAVED', 'Saved recipe sections successfully', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'INSTRUCTIONS_SAVED', 'Saved recipe sections successfully', userId);
 
 		const ingredientsData = Array.from(
 			validatedRecipe.sections.entries().map(([index, section]) => {
@@ -67,10 +68,10 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>) {
 			}),
 		);
 		await saveRecipeIngredients(savedRecipe.id, ingredientsData, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrapeId, 'INGREDIENTS_SAVED', 'Saved recipe sections successfully', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'INGREDIENTS_SAVED', 'Saved recipe sections successfully', userId);
 	} catch (err) {
-		if (recipeScrapeId) {
-			await updateRecipeScrapeStatus(recipeScrapeId, 'FAILED', (err as Error).message, userId);
+		if (recipeScrape) {
+			await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', (err as Error).message, userId);
 		}
 		return rzStepErrorToJsonResponse(err);
 	}

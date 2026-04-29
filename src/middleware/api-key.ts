@@ -2,7 +2,7 @@ import { type DefaultAppContext, type RequestInfo, requestInfo } from 'rwsdk/wor
 import { errorResponse } from '@/api/utils';
 import { getApiKeyByKey } from '@/repositories/api-keys';
 
-export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>) {
+export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>): Promise<Response | undefined> {
 	const authHeader = request.headers.get('Authorization');
 	if (!authHeader?.startsWith('Bearer ')) {
 		return;

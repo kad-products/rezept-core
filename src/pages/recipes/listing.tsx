@@ -6,7 +6,7 @@ import { getApiKeysByUserId } from '@/repositories/api-keys';
 import { getRecipeUploads } from '@/repositories/recipe-uploads';
 import { getRecipes } from '@/repositories/recipes';
 
-export default async function Pages__recipes__listing({ ctx }: RequestInfo) {
+export default async function Pages__recipes__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const userId = ctx.user?.id;
 	const recipes = await getRecipes();
 	const recipeUploads = await getRecipeUploads();

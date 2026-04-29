@@ -3,7 +3,7 @@ import type { ActionState } from '@/types';
 
 export function errorResponse<T>(
 	errors: string | Record<string, string[]> | unknown,
-	status = 400,
+	status: number = 400,
 	prodErrorMessage?: string,
 ): ActionState<T> {
 	if (env.REZEPT_ENV === 'production') {
@@ -19,7 +19,7 @@ export function errorResponse<T>(
 	return { success: false, code: status, errors: { _form: [message] } };
 }
 
-export function successResponse<T>(data: T, status = 200): ActionState<T> {
+export function successResponse<T>(data: T, status: number = 200): ActionState<T> {
 	return {
 		success: true,
 		code: status,

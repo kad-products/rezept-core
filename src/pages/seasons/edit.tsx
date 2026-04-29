@@ -9,7 +9,7 @@ import { getIngredientsBySeasonId } from '@/repositories/seasonal-ingredients';
 import { getSeasonById } from '@/repositories/seasons';
 import type { Season as SeasonModel } from '@/types';
 
-export default async function Pages__seasons__edit({ ctx, params }: RequestInfo) {
+export default async function Pages__seasons__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;
 	let [allIngredients, season, seasonalIngredients] = await Promise.all([
 		getIngredients(),

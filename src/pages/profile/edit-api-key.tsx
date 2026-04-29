@@ -6,7 +6,7 @@ import StandardLayout from '@/layouts/standard';
 import { getApiKeyById } from '@/repositories/api-keys';
 import type { ApiKey } from '@/types';
 
-export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo) {
+export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const apiKeyId = params.apiKeyId;
 	const userId = requestInfo.ctx.user?.id;
 

@@ -34,7 +34,7 @@ export async function getApiKeyByKey(key: string): Promise<ApiKey> {
 	return matchedApiKeys[0];
 }
 
-export async function createApiKey(apiKey: ApiKeyFormData, userId: string) {
+export async function createApiKey(apiKey: ApiKeyFormData, userId: string): Promise<ApiKey> {
 	requestInfo.ctx.logger.info(`Form data in createApiKey: ${JSON.stringify(apiKey, null, 4)} `);
 
 	const insertedRecipes = await db
@@ -48,7 +48,7 @@ export async function createApiKey(apiKey: ApiKeyFormData, userId: string) {
 	return insertedRecipes[0];
 }
 
-export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormData, userId: string) {
+export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormData, userId: string): Promise<ApiKey> {
 	requestInfo.ctx.logger.info(`Form data in updateApiKey: ${JSON.stringify(apiKey, null, 4)} `);
 
 	const updatedRecipes = await db

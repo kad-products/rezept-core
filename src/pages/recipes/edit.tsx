@@ -10,7 +10,7 @@ import { getSectionsByRecipeId } from '@/repositories/recipe-sections';
 import { getRecipeById } from '@/repositories/recipes';
 import type { RecipeWithSections } from '@/types';
 
-export default async function Pages__recipes__edit({ ctx, params }: RequestInfo) {
+export default async function Pages__recipes__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const recipeId = params.recipeId;
 	const userId = requestInfo.ctx.user?.id;
 	let recipe: RecipeWithSections | undefined;

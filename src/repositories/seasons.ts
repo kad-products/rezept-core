@@ -21,7 +21,7 @@ export async function getSeasonById(seasonId: string): Promise<Season> {
 	return matchedSeasons[0];
 }
 
-export async function createSeason(season: SeasonFormSave, userId: string) {
+export async function createSeason(season: SeasonFormSave, userId: string): Promise<Season> {
 	console.log(`Form data in createSeason: ${JSON.stringify(season, null, 4)} `);
 
 	const createdSeasons = await db
@@ -37,7 +37,7 @@ export async function createSeason(season: SeasonFormSave, userId: string) {
 	return createdSeasons[0];
 }
 
-export async function updateSeason(seasonId: string, seasonData: SeasonFormSave, userId: string) {
+export async function updateSeason(seasonId: string, seasonData: SeasonFormSave, userId: string): Promise<Season> {
 	console.log(`Form data in updateSeason: ${JSON.stringify(seasonData, null, 4)} `);
 
 	const updatedSeasons = await db

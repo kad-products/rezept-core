@@ -2,10 +2,10 @@ import { eq } from 'drizzle-orm';
 import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { recipeScrapes } from '@/models';
-import type { RecipeScrapeStatus } from '@/types';
+import type { RecipeScrape, RecipeScrapeStatus } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createRecipeScrape(stringifiedRawJson: string, userId: string) {
+export async function createRecipeScrape(stringifiedRawJson: string, userId: string): Promise<RecipeScrape> {
 	const bodySize = stringifiedRawJson.length;
 	requestInfo.ctx.logger.info(`Stringified data in createRecipeScrape is ${bodySize} bytes`);
 
@@ -27,7 +27,7 @@ export async function updateRecipeScrapeStatus(
 	status: RecipeScrapeStatus,
 	statusText: string,
 	userId: string,
-) {
+): Promise<RecipeScrape> {
 	if (!validateUuid(recipeScrapeId)) {
 		throw new Error(`Invalid id: ${recipeScrapeId}`);
 	}

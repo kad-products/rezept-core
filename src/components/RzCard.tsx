@@ -3,7 +3,15 @@ type CardAction = {
 	text: string;
 };
 
-export default function RzCard({ title, body, actions }: { title: string; body?: string; actions: CardAction[] }) {
+export default function RzCard({
+	title,
+	body,
+	actions,
+}: {
+	title: string;
+	body?: string;
+	actions: CardAction[];
+}): React.ReactNode {
 	return (
 		<div className="rz-card">
 			<div className="rz-card-title">{title}</div>

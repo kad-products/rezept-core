@@ -5,7 +5,7 @@ import { recipeUploads } from '@/models';
 import type { RecipeUpload, RecipeUploadFormData } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createRecipeUpload(recipeUpload: RecipeUploadFormData, userId: string) {
+export async function createRecipeUpload(recipeUpload: RecipeUploadFormData, userId: string): Promise<RecipeUpload> {
 	requestInfo.ctx.logger.info(`Form data in createRecipeUpload: ${JSON.stringify(recipeUpload, null, 4)} `);
 
 	const recipesUploaded = await db
@@ -20,7 +20,7 @@ export async function createRecipeUpload(recipeUpload: RecipeUploadFormData, use
 	return recipesUploaded[0];
 }
 
-export async function getRecipeUploads() {
+export async function getRecipeUploads(): Promise<RecipeUpload[]> {
 	if (!requestInfo.ctx.user) {
 		return [];
 	}

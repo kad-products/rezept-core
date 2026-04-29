@@ -7,7 +7,7 @@ import { getSectionsByRecipeId } from '@/repositories/recipe-sections';
 import { getRecipeById } from '@/repositories/recipes';
 import { getUserById } from '@/repositories/users';
 
-export default async function Pages__recipes__view({ ctx, params }: RequestInfo) {
+export default async function Pages__recipes__view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const recipeId = params.recipeId;
 	const recipe = await getRecipeById(recipeId);
 

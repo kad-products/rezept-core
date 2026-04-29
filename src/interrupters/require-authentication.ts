@@ -1,6 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 
-export function requireAuthentication({ ctx }: RequestInfo<DefaultAppContext>) {
+export function requireAuthentication({ ctx }: RequestInfo<DefaultAppContext>): Response | undefined {
 	if (!ctx.user) {
 		return Response.json(
 			{

@@ -14,6 +14,9 @@ export type RecipeFormSave = Omit<
 // output type (with string | null) is used internally via parsed.data.
 export type RecipeFormData = z.input<typeof recipesSchemas.form>;
 
+// Output type (post-transform) of the scrape schema — what validateAsRecipe returns.
+export type RecipeScrapeData = z.output<typeof recipesSchemas.scrape>;
+
 export type RecipeWithSections = Recipe & {
 	sections: Array<
 		RecipeSection & {

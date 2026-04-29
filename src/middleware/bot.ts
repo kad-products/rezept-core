@@ -1,6 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 
-export default function botMiddleware({ request }: RequestInfo<DefaultAppContext>) {
+export default function botMiddleware({ request }: RequestInfo<DefaultAppContext>): Response | undefined {
 	// this is not actually a bot, it is just react devtools
 	if (request.url.toLowerCase().includes('installhook.js.map')) {
 		return Response.json(

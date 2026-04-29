@@ -9,7 +9,13 @@ import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
 import { useAppForm } from './context';
 
-export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: ApiKey; currentUserId: string | undefined }) {
+export default function FormApiKey({
+	apiKey,
+	currentUserId,
+}: {
+	apiKey?: ApiKey;
+	currentUserId: string | undefined;
+}): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<ApiKeyFormData>>();
 
 	const newApiKeyDefaults = {
@@ -22,7 +28,7 @@ export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: ApiKey;
 		validators: {
 			onBlur: apiKeysSchemas.form,
 		},
-		onSubmit: async ({ value: formDataObj }) => {
+		onSubmit: async ({ value: formDataObj }: { value: ApiKeyFormData }): Promise<void> => {
 			setFormState(await saveApiKey(formDataObj));
 		},
 	});
@@ -43,7 +49,7 @@ export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: ApiKey;
 		<>
 			<Form.Root
 				className="rz-form"
-				onSubmit={e => {
+				onSubmit={(e: React.FormEvent): void => {
 					console.log(`Trying to submit the form`);
 					e.preventDefault();
 					e.stopPropagation();
@@ -58,10 +64,12 @@ export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: ApiKey;
 					form.handleSubmit();
 				}}
 			>
-				<form.AppField name="name">{field => <field.TextInput label="Name" required />}</form.AppField>
+				{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
+				<form.AppField name="name">{(field): React.ReactNode => <field.TextInput label="Name" required />}</form.AppField>
 				<form.AppField name="permissions">
-					{field => <field.CheckboxGroup label="Permissions" required options={permissionsOptions} />}
+					{(field): React.ReactNode => <field.CheckboxGroup label="Permissions" required options={permissionsOptions} />}
 				</form.AppField>
+				{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 				{formState?.success && <p className="success">API Key saved!</p>}
 				<form.AppForm>
@@ -69,12 +77,12 @@ export default function FormApiKey({ apiKey, currentUserId }: { apiKey?: ApiKey;
 				</form.AppForm>
 				<form.Subscribe
 					key={form.state.submissionAttempts} // Force re-render on each attempt
-					selector={state => ({
+					selector={(state: { errors: unknown[]; submissionAttempts: number }): { errors: unknown[]; attempts: number } => ({
 						errors: state.errors,
 						attempts: state.submissionAttempts,
 					})}
 				>
-					{state => (
+					{(state: { errors: unknown[]; attempts: number }): React.ReactNode => (
 						<div>
 							<pre>Submission Attempts: {state.attempts}</pre>
 							<pre>Errors: {JSON.stringify(state.errors, null, 2)}</pre>

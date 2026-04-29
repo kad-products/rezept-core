@@ -25,7 +25,7 @@ export async function getRecipeById(recipeId: string): Promise<Recipe> {
 	return matchedRecipes[0];
 }
 
-export async function createRecipe(recipe: RecipeFormSave, userId: string) {
+export async function createRecipe(recipe: RecipeFormSave, userId: string): Promise<Recipe> {
 	requestInfo.ctx.logger.info(`Form data in createRecipe: ${JSON.stringify(recipe, null, 4)} `);
 
 	const insertedRecipes = await db
@@ -39,7 +39,7 @@ export async function createRecipe(recipe: RecipeFormSave, userId: string) {
 	return insertedRecipes[0];
 }
 
-export async function updateRecipe(recipeId: string, recipeData: RecipeFormSave, userId: string) {
+export async function updateRecipe(recipeId: string, recipeData: RecipeFormSave, userId: string): Promise<Recipe> {
 	requestInfo.ctx.logger.info(`Form data in updateRecipe: ${JSON.stringify(recipeData, null, 4)} `);
 
 	const updatedRecipes = await db

@@ -1,9 +1,14 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { recipesSchemas } from '@/schemas';
+import type { RecipeScrapeData } from '@/types';
 import type { ParsedRecipeScrape } from './transform-scrape-to-recipe';
 
-export async function validateAsRecipe(transformedRecipe: ParsedRecipeScrape, userId: string, logger: RzLogger) {
+export async function validateAsRecipe(
+	transformedRecipe: ParsedRecipeScrape,
+	userId: string,
+	logger: RzLogger,
+): Promise<RecipeScrapeData> {
 	try {
 		const parsed = recipesSchemas.scrape.safeParse({ authorId: userId, ...transformedRecipe });
 

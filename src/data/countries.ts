@@ -6,7 +6,7 @@
 // const countryNames = countries.getNames('en')
 // so I pulled this out manually for now
 
-const en = {
+const en: { locale: string; countries: Record<string, string | string[]> } = {
 	locale: 'en',
 	countries: {
 		AF: 'Afghanistan',
@@ -262,15 +262,15 @@ const en = {
 	},
 };
 
-const countryNames = Object.entries(en.countries).map(([value, labels]) => {
+const countryNames: Array<{ code: string; label: string }> = Object.entries(en.countries).map(([value, labels]) => {
 	return {
 		code: value,
 		label: typeof labels === 'string' ? labels : labels[0],
 	};
 });
 
-export const validCountryCodes = Object.keys(en.countries);
-export const countryOptions = countryNames.map(({ code, label }) => ({
+export const validCountryCodes: string[] = Object.keys(en.countries);
+export const countryOptions: Array<{ value: string; label: string }> = countryNames.map(({ code, label }) => ({
 	value: code, // "US", "NO", "NG"
 	label, // "United States", "Norway", "Nigeria"
 }));

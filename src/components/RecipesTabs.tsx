@@ -16,7 +16,7 @@ export default function RecipesTabs({
 	recipes: Recipe[];
 	recipeUploads: RecipeUpload[];
 	permissions?: string[];
-}) {
+}): React.ReactNode {
 	return (
 		<Tabs.Root className="rz-tabs-root" defaultValue="listing">
 			<Tabs.List className="rz-tabs-list" aria-label="Choose your recipe type">

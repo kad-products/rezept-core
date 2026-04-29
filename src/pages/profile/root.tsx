@@ -5,7 +5,7 @@ import StandardLayout from '@/layouts/standard';
 import { getApiKeysByUserId } from '@/repositories/api-keys';
 import { getCredentialsByUserId } from '@/repositories/credentials';
 
-export default async function Pages__profile__root({ ctx }: RequestInfo) {
+export default async function Pages__profile__root({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const userId = ctx.user?.id;
 
 	if (!userId) {
