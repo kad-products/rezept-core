@@ -3,6 +3,7 @@ import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import { seasonalIngredients } from '@/models';
 
+// biome-ignore lint/nursery/useExplicitType: Drizzle query builder return type is not practically writable
 const getSeasonalIngredientsQuery = (seasonId: string) =>
 	db.query.seasonalIngredients.findMany({
 		where: eq(seasonalIngredients.seasonId, seasonId),
