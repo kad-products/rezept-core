@@ -1,3 +1,17 @@
+## [1.18.7](https://github.com/kad-products/rezept-core/compare/v1.18.6...v1.18.7) (2026-04-29)
+
+### Bug Fixes
+
+* align forms to explicit type biome rule ([9558837](https://github.com/kad-products/rezept-core/commit/955883754ec93fe30d371ab18b81db00a78b31c9))
+* final biome explicit return types ([1fd3831](https://github.com/kad-products/rezept-core/commit/1fd38315fbfb11608f06028f658e7a40dbf4461e))
+* more simple return type definitions ([708616e](https://github.com/kad-products/rezept-core/commit/708616ecf6d5f1124bbc7d7cd8b27c56f7f1c94d))
+* required types on a lot of basic elements and components ([7823d71](https://github.com/kad-products/rezept-core/commit/7823d717f94f5fa4ad7402b3ccf792099036be58))
+* return types for initialize scrape and related method ([0b24e39](https://github.com/kad-products/rezept-core/commit/0b24e39d7b0aeafbbd75b2b56032f42b580bd399))
+* type for repository utils ([961a909](https://github.com/kad-products/rezept-core/commit/961a909cdca92c977c33f83b31a6be815c4121ef))
+* type for saveRecipeIngredients ([8367744](https://github.com/kad-products/rezept-core/commit/836774471d2a4681964e8ccbf11c2253b54cbf10))
+* type of recipe validator ([0969d75](https://github.com/kad-products/rezept-core/commit/0969d7501fe959219308c37e5df7aee2d633dcb4))
+* types added to actions, data, and middleware ([6e911bb](https://github.com/kad-products/rezept-core/commit/6e911bb4d9efc65739426877099454278eed7efe))
+
 ## [1.18.6](https://github.com/kad-products/rezept-core/compare/v1.18.5...v1.18.6) (2026-04-28)
 
 ### Bug Fixes
