@@ -50,7 +50,7 @@ describe('apiKeyMiddleware', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockRequestInfo = {
-			ctx: {},
+			ctx: { logger: new Logger() },
 			request: new Request('https://example.com/api/test'),
 			response: { headers: new Headers() },
 		};
