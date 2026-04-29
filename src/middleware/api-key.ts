@@ -11,7 +11,7 @@ export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<Def
 	const key = authHeader.slice(7);
 
 	try {
-		const apiKey = await getApiKeyByKey(key);
+		const apiKey = await getApiKeyByKey(key, ctx.logger);
 
 		if (apiKey.revokeAt && new Date(apiKey.revokeAt) < new Date()) {
 			return errorResponse('API key has been revoked', 403);

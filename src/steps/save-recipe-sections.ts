@@ -12,7 +12,7 @@ export async function saveRecipeSections(
 ): Promise<RecipeSection[]> {
 	let sections: RecipeSection[];
 	try {
-		sections = await updateRecipeSections(recipeId, sectionsData, userId);
+		sections = await updateRecipeSections(recipeId, sectionsData, userId, logger);
 		logger.info(`Recipe sections saved for ${recipeId}: ${JSON.stringify(sections, null, 4)}`);
 	} catch (error) {
 		logger.info(`Error saving sections: ${error} `);

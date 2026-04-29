@@ -5,7 +5,7 @@ import { getRecipeUploadById } from '@/repositories/recipe-uploads';
 
 export default async function Pages__recipes__uploadView({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const recipeUploadId = params.recipeUploadId;
-	const recipeUpload = await getRecipeUploadById(recipeUploadId);
+	const recipeUpload = await getRecipeUploadById(recipeUploadId, ctx.logger);
 
 	if (!recipeUpload) {
 		return <p>Recipe upload not found</p>;

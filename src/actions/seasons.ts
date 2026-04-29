@@ -23,7 +23,7 @@ export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<
 				requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 				return errorResponse<SeasonFormSave>(parsed.error.flatten().fieldErrors, 400);
 			}
-			const updatedSeason = await updateSeason(parsed.data.id, parsed.data, userId);
+			const updatedSeason = await updateSeason(parsed.data.id, parsed.data, userId, requestInfo.ctx.logger);
 			return successResponse<SeasonFormSave>(updatedSeason);
 		} else {
 			const parsed = seasonsSchemas.create.safeParse(formData);
@@ -31,7 +31,7 @@ export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<
 				requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 				return errorResponse<SeasonFormSave>(parsed.error.flatten().fieldErrors, 400);
 			}
-			const createdSeason = await createSeason(parsed.data, userId);
+			const createdSeason = await createSeason(parsed.data, userId, requestInfo.ctx.logger);
 			return successResponse<SeasonFormSave>(createdSeason);
 		}
 	} catch (error) {

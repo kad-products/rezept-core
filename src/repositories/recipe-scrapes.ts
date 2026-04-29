@@ -1,13 +1,13 @@
 import { eq } from 'drizzle-orm';
-import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
+import type RzLogger from '@/logger';
 import { recipeScrapes } from '@/models';
 import type { RecipeScrape, RecipeScrapeStatus } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createRecipeScrape(stringifiedRawJson: string, userId: string): Promise<RecipeScrape> {
+export async function createRecipeScrape(stringifiedRawJson: string, userId: string, logger: RzLogger): Promise<RecipeScrape> {
 	const bodySize = stringifiedRawJson.length;
-	requestInfo.ctx.logger.info(`Stringified data in createRecipeScrape is ${bodySize} bytes`);
+	logger.debug(`Creating recipe scrape with body size ${bodySize}`);
 
 	const recipeScraped = await db
 		.insert(recipeScrapes)
@@ -19,7 +19,9 @@ export async function createRecipeScrape(stringifiedRawJson: string, userId: str
 		})
 		.returning();
 
-	return recipeScraped[0];
+	const result = recipeScraped[0];
+	logger.info(`Created recipe scrape ${result.id}`);
+	return result;
 }
 
 export async function updateRecipeScrapeStatus(
@@ -27,14 +29,13 @@ export async function updateRecipeScrapeStatus(
 	status: RecipeScrapeStatus,
 	statusText: string,
 	userId: string,
+	logger: RzLogger,
 ): Promise<RecipeScrape> {
 	if (!validateUuid(recipeScrapeId)) {
 		throw new Error(`Invalid id: ${recipeScrapeId}`);
 	}
 
-	requestInfo.ctx.logger.info(
-		`Updating recipe scrape status in updateRecipeScrapeStatus: ${JSON.stringify({ recipeScrapeId, status, statusText }, null, 4)} `,
-	);
+	logger.debug(`Updating scrape ${recipeScrapeId} status to ${status}`);
 
 	const updatedScrapes = await db
 		.update(recipeScrapes)
@@ -50,5 +51,6 @@ export async function updateRecipeScrapeStatus(
 		throw new Error(`updateRecipeScrapeStatus: updated ${updatedScrapes.length} records instead of 1`);
 	}
 
+	logger.info(`Updated scrape ${recipeScrapeId} status to ${status}`);
 	return updatedScrapes[0];
 }

@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import { requestInfo } from 'rwsdk/worker';
 import Recipe from '@/forms/recipe';
 import StandardLayout from '@/layouts/standard';
 import { getIngredients } from '@/repositories/ingredients';
@@ -12,32 +11,32 @@ import type { RecipeWithSections } from '@/types';
 
 export default async function Pages__recipes__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const recipeId = params.recipeId;
-	const userId = requestInfo.ctx.user?.id;
+	const userId = ctx.user?.id;
 	let recipe: RecipeWithSections | undefined;
 
 	if (!recipeId) {
 		recipe = undefined;
 	} else {
-		const recipeBase = await getRecipeById(recipeId);
+		const recipeBase = await getRecipeById(recipeId, ctx.logger);
 		if (!recipeBase) {
 			return <p>Recipe not found</p>;
 		}
-		const sections = await getSectionsByRecipeId(recipeId);
+		const sections = await getSectionsByRecipeId(recipeId, ctx.logger);
 		recipe = {
 			...recipeBase,
 			sections: await Promise.all(
 				sections.map(async s => {
 					return {
 						...s,
-						ingredients: await getIngredientsByRecipeSectionId(s.id),
-						instructions: await getInstructionsByRecipeSectionId(s.id),
+						ingredients: await getIngredientsByRecipeSectionId(s.id, ctx.logger),
+						instructions: await getInstructionsByRecipeSectionId(s.id, ctx.logger),
 					};
 				}),
 			),
 		};
 	}
 
-	const allIngredients = await getIngredients();
+	const allIngredients = await getIngredients(ctx.logger);
 
 	return (
 		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>

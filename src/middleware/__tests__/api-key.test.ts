@@ -89,7 +89,7 @@ describe('apiKeyMiddleware', () => {
 
 			await apiKeyMiddleware(mockRequestInfo);
 
-			expect(getApiKeyByKey).toHaveBeenCalledWith('rz_std_abc123');
+			expect(getApiKeyByKey).toHaveBeenCalledWith('rz_std_abc123', expect.anything());
 		});
 
 		it('sets session userId from api key', async () => {

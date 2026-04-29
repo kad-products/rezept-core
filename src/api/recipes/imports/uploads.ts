@@ -49,6 +49,7 @@ export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContex
 				status: 'UPLOADED',
 			},
 			userId,
+			ctx.logger,
 		);
 	} catch (err) {
 		ctx.logger.info(`Error saving recipe: ${err} `);
