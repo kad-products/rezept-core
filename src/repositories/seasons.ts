@@ -1,18 +1,22 @@
 import { eq } from 'drizzle-orm';
 import db from '@/db';
+import type RzLogger from '@/logger';
 import { seasons } from '@/models';
 import type { Season, SeasonFormSave } from '@/types';
 import { validateUuid } from './utils';
 
-export async function getSeasons(): Promise<Season[]> {
+export async function getSeasons(logger: RzLogger): Promise<Season[]> {
+	logger.debug('Fetching all seasons');
 	const allSeasons = await db.select().from(seasons);
+	logger.debug(`Fetched ${allSeasons.length} seasons`);
 	return allSeasons;
 }
 
-export async function getSeasonById(seasonId: string): Promise<Season> {
+export async function getSeasonById(seasonId: string, logger: RzLogger): Promise<Season> {
 	if (!validateUuid(seasonId)) {
 		throw new Error(`Invalid id: ${seasonId}`);
 	}
+	logger.debug(`Fetching season ${seasonId}`);
 	const matchedSeasons = await db.select().from(seasons).where(eq(seasons.id, seasonId));
 	if (matchedSeasons.length !== 1) {
 		throw new Error(`getSeasonById: matchedSeasons length is ${matchedSeasons.length} for id ${seasonId}`);
@@ -21,8 +25,8 @@ export async function getSeasonById(seasonId: string): Promise<Season> {
 	return matchedSeasons[0];
 }
 
-export async function createSeason(season: SeasonFormSave, userId: string): Promise<Season> {
-	console.log(`Form data in createSeason: ${JSON.stringify(season, null, 4)} `);
+export async function createSeason(season: SeasonFormSave, userId: string, logger: RzLogger): Promise<Season> {
+	logger.debug('Creating season');
 
 	const createdSeasons = await db
 		.insert(seasons)
@@ -32,13 +36,18 @@ export async function createSeason(season: SeasonFormSave, userId: string): Prom
 		})
 		.returning();
 
-	console.log(`Created season: ${JSON.stringify(createdSeasons, null, 4)}`);
-
-	return createdSeasons[0];
+	const result = createdSeasons[0];
+	logger.info(`Created season ${result.id}`);
+	return result;
 }
 
-export async function updateSeason(seasonId: string, seasonData: SeasonFormSave, userId: string): Promise<Season> {
-	console.log(`Form data in updateSeason: ${JSON.stringify(seasonData, null, 4)} `);
+export async function updateSeason(
+	seasonId: string,
+	seasonData: SeasonFormSave,
+	userId: string,
+	logger: RzLogger,
+): Promise<Season> {
+	logger.debug(`Updating season ${seasonId}`);
 
 	const updatedSeasons = await db
 		.update(seasons)
@@ -49,7 +58,6 @@ export async function updateSeason(seasonId: string, seasonData: SeasonFormSave,
 		.where(eq(seasons.id, seasonId))
 		.returning();
 
-	console.log(`Updated ${updatedSeasons.length} Seasons`);
-
+	logger.info(`Updated season ${seasonId}`);
 	return updatedSeasons[0];
 }

@@ -143,6 +143,7 @@ describe('_saveRecipe', () => {
 					title: 'Simple Recipe',
 				}),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 
@@ -171,6 +172,7 @@ describe('_saveRecipe', () => {
 					cookTime: 30,
 				}),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 
@@ -288,6 +290,7 @@ describe('_saveRecipe', () => {
 					expect.objectContaining({ title: 'Sauce', order: 1 }),
 				]),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 
@@ -463,6 +466,7 @@ describe('_saveRecipe', () => {
 					title: 'Updated Recipe',
 				}),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 

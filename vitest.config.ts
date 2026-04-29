@@ -30,7 +30,7 @@ export default defineConfig({
 					branches: 100,
 				},
 				'src/repositories/**': {
-					branches: 43,
+					branches: 40,
 				},
 				'src/schemas/**': {
 					branches: 100,

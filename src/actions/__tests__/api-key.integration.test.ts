@@ -43,7 +43,7 @@ describe('saveApiKey integration', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser');
+		const user = await createUser('testuser', mockRequestInfo.ctx.logger);
 		testUserId = user.id;
 		mockRequestInfo.ctx.user = { id: testUserId };
 	});
@@ -56,7 +56,7 @@ describe('saveApiKey integration', () => {
 			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
-				const apiKey = await getApiKeyById(result.data.id);
+				const apiKey = await getApiKeyById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(apiKey).toBeDefined();
 				expect(apiKey.name).toBe('Test API Key');
 				expect(apiKey.permissions).toEqual(['recipes:upload']);
@@ -77,7 +77,7 @@ describe('saveApiKey integration', () => {
 			expect(result.success).toBe(false);
 			expect(result.data).toBeUndefined();
 
-			const keys = await getApiKeysByUserId(testUserId);
+			const keys = await getApiKeysByUserId(testUserId, mockRequestInfo.ctx.logger);
 			expect(keys).toHaveLength(0);
 		});
 
@@ -88,7 +88,7 @@ describe('saveApiKey integration', () => {
 			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
-				const apiKey = await getApiKeyById(result.data.id);
+				const apiKey = await getApiKeyById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(apiKey.createdBy).toBe(testUserId);
 				expect(apiKey.createdAt).toBeDefined();
 				expect(apiKey.updatedAt).toBeNull();
@@ -104,7 +104,7 @@ describe('saveApiKey integration', () => {
 			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
-				const apiKey = await getApiKeyById(result.data.id);
+				const apiKey = await getApiKeyById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(apiKey.revokeAt).toBeDefined();
 			}
 		});
@@ -116,7 +116,7 @@ describe('saveApiKey integration', () => {
 			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
-				const apiKey = await getApiKeyById(result.data.id);
+				const apiKey = await getApiKeyById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(apiKey.revokeAt).toBeNull();
 			}
 		});
@@ -128,7 +128,7 @@ describe('saveApiKey integration', () => {
 
 			expect(result.success).toBe(false);
 
-			const keys = await getApiKeysByUserId(testUserId);
+			const keys = await getApiKeysByUserId(testUserId, mockRequestInfo.ctx.logger);
 			expect(keys).toHaveLength(0);
 		});
 
@@ -168,7 +168,7 @@ describe('saveApiKey integration', () => {
 				expect(updateResult.success).toBe(true);
 				expect(updateResult.data?.id).toBe(apiKeyId);
 
-				const apiKey = await getApiKeyById(apiKeyId);
+				const apiKey = await getApiKeyById(apiKeyId, mockRequestInfo.ctx.logger);
 				expect(apiKey.name).toBe('Updated Name');
 				expect(apiKey.permissions).toEqual(['recipes:upload', 'recipes:read']);
 			}
@@ -192,7 +192,7 @@ describe('saveApiKey integration', () => {
 					name: 'Updated Name',
 				});
 
-				const apiKey = await getApiKeyById(apiKeyId);
+				const apiKey = await getApiKeyById(apiKeyId, mockRequestInfo.ctx.logger);
 				expect(apiKey.updatedBy).toBe(testUserId);
 				expect(apiKey.updatedAt).toBeDefined();
 				expect(apiKey.updatedAt).not.toBe(apiKey.createdAt);
@@ -216,7 +216,7 @@ describe('saveApiKey integration', () => {
 					name: 'Updated Name',
 				});
 
-				const apiKey = await getApiKeyById(apiKeyId);
+				const apiKey = await getApiKeyById(apiKeyId, mockRequestInfo.ctx.logger);
 				expect(apiKey.apiKey).toBe(originalKey);
 			}
 		});

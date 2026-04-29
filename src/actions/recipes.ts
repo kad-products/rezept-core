@@ -50,9 +50,9 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	let recipe: Recipe;
 	try {
 		if (parsed.data.id) {
-			recipe = await updateRecipe(parsed.data.id, parsed.data, userId);
+			recipe = await updateRecipe(parsed.data.id, parsed.data, userId, requestInfo.ctx.logger);
 		} else {
-			recipe = await createRecipe(parsed.data, userId);
+			recipe = await createRecipe(parsed.data, userId, requestInfo.ctx.logger);
 		}
 		requestInfo.ctx.logger.info(`Recipe ${recipe.id} saved`);
 	} catch (error) {
@@ -66,7 +66,12 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	//
 	let sections: RecipeSection[];
 	try {
-		sections = await updateRecipeSections(recipe.id, parsed.data.sections as RecipeSectionFormSave[], userId);
+		sections = await updateRecipeSections(
+			recipe.id,
+			parsed.data.sections as RecipeSectionFormSave[],
+			userId,
+			requestInfo.ctx.logger,
+		);
 		requestInfo.ctx.logger.info(`Recipe sections saved for ${recipe.id}: ${JSON.stringify(sections, null, 4)}`);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error saving sections: ${error} `);
@@ -87,6 +92,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 				savedSection.id,
 				section.instructions as RecipeInstructionFormSave[],
 				userId,
+				requestInfo.ctx.logger,
 			);
 			requestInfo.ctx.logger.info(`Recipe instructions saved for recipe ${recipe.id} section ${savedSection.id}`);
 		} catch (error) {
@@ -109,6 +115,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 				savedSection.id,
 				section.ingredients as RecipeIngredientFormSave[],
 				userId,
+				requestInfo.ctx.logger,
 			);
 			requestInfo.ctx.logger.info(`Recipe ingredients saved for recipe ${recipe.id} section ${section.id}`);
 		} catch (error) {

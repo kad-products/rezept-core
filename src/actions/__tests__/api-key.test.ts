@@ -91,6 +91,7 @@ describe('_saveApiKey', () => {
 					permissions: ['recipes:upload'],
 				}),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 
@@ -112,6 +113,7 @@ describe('_saveApiKey', () => {
 			expect(createApiKey).toHaveBeenCalledWith(
 				expect.objectContaining({ permissions: ['recipes:upload', 'recipes:read'] }),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 
@@ -121,7 +123,7 @@ describe('_saveApiKey', () => {
 			const result = await _saveApiKey({ ...baseApiKeyData, revokeAt });
 
 			expect(result.success).toBe(true);
-			expect(createApiKey).toHaveBeenCalledWith(expect.objectContaining({ revokeAt }), 'test-user-id');
+			expect(createApiKey).toHaveBeenCalledWith(expect.objectContaining({ revokeAt }), 'test-user-id', expect.anything());
 		});
 
 		it('handles repository errors gracefully', async () => {
@@ -167,6 +169,7 @@ describe('_saveApiKey', () => {
 					permissions: ['recipes:upload'],
 				}),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 
@@ -192,6 +195,7 @@ describe('_saveApiKey', () => {
 				data.id,
 				expect.objectContaining({ permissions: ['recipes:upload', 'recipes:read'] }),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 

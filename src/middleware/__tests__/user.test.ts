@@ -62,7 +62,7 @@ describe('userMiddleware', () => {
 
 		await userMiddleware(mockRequestInfo as any);
 
-		expect(getUserById).toHaveBeenCalledWith('test-user-id');
+		expect(getUserById).toHaveBeenCalledWith('test-user-id', expect.anything());
 		expect(mockRequestInfo.ctx.user).toBe(mockUser);
 	});
 

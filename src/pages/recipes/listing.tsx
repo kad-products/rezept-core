@@ -8,9 +8,9 @@ import { getRecipes } from '@/repositories/recipes';
 
 export default async function Pages__recipes__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const userId = ctx.user?.id;
-	const recipes = await getRecipes();
-	const recipeUploads = await getRecipeUploads();
-	const apiKeys = userId ? await getApiKeysByUserId(userId) : [];
+	const recipes = await getRecipes(ctx.logger);
+	const recipeUploads = await getRecipeUploads(ctx.logger);
+	const apiKeys = userId ? await getApiKeysByUserId(userId, ctx.logger) : [];
 	return (
 		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
 			<Suspense fallback={<div>Loading recipes...</div>}>

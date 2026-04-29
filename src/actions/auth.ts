@@ -89,15 +89,18 @@ export async function finishPasskeyRegistration(username: string, registration: 
 
 	await sessions.save(response.headers, { challenge: null });
 
-	const user = await createUser(username);
+	const user = await createUser(username, requestInfo.ctx.logger);
 
-	await createCredential({
-		userId: user.id,
-		credentialId: verification.registrationInfo.credential.id,
-		publicKey: verification.registrationInfo.credential.publicKey,
-		counter: verification.registrationInfo.credential.counter,
-		name: deviceNameFromUA(request.headers.get('User-Agent') || ''),
-	});
+	await createCredential(
+		{
+			userId: user.id,
+			credentialId: verification.registrationInfo.credential.id,
+			publicKey: verification.registrationInfo.credential.publicKey,
+			counter: verification.registrationInfo.credential.counter,
+			name: deviceNameFromUA(request.headers.get('User-Agent') || ''),
+		},
+		requestInfo.ctx.logger,
+	);
 
 	return true;
 }
@@ -146,7 +149,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 		return false;
 	}
 
-	const credential = await getCredentialById(login.id);
+	const credential = await getCredentialById(login.id, requestInfo.ctx.logger);
 
 	requestInfo.ctx.logger.info(`Credential: ${JSON.stringify(credential, null, 4)}`);
 
@@ -173,9 +176,9 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 		return false;
 	}
 
-	await updateCredentialCounter(login.id, verification.authenticationInfo.newCounter);
+	await updateCredentialCounter(login.id, verification.authenticationInfo.newCounter, requestInfo.ctx.logger);
 
-	const user = await getUserById(credential.userId);
+	const user = await getUserById(credential.userId, requestInfo.ctx.logger);
 
 	requestInfo.ctx.logger.info(`User: ${JSON.stringify(user, null, 4)}`);
 

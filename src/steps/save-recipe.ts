@@ -8,9 +8,9 @@ export async function saveRecipe(recipeData: RecipeFormSave, userId: string, log
 	let recipe: Recipe;
 	try {
 		if (recipeData.id) {
-			recipe = await updateRecipe(recipeData.id, recipeData, userId);
+			recipe = await updateRecipe(recipeData.id, recipeData, userId, logger);
 		} else {
-			recipe = await createRecipe(recipeData, userId);
+			recipe = await createRecipe(recipeData, userId, logger);
 		}
 		logger.info(`Recipe ${recipe.id} saved`);
 	} catch (error) {

@@ -27,16 +27,22 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Pr
 	try {
 		const parsedBodyJson = await parseBodyJson(request);
 
-		recipeScrape = await initializeScrape(parsedBodyJson, userId);
+		recipeScrape = await initializeScrape(parsedBodyJson, userId, ctx.logger);
 
 		const transformedRecipe = await transformScrapeToRecipe(parsedBodyJson, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'TRANSFORMED', 'Transformed payload to recipe', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'TRANSFORMED', 'Transformed payload to recipe', userId, ctx.logger);
 
 		const validatedRecipe = await validateAsRecipe(transformedRecipe, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'VALIDATED', 'Validated transformed payload as saveable recipe', userId);
+		await updateRecipeScrapeStatus(
+			recipeScrape.id,
+			'VALIDATED',
+			'Validated transformed payload as saveable recipe',
+			userId,
+			ctx.logger,
+		);
 
 		const savedRecipe = await saveRecipe(validatedRecipe, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'RECIPE_SAVED', 'Saved base recipe entity successfully', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'RECIPE_SAVED', 'Saved base recipe entity successfully', userId, ctx.logger);
 
 		const savedSections = await saveRecipeSections(
 			savedRecipe.id,
@@ -44,7 +50,7 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Pr
 			userId,
 			ctx.logger,
 		);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'SECTIONS_SAVED', 'Saved recipe sections successfully', userId);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'SECTIONS_SAVED', 'Saved recipe sections successfully', userId, ctx.logger);
 
 		const instructionsData = Array.from(
 			validatedRecipe.sections.entries().map(([index, section]) => {
@@ -56,7 +62,13 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Pr
 			}),
 		);
 		await saveRecipeInstructions(savedRecipe.id, instructionsData, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'INSTRUCTIONS_SAVED', 'Saved recipe sections successfully', userId);
+		await updateRecipeScrapeStatus(
+			recipeScrape.id,
+			'INSTRUCTIONS_SAVED',
+			'Saved recipe sections successfully',
+			userId,
+			ctx.logger,
+		);
 
 		const ingredientsData = Array.from(
 			validatedRecipe.sections.entries().map(([index, section]) => {
@@ -68,10 +80,16 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Pr
 			}),
 		);
 		await saveRecipeIngredients(savedRecipe.id, ingredientsData, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'INGREDIENTS_SAVED', 'Saved recipe sections successfully', userId);
+		await updateRecipeScrapeStatus(
+			recipeScrape.id,
+			'INGREDIENTS_SAVED',
+			'Saved recipe sections successfully',
+			userId,
+			ctx.logger,
+		);
 	} catch (err) {
 		if (recipeScrape) {
-			await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', (err as Error).message, userId);
+			await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', (err as Error).message, userId, ctx.logger);
 		}
 		return rzStepErrorToJsonResponse(err);
 	}

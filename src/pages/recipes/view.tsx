@@ -9,16 +9,16 @@ import { getUserById } from '@/repositories/users';
 
 export default async function Pages__recipes__view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const recipeId = params.recipeId;
-	const recipe = await getRecipeById(recipeId);
+	const recipe = await getRecipeById(recipeId, ctx.logger);
 
 	if (!recipe) {
 		return <p>Recipe not found</p>;
 	}
 
-	const author = await getUserById(recipe.authorId);
-	const sections = await getSectionsByRecipeId(recipeId);
-	const instructions = await Promise.all(sections.map(async s => await getInstructionsByRecipeSectionId(s.id)));
-	const ingredients = await Promise.all(sections.map(async s => await getIngredientsByRecipeSectionId(s.id)));
+	const author = await getUserById(recipe.authorId, ctx.logger);
+	const sections = await getSectionsByRecipeId(recipeId, ctx.logger);
+	const instructions = await Promise.all(sections.map(async s => await getInstructionsByRecipeSectionId(s.id, ctx.logger)));
+	const ingredients = await Promise.all(sections.map(async s => await getIngredientsByRecipeSectionId(s.id, ctx.logger)));
 
 	return (
 		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>

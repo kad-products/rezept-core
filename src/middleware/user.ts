@@ -5,7 +5,7 @@ import { getUserById } from '@/repositories/users';
 export default async function userMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>): Promise<Response | undefined> {
 	if (ctx.session?.userId) {
 		try {
-			ctx.user = await getUserById(ctx.session.userId);
+			ctx.user = await getUserById(ctx.session.userId, ctx.logger);
 		} catch (err) {
 			ctx.logger.error(`Error fetching current user: ${err}`);
 			const headers = new Headers();

@@ -35,7 +35,7 @@ describe('saveSeason integration', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser');
+		const user = await createUser('testuser', mockRequestInfo.ctx.logger);
 		testUserId = user.id;
 		mockRequestInfo.ctx.user = { id: testUserId };
 
@@ -58,7 +58,7 @@ describe('saveSeason integration', () => {
 
 			// Verify it's actually in the database
 			if (result.data?.id) {
-				const season = await getSeasonById(result.data.id);
+				const season = await getSeasonById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(season).toBeDefined();
 				expect(season?.name).toBe('Spring Season');
 				expect(season?.country).toBe('US');
@@ -82,7 +82,7 @@ describe('saveSeason integration', () => {
 			expect(result.data).toBeUndefined();
 
 			// Verify nothing was saved to database
-			const seasonData = await getSeasons();
+			const seasonData = await getSeasons(mockRequestInfo.ctx.logger);
 			expect(seasonData).toHaveLength(0);
 		});
 
@@ -103,7 +103,7 @@ describe('saveSeason integration', () => {
 			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
-				const season = await getSeasonById(result.data.id);
+				const season = await getSeasonById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(season?.region).toBe('Provence');
 				expect(season?.description).toBe('Spring season');
 				expect(season?.notes).toBe('Great for lavender');
@@ -124,7 +124,7 @@ describe('saveSeason integration', () => {
 			expect(result.data?.id).toBeDefined();
 
 			if (result.data?.id) {
-				const season = await getSeasonById(result.data.id);
+				const season = await getSeasonById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(season?.createdBy).toBe(testUserId);
 				expect(season?.createdAt).toBeDefined();
 				expect(season?.updatedAt).toBeNull();
@@ -147,7 +147,7 @@ describe('saveSeason integration', () => {
 			expect(result.success).toBe(false);
 
 			// Verify nothing was saved
-			const seasonData = await getSeasons();
+			const seasonData = await getSeasons(mockRequestInfo.ctx.logger);
 			expect(seasonData).toHaveLength(0);
 		});
 	});
@@ -185,7 +185,7 @@ describe('saveSeason integration', () => {
 				expect(updateResult.data?.id).toBe(seasonId);
 
 				// Verify the update persisted
-				const season = await getSeasonById(seasonId);
+				const season = await getSeasonById(seasonId, mockRequestInfo.ctx.logger);
 				expect(season?.name).toBe('Updated Name');
 				expect(season?.country).toBe('CA');
 				expect(season?.startMonth).toBe(6);
@@ -224,7 +224,7 @@ describe('saveSeason integration', () => {
 
 				await saveSeason(updateData);
 
-				const season = await getSeasonById(seasonId);
+				const season = await getSeasonById(seasonId, mockRequestInfo.ctx.logger);
 				expect(season?.createdBy).toBe(testUserId);
 				expect(season?.updatedBy).toBe(testUserId);
 				expect(season?.updatedAt).toBeDefined();
@@ -261,7 +261,7 @@ describe('saveSeason integration', () => {
 
 				await saveSeason(updateData);
 
-				const season = await getSeasonById(seasonId);
+				const season = await getSeasonById(seasonId, mockRequestInfo.ctx.logger);
 				expect(season?.name).toBe('Updated Name');
 				expect(season?.description).toBe('Original description');
 			}
