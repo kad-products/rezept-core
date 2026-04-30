@@ -29,7 +29,7 @@ All routes are registered in `routes.ts` via `route()`.
 
 - **Orchestrate** — call steps for complex pipelines, repositories directly for simple operations
 - **Return a consistent response shape** — always use the `successResponse` and `errorResponse` utilities from `./utils`
-- **Handle step errors** — catch `RzStepError` via the `rzStepErrorToJsonResponse` utility from `./utils`
+- **Handle step errors** — catch `RzStepError` via the `apiErrorResponse` utility from `./utils`
 
 ## Response shape
 
@@ -56,7 +56,7 @@ return errorResponse('API key has been revoked', 403);
 
 // step errors (RzStepError thrown by steps)
 } catch (err) {
-    return rzStepErrorToJsonResponse(err);
+    return apiErrorResponse(err);
 }
 ```
 

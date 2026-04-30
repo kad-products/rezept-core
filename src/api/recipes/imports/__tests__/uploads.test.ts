@@ -19,6 +19,7 @@ vi.mock('@/middleware/permissions', () => ({
 	requirePermissions: vi.fn(() => vi.fn()),
 }));
 
+import { requireAuthentication } from '@/interrupters/require-authentication';
 import { createRecipeUpload } from '@/repositories/recipe-uploads';
 import handler, { _postHandler } from '../uploads';
 
@@ -59,17 +60,6 @@ describe('_postHandler', () => {
 		ctx = { user: { id: 'user-id' }, logger: new Logger() };
 	});
 
-	describe('authentication', () => {
-		it('returns 400 when user is not set', async () => {
-			ctx.user = null;
-			const response = await _postHandler({ request: makeRequest(), ctx } as any);
-			expect(response.status).toBe(400);
-			const body = (await response.json()) as any;
-			expect(body.success).toBe(false);
-			expect(body.errors._form).toContain('You must be logged in');
-		});
-	});
-
 	describe('file upload', () => {
 		it('uploads the file to R2 at /raw/<filename>', async () => {
 			await _postHandler({ request: makeRequest(), ctx } as any);
@@ -96,7 +86,7 @@ describe('_postHandler', () => {
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(response.status).toBe(200);
 			const body = (await response.json()) as any;
-			expect(body).toMatchObject({ id: 'upload-id', originalFilename: 'recipe.csv' });
+			expect(body).toMatchObject({ data: { id: 'upload-id', originalFilename: 'recipe.csv' } });
 		});
 
 		it('uses the original file name in the R2 key', async () => {
@@ -117,7 +107,7 @@ describe('_postHandler', () => {
 			expect(response.status).toBe(500);
 			const body = (await response.json()) as any;
 			expect(body.success).toBe(false);
-			expect(body.errors._form[0]).toBe('DB connection failed');
+			expect(body.error).toBe('DB connection failed');
 		});
 
 		it('hides error details in production when createRecipeUpload fails', async () => {
@@ -126,7 +116,7 @@ describe('_postHandler', () => {
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(response.status).toBe(500);
 			const body = (await response.json()) as any;
-			expect(body.errors._form[0]).toBe('Failed to save item');
+			expect(body.error).toBe('Error uploading recipe');
 		});
 	});
 });
@@ -147,13 +137,22 @@ describe('route handler', () => {
 		mockEnv.rezept_recipe_uploads.put.mockResolvedValue({ key: '/raw/recipe.csv' });
 		vi.mocked(createRecipeUpload).mockResolvedValue(mockUpload as any);
 		// handler.post[0] is the function returned by requirePermissions() at module init
-		permissionCheck = handler.post[0] as ReturnType<typeof vi.fn>;
+		permissionCheck = handler.post[1] as ReturnType<typeof vi.fn>;
 		vi.mocked(permissionCheck).mockResolvedValue(undefined); // passes through by default
 		ctx = { user: { id: 'user-id' }, logger: new Logger() };
 	});
 
 	it('handler chain ends with _postHandler', () => {
 		expect(handler.post[handler.post.length - 1]).toBe(_postHandler);
+	});
+
+	it('includes requireAuthentication in the chain', () => {
+		expect(handler.post).toContain(requireAuthentication);
+	});
+
+	it('returns 401 for unauthenticated requests', async () => {
+		const response = await executeChain({ request: makeRequest(), ctx: { ...ctx, user: null } });
+		expect(response?.status).toBe(401);
 	});
 
 	it('blocks the request when the permission check fails', async () => {
@@ -163,14 +162,10 @@ describe('route handler', () => {
 		expect(response?.status).toBe(403);
 	});
 
-	it('reaches _postHandler when permission check passes', async () => {
+	it('reaches _postHandler when auth and permissions pass', async () => {
 		const response = await executeChain({ request: makeRequest(), ctx });
 		expect(response?.status).toBe(200);
-	});
-
-	it('returns 400 when user is missing even after permission check passes', async () => {
-		ctx.user = null;
-		const response = await executeChain({ request: makeRequest(), ctx });
-		expect(response?.status).toBe(400);
+		const body = (await response?.json()) as any;
+		expect(body.success).toBe(true);
 	});
 });

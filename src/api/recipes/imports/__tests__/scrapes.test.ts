@@ -2,6 +2,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
+const mockEnv = vi.hoisted(() => ({
+	REZEPT_ENV: 'development' as string,
+	rezept_recipe_uploads: {
+		put: vi.fn(),
+	},
+}));
+
+vi.mock('cloudflare:workers', () => ({ env: mockEnv }));
+
 vi.mock('@/steps', () => ({
 	parseBodyJson: vi.fn(),
 	initializeScrape: vi.fn(),
