@@ -10,7 +10,7 @@ import { errorResponse, successResponse } from './utils';
 // biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
 export const saveApiKey = serverAction([
 	requireAuthentication,
-	requirePermissions('apiKeys:create', 'apiKeys:update'),
+	requirePermissions('api-keys:create', 'api-keys:update'),
 	_saveApiKey,
 ]);
 
