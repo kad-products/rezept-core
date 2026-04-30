@@ -1,3 +1,12 @@
+## [1.18.13](https://github.com/kad-products/rezept-core/compare/v1.18.12...v1.18.13) (2026-04-30)
+
+### Bug Fixes
+
+* added tests for api endpoints ([f91fa38](https://github.com/kad-products/rezept-core/commit/f91fa382b0643f5d8115f50a80399a450c93bc7b))
+* align return type to actual return possibilities ([fd96673](https://github.com/kad-products/rezept-core/commit/fd96673e63f5c346112179a2118d7a82c4ece92f))
+* api handlers export and named properly ([e7da8cd](https://github.com/kad-products/rezept-core/commit/e7da8cd4da89e1b1ea819061018cc31dde3128fc))
+* create actions barrel export ([51bd93d](https://github.com/kad-products/rezept-core/commit/51bd93d28c0a1a7a4046f367276172c3eaa1143a))
+
 ## [1.18.12](https://github.com/kad-products/rezept-core/compare/v1.18.11...v1.18.12) (2026-04-30)
 
 ### Bug Fixes
