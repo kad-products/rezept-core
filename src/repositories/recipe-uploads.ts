@@ -1,5 +1,4 @@
 import { eq } from 'drizzle-orm';
-import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeUploads } from '@/models';
@@ -27,13 +26,9 @@ export async function createRecipeUpload(
 	return result;
 }
 
-export async function getRecipeUploads(logger: RzLogger): Promise<RecipeUpload[]> {
-	if (!requestInfo.ctx.user) {
-		return [];
-	}
-
-	logger.debug(`Fetching recipe uploads for user ${requestInfo.ctx.user.id}`);
-	const results = await db.select().from(recipeUploads).where(eq(recipeUploads.userId, requestInfo.ctx.user.id));
+export async function getRecipeUploads(userId: string, logger: RzLogger): Promise<RecipeUpload[]> {
+	logger.debug(`Fetching recipe uploads for user ${userId}`);
+	const results = await db.select().from(recipeUploads).where(eq(recipeUploads.userId, userId));
 	logger.debug(`Fetched ${results.length} recipe uploads`);
 	return results;
 }
