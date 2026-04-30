@@ -1,3 +1,9 @@
+## [1.18.10](https://github.com/kad-products/rezept-core/compare/v1.18.9...v1.18.10) (2026-04-30)
+
+### Bug Fixes
+
+* remove extra wrapper from bookmarklet install page ([d108f60](https://github.com/kad-products/rezept-core/commit/d108f60f456b963cb2dfe349a89dfdc0a422c652))
+
 ## [1.18.9](https://github.com/kad-products/rezept-core/compare/v1.18.8...v1.18.9) (2026-04-30)
 
 ### Bug Fixes
