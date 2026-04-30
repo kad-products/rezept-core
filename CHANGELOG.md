@@ -1,3 +1,9 @@
+## [1.18.15](https://github.com/kad-products/rezept-core/compare/v1.18.14...v1.18.15) (2026-04-30)
+
+### Bug Fixes
+
+* move inferred type to explicit and into types/ dir ([b6eb2e0](https://github.com/kad-products/rezept-core/commit/b6eb2e0bb0543b1213ed968a2ff3a7cced47417c))
+
 ## [1.18.14](https://github.com/kad-products/rezept-core/compare/v1.18.13...v1.18.14) (2026-04-30)
 
 ### Code Refactoring
