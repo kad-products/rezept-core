@@ -25,6 +25,7 @@ const mockRequestInfo: MockRequestInfo = {
 };
 
 vi.mock('rwsdk/worker', () => ({
+	serverAction: (handlers: any[]) => handlers[handlers.length - 1],
 	get requestInfo() {
 		return mockRequestInfo;
 	},
@@ -133,6 +134,8 @@ describe('saveSeason integration', () => {
 		});
 
 		it('requires authentication', async () => {
+			// _saveSeason asserts ctx.user is non-null (enforced by requireAuthentication in the serverAction chain).
+			// Calling it directly without a user throws — auth gating is tested in unit tests.
 			mockRequestInfo.ctx.user = null;
 
 			const data = {
@@ -142,9 +145,7 @@ describe('saveSeason integration', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
-
-			expect(result.success).toBe(false);
+			await expect(saveSeason(data)).rejects.toThrow();
 
 			// Verify nothing was saved
 			const seasonData = await getSeasons(mockRequestInfo.ctx.logger);

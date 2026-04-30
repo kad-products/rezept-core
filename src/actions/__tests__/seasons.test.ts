@@ -3,6 +3,7 @@ import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
 const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
+const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 
 // Mock repositories
 vi.mock('@/repositories/seasons', () => ({
@@ -33,15 +34,20 @@ const mockRequestInfo: MockRequestInfo = {
 };
 
 vi.mock('rwsdk/worker', () => ({
+	serverAction: (handlers: unknown[]) => {
+		capturedChain.handlers = handlers;
+		return Array.isArray(handlers) ? handlers[handlers.length - 1] : handlers;
+	},
 	get requestInfo() {
 		return mockRequestInfo;
 	},
 }));
 
 import { randomUUID } from 'node:crypto';
+import { requireAuthentication } from '@/interrupters';
 import { createSeason, updateSeason } from '@/repositories/seasons';
 import type { SeasonFormSave } from '@/types';
-import { saveSeason } from '../seasons';
+import { _saveSeason } from '../seasons';
 
 describe('saveSeason', () => {
 	beforeEach(() => {
@@ -55,21 +61,8 @@ describe('saveSeason', () => {
 	});
 
 	describe('authentication', () => {
-		it('rejects unauthenticated requests', async () => {
-			mockRequestInfo.ctx.user = null;
-
-			const data = {
-				name: 'Test Season',
-				country: 'US',
-				startMonth: 1,
-				endMonth: 3,
-			};
-
-			const result = await saveSeason(data);
-
-			expect(result.success).toBe(false);
-			expect(result.errors?._form?.[0]).toContain('You must be logged in');
-			expect(createSeason).not.toHaveBeenCalled();
+		it('includes requireAuthentication in the serverAction chain', () => {
+			expect(capturedChain.handlers).toContain(requireAuthentication);
 		});
 	});
 
@@ -82,7 +75,7 @@ describe('saveSeason', () => {
 				endMonth: 5,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(createSeason).toHaveBeenCalledTimes(1);
@@ -101,7 +94,7 @@ describe('saveSeason', () => {
 		it('validates required fields', async () => {
 			const data = {} as SeasonFormSave;
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toBeDefined();
@@ -116,7 +109,7 @@ describe('saveSeason', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.country).toBeDefined();
@@ -130,7 +123,7 @@ describe('saveSeason', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.country).toBeDefined();
@@ -144,7 +137,7 @@ describe('saveSeason', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.startMonth).toBeDefined();
@@ -158,7 +151,7 @@ describe('saveSeason', () => {
 				endMonth: 13, // Too high
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?.endMonth).toBeDefined();
@@ -174,7 +167,7 @@ describe('saveSeason', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
@@ -189,7 +182,7 @@ describe('saveSeason', () => {
 				endMonth: 8,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(true);
 		});
@@ -205,7 +198,7 @@ describe('saveSeason', () => {
 				notes: 'Great for lavender',
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(createSeason).toHaveBeenCalledWith(
@@ -229,7 +222,7 @@ describe('saveSeason', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.errors?._form?.[0]).toBe('Failed to save season');
 			expect(result.errors?._form?.[0]).not.toContain('postgres://');
@@ -248,7 +241,7 @@ describe('saveSeason', () => {
 				endMonth: 8,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(updateSeason).toHaveBeenCalledTimes(1);
@@ -276,7 +269,7 @@ describe('saveSeason', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();

@@ -1,18 +1,25 @@
 'use server';
-
-import { requestInfo } from 'rwsdk/worker';
+import { requestInfo, serverAction } from 'rwsdk/worker';
+import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createSeason, updateSeason } from '@/repositories/seasons';
 import { seasonsSchemas } from '@/schemas';
 import type { ActionState, SeasonFormSave } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
-export async function saveSeason(formData: SeasonFormSave): Promise<ActionState<SeasonFormSave>> {
-	const { ctx } = requestInfo;
-	const userId = ctx.user?.id;
+// biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
+export const saveSeason = serverAction([
+	requireAuthentication,
+	requirePermissions('seasons:create', 'seasons:update'),
+	_saveSeason,
+]);
 
-	if (!userId) {
-		return errorResponse<SeasonFormSave>('You must be logged in to perform this action', 401);
-	}
+/**
+ * @private - exported for testing only, do not use directly
+ */
+export async function _saveSeason(formData: SeasonFormSave): Promise<ActionState<SeasonFormSave>> {
+	const { ctx } = requestInfo;
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
+	const userId = ctx.user!.id;
 
 	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
 
