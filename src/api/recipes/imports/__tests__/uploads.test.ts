@@ -134,7 +134,7 @@ describe('_postHandler', () => {
 describe('route handler', () => {
 	const executeChain = async (requestInfo: any): Promise<Response | undefined> => {
 		for (const fn of handler.post) {
-			const result = await (fn as Function)(requestInfo);
+			const result = await (fn as (info: unknown) => Promise<Response | undefined>)(requestInfo);
 			if (result instanceof Response) return result;
 		}
 	};
