@@ -1,3 +1,9 @@
+## [1.18.9](https://github.com/kad-products/rezept-core/compare/v1.18.8...v1.18.9) (2026-04-30)
+
+### Bug Fixes
+
+* streamline schema utils ([e199619](https://github.com/kad-products/rezept-core/commit/e199619b46ed68d3fa1de2936d7a21ec8c039389))
+
 ## [1.18.8](https://github.com/kad-products/rezept-core/compare/v1.18.7...v1.18.8) (2026-04-30)
 
 ### Bug Fixes
