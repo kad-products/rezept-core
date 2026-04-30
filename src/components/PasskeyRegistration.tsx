@@ -2,7 +2,7 @@
 
 import { startRegistration } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
-import { finishPasskeyRegistration, startPasskeyRegistration } from '@/actions/auth';
+import { finishPasskeyRegistration, startPasskeyRegistration } from '@/actions';
 
 export default function PasskeyRegistration(): React.ReactNode {
 	const [username, setUsername] = useState('');
