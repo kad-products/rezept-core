@@ -120,6 +120,20 @@ ADRs live in `docs/decisions/` using MADR format. File naming: `NNNN-kebab-case-
 
 ---
 
+## Agent Worktrees
+
+When working in a git worktree (e.g. created via `git worktree add`), `.dev.vars` is not present because it is gitignored. Without it, `pnpm generate` (`wrangler types`) produces an incomplete `worker-configuration.d.ts` that is missing secrets like `SESSION_SECRET_KEY`, which causes `tsc` to fail.
+
+**Fix:** Copy or symlink `.dev.vars` from the repo root into the worktree before running `pnpm install` or `pnpm generate`:
+
+```bash
+cp /path/to/repo/.dev.vars /path/to/worktree/.dev.vars
+# or
+ln -s /path/to/repo/.dev.vars /path/to/worktree/.dev.vars
+```
+
+---
+
 ## Docs to Reference
 
 - [RedwoodSDK docs](https://rwsdk.com) — framework patterns, server actions, routing
