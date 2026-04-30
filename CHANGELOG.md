@@ -1,3 +1,14 @@
+## [1.18.8](https://github.com/kad-products/rezept-core/compare/v1.18.7...v1.18.8) (2026-04-30)
+
+### Bug Fixes
+
+* add logger to api-key middleware test mock ctx ([f5e213d](https://github.com/kad-products/rezept-core/commit/f5e213dc4031103499ec476a9da292fefa982762))
+* restore worker-configuration.d.ts from main ([cad0112](https://github.com/kad-products/rezept-core/commit/cad0112eeff326dcd60eea2510d0689e5172727c))
+
+### Code Refactoring
+
+* pass logger as parameter to all repository methods ([3fb9e58](https://github.com/kad-products/rezept-core/commit/3fb9e5825038d53d5586ce39ac0d2e70eb76f0c8))
+
 ## [1.18.7](https://github.com/kad-products/rezept-core/compare/v1.18.6...v1.18.7) (2026-04-29)
 
 ### Bug Fixes
