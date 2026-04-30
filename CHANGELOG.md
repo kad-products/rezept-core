@@ -1,3 +1,9 @@
+## [1.18.11](https://github.com/kad-products/rezept-core/compare/v1.18.10...v1.18.11) (2026-04-30)
+
+### Bug Fixes
+
+* change Pages__recipes__upload_view naming convention ([fed1931](https://github.com/kad-products/rezept-core/commit/fed193125fb7266101c5e4d93126ddc8f3058485))
+
 ## [1.18.10](https://github.com/kad-products/rezept-core/compare/v1.18.9...v1.18.10) (2026-04-30)
 
 ### Bug Fixes
