@@ -93,13 +93,7 @@ export default function RecipesTabs({
 				</div>
 			</Tabs.Content>
 			<Tabs.Content className="rz-tabs-content" value="scrapes">
-				<div>
-					<code>
-						<pre>
-							<BookmarkletInstall apiKeys={apiKeys} userId={userId} />
-						</pre>
-					</code>
-				</div>
+				<BookmarkletInstall apiKeys={apiKeys} userId={userId} />
 			</Tabs.Content>
 		</Tabs.Root>
 	);
