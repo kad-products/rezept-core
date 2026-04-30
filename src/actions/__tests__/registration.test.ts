@@ -227,7 +227,7 @@ describe('finishPasskeyRegistration', () => {
 		await finishPasskeyRegistration('testuser', mockRegistration as any);
 		const [credentialData] = vi.mocked(createCredential).mock.calls[0];
 		expect(typeof credentialData.name).toBe('string');
-		expect(credentialData.name.length).toBeGreaterThan(0);
+		expect(credentialData.name?.length).toBeGreaterThan(0);
 	});
 
 	it('falls back to "Unknown Device" when the User-Agent header is absent', async () => {
