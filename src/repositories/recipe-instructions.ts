@@ -1,12 +1,13 @@
 import { eq } from 'drizzle-orm';
-import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
+import type RzLogger from '@/logger';
 import { recipeInstructions } from '@/models';
 import type { RecipeInstruction, RecipeInstructionFormSave } from '@/types';
 
-export async function getInstructionsByRecipeSectionId(recipeSectionId: string): Promise<RecipeInstruction[]> {
+export async function getInstructionsByRecipeSectionId(recipeSectionId: string, logger: RzLogger): Promise<RecipeInstruction[]> {
+	logger.debug(`Fetching instructions for section ${recipeSectionId}`);
 	const instructions = await db.select().from(recipeInstructions).where(eq(recipeInstructions.recipeSectionId, recipeSectionId));
-
+	logger.debug(`Fetched ${instructions.length} instructions for section ${recipeSectionId}`);
 	return instructions.sort((a, b) => a.stepNumber - b.stepNumber);
 }
 
@@ -14,10 +15,9 @@ export async function updateRecipeInstructions(
 	recipeSectionId: string,
 	instructionsData: RecipeInstructionFormSave[],
 	userId: string,
+	logger: RzLogger,
 ): Promise<RecipeInstruction[]> {
-	requestInfo.ctx.logger.info(
-		`Updating recipe instructions for recipeSectionId ${recipeSectionId} with data: ${JSON.stringify(instructionsData, null, 4)} `,
-	);
+	logger.debug(`Updating instructions for section ${recipeSectionId}`);
 
 	// get existing instructions for the recipe
 	const existingInstructions = await db
@@ -32,7 +32,9 @@ export async function updateRecipeInstructions(
 
 	await Promise.all(removedInstructionIds.map(id => db.delete(recipeInstructions).where(eq(recipeInstructions.id, id))));
 
-	requestInfo.ctx.logger.info(`Removed instruction IDs: ${JSON.stringify(removedInstructionIds, null, 4)} `);
+	if (removedInstructionIds.length > 0) {
+		logger.info(`Deleted ${removedInstructionIds.length} instructions for section ${recipeSectionId}`);
+	}
 
 	// update or insert instructions from instructionsData
 	const savedInstructions = await Promise.all(
@@ -49,7 +51,7 @@ export async function updateRecipeInstructions(
 					.where(eq(recipeInstructions.id, instData.id))
 					.returning();
 
-				requestInfo.ctx.logger.info(`Updated existing instruction ID ${instData.id}: ${JSON.stringify(instData, null, 4)} `);
+				logger.info(`Updated instruction ${instData.id}`);
 				return updatedInstruction;
 			} else {
 				// insert new instruction
@@ -63,18 +65,14 @@ export async function updateRecipeInstructions(
 					})
 					.returning();
 
-				requestInfo.ctx.logger.info(
-					`Inserted new instruction for recipeSectionId ${recipeSectionId}: ${JSON.stringify(instData, null, 4)} `,
-				);
+				logger.info(`Created instruction ${newInstruction.id} for section ${recipeSectionId}`);
 
 				return newInstruction;
 			}
 		}),
 	);
 
-	requestInfo.ctx.logger.info(
-		`Updated/Inserted instructions for recipeSectionId ${recipeSectionId}: ${JSON.stringify(instructionsData, null, 4)} `,
-	);
+	logger.info(`Updated ${savedInstructions.length} instructions for section ${recipeSectionId}`);
 
 	return savedInstructions;
 }

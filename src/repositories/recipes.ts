@@ -1,21 +1,23 @@
 import { eq } from 'drizzle-orm';
-import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
+import type RzLogger from '@/logger';
 import { recipes } from '@/models';
 import type { Recipe, RecipeFormSave } from '@/types';
 import { validateUuid } from './utils';
 
-export async function getRecipes(): Promise<Recipe[]> {
-	requestInfo.ctx.logger.info(`Getting recipes`);
+export async function getRecipes(logger: RzLogger): Promise<Recipe[]> {
+	logger.debug('Fetching all recipes');
 	const allRecipes = await db.select().from(recipes);
+	logger.debug(`Fetched ${allRecipes.length} recipes`);
 	return allRecipes;
 }
 
-export async function getRecipeById(recipeId: string): Promise<Recipe> {
+export async function getRecipeById(recipeId: string, logger: RzLogger): Promise<Recipe> {
 	if (!validateUuid(recipeId)) {
 		throw new Error(`Invalid id: ${recipeId}`);
 	}
 
+	logger.debug(`Fetching recipe ${recipeId}`);
 	const matchedRecipes = await db.select().from(recipes).where(eq(recipes.id, recipeId));
 
 	if (matchedRecipes.length !== 1) {
@@ -25,8 +27,8 @@ export async function getRecipeById(recipeId: string): Promise<Recipe> {
 	return matchedRecipes[0];
 }
 
-export async function createRecipe(recipe: RecipeFormSave, userId: string): Promise<Recipe> {
-	requestInfo.ctx.logger.info(`Form data in createRecipe: ${JSON.stringify(recipe, null, 4)} `);
+export async function createRecipe(recipe: RecipeFormSave, userId: string, logger: RzLogger): Promise<Recipe> {
+	logger.debug('Creating recipe');
 
 	const insertedRecipes = await db
 		.insert(recipes)
@@ -36,11 +38,18 @@ export async function createRecipe(recipe: RecipeFormSave, userId: string): Prom
 		})
 		.returning();
 
-	return insertedRecipes[0];
+	const result = insertedRecipes[0];
+	logger.info(`Created recipe ${result.id}`);
+	return result;
 }
 
-export async function updateRecipe(recipeId: string, recipeData: RecipeFormSave, userId: string): Promise<Recipe> {
-	requestInfo.ctx.logger.info(`Form data in updateRecipe: ${JSON.stringify(recipeData, null, 4)} `);
+export async function updateRecipe(
+	recipeId: string,
+	recipeData: RecipeFormSave,
+	userId: string,
+	logger: RzLogger,
+): Promise<Recipe> {
+	logger.debug(`Updating recipe ${recipeId}`);
 
 	const updatedRecipes = await db
 		.update(recipes)
@@ -51,5 +60,7 @@ export async function updateRecipe(recipeId: string, recipeData: RecipeFormSave,
 		.where(eq(recipes.id, recipeId))
 		.returning();
 
-	return updatedRecipes[0];
+	const result = updatedRecipes[0];
+	logger.info(`Updated recipe ${result.id}`);
+	return result;
 }

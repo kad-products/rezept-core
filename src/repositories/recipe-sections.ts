@@ -1,12 +1,13 @@
 import { eq } from 'drizzle-orm';
-import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
+import type RzLogger from '@/logger';
 import { recipeSections } from '@/models';
 import type { RecipeSection, RecipeSectionFormSave } from '@/types';
 
-export async function getSectionsByRecipeId(recipeId: string): Promise<RecipeSection[]> {
+export async function getSectionsByRecipeId(recipeId: string, logger: RzLogger): Promise<RecipeSection[]> {
+	logger.debug(`Fetching sections for recipe ${recipeId}`);
 	const sections = await db.select().from(recipeSections).where(eq(recipeSections.recipeId, recipeId));
-
+	logger.debug(`Fetched ${sections.length} sections for recipe ${recipeId}`);
 	return sections.sort((a, b) => a.order - b.order);
 }
 
@@ -14,28 +15,27 @@ export async function updateRecipeSections(
 	recipeId: string,
 	sectionsData: RecipeSectionFormSave[],
 	userId: string,
+	logger: RzLogger,
 ): Promise<RecipeSection[]> {
-	requestInfo.ctx.logger.info(
-		`Updating recipe sections for recipeId ${recipeId} with data: ${JSON.stringify(sectionsData, null, 4)} `,
-	);
+	logger.debug(`Updating sections for recipe ${recipeId}`);
 
 	// get existing sections
-	const existingSections = await getSectionsByRecipeId(recipeId);
+	const existingSections = await getSectionsByRecipeId(recipeId, logger);
 
 	// remove ones that are not present in sectionsData
 	const removedSectionIds = existingSections.map(s => s.id).filter(id => !sectionsData.some(sd => sd.id === id));
 
 	await Promise.all(removedSectionIds.map(id => db.delete(recipeSections).where(eq(recipeSections.id, id))));
 
-	requestInfo.ctx.logger.info(`Removed section IDs: ${JSON.stringify(removedSectionIds, null, 4)} `);
+	if (removedSectionIds.length > 0) {
+		logger.info(`Deleted ${removedSectionIds.length} sections for recipe ${recipeId}`);
+	}
 
 	const returnSections = [];
 
 	// update or insert sections from sectionsData
 	for (const section of sectionsData) {
 		if (section.id) {
-			requestInfo.ctx.logger.info(`Updating existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
-
 			// update existing section
 			const [updatedSection] = await db
 				.update(recipeSections)
@@ -47,11 +47,9 @@ export async function updateRecipeSections(
 				.where(eq(recipeSections.id, section.id))
 				.returning();
 
-			requestInfo.ctx.logger.info(`Updated existing section ID ${section.id}: ${JSON.stringify(section, null, 4)} `);
+			logger.info(`Updated section ${section.id}`);
 			returnSections.push(updatedSection);
 		} else {
-			requestInfo.ctx.logger.info(`Inserting new section for recipeId ${recipeId}: ${JSON.stringify(section, null, 4)} `);
-
 			// insert new section
 			const [newSection] = await db
 				.insert(recipeSections)
@@ -63,12 +61,12 @@ export async function updateRecipeSections(
 				})
 				.returning();
 
-			requestInfo.ctx.logger.info(`Inserted new section: ${JSON.stringify(section, null, 4)} `);
+			logger.info(`Created section ${newSection.id} for recipe ${recipeId}`);
 			returnSections.push(newSection);
 		}
 	}
 
-	requestInfo.ctx.logger.info(`Updated/Inserted sections for recipeId ${recipeId}: ${JSON.stringify(sectionsData, null, 4)} `);
+	logger.info(`Updated ${returnSections.length} sections for recipe ${recipeId}`);
 
 	return returnSections;
 }

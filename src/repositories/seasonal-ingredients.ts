@@ -1,6 +1,6 @@
 import { and, eq, inArray } from 'drizzle-orm';
-import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
+import type RzLogger from '@/logger';
 import { seasonalIngredients } from '@/models';
 
 // biome-ignore lint/nursery/useExplicitType: Drizzle query builder return type is not practically writable
@@ -14,14 +14,18 @@ const getSeasonalIngredientsQuery = (seasonId: string) =>
 
 export type SeasonalIngredientWithRelations = Awaited<ReturnType<typeof getSeasonalIngredientsQuery>>[number];
 
-export async function getIngredientsBySeasonId(seasonId: string): Promise<SeasonalIngredientWithRelations[]> {
-	return await getSeasonalIngredientsQuery(seasonId);
+export async function getIngredientsBySeasonId(seasonId: string, logger: RzLogger): Promise<SeasonalIngredientWithRelations[]> {
+	logger.debug(`Fetching ingredients for season ${seasonId}`);
+	const results = await getSeasonalIngredientsQuery(seasonId);
+	logger.debug(`Fetched ${results.length} ingredients for season ${seasonId}`);
+	return results;
 }
 
 export async function updateSeasonalIngredientsForSeason(
 	seasonId: string,
 	ingredientIds: string[],
 	userId: string,
+	logger: RzLogger,
 ): Promise<void> {
 	// find existing ones
 	const existingIngredientIds = await db
@@ -30,7 +34,7 @@ export async function updateSeasonalIngredientsForSeason(
 		.where(eq(seasonalIngredients.seasonId, seasonId))
 		.then(rows => rows.map(row => row.ingredientId));
 
-	requestInfo.ctx.logger.info(`Existing ingredient IDs: ${JSON.stringify(existingIngredientIds, null, 4)} `);
+	logger.debug(`Found ${existingIngredientIds.length} existing ingredients for season ${seasonId}`);
 
 	// insert and ignore conflicts for new ones
 	const insertValues = ingredientIds.map(ingredientId => ({
@@ -40,9 +44,7 @@ export async function updateSeasonalIngredientsForSeason(
 	}));
 	await db.insert(seasonalIngredients).values(insertValues).onConflictDoNothing();
 
-	requestInfo.ctx.logger.info(
-		`Inserted/ignored seasonal ingredients for season ${seasonId}: ${JSON.stringify(insertValues, null, 4)} `,
-	);
+	logger.info(`Upserted ${insertValues.length} seasonal ingredients for season ${seasonId}`);
 
 	// delete the existing ones not in the new list
 	const removedIngredientIds = existingIngredientIds.filter(id => !ingredientIds.includes(id));
@@ -50,7 +52,9 @@ export async function updateSeasonalIngredientsForSeason(
 		.delete(seasonalIngredients)
 		.where(and(inArray(seasonalIngredients.ingredientId, removedIngredientIds), eq(seasonalIngredients.seasonId, seasonId)));
 
-	requestInfo.ctx.logger.info(`Removed ingredient IDs: ${JSON.stringify(removedIngredientIds, null, 4)} `);
+	if (removedIngredientIds.length > 0) {
+		logger.info(`Deleted ${removedIngredientIds.length} seasonal ingredients for season ${seasonId}`);
+	}
 
-	requestInfo.ctx.logger.info(`Updated seasonal ingredients for season ${seasonId}`);
+	logger.info(`Updated seasonal ingredients for season ${seasonId}`);
 }

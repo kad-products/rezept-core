@@ -94,6 +94,7 @@ describe('saveSeason', () => {
 					endMonth: 5,
 				}),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 
@@ -214,6 +215,7 @@ describe('saveSeason', () => {
 					notes: 'Great for lavender',
 				}),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 
@@ -259,6 +261,7 @@ describe('saveSeason', () => {
 					endMonth: 8,
 				}),
 				'test-user-id',
+				expect.anything(),
 			);
 		});
 

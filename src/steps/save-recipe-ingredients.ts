@@ -25,6 +25,7 @@ export async function saveRecipeIngredients(
 				section.sectionId,
 				section.ingredients as RecipeIngredientFormSave[],
 				userId,
+				logger,
 			);
 			logger.info(`Recipe ingredients saved for recipe ${recipeId} section ${section.sectionId}`);
 		} catch (error) {

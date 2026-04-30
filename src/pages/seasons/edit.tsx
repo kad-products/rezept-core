@@ -12,9 +12,9 @@ import type { Season as SeasonModel } from '@/types';
 export default async function Pages__seasons__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;
 	let [allIngredients, season, seasonalIngredients] = await Promise.all([
-		getIngredients(),
-		seasonId ? getSeasonById(seasonId) : Promise.resolve(undefined),
-		seasonId ? getIngredientsBySeasonId(seasonId) : Promise.resolve(undefined),
+		getIngredients(ctx.logger),
+		seasonId ? getSeasonById(seasonId, ctx.logger) : Promise.resolve(undefined),
+		seasonId ? getIngredientsBySeasonId(seasonId, ctx.logger) : Promise.resolve(undefined),
 	]);
 
 	if (!seasonId) {

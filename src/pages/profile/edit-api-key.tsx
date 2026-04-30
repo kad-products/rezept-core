@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import { requestInfo } from 'rwsdk/worker';
 import FormApiKey from '@/forms/api-key';
 import StandardLayout from '@/layouts/standard';
 import { getApiKeyById } from '@/repositories/api-keys';
@@ -8,14 +7,14 @@ import type { ApiKey } from '@/types';
 
 export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const apiKeyId = params.apiKeyId;
-	const userId = requestInfo.ctx.user?.id;
+	const userId = ctx.user?.id;
 
 	let apiKey: ApiKey | undefined;
 
 	if (!apiKeyId) {
 		apiKey = undefined;
 	} else {
-		apiKey = await getApiKeyById(params.apiKeyId);
+		apiKey = await getApiKeyById(params.apiKeyId, ctx.logger);
 	}
 
 	return (

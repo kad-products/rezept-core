@@ -34,9 +34,9 @@ export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState
 	let apiKey: ApiKey;
 	try {
 		if (parsed.data.id) {
-			apiKey = await updateApiKey(parsed.data.id, parsed.data, userId);
+			apiKey = await updateApiKey(parsed.data.id, parsed.data, userId, requestInfo.ctx.logger);
 		} else {
-			apiKey = await createApiKey(parsed.data, userId);
+			apiKey = await createApiKey(parsed.data, userId, requestInfo.ctx.logger);
 		}
 		requestInfo.ctx.logger.info(`API Key ${apiKey.id} saved`);
 

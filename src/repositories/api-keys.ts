@@ -1,20 +1,23 @@
 import { eq } from 'drizzle-orm';
-import { requestInfo } from 'rwsdk/worker';
 import db from '@/db';
+import type RzLogger from '@/logger';
 import { apiKeys } from '@/models';
 import type { ApiKey, ApiKeyFormData } from '@/types';
 import { validateUuid } from './utils';
 
-export async function getApiKeysByUserId(userId: string): Promise<ApiKey[]> {
+export async function getApiKeysByUserId(userId: string, logger: RzLogger): Promise<ApiKey[]> {
+	logger.debug(`Fetching API keys for user ${userId}`);
 	const matchedApiKeys = await db.select().from(apiKeys).where(eq(apiKeys.userId, userId));
+	logger.debug(`Fetched ${matchedApiKeys.length} API keys for user ${userId}`);
 	return matchedApiKeys;
 }
 
-export async function getApiKeyById(apiKeyId: string): Promise<ApiKey> {
+export async function getApiKeyById(apiKeyId: string, logger: RzLogger): Promise<ApiKey> {
 	if (!validateUuid(apiKeyId)) {
 		throw new Error(`Invalid id: ${apiKeyId}`);
 	}
 
+	logger.debug(`Fetching API key ${apiKeyId}`);
 	const matchedApiKeys = await db.select().from(apiKeys).where(eq(apiKeys.id, apiKeyId));
 
 	if (matchedApiKeys.length !== 1) {
@@ -24,7 +27,8 @@ export async function getApiKeyById(apiKeyId: string): Promise<ApiKey> {
 	return matchedApiKeys[0];
 }
 
-export async function getApiKeyByKey(key: string): Promise<ApiKey> {
+export async function getApiKeyByKey(key: string, logger: RzLogger): Promise<ApiKey> {
+	logger.debug('Fetching API key by key');
 	const matchedApiKeys = await db.select().from(apiKeys).where(eq(apiKeys.apiKey, key));
 
 	if (matchedApiKeys.length !== 1) {
@@ -34,8 +38,8 @@ export async function getApiKeyByKey(key: string): Promise<ApiKey> {
 	return matchedApiKeys[0];
 }
 
-export async function createApiKey(apiKey: ApiKeyFormData, userId: string): Promise<ApiKey> {
-	requestInfo.ctx.logger.info(`Form data in createApiKey: ${JSON.stringify(apiKey, null, 4)} `);
+export async function createApiKey(apiKey: ApiKeyFormData, userId: string, logger: RzLogger): Promise<ApiKey> {
+	logger.debug('Creating API key');
 
 	const insertedRecipes = await db
 		.insert(apiKeys)
@@ -45,11 +49,13 @@ export async function createApiKey(apiKey: ApiKeyFormData, userId: string): Prom
 		})
 		.returning();
 
-	return insertedRecipes[0];
+	const result = insertedRecipes[0];
+	logger.info(`Created API key ${result.id}`);
+	return result;
 }
 
-export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormData, userId: string): Promise<ApiKey> {
-	requestInfo.ctx.logger.info(`Form data in updateApiKey: ${JSON.stringify(apiKey, null, 4)} `);
+export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormData, userId: string, logger: RzLogger): Promise<ApiKey> {
+	logger.debug(`Updating API key ${apiKeyId}`);
 
 	const updatedRecipes = await db
 		.update(apiKeys)
@@ -64,5 +70,6 @@ export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormData, use
 		throw new Error(`updateApiKey: updated ${updatedRecipes.length} records instead of 1`);
 	}
 
+	logger.info(`Updated API key ${apiKeyId}`);
 	return updatedRecipes[0];
 }

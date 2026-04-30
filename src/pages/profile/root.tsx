@@ -12,8 +12,8 @@ export default async function Pages__profile__root({ ctx }: RequestInfo): Promis
 		return <p>No user found, please log in.</p>;
 	}
 
-	const userCredentials = await getCredentialsByUserId(userId);
-	const apiKeys = await getApiKeysByUserId(userId);
+	const userCredentials = await getCredentialsByUserId(userId, ctx.logger);
+	const apiKeys = await getApiKeysByUserId(userId, ctx.logger);
 
 	// Only plain objects can be passed to Client Components from Server Components. Uint8Array objects are not supported.
 	const clientComponentCredentials = userCredentials.map(credential => ({

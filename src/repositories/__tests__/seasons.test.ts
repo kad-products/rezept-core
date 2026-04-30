@@ -1,7 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import Logger from '@/logger';
 import { createUser } from '@/repositories/users';
 import { resetDb } from '../../../tests/mocks/db';
 import { createSeason, getSeasonById, getSeasons, updateSeason } from '../seasons';
+
+const logger = new Logger();
 
 const baseSeasonData = {
 	name: 'Spring Season',
@@ -15,29 +18,29 @@ describe('seasons repository', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser');
+		const user = await createUser('testuser', logger);
 		testUserId = user.id;
 	});
 
 	describe('getSeasons', () => {
 		it('returns empty array when no seasons exist', async () => {
-			const result = await getSeasons();
+			const result = await getSeasons(logger);
 			expect(result).toEqual([]);
 		});
 
 		it('returns all seasons', async () => {
-			await createSeason({ ...baseSeasonData, name: 'Season 1' }, testUserId);
-			await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId);
-			await createSeason({ ...baseSeasonData, name: 'Season 3' }, testUserId);
+			await createSeason({ ...baseSeasonData, name: 'Season 1' }, testUserId, logger);
+			await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId, logger);
+			await createSeason({ ...baseSeasonData, name: 'Season 3' }, testUserId, logger);
 
-			const result = await getSeasons();
+			const result = await getSeasons(logger);
 			expect(result).toHaveLength(3);
 		});
 
 		it('returns seasons with correct shape', async () => {
-			await createSeason(baseSeasonData, testUserId);
+			await createSeason(baseSeasonData, testUserId, logger);
 
-			const result = await getSeasons();
+			const result = await getSeasons(logger);
 			expect(result[0]).toMatchObject({
 				name: 'Spring Season',
 				country: 'US',
@@ -50,42 +53,42 @@ describe('seasons repository', () => {
 
 	describe('getSeasonById', () => {
 		it('returns season by id', async () => {
-			const created = await createSeason(baseSeasonData, testUserId);
+			const created = await createSeason(baseSeasonData, testUserId, logger);
 
-			const result = await getSeasonById(created.id);
+			const result = await getSeasonById(created.id, logger);
 			expect(result.id).toBe(created.id);
 			expect(result.name).toBe('Spring Season');
 		});
 
 		it('throws when season does not exist', async () => {
-			await expect(getSeasonById(crypto.randomUUID())).rejects.toThrow('matchedSeasons length is 0');
+			await expect(getSeasonById(crypto.randomUUID(), logger)).rejects.toThrow('matchedSeasons length is 0');
 		});
 
 		it('returns correct season when multiple exist', async () => {
-			await createSeason({ ...baseSeasonData, name: 'Season 1' }, testUserId);
-			const season2 = await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId);
+			await createSeason({ ...baseSeasonData, name: 'Season 1' }, testUserId, logger);
+			const season2 = await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId, logger);
 
-			const result = await getSeasonById(season2.id);
+			const result = await getSeasonById(season2.id, logger);
 			expect(result.id).toBe(season2.id);
 			expect(result.name).toBe('Season 2');
 		});
 
 		it('throws when id is not a valid uuid', async () => {
-			await expect(getSeasonById('not-a-uuid')).rejects.toThrow('Invalid id: not-a-uuid');
+			await expect(getSeasonById('not-a-uuid', logger)).rejects.toThrow('Invalid id: not-a-uuid');
 		});
 
 		it('throws when id is an empty string', async () => {
-			await expect(getSeasonById('')).rejects.toThrow('Invalid id: ');
+			await expect(getSeasonById('', logger)).rejects.toThrow('Invalid id: ');
 		});
 
 		it('throws when id contains special characters', async () => {
-			await expect(getSeasonById('<Anonymous code>')).rejects.toThrow('Invalid id: <Anonymous code>');
+			await expect(getSeasonById('<Anonymous code>', logger)).rejects.toThrow('Invalid id: <Anonymous code>');
 		});
 	});
 
 	describe('createSeason', () => {
 		it('creates a season with required fields', async () => {
-			const result = await createSeason(baseSeasonData, testUserId);
+			const result = await createSeason(baseSeasonData, testUserId, logger);
 
 			expect(result.id).toBeDefined();
 			expect(result.name).toBe('Spring Season');
@@ -95,12 +98,12 @@ describe('seasons repository', () => {
 		});
 
 		it('sets createdBy to userId', async () => {
-			const result = await createSeason(baseSeasonData, testUserId);
+			const result = await createSeason(baseSeasonData, testUserId, logger);
 			expect(result.createdBy).toBe(testUserId);
 		});
 
 		it('sets audit fields correctly', async () => {
-			const result = await createSeason(baseSeasonData, testUserId);
+			const result = await createSeason(baseSeasonData, testUserId, logger);
 
 			expect(result.createdAt).toBeDefined();
 			expect(result.updatedAt).toBeNull();
@@ -116,6 +119,7 @@ describe('seasons repository', () => {
 					notes: 'Some notes',
 				},
 				testUserId,
+				logger,
 			);
 
 			expect(result.region).toBe('Midwest');
@@ -124,8 +128,8 @@ describe('seasons repository', () => {
 		});
 
 		it('creates multiple seasons with unique ids', async () => {
-			const season1 = await createSeason({ ...baseSeasonData, name: 'Season 1' }, testUserId);
-			const season2 = await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId);
+			const season1 = await createSeason({ ...baseSeasonData, name: 'Season 1' }, testUserId, logger);
+			const season2 = await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId, logger);
 
 			expect(season1.id).not.toBe(season2.id);
 		});
@@ -133,7 +137,7 @@ describe('seasons repository', () => {
 
 	describe('updateSeason', () => {
 		it('updates season fields', async () => {
-			const created = await createSeason(baseSeasonData, testUserId);
+			const created = await createSeason(baseSeasonData, testUserId, logger);
 
 			const result = await updateSeason(
 				created.id,
@@ -143,6 +147,7 @@ describe('seasons repository', () => {
 					country: 'CA',
 				},
 				testUserId,
+				logger,
 			);
 
 			expect(result.name).toBe('Updated Name');
@@ -150,18 +155,18 @@ describe('seasons repository', () => {
 		});
 
 		it('sets updatedBy to userId', async () => {
-			const created = await createSeason(baseSeasonData, testUserId);
+			const created = await createSeason(baseSeasonData, testUserId, logger);
 
-			const result = await updateSeason(created.id, baseSeasonData, testUserId);
+			const result = await updateSeason(created.id, baseSeasonData, testUserId, logger);
 			expect(result.updatedBy).toBe(testUserId);
 		});
 
 		it('sets updatedAt on update', async () => {
-			const created = await createSeason(baseSeasonData, testUserId);
+			const created = await createSeason(baseSeasonData, testUserId, logger);
 
 			await new Promise(resolve => setTimeout(resolve, 10));
 
-			const result = await updateSeason(created.id, baseSeasonData, testUserId);
+			const result = await updateSeason(created.id, baseSeasonData, testUserId, logger);
 			expect(result.updatedAt).toBeDefined();
 			expect(result.updatedAt).not.toBe(created.createdAt);
 		});
@@ -173,24 +178,25 @@ describe('seasons repository', () => {
 					description: 'Original description',
 				},
 				testUserId,
+				logger,
 			);
 
-			const result = await updateSeason(created.id, baseSeasonData, testUserId);
+			const result = await updateSeason(created.id, baseSeasonData, testUserId, logger);
 			expect(result.description).toBe('Original description');
 		});
 
 		it('returns undefined for non-existent season', async () => {
-			const result = await updateSeason(crypto.randomUUID(), baseSeasonData, testUserId);
+			const result = await updateSeason(crypto.randomUUID(), baseSeasonData, testUserId, logger);
 			expect(result).toBeUndefined();
 		});
 
 		it('does not affect other seasons', async () => {
-			const season1 = await createSeason({ ...baseSeasonData, name: 'Season 1' }, testUserId);
-			const season2 = await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId);
+			const season1 = await createSeason({ ...baseSeasonData, name: 'Season 1' }, testUserId, logger);
+			const season2 = await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId, logger);
 
-			await updateSeason(season1.id, { ...baseSeasonData, name: 'Updated' }, testUserId);
+			await updateSeason(season1.id, { ...baseSeasonData, name: 'Updated' }, testUserId, logger);
 
-			const unchanged = await getSeasonById(season2.id);
+			const unchanged = await getSeasonById(season2.id, logger);
 			expect(unchanged.name).toBe('Season 2');
 		});
 	});

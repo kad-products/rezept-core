@@ -5,7 +5,7 @@ import StandardLayout from '@/layouts/standard';
 import { getSeasons } from '@/repositories/seasons';
 
 export default async function Pages__seasons__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
-	const seasons = await getSeasons();
+	const seasons = await getSeasons(ctx.logger);
 	return (
 		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading seasons...</div>}>

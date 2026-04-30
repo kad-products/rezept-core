@@ -1,23 +1,27 @@
 import { eq } from 'drizzle-orm';
 
 import db from '@/db';
+import type RzLogger from '@/logger';
 import { credentials } from '@/models';
 import type { Credential, CredentialInsert } from '@/types';
 
-export async function createCredential(newCredential: CredentialInsert): Promise<Credential> {
-	console.log('Creating credential for user: %s', newCredential.userId);
+export async function createCredential(newCredential: CredentialInsert, logger: RzLogger): Promise<Credential> {
+	logger.debug(`Creating credential for user ${newCredential.userId}`);
 
 	const [insertedCredential] = await db.insert(credentials).values(newCredential).returning();
-	console.log('Credential created successfully: %s', insertedCredential.id);
+	logger.info(`Created credential ${insertedCredential.id}`);
 	return insertedCredential;
 }
 
-export async function getCredentialsByUserId(userId: string): Promise<Credential[]> {
+export async function getCredentialsByUserId(userId: string, logger: RzLogger): Promise<Credential[]> {
+	logger.debug(`Fetching credentials for user ${userId}`);
 	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.userId, userId));
+	logger.debug(`Fetched ${matchedCredentials.length} credentials for user ${userId}`);
 	return matchedCredentials;
 }
 
-export async function getCredentialById(credentialId: string): Promise<Credential> {
+export async function getCredentialById(credentialId: string, logger: RzLogger): Promise<Credential> {
+	logger.debug(`Fetching credential ${credentialId}`);
 	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.credentialId, credentialId));
 
 	if (matchedCredentials.length !== 1) {
@@ -27,8 +31,9 @@ export async function getCredentialById(credentialId: string): Promise<Credentia
 	return matchedCredentials[0];
 }
 
-export async function updateCredentialCounter(credentialId: string, counter: number): Promise<void> {
+export async function updateCredentialCounter(credentialId: string, counter: number, logger: RzLogger): Promise<void> {
+	logger.debug(`Updating credential counter for ${credentialId}`);
 	await db.update(credentials).set({ counter }).where(eq(credentials.id, credentialId));
 
-	console.log('Updated credential counter for %s to %d', credentialId, counter);
+	logger.info(`Updated credential counter for ${credentialId} to ${counter}`);
 }
