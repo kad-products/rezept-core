@@ -14,6 +14,8 @@ route('/recipes', [requireAuthentication, RecipesPage])
 
 If the logic should run on **specific routes only** — it's an interrupter. If it should run on every request, it's middleware.
 
+The clearest distinguishing rule: **interrupters only read `ctx` to decide whether to halt — they never write to it.** If the function sets anything on `ctx`, it belongs in middleware instead. See the middleware readme for the counterpart rule and its one principled exception.
+
 ## Guidelines
 
 - **Named exports** — not default exports.

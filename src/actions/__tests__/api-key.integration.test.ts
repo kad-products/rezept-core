@@ -122,11 +122,11 @@ describe('saveApiKey integration', () => {
 		});
 
 		it('requires authentication', async () => {
+			// _saveApiKey asserts ctx.user is non-null (enforced by requireAuthentication in the serverAction chain).
+			// Calling it directly without a user throws — auth gating is tested in unit tests.
 			mockRequestInfo.ctx.user = null;
 
-			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
-
-			expect(result.success).toBe(false);
+			await expect(_saveApiKey({ ...baseApiKeyData, userId: testUserId })).rejects.toThrow();
 
 			const keys = await getApiKeysByUserId(testUserId, mockRequestInfo.ctx.logger);
 			expect(keys).toHaveLength(0);

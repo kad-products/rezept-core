@@ -4,7 +4,7 @@ import Logger from '@/logger';
 import { getSeasonById, getSeasons } from '@/repositories/seasons';
 import { createUser } from '@/repositories/users';
 import { resetDb } from '../../../tests/mocks/db';
-import { saveSeason } from '../seasons';
+import { _saveSeason } from '../seasons';
 
 vi.mock('cloudflare:workers', () => ({
 	env: { REZEPT_ENV: 'development' },
@@ -25,12 +25,13 @@ const mockRequestInfo: MockRequestInfo = {
 };
 
 vi.mock('rwsdk/worker', () => ({
+	serverAction: (handlers: any[]) => handlers[handlers.length - 1],
 	get requestInfo() {
 		return mockRequestInfo;
 	},
 }));
 
-describe('saveSeason integration', () => {
+describe('_saveSeason integration', () => {
 	let testUserId: string;
 
 	beforeEach(async () => {
@@ -51,7 +52,7 @@ describe('saveSeason integration', () => {
 				endMonth: 5,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -76,7 +77,7 @@ describe('saveSeason integration', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(false);
 			expect(result.data).toBeUndefined();
@@ -97,7 +98,7 @@ describe('saveSeason integration', () => {
 				endMonth: 6,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -118,7 +119,7 @@ describe('saveSeason integration', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
+			const result = await _saveSeason(data);
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBeDefined();
@@ -133,6 +134,8 @@ describe('saveSeason integration', () => {
 		});
 
 		it('requires authentication', async () => {
+			// __saveSeason asserts ctx.user is non-null (enforced by requireAuthentication in the serverAction chain).
+			// Calling it directly without a user throws — auth gating is tested in unit tests.
 			mockRequestInfo.ctx.user = null;
 
 			const data = {
@@ -142,9 +145,7 @@ describe('saveSeason integration', () => {
 				endMonth: 3,
 			};
 
-			const result = await saveSeason(data);
-
-			expect(result.success).toBe(false);
+			await expect(_saveSeason(data)).rejects.toThrow();
 
 			// Verify nothing was saved
 			const seasonData = await getSeasons(mockRequestInfo.ctx.logger);
@@ -162,7 +163,7 @@ describe('saveSeason integration', () => {
 				endMonth: 3,
 			};
 
-			const createResult = await saveSeason(createData);
+			const createResult = await _saveSeason(createData);
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -179,7 +180,7 @@ describe('saveSeason integration', () => {
 					endMonth: 8,
 				};
 
-				const updateResult = await saveSeason(updateData);
+				const updateResult = await _saveSeason(updateData);
 
 				expect(updateResult.success).toBe(true);
 				expect(updateResult.data?.id).toBe(seasonId);
@@ -202,7 +203,7 @@ describe('saveSeason integration', () => {
 				endMonth: 3,
 			};
 
-			const createResult = await saveSeason(createData);
+			const createResult = await _saveSeason(createData);
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -222,7 +223,7 @@ describe('saveSeason integration', () => {
 					endMonth: 3,
 				};
 
-				await saveSeason(updateData);
+				await _saveSeason(updateData);
 
 				const season = await getSeasonById(seasonId, mockRequestInfo.ctx.logger);
 				expect(season?.createdBy).toBe(testUserId);
@@ -242,7 +243,7 @@ describe('saveSeason integration', () => {
 				endMonth: 3,
 			};
 
-			const createResult = await saveSeason(createData);
+			const createResult = await _saveSeason(createData);
 
 			expect(createResult.success).toBe(true);
 			expect(createResult.data?.id).toBeDefined();
@@ -259,7 +260,7 @@ describe('saveSeason integration', () => {
 					endMonth: 3,
 				};
 
-				await saveSeason(updateData);
+				await _saveSeason(updateData);
 
 				const season = await getSeasonById(seasonId, mockRequestInfo.ctx.logger);
 				expect(season?.name).toBe('Updated Name');
@@ -279,7 +280,7 @@ describe('saveSeason integration', () => {
 					endMonth: 3,
 				};
 
-				return saveSeason(data);
+				return _saveSeason(data);
 			});
 
 			const results = await Promise.all(promises);

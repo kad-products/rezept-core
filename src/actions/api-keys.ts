@@ -1,25 +1,26 @@
 'use server';
 
 import { requestInfo, serverAction } from 'rwsdk/worker';
-import { requirePermissions } from '@/middleware/permissions';
+import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createApiKey, updateApiKey } from '@/repositories/api-keys';
 import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
 // biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
-export const saveApiKey = serverAction([requirePermissions('apiKeys:create', 'apiKeys:update'), _saveApiKey]);
+export const saveApiKey = serverAction([
+	requireAuthentication,
+	requirePermissions('apiKeys:create', 'apiKeys:update'),
+	_saveApiKey,
+]);
 
 /**
  * @private - exported for testing only, do not use directly
  */
 export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState<ApiKeyFormData>> {
 	const { ctx } = requestInfo;
-	const userId = ctx.user?.id;
-
-	if (!userId) {
-		return errorResponse<ApiKeyFormData>('You must be logged in to perform this action', 401);
-	}
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
+	const userId = ctx.user!.id;
 
 	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
 

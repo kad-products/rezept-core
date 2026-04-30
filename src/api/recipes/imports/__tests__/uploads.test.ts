@@ -15,11 +15,12 @@ vi.mock('@/repositories/recipe-uploads', () => ({
 	createRecipeUpload: vi.fn(),
 }));
 
-vi.mock('@/middleware/permissions', () => ({
+vi.mock('@/interrupters', () => ({
+	requireAuthentication: vi.fn(),
 	requirePermissions: vi.fn(() => vi.fn()),
 }));
 
-import { requireAuthentication } from '@/interrupters/require-authentication';
+import { requireAuthentication } from '@/interrupters';
 import { createRecipeUpload } from '@/repositories/recipe-uploads';
 import handler, { _postHandler } from '../uploads';
 
@@ -130,13 +131,15 @@ describe('route handler', () => {
 	};
 
 	let ctx: any;
+	let authCheck: ReturnType<typeof vi.fn>;
 	let permissionCheck: ReturnType<typeof vi.fn>;
 
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockEnv.rezept_recipe_uploads.put.mockResolvedValue({ key: '/raw/recipe.csv' });
 		vi.mocked(createRecipeUpload).mockResolvedValue(mockUpload as any);
-		// handler.post[0] is the function returned by requirePermissions() at module init
+		authCheck = handler.post[0] as ReturnType<typeof vi.fn>;
+		vi.mocked(authCheck).mockReturnValue(undefined); // passes through by default
 		permissionCheck = handler.post[1] as ReturnType<typeof vi.fn>;
 		vi.mocked(permissionCheck).mockResolvedValue(undefined); // passes through by default
 		ctx = { user: { id: 'user-id' }, logger: new Logger() };
@@ -151,6 +154,7 @@ describe('route handler', () => {
 	});
 
 	it('returns 401 for unauthenticated requests', async () => {
+		vi.mocked(authCheck).mockReturnValueOnce(Response.json({ error: 'Unauthorized' }, { status: 401 }));
 		const response = await executeChain({ request: makeRequest(), ctx: { ...ctx, user: null } });
 		expect(response?.status).toBe(401);
 	});

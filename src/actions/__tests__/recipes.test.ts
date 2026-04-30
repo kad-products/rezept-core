@@ -3,6 +3,7 @@ import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
 const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
+const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 
 // Mock repositories
 vi.mock('@/repositories/recipes', () => ({
@@ -45,9 +46,9 @@ const mockRequestInfo: MockRequestInfo = {
 };
 
 vi.mock('rwsdk/worker', () => ({
-	serverAction: (action: any) => {
-		// If called with middleware array, return the last element (the actual handler)
-		return Array.isArray(action) ? action[action.length - 1] : action;
+	serverAction: (handlers: unknown[]) => {
+		capturedChain.handlers = handlers;
+		return Array.isArray(handlers) ? handlers[handlers.length - 1] : handlers;
 	},
 	get requestInfo() {
 		return mockRequestInfo;
@@ -55,6 +56,7 @@ vi.mock('rwsdk/worker', () => ({
 }));
 
 import { randomUUID } from 'node:crypto';
+import { requireAuthentication } from '@/interrupters';
 import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
 import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
 import { updateRecipeSections } from '@/repositories/recipe-sections';
@@ -108,20 +110,8 @@ describe('_saveRecipe', () => {
 	});
 
 	describe('authentication', () => {
-		it('rejects unauthenticated requests', async () => {
-			mockRequestInfo.ctx.user = null;
-
-			const data = {
-				authorId: randomUUID(),
-				title: 'Test Recipe',
-				sections: [],
-			};
-
-			const result = await _saveRecipe(data);
-
-			expect(result.success).toBe(false);
-			expect(result.errors?._form?.[0]).toContain('You must be logged in');
-			expect(createRecipe).not.toHaveBeenCalled();
+		it('includes requireAuthentication in the serverAction chain', () => {
+			expect(capturedChain.handlers).toContain(requireAuthentication);
 		});
 	});
 
