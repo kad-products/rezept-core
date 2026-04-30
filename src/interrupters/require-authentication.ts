@@ -1,6 +1,7 @@
-import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { getRequestInfo } from 'rwsdk/worker';
 
-export function requireAuthentication({ ctx }: RequestInfo<DefaultAppContext>): Response | undefined {
+export function requireAuthentication(): Response | undefined {
+	const { ctx } = getRequestInfo();
 	if (!ctx.user) {
 		return Response.json(
 			{

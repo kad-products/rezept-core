@@ -1,6 +1,6 @@
 'use server';
 import { requestInfo, serverAction } from 'rwsdk/worker';
-import { requirePermissions } from '@/middleware/permissions';
+import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
 import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
 import { updateRecipeSections } from '@/repositories/recipe-sections';
@@ -20,18 +20,19 @@ import type {
 import { errorResponse, successResponse } from './utils';
 
 // biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
-export const saveRecipe = serverAction([requirePermissions('recipes:create', 'recipes:update'), _saveRecipe]);
+export const saveRecipe = serverAction([
+	requireAuthentication,
+	requirePermissions('recipes:create', 'recipes:update'),
+	_saveRecipe,
+]);
 
 /**
  * @private - exported for testing only, do not use directly
  */
 export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState<RecipeFormData>> {
 	const { ctx } = requestInfo;
-	const userId = ctx.user?.id;
-
-	if (!userId) {
-		return errorResponse<RecipeFormData>('You must be logged in to perform this action', 401);
-	}
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
+	const userId = ctx.user!.id;
 
 	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
 

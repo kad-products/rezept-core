@@ -3,6 +3,7 @@ import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
 const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
+const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 
 // Mock repositories
 vi.mock('@/repositories/api-keys', () => ({
@@ -35,10 +36,14 @@ vi.mock('rwsdk/worker', () => ({
 	get requestInfo() {
 		return mockRequestInfo;
 	},
-	serverAction: (handlers: any[]) => handlers[handlers.length - 1],
+	serverAction: (handlers: unknown[]) => {
+		capturedChain.handlers = handlers;
+		return handlers[handlers.length - 1];
+	},
 }));
 
 import { randomUUID } from 'node:crypto';
+import { requireAuthentication } from '@/interrupters';
 import { createApiKey, updateApiKey } from '@/repositories/api-keys';
 import { _saveApiKey } from '../api-keys';
 
@@ -68,14 +73,8 @@ describe('_saveApiKey', () => {
 	});
 
 	describe('authentication', () => {
-		it('rejects unauthenticated requests', async () => {
-			mockRequestInfo.ctx.user = null;
-
-			const result = await _saveApiKey(baseApiKeyData);
-
-			expect(result.success).toBe(false);
-			expect(result.errors?._form).toContain('You must be logged in to perform this action');
-			expect(createApiKey).not.toHaveBeenCalled();
+		it('includes requireAuthentication in the serverAction chain', () => {
+			expect(capturedChain.handlers).toContain(requireAuthentication);
 		});
 	});
 

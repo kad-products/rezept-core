@@ -1,7 +1,5 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
-import { getRequestInfo } from 'rwsdk/worker';
 import permissions from '@/data/permissions';
-import type { Permission } from '@/types';
 
 const flattenedPermissions: Array<{ permission: string; roles: string[] }> = Object.entries(permissions).flatMap(
 	([resource, actions]) =>
@@ -23,20 +21,3 @@ export default async function permissionsMiddleware({ ctx }: RequestInfo<Default
 	}
 	ctx.permissions = flattenedPermissions.filter(p => p.roles.includes('*') || p.roles.includes(role)).map(p => p.permission);
 }
-
-export const requirePermissions = (...required: Permission[]): (() => Promise<Response | undefined>) => {
-	return async () => {
-		const { ctx } = getRequestInfo();
-		const missing = required.filter(p => !ctx.permissions?.includes(p));
-
-		if (missing.length > 0) {
-			return Response.json(
-				{ error: 'Forbidden', missing },
-				{
-					status: 403,
-					headers: { 'Content-Type': 'application/json' },
-				},
-			);
-		}
-	};
-};

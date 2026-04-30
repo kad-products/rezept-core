@@ -10,6 +10,8 @@ Middleware runs globally on every request before route matching. It prepares the
 
 If the logic should run on **every single request** — it's middleware. If it should only run on specific routes, it's an interrupter.
 
+The clearest distinguishing rule: **middleware writes to `ctx` to enrich it for downstream consumers — interrupters only read `ctx` to gate access.** A middleware function may also halt the request as a defensive measure when it cannot safely enrich `ctx` (e.g., a bearer token that fails lookup or is revoked). This is different from an interrupter's purpose: the halting is a side effect of a failed enrichment attempt, not the primary job of the function. If a function only reads `ctx` and decides whether to proceed, it belongs in interrupters instead.
+
 ## Guidelines
 
 - **Default exports** — one middleware function per file, exported as default.

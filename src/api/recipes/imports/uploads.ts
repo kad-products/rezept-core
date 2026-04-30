@@ -1,8 +1,7 @@
 import { env } from 'cloudflare:workers';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { apiErrorResponse, successResponse } from '@/api/utils';
-import { requireAuthentication } from '@/interrupters/require-authentication';
-import { requirePermissions } from '@/middleware/permissions';
+import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createRecipeUpload } from '@/repositories/recipe-uploads';
 import type { RecipeUpload } from '@/types';
 
