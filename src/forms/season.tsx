@@ -6,20 +6,8 @@ import { useState } from 'react';
 import { saveSeason } from '@/actions/seasons';
 import type { SeasonalIngredientWithRelations } from '@/repositories/seasonal-ingredients';
 import { seasonsSchemas } from '@/schemas';
-import type { ActionState, Season as SeasonModel } from '@/types';
+import type { ActionState, SeasonFormData, Season as SeasonModel } from '@/types';
 import { useAppForm } from './context';
-
-type SeasonFormData = {
-	name: string;
-	id?: string | undefined;
-	description?: string | undefined | null;
-	country: string;
-	region?: string | null;
-	startMonth: number;
-	endMonth: number;
-	notes?: string | null;
-	ingredients?: string[];
-};
 
 export default function Season({
 	season,
