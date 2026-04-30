@@ -60,7 +60,7 @@
 			}
 		},
 		{
-			"includes": ["src/components/**", "src/forms/**", "src/layouts/**", "src/repositories/**", "scripts/**"],
+			"includes": ["src/components/**", "src/forms/**", "src/layouts/**", "src/pages/**", "scripts/**"],
 			"linter": {
 				"rules": {
 					"suspicious": {
