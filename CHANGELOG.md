@@ -1,3 +1,10 @@
+## [1.18.18](https://github.com/kad-products/rezept-core/compare/v1.18.17...v1.18.18) (2026-04-30)
+
+### Bug Fixes
+
+* cleanup inline auth checks ([867b838](https://github.com/kad-products/rezept-core/commit/867b838093ac1bd27cda0a405ece9f50de2f4e34))
+* use requireAuth interruptor in actions ([8726319](https://github.com/kad-products/rezept-core/commit/872631956c534c3a73bcff0d531eb495aff209a7))
+
 ## [1.18.17](https://github.com/kad-products/rezept-core/compare/v1.18.16...v1.18.17) (2026-04-30)
 
 ### Bug Fixes
