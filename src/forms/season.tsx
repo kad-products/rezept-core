@@ -4,9 +4,8 @@ import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveSeason } from '@/actions';
-import type { SeasonalIngredientWithRelations } from '@/repositories/seasonal-ingredients';
 import { seasonsSchemas } from '@/schemas';
-import type { ActionState, SeasonFormData, Season as SeasonModel } from '@/types';
+import type { ActionState, SeasonalIngredientWithRelations, SeasonFormData, Season as SeasonModel } from '@/types';
 import { useAppForm } from './context';
 
 export default function Season({
