@@ -1,6 +1,6 @@
 'use client';
 
-import { startRegistration } from '@simplewebauthn/browser';
+import { type PublicKeyCredentialCreationOptionsJSON, startRegistration } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
 import { finishPasskeyRegistration, startPasskeyRegistration } from '@/actions';
 
@@ -17,15 +17,21 @@ export default function PasskeyRegistration(): React.ReactNode {
 
 		try {
 			// 1. Get a challenge from the worker
-			const options = await startPasskeyRegistration(username);
+			const startResult = await startPasskeyRegistration(username);
+			if (!startResult.success || !startResult.data) {
+				setResult(startResult.errors?._form?.[0] ?? 'Failed to start registration');
+				return;
+			}
 			// 2. Ask the browser to sign the challenge
-			const registration = await startRegistration({ optionsJSON: options });
+			const registration = await startRegistration({
+				optionsJSON: startResult.data as unknown as PublicKeyCredentialCreationOptionsJSON,
+			});
 
 			// 3. Give the signed challenge to the worker to finish the registration process
-			const success = await finishPasskeyRegistration(username, registration);
+			const finishResult = await finishPasskeyRegistration(username, registration);
 
-			if (!success) {
-				setResult('Registration failed');
+			if (!finishResult.success) {
+				setResult(finishResult.errors?._form?.[0] ?? 'Registration failed');
 			} else {
 				setResult('Registration successful!');
 			}

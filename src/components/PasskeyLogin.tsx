@@ -1,5 +1,5 @@
 'use client';
-import { startAuthentication } from '@simplewebauthn/browser';
+import { type PublicKeyCredentialRequestOptionsJSON, startAuthentication } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
 import { navigate } from 'rwsdk/client';
 import { finishPasskeyLogin, startPasskeyLogin } from '@/actions';
@@ -11,20 +11,25 @@ export default function PasskeyLogin(): React.ReactNode {
 	const passkeyLogin = async (): Promise<void> => {
 		try {
 			// 1. Get a challenge from the worker
-			const options = await startPasskeyLogin();
-			console.log(options);
+			const startResult = await startPasskeyLogin();
+			if (!startResult.success || !startResult.data) {
+				setResult(startResult.errors?._form?.[0] ?? 'Failed to start login');
+				return;
+			}
 
 			// 2. Ask the browser to sign the challenge
-			const login = await startAuthentication({ optionsJSON: options });
+			const login = await startAuthentication({
+				optionsJSON: startResult.data as unknown as PublicKeyCredentialRequestOptionsJSON,
+			});
 			console.log(login);
 
 			// 3. Give the signed challenge to the worker to finish the login process
-			const success = await finishPasskeyLogin(login);
-			console.log(success);
+			const finishResult = await finishPasskeyLogin(login);
+			console.log(finishResult);
 
-			if (!success) {
+			if (!finishResult.success) {
 				console.log('Failed');
-				setResult('Login failed');
+				setResult(finishResult.errors?._form?.[0] ?? 'Login failed');
 			} else {
 				setResult('Login successful!');
 				navigate('/profile', { history: 'replace' });
