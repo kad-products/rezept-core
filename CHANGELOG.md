@@ -1,3 +1,9 @@
+## [1.18.19](https://github.com/kad-products/rezept-core/compare/v1.18.18...v1.18.19) (2026-04-30)
+
+### Bug Fixes
+
+* align session middleware to filename ([03543b5](https://github.com/kad-products/rezept-core/commit/03543b5a3ea81fec19a9a7017dacf3d8278b321c))
+
 ## [1.18.18](https://github.com/kad-products/rezept-core/compare/v1.18.17...v1.18.18) (2026-04-30)
 
 ### Bug Fixes
