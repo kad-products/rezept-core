@@ -1,7 +1,7 @@
 'use server';
 import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import { createIngredient } from '@/repositories/ingredients';
+import { createIngredient } from '@/repositories';
 import type { ActionState, IngredientFormSave } from '@/types';
 import { errorResponse, successResponse } from './utils';
 

@@ -1,10 +1,13 @@
 'use server';
 import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
-import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
-import { updateRecipeSections } from '@/repositories/recipe-sections';
-import { createRecipe, updateRecipe } from '@/repositories/recipes';
+import {
+	createRecipe,
+	updateRecipe,
+	updateRecipeIngredients,
+	updateRecipeInstructions,
+	updateRecipeSections,
+} from '@/repositories';
 import { recipesSchemas } from '@/schemas';
 import type {
 	ActionState,

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import RzCard from '@/components/RzCard';
 import StandardLayout from '@/layouts/standard';
-import { getSeasons } from '@/repositories/seasons';
+import { getSeasons } from '@/repositories';
 
 export default async function Pages__seasons__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const seasons = await getSeasons(ctx.logger);

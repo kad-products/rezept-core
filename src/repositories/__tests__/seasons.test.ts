@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
-import { createUser } from '@/repositories/users';
+import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import { createSeason, getSeasonById, getSeasons, updateSeason } from '../seasons';
 

@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
-import { getApiKeyById, getApiKeysByUserId } from '@/repositories/api-keys';
-import { createUser } from '@/repositories/users';
+import { createUser, getApiKeyById, getApiKeysByUserId } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 
 vi.mock('cloudflare:workers', () => ({

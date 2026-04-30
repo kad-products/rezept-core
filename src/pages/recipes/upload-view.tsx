@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import StandardLayout from '@/layouts/standard';
-import { getRecipeUploadById } from '@/repositories/recipe-uploads';
+import { getRecipeUploadById } from '@/repositories';
 
 export default async function Pages__recipes__upload_view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const recipeUploadId = params.recipeUploadId;

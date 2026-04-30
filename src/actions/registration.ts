@@ -3,8 +3,7 @@ import { generateRegistrationOptions, type RegistrationResponseJSON, verifyRegis
 import { requestInfo } from 'rwsdk/worker';
 import { UAParser as uap } from 'ua-parser-js';
 import { sessions } from '@/durable-objects/store';
-import { createCredential } from '@/repositories/credentials';
-import { createUser } from '@/repositories/users';
+import { createCredential, createUser } from '@/repositories';
 import type { ActionState } from '@/types';
 import { errorResponse, successResponse } from './utils';
 import { getWebAuthnConfig } from './webauthn';

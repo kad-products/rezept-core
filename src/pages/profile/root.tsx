@@ -2,8 +2,7 @@ import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import ApiKeysTable from '@/components/ApiKeysTable';
 import StandardLayout from '@/layouts/standard';
-import { getApiKeysByUserId } from '@/repositories/api-keys';
-import { getCredentialsByUserId } from '@/repositories/credentials';
+import { getApiKeysByUserId, getCredentialsByUserId } from '@/repositories';
 
 export default async function Pages__profile__root({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const userId = ctx.user?.id;

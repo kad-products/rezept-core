@@ -6,7 +6,7 @@ const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
 const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 
 // Mock repositories
-vi.mock('@/repositories/api-keys', () => ({
+vi.mock('@/repositories', () => ({
 	createApiKey: vi.fn(),
 	updateApiKey: vi.fn(),
 }));
@@ -44,7 +44,7 @@ vi.mock('rwsdk/worker', () => ({
 
 import { randomUUID } from 'node:crypto';
 import { requireAuthentication } from '@/interrupters';
-import { createApiKey, updateApiKey } from '@/repositories/api-keys';
+import { createApiKey, updateApiKey } from '@/repositories';
 import { _saveApiKey } from '../api-keys';
 
 const baseApiKeyData = {

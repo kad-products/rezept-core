@@ -1,6 +1,6 @@
 import { type DefaultAppContext, type RequestInfo, requestInfo } from 'rwsdk/worker';
 import { errorResponse } from '@/api/utils';
-import { getApiKeyByKey } from '@/repositories/api-keys';
+import { getApiKeyByKey } from '@/repositories';
 
 export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>): Promise<Response | undefined> {
 	const authHeader = request.headers.get('Authorization');

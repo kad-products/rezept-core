@@ -4,9 +4,7 @@ import { countryOptions } from '@/data/countries';
 import { monthOptions } from '@/data/months';
 import Season from '@/forms/season';
 import StandardLayout from '@/layouts/standard';
-import { getIngredients } from '@/repositories/ingredients';
-import { getIngredientsBySeasonId } from '@/repositories/seasonal-ingredients';
-import { getSeasonById } from '@/repositories/seasons';
+import { getIngredients, getIngredientsBySeasonId, getSeasonById } from '@/repositories';
 import type { Season as SeasonModel } from '@/types';
 
 export default async function Pages__seasons__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {

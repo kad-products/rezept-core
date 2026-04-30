@@ -1,11 +1,13 @@
 import { Fragment, Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import StandardLayout from '@/layouts/standard';
-import { getIngredientsByRecipeSectionId } from '@/repositories/recipe-ingredients';
-import { getInstructionsByRecipeSectionId } from '@/repositories/recipe-instructions';
-import { getSectionsByRecipeId } from '@/repositories/recipe-sections';
-import { getRecipeById } from '@/repositories/recipes';
-import { getUserById } from '@/repositories/users';
+import {
+	getIngredientsByRecipeSectionId,
+	getInstructionsByRecipeSectionId,
+	getRecipeById,
+	getSectionsByRecipeId,
+	getUserById,
+} from '@/repositories';
 
 export default async function Pages__recipes__view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const recipeId = params.recipeId;

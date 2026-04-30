@@ -5,7 +5,7 @@ import Logger from '@/logger';
 const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
 const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 
-vi.mock('@/repositories/ingredients', () => ({
+vi.mock('@/repositories', () => ({
 	createIngredient: vi.fn(),
 }));
 
@@ -38,7 +38,7 @@ vi.mock('rwsdk/worker', () => ({
 }));
 
 import { requireAuthentication } from '@/interrupters';
-import { createIngredient } from '@/repositories/ingredients';
+import { createIngredient } from '@/repositories';
 import { _addIngredient } from '../ingredients';
 
 const mockIngredient = {
