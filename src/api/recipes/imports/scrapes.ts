@@ -16,10 +16,13 @@ import {
 import type { RecipeScrape } from '@/types';
 
 export default {
-	post: [requireAuthentication, requirePermissions('recipes:scrape'), postHandler] as const,
+	post: [requireAuthentication, requirePermissions('recipes:scrape'), _postHandler] as const,
 };
 
-async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
+/**
+ * @private - exported for testing only, do not use directly
+ */
+export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication interrupter
 	const userId = ctx.user!.id;
 

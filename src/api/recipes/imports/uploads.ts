@@ -5,13 +5,13 @@ import { createRecipeUpload } from '@/repositories/recipe-uploads';
 import type { RecipeUpload } from '@/types';
 
 export default {
-	post: [requirePermissions('recipes:upload'), postHandler] as const,
+	post: [requirePermissions('recipes:upload'), _postHandler] as const,
 };
 
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
+export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
 	const userId = ctx.user?.id;
 
 	if (!userId) {
