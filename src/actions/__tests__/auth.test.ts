@@ -159,7 +159,7 @@ describe('finishPasskeyLogin', () => {
 	// The challenge links Phase 1 (start) to Phase 2 (finish). Without it the server has no
 	// way to confirm that the signed response belongs to this ceremony rather than being replayed.
 	it('returns an error when no challenge is in the session', async () => {
-		vi.mocked(sessions.load).mockResolvedValue(null);
+		vi.mocked(sessions.load).mockResolvedValue(null as any);
 		const result = await finishPasskeyLogin(mockLogin as any);
 		expect(result.success).toBe(false);
 		expect(result.errors?._form?.[0]).toContain('challenge');
@@ -175,7 +175,7 @@ describe('finishPasskeyLogin', () => {
 	// stored public key to verify the signature — if there's no matching record this device
 	// was never registered on this server.
 	it('returns an error when the credential ID is not found', async () => {
-		vi.mocked(getCredentialById).mockResolvedValue(null);
+		vi.mocked(getCredentialById).mockResolvedValue(null as any);
 		const result = await finishPasskeyLogin(mockLogin as any);
 		expect(result.success).toBe(false);
 		expect(result.errors?._form?.[0]).toContain('credential');
@@ -215,7 +215,7 @@ describe('finishPasskeyLogin', () => {
 	});
 
 	it('returns an error when the user record cannot be found', async () => {
-		vi.mocked(getUserById).mockResolvedValue(null);
+		vi.mocked(getUserById).mockResolvedValue(null as any);
 		const result = await finishPasskeyLogin(mockLogin as any);
 		expect(result.success).toBe(false);
 		expect(result.errors?._form?.[0]).toContain('user');

@@ -168,7 +168,7 @@ describe('finishPasskeyRegistration', () => {
 	// The challenge links Phase 1 (start) to Phase 2 (finish). If it's missing from the
 	// session the user either skipped Phase 1 or the session expired — the ceremony cannot proceed.
 	it('returns an error when no challenge is in the session', async () => {
-		vi.mocked(sessions.load).mockResolvedValue(null);
+		vi.mocked(sessions.load).mockResolvedValue(null as any);
 		const result = await finishPasskeyRegistration('testuser', mockRegistration as any);
 		expect(result.success).toBe(false);
 		expect(result.errors?._form?.[0]).toContain('challenge');
