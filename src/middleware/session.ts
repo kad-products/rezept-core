@@ -2,7 +2,7 @@ import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { ErrorResponse } from 'rwsdk/worker';
 import { sessions } from '@/durable-objects/store';
 
-export default async function authMiddleware(requestInfo: RequestInfo<DefaultAppContext>): Promise<void> {
+export default async function sessionMiddleware(requestInfo: RequestInfo<DefaultAppContext>): Promise<void> {
 	const { ctx, request, response } = requestInfo;
 
 	try {
