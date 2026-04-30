@@ -52,7 +52,8 @@ Directories to audit (in order):
 - `console.log` in server-side code (allowed in `src/components/`, `src/forms/`, `src/layouts/`; disallowed everywhere else)
 - Manual `Response` construction instead of `Response.json()`
 - Duplicated error message logic that should be extracted to a utility
-- Dead code guards after repository calls that throw on not-found
+- Dead code guards after `getXxxById` repository calls — these functions always throw on not-found, so `if (!record)` after the call is unreachable; the correct pattern is a `try/catch` around the call
+- `getXxxById` calls without a wrapping `try/catch` — if the call is not inside any try/catch block, a not-found error will propagate as an unhandled rejection
 
 **Tests**
 - Missing test files for directories where tests are expected
