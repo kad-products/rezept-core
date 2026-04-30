@@ -1,3 +1,9 @@
+## [1.18.12](https://github.com/kad-products/rezept-core/compare/v1.18.11...v1.18.12) (2026-04-30)
+
+### Bug Fixes
+
+* move SeasonFormData type to types ([9064a07](https://github.com/kad-products/rezept-core/commit/9064a078673758277b65f61183cdb6656ded54ce))
+
 ## [1.18.11](https://github.com/kad-products/rezept-core/compare/v1.18.10...v1.18.11) (2026-04-30)
 
 ### Bug Fixes
