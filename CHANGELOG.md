@@ -1,3 +1,9 @@
+## [1.18.17](https://github.com/kad-products/rezept-core/compare/v1.18.16...v1.18.17) (2026-04-30)
+
+### Bug Fixes
+
+* use the right permissions on recipe creation ([533b726](https://github.com/kad-products/rezept-core/commit/533b7268ffe1cddf93c0312587a472ca2d026cb7))
+
 ## [1.18.16](https://github.com/kad-products/rezept-core/compare/v1.18.15...v1.18.16) (2026-04-30)
 
 ### Bug Fixes
