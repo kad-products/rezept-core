@@ -5,11 +5,8 @@ import StandardLayout from '@/layouts/standard';
 import { getApiKeysByUserId, getCredentialsByUserId } from '@/repositories';
 
 export default async function Pages__profile__root({ ctx }: RequestInfo): Promise<React.JSX.Element> {
-	const userId = ctx.user?.id;
-
-	if (!userId) {
-		return <p>No user found, please log in.</p>;
-	}
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in route chain
+	const userId = ctx.user!.id;
 
 	const userCredentials = await getCredentialsByUserId(userId, ctx.logger);
 	const apiKeys = await getApiKeysByUserId(userId, ctx.logger);

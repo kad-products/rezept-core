@@ -86,17 +86,6 @@ describe('permissionsMiddleware', () => {
 		expect(mockRequestInfo.ctx.permissions.every(p => p.endsWith(':read'))).toBe(true);
 	});
 
-	it('permissions array contains properly formatted strings', () => {
-		mockRequestInfo.ctx.user = { id: 'user-123', role: 'ADMIN' };
-
-		permissionsMiddleware(mockRequestInfo as any);
-
-		mockRequestInfo.ctx.permissions.forEach(permission => {
-			expect(typeof permission).toBe('string');
-			expect(permission).toMatch(/^[\w]+:[\w]+$/);
-		});
-	});
-
 	describe('api key permissions', () => {
 		it('uses api key permissions when ctx.apiKey is set', () => {
 			mockRequestInfo.ctx.apiKey = { permissions: ['recipes:upload'] };

@@ -7,7 +7,8 @@ import type { ApiKey } from '@/types';
 
 export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const apiKeyId = params.apiKeyId;
-	const userId = ctx.user?.id;
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in route chain
+	const userId = ctx.user!.id;
 
 	let apiKey: ApiKey | undefined;
 

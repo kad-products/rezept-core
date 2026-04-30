@@ -1,5 +1,5 @@
 export default {
-	apiKeys: {
+	'api-keys': {
 		create: ['BASIC', 'ADMIN'],
 		read: ['BASIC', 'ADMIN'],
 		update: ['BASIC', 'ADMIN'],

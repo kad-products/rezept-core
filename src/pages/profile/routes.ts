@@ -1,5 +1,9 @@
 import { route } from 'rwsdk/router';
+import { requireAuthentication, requirePermissions } from '@/interrupters';
 import Pages__api_keys__edit from './edit-api-key';
 import Pages__profile__root from './root';
 
-export default [route('/', Pages__profile__root), route('/api-keys/new', Pages__api_keys__edit)];
+export default [
+	route('/', [requireAuthentication, requirePermissions('profile:read'), Pages__profile__root]),
+	route('/api-keys/new', [requireAuthentication, requirePermissions('api-keys:read'), Pages__api_keys__edit]),
+];
