@@ -1,3 +1,10 @@
+## [1.18.16](https://github.com/kad-products/rezept-core/compare/v1.18.15...v1.18.16) (2026-04-30)
+
+### Bug Fixes
+
+* handle get credentials error better ([5102ad6](https://github.com/kad-products/rezept-core/commit/5102ad6ca701e1b3ade0aeecdc8de40b236a80a5))
+* tests and docs about catching getXXXById since it'll throw ([9e82fc8](https://github.com/kad-products/rezept-core/commit/9e82fc89a07e6d557b23f61210f6ec2c2ee0f378))
+
 ## [1.18.15](https://github.com/kad-products/rezept-core/compare/v1.18.14...v1.18.15) (2026-04-30)
 
 ### Bug Fixes
