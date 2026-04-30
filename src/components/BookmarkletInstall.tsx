@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { saveApiKey } from '@/actions/api-keys';
+import { saveApiKey } from '@/actions';
 import type { ApiKey } from '@/types';
 
 const SCRAPE_PERMISSION = 'recipes:scrape';

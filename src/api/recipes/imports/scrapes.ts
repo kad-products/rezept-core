@@ -1,5 +1,5 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
-import { rzStepErrorToJsonResponse } from '@/api/utils';
+import { apiErrorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication } from '@/interrupters';
 import { requirePermissions } from '@/middleware/permissions';
 import { updateRecipeScrapeStatus } from '@/repositories/recipe-scrapes';
@@ -16,10 +16,13 @@ import {
 import type { RecipeScrape } from '@/types';
 
 export default {
-	post: [requireAuthentication, requirePermissions('recipes:scrape'), postHandler] as const,
+	post: [requireAuthentication, requirePermissions('recipes:scrape'), _postHandler] as const,
 };
 
-async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
+/**
+ * @private - exported for testing only, do not use directly
+ */
+export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication interrupter
 	const userId = ctx.user!.id;
 
@@ -80,7 +83,7 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Pr
 			}),
 		);
 		await saveRecipeIngredients(savedRecipe.id, ingredientsData, userId, ctx.logger);
-		await updateRecipeScrapeStatus(
+		recipeScrape = await updateRecipeScrapeStatus(
 			recipeScrape.id,
 			'INGREDIENTS_SAVED',
 			'Saved recipe sections successfully',
@@ -91,8 +94,8 @@ async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Pr
 		if (recipeScrape) {
 			await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', (err as Error).message, userId, ctx.logger);
 		}
-		return rzStepErrorToJsonResponse(err);
+		return apiErrorResponse(err, 'Error processing recipe scrape');
 	}
 
-	return Response.json({ success: true });
+	return successResponse(recipeScrape);
 }

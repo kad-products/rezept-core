@@ -17,7 +17,7 @@ export async function createUser(username: string, logger: RzLogger): Promise<Us
 	return insertedUser;
 }
 
-export async function getUserById(id: string, logger: RzLogger): Promise<User | undefined> {
+export async function getUserById(id: string, logger: RzLogger): Promise<User> {
 	logger.debug(`Fetching user ${id}`);
 	const matchedUsers = await db.select().from(users).where(eq(users.id, id));
 	if (matchedUsers.length !== 1) {

@@ -30,7 +30,7 @@ One file per entity. Each file has a single default export — the form componen
 ```tsx
 'use client';
 import { useAppForm } from './context';
-import { saveRecipe } from '@/actions/recipes';
+import { saveRecipe } from '@/actions';
 import type { ActionState, RecipeFormData } from '@/types';
 
 export default function FormRecipe({ recipe }: { recipe?: Recipe }) {

@@ -1,28 +1,21 @@
 import { env } from 'cloudflare:workers';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { apiErrorResponse, successResponse } from '@/api/utils';
+import { requireAuthentication } from '@/interrupters/require-authentication';
 import { requirePermissions } from '@/middleware/permissions';
 import { createRecipeUpload } from '@/repositories/recipe-uploads';
 import type { RecipeUpload } from '@/types';
 
 export default {
-	post: [requirePermissions('recipes:upload'), postHandler] as const,
+	post: [requireAuthentication, requirePermissions('recipes:upload'), _postHandler] as const,
 };
 
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
-	const userId = ctx.user?.id;
-
-	if (!userId) {
-		return Response.json(
-			{
-				success: false,
-				errors: { _form: ['You must be logged in'] },
-			},
-			{ status: 400 },
-		);
-	}
+export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppContext>): Promise<Response> {
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication interrupter
+	const userId = ctx.user!.id;
 
 	const formData = await request.formData();
 	const file = formData.get('file') as File;
@@ -52,26 +45,11 @@ export async function postHandler({ request, ctx }: RequestInfo<DefaultAppContex
 			ctx.logger,
 		);
 	} catch (err) {
-		ctx.logger.info(`Error saving recipe: ${err} `);
-
-		const errorMessage =
-			env.REZEPT_ENV === 'development' ? (err instanceof Error ? err.message : String(err)) : 'Failed to save item';
-
-		return Response.json(
-			{
-				success: false,
-				errors: { _form: [errorMessage] },
-			},
-			{ status: 500 },
-		);
+		ctx.logger.info(`Error uploading recipe: ${err} `);
+		return apiErrorResponse(err, 'Error uploading recipe');
 	}
 
 	ctx.logger.info(results);
 
-	return new Response(JSON.stringify(uploadedRecipe), {
-		status: 200,
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	});
+	return successResponse(uploadedRecipe);
 }
