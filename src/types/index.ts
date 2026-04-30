@@ -12,5 +12,6 @@ export * from './recipe-sections';
 export * from './recipe-uploads';
 export * from './recipes';
 export * from './rz-table';
+export * from './seasonal-ingredients';
 export * from './seasons';
 export * from './users';

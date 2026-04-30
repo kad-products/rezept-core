@@ -2,6 +2,7 @@ import { and, eq, inArray } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { seasonalIngredients } from '@/models';
+import type { SeasonalIngredientWithRelations } from '@/types';
 
 // biome-ignore lint/nursery/useExplicitType: Drizzle query builder return type is not practically writable
 const getSeasonalIngredientsQuery = (seasonId: string) =>
@@ -11,8 +12,6 @@ const getSeasonalIngredientsQuery = (seasonId: string) =>
 			ingredient: true,
 		},
 	});
-
-export type SeasonalIngredientWithRelations = Awaited<ReturnType<typeof getSeasonalIngredientsQuery>>[number];
 
 export async function getIngredientsBySeasonId(seasonId: string, logger: RzLogger): Promise<SeasonalIngredientWithRelations[]> {
 	logger.debug(`Fetching ingredients for season ${seasonId}`);
