@@ -1,3 +1,10 @@
+## [1.18.14](https://github.com/kad-products/rezept-core/compare/v1.18.13...v1.18.14) (2026-04-30)
+
+### Code Refactoring
+
+* add tests for auth and registration actions ([9baf63e](https://github.com/kad-products/rezept-core/commit/9baf63e07d756daa7e056dd6967f16b8993982eb))
+* split registration and auth actions ([e613ff4](https://github.com/kad-products/rezept-core/commit/e613ff40a0a5bb1a24923b4d921042966080d852))
+
 ## [1.18.13](https://github.com/kad-products/rezept-core/compare/v1.18.12...v1.18.13) (2026-04-30)
 
 ### Bug Fixes
