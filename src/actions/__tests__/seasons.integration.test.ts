@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
-import { getSeasonById, getSeasons } from '@/repositories/seasons';
-import { createUser } from '@/repositories/users';
+import { createUser, getSeasonById, getSeasons } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import { _saveSeason } from '../seasons';
 

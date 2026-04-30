@@ -22,7 +22,7 @@ vi.mock('@/steps', () => ({
 	saveRecipeIngredients: vi.fn(),
 }));
 
-vi.mock('@/repositories/recipe-scrapes', () => ({
+vi.mock('@/repositories', () => ({
 	updateRecipeScrapeStatus: vi.fn(),
 }));
 
@@ -33,7 +33,7 @@ vi.mock('@/interrupters', () => ({
 
 import { RzStepError } from '@/classes';
 import { requireAuthentication } from '@/interrupters';
-import { updateRecipeScrapeStatus } from '@/repositories/recipe-scrapes';
+import { updateRecipeScrapeStatus } from '@/repositories';
 import {
 	initializeScrape,
 	parseBodyJson,

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import FormApiKey from '@/forms/api-key';
 import StandardLayout from '@/layouts/standard';
-import { getApiKeyById } from '@/repositories/api-keys';
+import { getApiKeyById } from '@/repositories';
 import type { ApiKey } from '@/types';
 
 export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {

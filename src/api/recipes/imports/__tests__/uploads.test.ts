@@ -11,7 +11,7 @@ const mockEnv = vi.hoisted(() => ({
 
 vi.mock('cloudflare:workers', () => ({ env: mockEnv }));
 
-vi.mock('@/repositories/recipe-uploads', () => ({
+vi.mock('@/repositories', () => ({
 	createRecipeUpload: vi.fn(),
 }));
 
@@ -21,7 +21,7 @@ vi.mock('@/interrupters', () => ({
 }));
 
 import { requireAuthentication } from '@/interrupters';
-import { createRecipeUpload } from '@/repositories/recipe-uploads';
+import { createRecipeUpload } from '@/repositories';
 import handler, { _postHandler } from '../uploads';
 
 const makeFile = (name = 'recipe.csv', type = 'text/csv') => new File(['title,url\ntest,http://example.com'], name, { type });

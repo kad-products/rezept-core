@@ -2,7 +2,7 @@ import { env } from 'cloudflare:workers';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { apiErrorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import { createRecipeUpload } from '@/repositories/recipe-uploads';
+import { createRecipeUpload } from '@/repositories';
 import type { RecipeUpload } from '@/types';
 
 export default {

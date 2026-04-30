@@ -6,20 +6,11 @@ const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
 const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 
 // Mock repositories
-vi.mock('@/repositories/recipes', () => ({
+vi.mock('@/repositories', () => ({
 	createRecipe: vi.fn(),
 	updateRecipe: vi.fn(),
-}));
-
-vi.mock('@/repositories/recipe-sections', () => ({
 	updateRecipeSections: vi.fn(),
-}));
-
-vi.mock('@/repositories/recipe-ingredients', () => ({
 	updateRecipeIngredients: vi.fn(),
-}));
-
-vi.mock('@/repositories/recipe-instructions', () => ({
 	updateRecipeInstructions: vi.fn(),
 }));
 
@@ -57,10 +48,13 @@ vi.mock('rwsdk/worker', () => ({
 
 import { randomUUID } from 'node:crypto';
 import { requireAuthentication } from '@/interrupters';
-import { updateRecipeIngredients } from '@/repositories/recipe-ingredients';
-import { updateRecipeInstructions } from '@/repositories/recipe-instructions';
-import { updateRecipeSections } from '@/repositories/recipe-sections';
-import { createRecipe, updateRecipe } from '@/repositories/recipes';
+import {
+	createRecipe,
+	updateRecipe,
+	updateRecipeIngredients,
+	updateRecipeInstructions,
+	updateRecipeSections,
+} from '@/repositories';
 import { _saveRecipe } from '../recipes';
 
 describe('_saveRecipe', () => {

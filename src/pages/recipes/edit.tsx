@@ -2,11 +2,13 @@ import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import Recipe from '@/forms/recipe';
 import StandardLayout from '@/layouts/standard';
-import { getIngredients } from '@/repositories/ingredients';
-import { getIngredientsByRecipeSectionId } from '@/repositories/recipe-ingredients';
-import { getInstructionsByRecipeSectionId } from '@/repositories/recipe-instructions';
-import { getSectionsByRecipeId } from '@/repositories/recipe-sections';
-import { getRecipeById } from '@/repositories/recipes';
+import {
+	getIngredients,
+	getIngredientsByRecipeSectionId,
+	getInstructionsByRecipeSectionId,
+	getRecipeById,
+	getSectionsByRecipeId,
+} from '@/repositories';
 import type { RecipeWithSections } from '@/types';
 
 export default async function Pages__recipes__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {

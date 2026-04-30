@@ -2,7 +2,7 @@
 
 import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import { createApiKey, updateApiKey } from '@/repositories/api-keys';
+import { createApiKey, updateApiKey } from '@/repositories';
 import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
 import { errorResponse, successResponse } from './utils';

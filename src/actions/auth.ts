@@ -6,8 +6,7 @@ import {
 } from '@simplewebauthn/server';
 import { requestInfo } from 'rwsdk/worker';
 import { sessions } from '@/durable-objects/store';
-import { getCredentialById, updateCredentialCounter } from '@/repositories/credentials';
-import { getUserById } from '@/repositories/users';
+import { getCredentialById, getUserById, updateCredentialCounter } from '@/repositories';
 import type { ActionState, Credential } from '@/types';
 import { errorResponse, successResponse } from './utils';
 import { getWebAuthnConfig } from './webauthn';

@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import StandardLayout from '@/layouts/standard';
-import { getIngredientsBySeasonId } from '@/repositories/seasonal-ingredients';
-import { getSeasonById } from '@/repositories/seasons';
+import { getIngredientsBySeasonId, getSeasonById } from '@/repositories';
 
 export default async function Pages__seasons__view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;

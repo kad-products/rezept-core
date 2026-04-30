@@ -1,7 +1,7 @@
 'use server';
 import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import { createSeason, updateSeason } from '@/repositories/seasons';
+import { createSeason, updateSeason } from '@/repositories';
 import { seasonsSchemas } from '@/schemas';
 import type { ActionState, SeasonFormSave } from '@/types';
 import { errorResponse, successResponse } from './utils';

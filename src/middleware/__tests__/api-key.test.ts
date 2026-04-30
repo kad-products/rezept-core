@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
-vi.mock('@/repositories/api-keys', () => ({
+vi.mock('@/repositories', () => ({
 	getApiKeyByKey: vi.fn(),
 }));
 
@@ -29,7 +29,7 @@ vi.mock('rwsdk/worker', () => ({
 	},
 }));
 
-import { getApiKeyByKey } from '@/repositories/api-keys';
+import { getApiKeyByKey } from '@/repositories';
 import apiKeyMiddleware from '../api-key';
 
 const mockApiKey = {

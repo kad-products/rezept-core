@@ -1,7 +1,7 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { apiErrorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import { updateRecipeScrapeStatus } from '@/repositories/recipe-scrapes';
+import { updateRecipeScrapeStatus } from '@/repositories';
 import {
 	initializeScrape,
 	parseBodyJson,

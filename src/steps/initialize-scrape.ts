@@ -1,6 +1,6 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
-import { createRecipeScrape } from '@/repositories/recipe-scrapes';
+import { createRecipeScrape } from '@/repositories';
 import type { RecipeScrape } from '@/types';
 
 export async function initializeScrape(parsedBody: unknown, userId: string, logger: RzLogger): Promise<RecipeScrape> {

@@ -6,7 +6,7 @@ const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
 const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 
 // Mock repositories
-vi.mock('@/repositories/seasons', () => ({
+vi.mock('@/repositories', () => ({
 	createSeason: vi.fn(),
 	updateSeason: vi.fn(),
 }));
@@ -45,7 +45,7 @@ vi.mock('rwsdk/worker', () => ({
 
 import { randomUUID } from 'node:crypto';
 import { requireAuthentication } from '@/interrupters';
-import { createSeason, updateSeason } from '@/repositories/seasons';
+import { createSeason, updateSeason } from '@/repositories';
 import type { SeasonFormSave } from '@/types';
 import { _saveSeason } from '../seasons';
 

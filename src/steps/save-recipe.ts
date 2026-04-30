@@ -1,7 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
-import { createRecipe, updateRecipe } from '@/repositories/recipes';
+import { createRecipe, updateRecipe } from '@/repositories';
 import type { Recipe, RecipeFormSave } from '@/types';
 
 export async function saveRecipe(recipeData: RecipeFormSave, userId: string, logger: RzLogger): Promise<Recipe> {

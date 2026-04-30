@@ -18,11 +18,8 @@ vi.mock('@/durable-objects/store', () => ({
 	},
 }));
 
-vi.mock('@/repositories/credentials', () => ({
+vi.mock('@/repositories', () => ({
 	createCredential: vi.fn(),
-}));
-
-vi.mock('@/repositories/users', () => ({
 	createUser: vi.fn(),
 }));
 
@@ -60,8 +57,7 @@ vi.mock('rwsdk/worker', () => ({
 
 import { generateRegistrationOptions, verifyRegistrationResponse } from '@simplewebauthn/server';
 import { sessions } from '@/durable-objects/store';
-import { createCredential } from '@/repositories/credentials';
-import { createUser } from '@/repositories/users';
+import { createCredential, createUser } from '@/repositories';
 import { finishPasskeyRegistration, startPasskeyRegistration } from '../registration';
 
 const mockOptions = {

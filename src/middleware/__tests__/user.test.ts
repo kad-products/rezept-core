@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Logger from '@/logger';
 import type { User } from '@/types';
 
-vi.mock('@/repositories/users', () => ({
+vi.mock('@/repositories', () => ({
 	getUserById: vi.fn(),
 }));
 
@@ -13,7 +13,7 @@ vi.mock('@/durable-objects/store', () => ({
 }));
 
 import { sessions } from '@/durable-objects/store';
-import { getUserById } from '@/repositories/users';
+import { getUserById } from '@/repositories';
 import userMiddleware from '../user';
 
 const mockUser = {
