@@ -1,13 +1,13 @@
 import { z } from 'zod';
-import { optionalString, requiredUuid } from './utils';
+import { coercedInt, optionalString, requiredString, requiredUuid } from './utils';
 
 // Shared base fields
 const baseSchema = {
 	userId: requiredUuid,
-	credentialId: z.string().trim().min(1, 'Credential ID is required'),
+	credentialId: requiredString('Credential ID'),
 	publicKey: z.instanceof(Uint8Array, { message: 'Public key must be a Uint8Array' }),
-	counter: z.coerce.number().int().min(0).default(0),
-	name: optionalString.transform(val => val?.trim()),
+	counter: coercedInt(0).default(0),
+	name: optionalString,
 };
 
 // Create schema - no id

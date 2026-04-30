@@ -1,16 +1,12 @@
 import { z } from 'zod';
 
-// export const optionalString = z.preprocess(val => (val === '' ? undefined : val), z.string().optional());
-
-// export const optionalUuid = z.preprocess(
-// 	val => (val === '' ? undefined : val),
-// 	z.string().uuid('Must be a valid UUID').optional(),
-// );
-
 export const optionalString = z
 	.union([z.string(), z.null()])
-	.transform(val => (val === '' ? undefined : val))
+	.transform(val => val?.trim() || undefined)
 	.optional();
+
+export const optionalStringMax = (max: number, field: string) =>
+	optionalString.pipe(z.string().max(max, `${field} must be ${max} characters or less`).optional());
 
 export const optionalUuid = z
 	.union([z.string().uuid('Must be a valid UUID'), z.null(), z.literal('')])
@@ -18,3 +14,15 @@ export const optionalUuid = z
 	.optional();
 
 export const requiredUuid = z.string().uuid('Must be a valid UUID');
+
+export const coercedInt = (min?: number, max?: number): z.ZodNumber => {
+	let schema = z.coerce.number().int();
+	if (min !== undefined) schema = schema.min(min);
+	if (max !== undefined) schema = schema.max(max);
+	return schema as z.ZodNumber;
+};
+
+export const requiredString = (field: string, max?: number): z.ZodString => {
+	const base = z.string().trim().min(1, `${field} is required`);
+	return max !== undefined ? base.max(max, `${field} must be ${max} characters or less`) : base;
+};
