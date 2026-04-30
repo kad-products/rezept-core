@@ -1,3 +1,10 @@
+## [1.18.20](https://github.com/kad-products/rezept-core/compare/v1.18.19...v1.18.20) (2026-04-30)
+
+### Code Refactoring
+
+* move repositories to barrel export ([a67355c](https://github.com/kad-products/rezept-core/commit/a67355c276071519160750e9dd4c4b21bf2f49d4))
+* move request context out of repos ([aba33c1](https://github.com/kad-products/rezept-core/commit/aba33c162f360d816cad94c856c06ab857873dd8))
+
 ## [1.18.19](https://github.com/kad-products/rezept-core/compare/v1.18.18...v1.18.19) (2026-04-30)
 
 ### Bug Fixes
