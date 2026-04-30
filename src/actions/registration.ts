@@ -5,30 +5,39 @@ import { UAParser as uap } from 'ua-parser-js';
 import { sessions } from '@/durable-objects/store';
 import { createCredential } from '@/repositories/credentials';
 import { createUser } from '@/repositories/users';
+import type { ActionState } from '@/types';
+import { errorResponse, successResponse } from './utils';
 import { getWebAuthnConfig } from './webauthn';
 
-export async function startPasskeyRegistration(username: string): ReturnType<typeof generateRegistrationOptions> {
-	const { rpName, rpID } = getWebAuthnConfig(requestInfo.request);
-	const { response } = requestInfo;
+export async function startPasskeyRegistration(username: string): Promise<ActionState<PublicKeyCredentialCreationOptionsJSON>> {
+	try {
+		const { rpName, rpID } = getWebAuthnConfig(requestInfo.request);
+		const { response } = requestInfo;
 
-	const options = await generateRegistrationOptions({
-		rpName,
-		rpID,
-		userName: username,
-		authenticatorSelection: {
-			// Require the authenticator to store the credential, enabling a username-less login experience
-			residentKey: 'required',
-			// Prefer user verification (biometric, PIN, etc.), but allow authentication even if it's not available
-			userVerification: 'preferred',
-		},
-	});
+		const options = await generateRegistrationOptions({
+			rpName,
+			rpID,
+			userName: username,
+			authenticatorSelection: {
+				// Require the authenticator to store the credential, enabling a username-less login experience
+				residentKey: 'required',
+				// Prefer user verification (biometric, PIN, etc.), but allow authentication even if it's not available
+				userVerification: 'preferred',
+			},
+		});
 
-	await sessions.save(response.headers, { challenge: options.challenge });
+		await sessions.save(response.headers, { challenge: options.challenge });
 
-	return options;
+		return successResponse(options);
+	} catch (err) {
+		return errorResponse(err, 500, 'Failed to start passkey registration');
+	}
 }
 
-export async function finishPasskeyRegistration(username: string, registration: RegistrationResponseJSON): Promise<boolean> {
+export async function finishPasskeyRegistration(
+	username: string,
+	registration: RegistrationResponseJSON,
+): Promise<ActionState<boolean>> {
 	const { request, response } = requestInfo;
 	const { origin } = getWebAuthnConfig(requestInfo.request);
 
@@ -36,7 +45,7 @@ export async function finishPasskeyRegistration(username: string, registration: 
 	const challenge = session?.challenge;
 
 	if (!challenge) {
-		return false;
+		return errorResponse('No challenge found in session', 400);
 	}
 
 	const verification = await verifyRegistrationResponse({
@@ -47,7 +56,7 @@ export async function finishPasskeyRegistration(username: string, registration: 
 	});
 
 	if (!verification.verified || !verification.registrationInfo) {
-		return false;
+		return errorResponse('Invalid passkey registration', 400);
 	}
 
 	await sessions.save(response.headers, { challenge: null });
@@ -65,7 +74,7 @@ export async function finishPasskeyRegistration(username: string, registration: 
 		requestInfo.ctx.logger,
 	);
 
-	return true;
+	return successResponse(true);
 }
 
 function deviceNameFromUA(uaString: string): string {
