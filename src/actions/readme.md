@@ -30,12 +30,30 @@ export async function _saveWidget(formData: WidgetFormData): Promise<ActionState
 
 ## Error handling
 
-Catch repository errors and return them as `ActionState` failures. Use the `toActionErrorMessage` utility from `./utils` to convert caught errors into safe user-facing messages:
+Catch repository errors and return them as `ActionState` failures. Use the `errorResponse` utility from `./utils`:
 
 ```ts
 } catch (error) {
-    return { success: false, errors: { _form: [toActionErrorMessage(error)] } };
+    return errorResponse(error, 500, 'Failed to save widget');
 }
+```
+
+### Throwing repository functions (`getXxxById`)
+
+`getXxxById` repository functions always **throw** when a record is not found — they never return `null` or `undefined`. Callers must wrap these calls in their own `try/catch` to return an appropriate error response. A null guard after the call (`if (!record)`) is dead code:
+
+```ts
+// correct — inner try/catch for a 400 "not found" distinct from unexpected 500 errors
+let widget: Widget;
+try {
+    widget = await getWidgetById(id, ctx.logger);
+} catch (err) {
+    return errorResponse(err, 400, 'Widget not found');
+}
+
+// wrong — getWidgetById never returns null; this guard is never reached
+const widget = await getWidgetById(id, ctx.logger);
+if (!widget) { ... } // dead code
 ```
 
 The `_form` key and array structure for form-level errors is a known rough edge — see #124 for the plan to re-evaluate this once the TanStack Form integration is further along.

@@ -20,7 +20,7 @@ See [ADR-0005](../../docs/decisions/0005-repository-sync-operations.md) for the 
 
 - **Named exports** — one file per entity, functions exported by name.
 - **Set audit fields** — repositories are responsible for setting `createdBy` and `updatedBy` from the `userId` passed by the caller. Actions and API handlers do not set these directly.
-- **Throw on not-found for ID lookups** — if a caller has an ID and the record doesn't exist, that's an unexpected state worth surfacing as an error. Return `undefined` for search or existence-check operations where absence is a valid result.
+- **Throw on not-found for ID lookups** — if a caller has an ID and the record doesn't exist, that's an unexpected state worth surfacing as an error. Return `undefined` for search or existence-check operations where absence is a valid result. Callers must wrap `getXxxById` calls in `try/catch` — a null guard after the call is dead code and a sign the caller is using the wrong pattern.
 - **Logging** — every repository function accepts `logger: RzLogger` as its last parameter. Use `debug` for fetch/query operations and `info` for creates, updates, and deletes. Pass `ctx.logger` from the caller. Do not use `console.log` or `requestInfo.ctx.logger` directly inside repository functions.
 - **No `db` parameters in function signatures** — test concerns should not leak into production code. Use the database proxy pattern for testing.
 

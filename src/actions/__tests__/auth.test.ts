@@ -174,11 +174,23 @@ describe('finishPasskeyLogin', () => {
 	// login.id is the credential ID chosen by the authenticator. The server looks up its
 	// stored public key to verify the signature — if there's no matching record this device
 	// was never registered on this server.
-	it('returns an error when the credential ID is not found', async () => {
-		vi.mocked(getCredentialById).mockResolvedValue(null as any);
+	// getCredentialById throws (never returns null) so this is handled by an inner try/catch
+	// that returns a 400, distinguishing it from unexpected 500 errors from the outer catch.
+	it('returns a 400 error when getCredentialById throws', async () => {
+		vi.mocked(getCredentialById).mockRejectedValue(new Error('getCredentialById: matchedCredentials length is 0'));
 		const result = await finishPasskeyLogin(mockLogin as any);
 		expect(result.success).toBe(false);
-		expect(result.errors?._form?.[0]).toContain('credential');
+		expect(result.code).toBe(400);
+		expect(result.errors?._form?.[0]).toContain('matchedCredentials');
+	});
+
+	it('hides credential lookup error details in production', async () => {
+		mockEnv.REZEPT_ENV = 'production';
+		vi.mocked(getCredentialById).mockRejectedValue(new Error('getCredentialById: matchedCredentials length is 0'));
+		const result = await finishPasskeyLogin(mockLogin as any);
+		expect(result.success).toBe(false);
+		expect(result.code).toBe(400);
+		expect(result.errors?._form?.[0]).toBe('Credential not found');
 	});
 
 	// verifyAuthenticationResponse cryptographically verifies the authenticator's signature
@@ -214,11 +226,13 @@ describe('finishPasskeyLogin', () => {
 		);
 	});
 
-	it('returns an error when the user record cannot be found', async () => {
-		vi.mocked(getUserById).mockResolvedValue(null as any);
+	// getUserById throws (never returns null), caught by the outer try/catch.
+	// Unlike getCredentialById it does not have its own inner catch, so it returns 500.
+	it('returns a 500 error when getUserById throws', async () => {
+		vi.mocked(getUserById).mockRejectedValue(new Error('getUserById: matchedUsers length is 0'));
 		const result = await finishPasskeyLogin(mockLogin as any);
 		expect(result.success).toBe(false);
-		expect(result.errors?._form?.[0]).toContain('user');
+		expect(result.code).toBe(500);
 	});
 
 	// Saving userId establishes the session — subsequent requests will see ctx.user set.
