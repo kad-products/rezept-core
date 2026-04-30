@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { optionalString, optionalUuid, requiredUuid } from './utils';
+import { coercedInt, optionalStringMax, optionalUuid, requiredString, requiredUuid } from './utils';
 
 const ingredientRawSchema = z.object({
 	id: optionalUuid,
 	raw: z.string().min(1),
-	order: z.coerce.number().int().min(0) as z.ZodNumber,
+	order: coercedInt(0),
 });
 
 const ingredientStructuredSchema = z.object({
@@ -12,13 +12,9 @@ const ingredientStructuredSchema = z.object({
 	ingredientId: requiredUuid,
 	quantity: z.coerce.number().positive().multipleOf(0.01).optional() as unknown as z.ZodNumber,
 	unitId: optionalUuid,
-	preparation: optionalString
-		.transform(val => val?.trim())
-		.pipe(z.string().max(100, 'Preparation must be 100 characters or less').optional()),
-	modifier: optionalString
-		.transform(val => val?.trim())
-		.pipe(z.string().max(100, 'Modifier must be 100 characters or less').optional()),
-	order: z.coerce.number().int().min(0) as z.ZodNumber,
+	preparation: optionalStringMax(100, 'Preparation'),
+	modifier: optionalStringMax(100, 'Modifier'),
+	order: coercedInt(0),
 });
 
 const recipeIngredientSchema = z.union([ingredientRawSchema, ingredientStructuredSchema]);
@@ -30,14 +26,14 @@ const recipeSectionSchema = z.object({
 		.max(200, 'Title must be 200 characters or less')
 		.optional()
 		.transform(val => val?.trim() || null),
-	order: z.coerce.number().int().min(0) as z.ZodNumber,
+	order: coercedInt(0),
 	ingredients: z.array(recipeIngredientSchema).optional(),
 	instructions: z
 		.array(
 			z.object({
 				id: optionalUuid,
-				stepNumber: z.coerce.number().int().min(1) as z.ZodNumber,
-				instruction: z.string().trim().min(1, 'Instruction is required').max(2000, 'Instruction must be 2000 characters or less'),
+				stepNumber: coercedInt(1),
+				instruction: requiredString('Instruction', 2000),
 			}),
 		)
 		.optional(),
@@ -47,22 +43,12 @@ const recipeSectionSchema = z.object({
 const recipeFormSchema = z.object({
 	id: optionalUuid, // Present for update, absent for create
 	authorId: z.string().uuid('Must be a valid UUID'),
-	title: z.string().trim().min(1, 'Title is required').max(200, 'Title must be 200 characters or less'),
-	description: z
-		.union([z.string(), z.null()])
-		.transform(val => (val === '' ? undefined : val))
-		.optional()
-		.transform(val => val?.trim())
-		.pipe(z.string().max(1000, 'Description must be 1000 characters or less').optional()),
-	source: z
-		.union([z.string(), z.null()])
-		.transform(val => (val === '' ? undefined : val))
-		.optional()
-		.transform(val => val?.trim())
-		.pipe(z.string().max(500, 'Source must be 500 characters or less').optional()),
-	servings: z.coerce.number().int().min(0).optional() as z.ZodOptional<z.ZodNumber>,
-	prepTime: z.coerce.number().int().min(0).optional() as z.ZodOptional<z.ZodNumber>,
-	cookTime: z.coerce.number().int().min(0).optional() as z.ZodOptional<z.ZodNumber>,
+	title: requiredString('Title', 200),
+	description: optionalStringMax(1000, 'Description'),
+	source: optionalStringMax(500, 'Source'),
+	servings: coercedInt(0).optional(),
+	prepTime: coercedInt(0).optional(),
+	cookTime: coercedInt(0).optional(),
 	sections: z.array(recipeSectionSchema).optional(),
 });
 
