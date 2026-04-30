@@ -20,7 +20,7 @@ import type {
 import { errorResponse, successResponse } from './utils';
 
 // biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
-export const saveRecipe = serverAction([requirePermissions('seasons:create', 'seasons:update'), _saveRecipe]);
+export const saveRecipe = serverAction([requirePermissions('recipes:create', 'recipes:update'), _saveRecipe]);
 
 /**
  * @private - exported for testing only, do not use directly
