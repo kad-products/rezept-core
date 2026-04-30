@@ -1,3 +1,9 @@
+## [1.18.21](https://github.com/kad-products/rezept-core/compare/v1.18.20...v1.18.21) (2026-04-30)
+
+### Bug Fixes
+
+* use interruptor and perms for protected profile pages ([d853c49](https://github.com/kad-products/rezept-core/commit/d853c49481a2cbe556d71a286d011060737b5986))
+
 ## [1.18.20](https://github.com/kad-products/rezept-core/compare/v1.18.19...v1.18.20) (2026-04-30)
 
 ### Code Refactoring
