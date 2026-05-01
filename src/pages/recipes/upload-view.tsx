@@ -7,10 +7,6 @@ export default async function Pages__recipes__upload_view({ ctx, params }: Reque
 	const recipeUploadId = params.recipeUploadId;
 	const recipeUpload = await getRecipeUploadById(recipeUploadId, ctx.logger);
 
-	if (!recipeUpload) {
-		return <p>Recipe upload not found</p>;
-	}
-
 	return (
 		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
 			<Suspense fallback={<div>Loading recipe upload...</div>}>

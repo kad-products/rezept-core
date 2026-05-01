@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipes } from '@/models';
@@ -14,14 +15,14 @@ export async function getRecipes(logger: RzLogger): Promise<Recipe[]> {
 
 export async function getRecipeById(recipeId: string, logger: RzLogger): Promise<Recipe> {
 	if (!validateUuid(recipeId)) {
-		throw new Error(`Invalid id: ${recipeId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeId, 'Recipe']);
 	}
 
 	logger.debug(`Fetching recipe ${recipeId}`);
 	const matchedRecipes = await db.select().from(recipes).where(eq(recipes.id, recipeId));
 
 	if (matchedRecipes.length !== 1) {
-		throw new Error(`getRecipeById: matchedRecipes length is ${matchedRecipes.length} for id ${recipeId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedRecipes.length, 1, 'Recipe']);
 	}
 
 	return matchedRecipes[0];

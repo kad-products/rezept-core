@@ -30,7 +30,7 @@ One file per entity. Each file has a single default export — the form componen
 ```tsx
 'use client';
 import { useAppForm } from './context';
-import { saveRecipe } from '@/actions';
+import { saveRecipe } from '@/actions/recipes';
 import type { ActionState, RecipeFormData } from '@/types';
 
 export default function FormRecipe({ recipe }: { recipe?: Recipe }) {
@@ -107,7 +107,7 @@ Form components use a `Form` prefix: `FormRecipe`, `FormSeason`, `FormApiKey`. T
 - **`Form.Root` as the form element** — not a native `<form>` element
 - **Radix Form in all input components** — `Form.Field`, `Form.Label`, `Form.Control asChild`, `Form.Message forceMatch={true}`
 - **Props for data** — pages fetch data and pass it down; forms do not access repositories
-- **Server actions in `onSubmit`** — mutations go through `@/actions`
+- **Server actions in `onSubmit`** — import directly from the specific action file (e.g. `@/actions/recipes`), not a barrel
 - **`ActionState` in `useState`** — hold the server action response locally to display errors and success messages
 - **Default export** — one form component per file
 - **No type definitions** — types live in `@/types`

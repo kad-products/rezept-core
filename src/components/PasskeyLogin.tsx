@@ -2,7 +2,7 @@
 import { type PublicKeyCredentialRequestOptionsJSON, startAuthentication } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
 import { navigate } from 'rwsdk/client';
-import { finishPasskeyLogin, startPasskeyLogin } from '@/actions';
+import { finishPasskeyLogin, startPasskeyLogin } from '@/actions/auth';
 
 export default function PasskeyLogin(): React.ReactNode {
 	const [result, setResult] = useState('');
