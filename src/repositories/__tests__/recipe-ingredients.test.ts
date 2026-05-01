@@ -46,8 +46,8 @@ describe('recipe-ingredients repository', () => {
 			await updateRecipeIngredients(testSectionId, [{ order: 1, raw: '2 cups flour' }], testUserId, logger);
 
 			const result = await getIngredientsByRecipeSectionId(testSectionId, logger);
-			expect(result[0]).toHaveProperty('unit');
-			expect(result[0].unit).toBeNull();
+			expect(result[0]).toHaveProperty('unitId');
+			expect(result[0].unitId).toBeNull();
 		});
 
 		it('returns only ingredients for the specified section', async () => {
