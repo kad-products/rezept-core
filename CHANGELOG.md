@@ -1,3 +1,14 @@
+## [1.19.0](https://github.com/kad-products/rezept-core/compare/v1.18.21...v1.19.0) (2026-05-01)
+
+### Features
+
+* provide error fallback route ([b19b174](https://github.com/kad-products/rezept-core/commit/b19b17415e980cea8f19735f525a6f8c3daed9a4))
+
+### Bug Fixes
+
+* remove dead code checks and throw to error handler ([8f5762a](https://github.com/kad-products/rezept-core/commit/8f5762afb5bc7b2bdd294605b77c7a0bf607b4de))
+* revert actions barrel export to solve build and dev server problems ([6defc54](https://github.com/kad-products/rezept-core/commit/6defc546442b4ae43fd28dba6204427e48675e26))
+
 ## [1.18.21](https://github.com/kad-products/rezept-core/compare/v1.18.20...v1.18.21) (2026-04-30)
 
 ### Bug Fixes
