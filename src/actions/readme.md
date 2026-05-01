@@ -64,4 +64,4 @@ The `_form` key and array structure for form-level errors is a known rough edge 
 - **Named exports only** — the `serverAction()` wrapper is a `const` export; no default exports
 - **No direct DB access** — import from `@/repositories`, never `@/db`
 - **No type definitions** — types live in `@/types`
-- **Barrel-exported from `index.ts`** — consumers import from `@/actions`
+- **No barrel** — import directly from the specific action file (e.g. `@/actions/recipes`); a barrel with `'use server'` re-exports breaks the SSR build, and without it the dev scanner cannot find the actions

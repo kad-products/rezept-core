@@ -3,7 +3,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools';
 import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { Form } from 'radix-ui';
 import { useState } from 'react';
-import { saveRecipe } from '@/actions';
+import { saveRecipe } from '@/actions/recipes';
 import { recipesSchemas } from '@/schemas';
 import type { ActionState, Ingredient, RecipeFormData, RecipeWithSections } from '@/types';
 import { useAppForm } from './context';

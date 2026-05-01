@@ -2,7 +2,7 @@
 
 import { type PublicKeyCredentialCreationOptionsJSON, startRegistration } from '@simplewebauthn/browser';
 import { useState, useTransition } from 'react';
-import { finishPasskeyRegistration, startPasskeyRegistration } from '@/actions';
+import { finishPasskeyRegistration, startPasskeyRegistration } from '@/actions/registration';
 
 export default function PasskeyRegistration(): React.ReactNode {
 	const [username, setUsername] = useState('');
