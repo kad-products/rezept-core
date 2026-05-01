@@ -1,4 +1,4 @@
-import { prefix, render, route } from 'rwsdk/router';
+import { except, prefix, render, route } from 'rwsdk/router';
 import { defineApp } from 'rwsdk/worker';
 import apiRoutes from '@/api/routes';
 import { Document } from '@/Document';
@@ -9,6 +9,7 @@ import authRoutes from '@/pages/auth/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
+import RootErrorHandler from './components/RootErrorHandler';
 import apiKeyMiddleware from './middleware/api-key';
 import botMiddleware from './middleware/bot';
 import corsMiddleware from './middleware/cors';
@@ -29,6 +30,7 @@ export default defineApp([
 	permissionsMiddleware,
 	render(Document, [
 		route('/', Pages__root),
+		except(error => <RootErrorHandler error={error as Error} />),
 		prefix('/api', apiRoutes),
 		prefix('/auth', authRoutes),
 		prefix('/profile', profileRoutes),
