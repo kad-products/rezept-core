@@ -1,11 +1,6 @@
 import { z } from 'zod';
-import permissions from '@/data/permissions';
-import type { PermissionKey } from '@/types';
+import { permissionValues } from '@/data/permissions';
 import { requiredUuid } from './utils';
-
-const permissionValues = Object.entries(permissions).flatMap(([resource, actions]) =>
-	Object.keys(actions).map(action => `${resource}:${action}`),
-) as [PermissionKey, ...PermissionKey[]];
 
 const formSchema = z.object({
 	id: z
