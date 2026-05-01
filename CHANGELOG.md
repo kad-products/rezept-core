@@ -1,3 +1,9 @@
+## [1.19.3](https://github.com/kad-products/rezept-core/compare/v1.19.2...v1.19.3) (2026-05-01)
+
+### Bug Fixes
+
+* cleanup placeholder tests ([13d6682](https://github.com/kad-products/rezept-core/commit/13d6682d79f7eb8aa5c5c9307194185c75270240))
+
 ## [1.19.2](https://github.com/kad-products/rezept-core/compare/v1.19.1...v1.19.2) (2026-05-01)
 
 ### Bug Fixes
