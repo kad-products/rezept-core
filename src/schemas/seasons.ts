@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { validCountryCodes } from '@/data/countries';
 import { coercedInt, optionalString, optionalStringMax, requiredString, requiredUuid } from './utils';
 
-// Shared base fields
-const baseSeasonFields = {
+const formSchema = z.object({
+	id: z.string().uuid('Must be a valid UUID').optional(),
 	name: requiredString('Name'),
 	description: optionalStringMax(500, 'Description'),
 	country: z
@@ -16,18 +16,8 @@ const baseSeasonFields = {
 	endMonth: coercedInt(1, 12),
 	notes: optionalStringMax(2000, 'Notes'),
 	ingredients: z.array(requiredUuid).default([]),
-};
-
-// Create schema - used in form and validated again on server
-const createSchema = z.object(baseSeasonFields);
-
-// Update schema - requires id
-const updateSchema = z.object({
-	...baseSeasonFields,
-	id: requiredUuid,
 });
 
 export const seasonsSchemas = {
-	create: createSchema,
-	update: updateSchema,
+	form: formSchema,
 };

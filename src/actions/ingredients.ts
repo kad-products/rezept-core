@@ -2,6 +2,7 @@
 import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createIngredient } from '@/repositories';
+import { ingredientsSchemas } from '@/schemas';
 import type { ActionState, IngredientFormSave } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
@@ -15,15 +16,18 @@ export const saveIngredient = serverAction([
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _addIngredient(ingredientName: string): Promise<ActionState<IngredientFormSave>> {
+export async function _addIngredient(formData: IngredientFormSave): Promise<ActionState<IngredientFormSave>> {
 	const { ctx } = requestInfo;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
 
-	requestInfo.ctx.logger.info(`Received on the server: ${ingredientName}`);
-
 	try {
-		const createdIngredient = await createIngredient({ name: ingredientName }, userId, requestInfo.ctx.logger);
+		const parsed = ingredientsSchemas.form.safeParse(formData);
+		if (!parsed.success) {
+			requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
+			return errorResponse<IngredientFormSave>(parsed.error.flatten().fieldErrors, 400);
+		}
+		const createdIngredient = await createIngredient({ name: parsed.data.name }, userId, requestInfo.ctx.logger);
 		return successResponse<IngredientFormSave>(createdIngredient, 201);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error adding ingredient: ${error} `);

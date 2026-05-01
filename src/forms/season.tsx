@@ -23,7 +23,7 @@ export default function Season({
 }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<SeasonFormData>>();
 
-	const schema = season?.id ? seasonsSchemas.update : seasonsSchemas.create;
+	const schema = seasonsSchemas.form;
 
 	const form = useAppForm({
 		defaultValues: season
