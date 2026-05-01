@@ -1,4 +1,3 @@
-import { env } from 'cloudflare:workers';
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { updateRecipeSections } from '@/repositories';
@@ -13,14 +12,10 @@ export async function saveRecipeSections(
 	let sections: RecipeSection[];
 	try {
 		sections = await updateRecipeSections(recipeId, sectionsData, userId, logger);
-		logger.info(`Recipe sections saved for ${recipeId}: ${JSON.stringify(sections, null, 4)}`);
+		logger.info(`Saved ${sections.length} sections for recipe ${recipeId}`);
 	} catch (error) {
-		logger.info(`Error saving sections: ${error} `);
-
-		const errorMessage =
-			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
-
-		throw new RzStepError(400, errorMessage);
+		logger.warn(`Error saving sections for recipe ${recipeId}: ${error}`);
+		throw new RzStepError(400, 'Failed to save recipe sections', `Error saving sections for recipe ${recipeId}: ${error}`);
 	}
 	return sections;
 }

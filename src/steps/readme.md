@@ -17,9 +17,26 @@ There is no requirement to extract logic to a step — simple actions and handle
 
 Steps always throw `RzStepError` on failure. Never return an error value — throw it. This lets the orchestrator decide how to translate the error into the appropriate response format (`ActionState` for actions, `Response.json` for API handlers).
 
+`RzStepError` carries two messages:
+
+```ts
+throw new RzStepError(
+  400,
+  'Failed to save recipe',                   // publicMessage — shown to users in production
+  `Error saving recipe: ${error}`,            // devMessage — shown in development, written to logs
+);
+```
+
+When only one message is passed, it is used for both. The orchestrator (not the step) decides which message to surface based on the environment.
+
 ## Logging
 
 Steps accept a `logger: RzLogger` argument. The caller is responsible for passing the logger down — steps never reach for the request context themselves. This keeps steps usable outside of request contexts.
+
+Log level guidance:
+- `logger.info` — step completion milestones (e.g. "Recipe saved", "Scrape initialized")
+- `logger.warn` — caught errors before re-throwing as `RzStepError`
+- `logger.debug` — diagnostic payload data (full objects, JSON dumps)
 
 ## Guidelines
 

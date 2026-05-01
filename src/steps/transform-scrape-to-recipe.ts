@@ -51,7 +51,7 @@ export async function transformScrapeToRecipe(parsedBody: JsonLdPayload, logger:
 			},
 		];
 
-		return {
+		const result = {
 			title,
 			description,
 			source: parsedBody.url,
@@ -60,10 +60,17 @@ export async function transformScrapeToRecipe(parsedBody: JsonLdPayload, logger:
 			cookTime: typeof recipe.cookTime === 'string' ? parseDuration(recipe.cookTime) : undefined,
 			sections,
 		};
+
+		logger.debug(`Transformed scrape to recipe: "${result.title}"`);
+		return result;
 	} catch (err) {
-		logger.warn(`Unexpected error during parsing JSON-LD payload: ${err}`);
-		logger.info(`Original scrape payload: ${JSON.stringify(parsedBody, null, 2)}`);
-		throw new RzStepError(400, 'Error transforming scrape to recipe');
+		logger.warn(`Error transforming JSON-LD payload to recipe: ${err}`);
+		logger.debug(`Original scrape payload: ${JSON.stringify(parsedBody, null, 2)}`);
+		throw new RzStepError(
+			400,
+			'Could not extract a recipe from the page content',
+			`Error transforming JSON-LD payload to recipe: ${err}`,
+		);
 	}
 }
 

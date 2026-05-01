@@ -181,7 +181,7 @@ describe('_postHandler', () => {
 
 	describe('error handling', () => {
 		it('does not update scrape status to FAILED when parseBodyJson fails (scrape not yet created)', async () => {
-			vi.mocked(parseBodyJson).mockRejectedValue(new RzStepError(400, 'Invalid JSON'));
+			vi.mocked(parseBodyJson).mockRejectedValue(new RzStepError(400, 'Invalid JSON', 'Invalid JSON'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).not.toHaveBeenCalledWith(
 				expect.anything(),
@@ -194,7 +194,7 @@ describe('_postHandler', () => {
 		});
 
 		it('does not update scrape status to FAILED when initializeScrape fails (scrape not yet created)', async () => {
-			vi.mocked(initializeScrape).mockRejectedValue(new RzStepError(500, 'DB error'));
+			vi.mocked(initializeScrape).mockRejectedValue(new RzStepError(500, 'DB error', 'DB error'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).not.toHaveBeenCalledWith(
 				expect.anything(),
@@ -207,7 +207,7 @@ describe('_postHandler', () => {
 		});
 
 		it('marks scrape as FAILED when transformScrapeToRecipe fails', async () => {
-			vi.mocked(transformScrapeToRecipe).mockRejectedValue(new RzStepError(422, 'Transform failed'));
+			vi.mocked(transformScrapeToRecipe).mockRejectedValue(new RzStepError(422, 'Transform failed', 'Transform failed'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
 				'scrape-id',
@@ -220,7 +220,7 @@ describe('_postHandler', () => {
 		});
 
 		it('marks scrape as FAILED when validateAsRecipe fails', async () => {
-			vi.mocked(validateAsRecipe).mockRejectedValue(new RzStepError(422, 'Validation failed'));
+			vi.mocked(validateAsRecipe).mockRejectedValue(new RzStepError(422, 'Validation failed', 'Validation failed'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
 				'scrape-id',
@@ -233,14 +233,14 @@ describe('_postHandler', () => {
 		});
 
 		it('marks scrape as FAILED when saveRecipe fails', async () => {
-			vi.mocked(saveRecipe).mockRejectedValue(new RzStepError(500, 'Save failed'));
+			vi.mocked(saveRecipe).mockRejectedValue(new RzStepError(500, 'Save failed', 'Save failed'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'FAILED', 'Save failed', 'user-id', expect.anything());
 			expect(response.status).toBe(500);
 		});
 
 		it('marks scrape as FAILED when saveRecipeSections fails', async () => {
-			vi.mocked(saveRecipeSections).mockRejectedValue(new RzStepError(500, 'Sections failed'));
+			vi.mocked(saveRecipeSections).mockRejectedValue(new RzStepError(500, 'Sections failed', 'Sections failed'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
 				'scrape-id',
@@ -253,7 +253,7 @@ describe('_postHandler', () => {
 		});
 
 		it('marks scrape as FAILED when saveRecipeInstructions fails', async () => {
-			vi.mocked(saveRecipeInstructions).mockRejectedValue(new RzStepError(500, 'Instructions failed'));
+			vi.mocked(saveRecipeInstructions).mockRejectedValue(new RzStepError(500, 'Instructions failed', 'Instructions failed'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
 				'scrape-id',
@@ -266,7 +266,7 @@ describe('_postHandler', () => {
 		});
 
 		it('marks scrape as FAILED when saveRecipeIngredients fails', async () => {
-			vi.mocked(saveRecipeIngredients).mockRejectedValue(new RzStepError(500, 'Ingredients failed'));
+			vi.mocked(saveRecipeIngredients).mockRejectedValue(new RzStepError(500, 'Ingredients failed', 'Ingredients failed'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
 				'scrape-id',
@@ -279,7 +279,7 @@ describe('_postHandler', () => {
 		});
 
 		it('returns the step error status code', async () => {
-			vi.mocked(transformScrapeToRecipe).mockRejectedValue(new RzStepError(403, 'Forbidden'));
+			vi.mocked(transformScrapeToRecipe).mockRejectedValue(new RzStepError(403, 'Forbidden', 'Forbidden'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(response.status).toBe(403);
 			const body = (await response.json()) as any;

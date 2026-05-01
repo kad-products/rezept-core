@@ -5,8 +5,11 @@ import type { RecipeScrape } from '@/types';
 
 export async function initializeScrape(parsedBody: unknown, userId: string, logger: RzLogger): Promise<RecipeScrape> {
 	try {
-		return await createRecipeScrape(JSON.stringify(parsedBody), userId, logger);
+		const result = await createRecipeScrape(JSON.stringify(parsedBody), userId, logger);
+		logger.info(`Scrape initialized: ${result.id}`);
+		return result;
 	} catch (err) {
-		throw new RzStepError(400, (err as Error).message);
+		logger.warn(`Error initializing scrape: ${err}`);
+		throw new RzStepError(400, 'Failed to initialize recipe scrape', `Error initializing scrape: ${err}`);
 	}
 }

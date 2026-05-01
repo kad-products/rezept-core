@@ -1,4 +1,3 @@
-import { env } from 'cloudflare:workers';
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { createRecipe, updateRecipe } from '@/repositories';
@@ -14,12 +13,8 @@ export async function saveRecipe(recipeData: RecipeFormSave, userId: string, log
 		}
 		logger.info(`Recipe ${recipe.id} saved`);
 	} catch (error) {
-		logger.info(`Error saving recipe: ${error} `);
-
-		const errorMessage =
-			env.REZEPT_ENV === 'development' ? (error instanceof Error ? error.message : String(error)) : 'Failed to save item';
-
-		throw new RzStepError(400, errorMessage);
+		logger.warn(`Error saving recipe: ${error}`);
+		throw new RzStepError(400, 'Failed to save recipe', `Error saving recipe: ${error}`);
 	}
 	return recipe;
 }
