@@ -1,4 +1,4 @@
-export default {
+const permissions = {
 	'api-keys': {
 		create: ['BASIC', 'ADMIN'],
 		read: ['BASIC', 'ADMIN'],
@@ -33,3 +33,13 @@ export default {
 		upload: ['ADMIN', 'BASIC'],
 	},
 } as const;
+
+export default permissions;
+
+export const flattenedPermissions: Array<{ permission: string; roles: string[] }> = Object.entries(permissions).flatMap(
+	([resource, actions]) =>
+		Object.entries(actions).map(([action, roles]) => ({
+			permission: `${resource}:${action}`,
+			roles,
+		})),
+);

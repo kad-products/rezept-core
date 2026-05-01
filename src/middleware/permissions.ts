@@ -1,13 +1,5 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
-import permissions from '@/data/permissions';
-
-const flattenedPermissions: Array<{ permission: string; roles: string[] }> = Object.entries(permissions).flatMap(
-	([resource, actions]) =>
-		Object.entries(actions).map(([action, roles]) => ({
-			permission: `${resource}:${action}`,
-			roles,
-		})),
-);
+import { flattenedPermissions } from '@/data/permissions';
 
 export default async function permissionsMiddleware({ ctx }: RequestInfo<DefaultAppContext>): Promise<void> {
 	if (ctx.apiKey) {
