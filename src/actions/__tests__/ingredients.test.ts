@@ -70,7 +70,7 @@ describe('_addIngredient', () => {
 
 	describe('add ingredient', () => {
 		it('creates ingredient with a valid name', async () => {
-			const result = await _addIngredient('Tomato');
+			const result = await _addIngredient({ name: 'Tomato' });
 
 			expect(result.success).toBe(true);
 			expect(createIngredient).toHaveBeenCalledTimes(1);
@@ -78,7 +78,7 @@ describe('_addIngredient', () => {
 		});
 
 		it('returns the created ingredient', async () => {
-			const result = await _addIngredient('Tomato');
+			const result = await _addIngredient({ name: 'Tomato' });
 
 			expect(result.success).toBe(true);
 			expect(result.data).toMatchObject({ id: 'mock-ingredient-id', name: 'Tomato' });
@@ -87,7 +87,7 @@ describe('_addIngredient', () => {
 		it('handles repository errors gracefully', async () => {
 			vi.mocked(createIngredient).mockRejectedValueOnce(new Error('Database error'));
 
-			const result = await _addIngredient('Tomato');
+			const result = await _addIngredient({ name: 'Tomato' });
 
 			expect(result.success).toBe(false);
 			expect(result.errors?._form).toBeDefined();
@@ -97,7 +97,7 @@ describe('_addIngredient', () => {
 			vi.mocked(createIngredient).mockRejectedValueOnce(new Error('Connection failed: postgres://user:password@db.internal'));
 			mockEnv.REZEPT_ENV = 'production';
 
-			const result = await _addIngredient('Tomato');
+			const result = await _addIngredient({ name: 'Tomato' });
 
 			expect(result.errors?._form?.[0]).toBe('Failed to add ingredient');
 			expect(result.errors?._form?.[0]).not.toContain('postgres://');

@@ -12,17 +12,16 @@ When an action or API handler receives external input that needs validation. Sch
 
 ## Structure
 
-Each file owns one entity and exports a single namespace object. Properties on the namespace are named by operation or purpose:
+Each file owns one entity and exports a single namespace object. Properties on the namespace are named by purpose:
 
 ```ts
 // seasons.ts
-export const seasonSchemas = {
-    create: z.object({ ... }),
-    update: z.object({ ... }),
+export const seasonsSchemas = {
+    form: z.object({ ... }),       // handles create + update, id is optional
 }
 
 // recipes.ts
-export const recipeSchemas = {
+export const recipesSchemas = {
     form: z.object({ ... }),       // handles create + update, id is optional
     scrape: z.object({ ... }),     // API/bookmarklet variant
     section: z.object({ ... }),    // sub-schema used compositionally
@@ -30,7 +29,11 @@ export const recipeSchemas = {
 }
 ```
 
-Use `create`/`update` when the shapes genuinely differ. Use a purpose-based name (`form`, `scrape`) when one schema covers multiple operations or serves a specific use case. Sub-schemas that are only referenced internally within the file don't belong on the namespace.
+Use a single `form` schema for create and update — the `id` field is optional (`optionalUuid`), absent on create and present on update. Only add a second schema (like `scrape`) when a distinct use case genuinely requires different validation rules.
+
+**Do not include server-side audit fields** (`createdBy`, `updatedBy`, `deletedBy`) in schemas. Those fields come from `ctx.user.id` at the server layer and are never part of user input. A schema that includes them is modelling a DB row rather than the user-supplied input shape — which is what the schema is for.
+
+Sub-schemas that are only referenced internally within the file don't belong on the namespace.
 
 ## Nullable vs optional fields
 
