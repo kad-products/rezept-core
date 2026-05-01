@@ -1,9 +1,14 @@
 export class RzStepError extends Error {
+	public devMessage: string;
+
 	constructor(
 		public code: number,
-		message: string,
+		public publicMessage: string,
+		devMessage?: string,
 	) {
-		super(message);
+		const dev = devMessage ?? publicMessage;
+		super(dev);
 		this.name = 'RzStepError';
+		this.devMessage = dev;
 	}
 }

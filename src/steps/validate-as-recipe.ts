@@ -13,15 +13,17 @@ export async function validateAsRecipe(
 		const parsed = recipesSchemas.scrape.safeParse({ authorId: userId, ...transformedRecipe });
 
 		if (parsed.error) {
-			logger.warn(`Schema parsing found error in JSON-LD payload: ${JSON.stringify(parsed.error.flatten().fieldErrors)}`);
-			logger.info(`Original scrape payload: ${JSON.stringify(transformedRecipe, null, 2)}`);
-			throw new RzStepError(400, JSON.stringify(parsed.error.flatten().fieldErrors));
+			const fieldErrors = JSON.stringify(parsed.error.flatten().fieldErrors);
+			logger.warn(`Recipe data failed validation: ${fieldErrors}`);
+			logger.debug(`Original scrape payload: ${JSON.stringify(transformedRecipe, null, 2)}`);
+			throw new RzStepError(400, 'The recipe data could not be validated', `Recipe data failed validation: ${fieldErrors}`);
 		}
 
-		logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
+		logger.debug(`Recipe data validated successfully`);
 		return parsed.data;
 	} catch (err) {
 		if (err instanceof RzStepError) throw err;
-		throw new RzStepError(400, `Unexpected error validating payload as recipe: ${(err as Error).message}`);
+		logger.warn(`Unexpected error validating recipe payload: ${err}`);
+		throw new RzStepError(400, 'Failed to validate recipe', `Unexpected error validating recipe payload: ${err}`);
 	}
 }
