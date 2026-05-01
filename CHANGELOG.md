@@ -1,3 +1,10 @@
+## [1.19.4](https://github.com/kad-products/rezept-core/compare/v1.19.3...v1.19.4) (2026-05-01)
+
+### Bug Fixes
+
+* better step errors and logging ([dcc79cd](https://github.com/kad-products/rezept-core/commit/dcc79cd457d7bce7a6b89ebe0e5fe0bcd823d3f7))
+* rzsteperror requires a dev message ([147bc54](https://github.com/kad-products/rezept-core/commit/147bc546d531648d3e4e5311863de97c0ba02afd))
+
 ## [1.19.3](https://github.com/kad-products/rezept-core/compare/v1.19.2...v1.19.3) (2026-05-01)
 
 ### Bug Fixes
