@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { resetDb } from '../../../tests/mocks/db';
-import { createUser, getUserById } from '../users';
+import { createUser, deleteUser, getUserById } from '../users';
 
 const logger = new Logger();
 
@@ -149,6 +149,34 @@ describe('getUserById', () => {
 		// Depending on your DB, this might throw or return undefined
 		// Adjust based on actual behavior
 		await expect(getUserById('not-a-uuid', logger)).rejects.toThrow();
+	});
+});
+
+describe('deleteUser', () => {
+	it('deletes the user', async () => {
+		const user = await createUser('tobedeleted', logger);
+
+		await deleteUser(user.id, logger);
+
+		await expect(getUserById(user.id, logger)).rejects.toThrow('Expected 1 User record(s), but found 0');
+	});
+
+	it('does not affect other users', async () => {
+		const user1 = await createUser('delete-me', logger);
+		const user2 = await createUser('keep-me', logger);
+
+		await deleteUser(user1.id, logger);
+
+		const found = await getUserById(user2.id, logger);
+		expect(found.username).toBe('keep-me');
+	});
+
+	it('throws when user does not exist', async () => {
+		await expect(deleteUser(crypto.randomUUID(), logger)).rejects.toThrow('Expected 1 User record(s), but found 0');
+	});
+
+	it('throws when id is not a valid uuid', async () => {
+		await expect(deleteUser('not-a-uuid', logger)).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a User');
 	});
 });
 

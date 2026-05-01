@@ -4,7 +4,7 @@ import Logger from '@/logger';
 import type { CredentialInsert } from '@/types';
 import { resetDb } from '../../../tests/mocks/db';
 import { createCredential, getCredentialById, getCredentialsByUserId, updateCredentialCounter } from '../credentials';
-import { createUser } from '../users';
+import { createUser, deleteUser } from '../users';
 
 const logger = new Logger();
 
@@ -110,9 +110,14 @@ describe('createCredential', () => {
 	});
 
 	it('cascades delete when user is deleted', async () => {
-		// This test depends on your user deletion functionality
-		// Placeholder for now - implement when you have deleteUser
-		expect(true).toBe(true);
+		const user = await createUser('tobedeleted', logger);
+		await createCredential(createCredentialData(user.id, { name: 'My Key' }), logger);
+		await createCredential(createCredentialData(user.id, { name: 'My Other Key' }), logger);
+
+		await deleteUser(user.id, logger);
+
+		const remaining = await getCredentialsByUserId(user.id, logger);
+		expect(remaining).toHaveLength(0);
 	});
 });
 
@@ -221,13 +226,6 @@ describe('getCredentialById', () => {
 
 		expect(found?.id).toBe(target.id);
 		expect(found?.credentialId).toBe(target.credentialId);
-	});
-
-	it('throws when multiple credentials have same credentialId', async () => {
-		// This shouldn't happen due to unique constraint, but test the error handling
-		// You'd need to manually insert duplicates to test this, which might not be possible
-		// with the unique constraint. This is more of a sanity check.
-		expect(true).toBe(true); // Placeholder
 	});
 
 	it('returns credential with all fields intact', async () => {

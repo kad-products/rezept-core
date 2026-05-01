@@ -18,6 +18,21 @@ export async function createUser(username: string, logger: RzLogger): Promise<Us
 	return insertedUser;
 }
 
+export async function deleteUser(id: string, logger: RzLogger): Promise<void> {
+	if (!validateUuid(id)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [id, 'User']);
+	}
+
+	logger.debug(`Deleting user ${id}`);
+	const deleted = await db.delete(users).where(eq(users.id, id)).returning();
+
+	if (deleted.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [deleted.length, 1, 'User']);
+	}
+
+	logger.info(`Deleted user ${id}`);
+}
+
 export async function getUserById(id: string, logger: RzLogger): Promise<User> {
 	if (!validateUuid(id)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [id, 'User']);
