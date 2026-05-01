@@ -61,7 +61,7 @@ describe('seasons repository', () => {
 		});
 
 		it('throws when season does not exist', async () => {
-			await expect(getSeasonById(crypto.randomUUID(), logger)).rejects.toThrow('matchedSeasons length is 0');
+			await expect(getSeasonById(crypto.randomUUID(), logger)).rejects.toThrow('Expected 1 Season record(s), but found 0');
 		});
 
 		it('returns correct season when multiple exist', async () => {
@@ -74,15 +74,17 @@ describe('seasons repository', () => {
 		});
 
 		it('throws when id is not a valid uuid', async () => {
-			await expect(getSeasonById('not-a-uuid', logger)).rejects.toThrow('Invalid id: not-a-uuid');
+			await expect(getSeasonById('not-a-uuid', logger)).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a Season');
 		});
 
 		it('throws when id is an empty string', async () => {
-			await expect(getSeasonById('', logger)).rejects.toThrow('Invalid id: ');
+			await expect(getSeasonById('', logger)).rejects.toThrow('The value "" is not a valid ID for a Season');
 		});
 
 		it('throws when id contains special characters', async () => {
-			await expect(getSeasonById('<Anonymous code>', logger)).rejects.toThrow('Invalid id: <Anonymous code>');
+			await expect(getSeasonById('<Anonymous code>', logger)).rejects.toThrow(
+				'The value "<Anonymous code>" is not a valid ID for a Season',
+			);
 		});
 	});
 

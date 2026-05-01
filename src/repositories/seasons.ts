@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { seasons } from '@/models';
@@ -14,12 +15,14 @@ export async function getSeasons(logger: RzLogger): Promise<Season[]> {
 
 export async function getSeasonById(seasonId: string, logger: RzLogger): Promise<Season> {
 	if (!validateUuid(seasonId)) {
-		throw new Error(`Invalid id: ${seasonId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [seasonId, 'Season']);
 	}
+
 	logger.debug(`Fetching season ${seasonId}`);
 	const matchedSeasons = await db.select().from(seasons).where(eq(seasons.id, seasonId));
+
 	if (matchedSeasons.length !== 1) {
-		throw new Error(`getSeasonById: matchedSeasons length is ${matchedSeasons.length} for id ${seasonId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedSeasons.length, 1, 'Season']);
 	}
 
 	return matchedSeasons[0];

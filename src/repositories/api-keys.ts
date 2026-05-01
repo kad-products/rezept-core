@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { apiKeys } from '@/models';
@@ -14,14 +15,14 @@ export async function getApiKeysByUserId(userId: string, logger: RzLogger): Prom
 
 export async function getApiKeyById(apiKeyId: string, logger: RzLogger): Promise<ApiKey> {
 	if (!validateUuid(apiKeyId)) {
-		throw new Error(`Invalid id: ${apiKeyId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [apiKeyId, 'ApiKey']);
 	}
 
 	logger.debug(`Fetching API key ${apiKeyId}`);
 	const matchedApiKeys = await db.select().from(apiKeys).where(eq(apiKeys.id, apiKeyId));
 
 	if (matchedApiKeys.length !== 1) {
-		throw new Error(`getApiKeyById: matchedApiKeys length is ${matchedApiKeys.length} for id ${apiKeyId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedApiKeys.length, 1, 'ApiKey']);
 	}
 
 	return matchedApiKeys[0];
@@ -32,7 +33,7 @@ export async function getApiKeyByKey(key: string, logger: RzLogger): Promise<Api
 	const matchedApiKeys = await db.select().from(apiKeys).where(eq(apiKeys.apiKey, key));
 
 	if (matchedApiKeys.length !== 1) {
-		throw new Error(`getApiKeyByKey: matchedApiKeys length is ${matchedApiKeys.length} for key ${key.substring(0, 12)}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedApiKeys.length, 1, 'ApiKey']);
 	}
 
 	return matchedApiKeys[0];
@@ -57,7 +58,7 @@ export async function createApiKey(apiKey: ApiKeyFormData, userId: string, logge
 export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormData, userId: string, logger: RzLogger): Promise<ApiKey> {
 	logger.debug(`Updating API key ${apiKeyId}`);
 
-	const updatedRecipes = await db
+	const updatedApiKeys = await db
 		.update(apiKeys)
 		.set({
 			...apiKey,
@@ -66,10 +67,10 @@ export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormData, use
 		.where(eq(apiKeys.id, apiKeyId))
 		.returning();
 
-	if (updatedRecipes.length !== 1) {
-		throw new Error(`updateApiKey: updated ${updatedRecipes.length} records instead of 1`);
+	if (updatedApiKeys.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [updatedApiKeys.length, 1, 'ApiKey']);
 	}
 
 	logger.info(`Updated API key ${apiKeyId}`);
-	return updatedRecipes[0];
+	return updatedApiKeys[0];
 }

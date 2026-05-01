@@ -104,7 +104,15 @@ describe('getUserById', () => {
 	it('throws with descriptive error message when user not found', async () => {
 		const nonexistentId = crypto.randomUUID();
 
-		await expect(getUserById(nonexistentId, logger)).rejects.toThrow(/matchedUsers length is 0/);
+		await expect(getUserById(nonexistentId, logger)).rejects.toThrow('Expected 1 User record(s), but found 0');
+	});
+
+	it('throws when id is not a valid uuid', async () => {
+		await expect(getUserById('not-a-uuid', logger)).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a User');
+	});
+
+	it('throws when id is an empty string', async () => {
+		await expect(getUserById('', logger)).rejects.toThrow('The value "" is not a valid ID for a User');
 	});
 
 	it('returns correct user when multiple users exist', async () => {

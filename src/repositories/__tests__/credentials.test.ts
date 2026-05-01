@@ -338,11 +338,18 @@ describe('updateCredentialCounter', () => {
 		expect(updated?.credentialId).toBe(credential.credentialId);
 	});
 
-	it('handles updating non-existent credential gracefully', async () => {
+	it('throws when updating non-existent credential', async () => {
 		const nonexistentId = randomUUID();
 
-		// Should not throw, just do nothing
-		await expect(updateCredentialCounter(nonexistentId, 5, logger)).resolves.not.toThrow();
+		await expect(updateCredentialCounter(nonexistentId, 5, logger)).rejects.toThrow(
+			'Expected 1 Credential record(s), but found 0',
+		);
+	});
+
+	it('throws when id is not a valid uuid', async () => {
+		await expect(updateCredentialCounter('not-a-uuid', 5, logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a Credential',
+		);
 	});
 });
 

@@ -67,9 +67,7 @@ describe('api-keys repository', () => {
 		});
 
 		it('throws when api key does not exist', async () => {
-			await expect(getApiKeyById(crypto.randomUUID(), logger)).rejects.toThrow(
-				'getApiKeyById: matchedApiKeys length is 0 for id',
-			);
+			await expect(getApiKeyById(crypto.randomUUID(), logger)).rejects.toThrow('Expected 1 ApiKey record(s), but found 0');
 		});
 
 		it('returns correct key when multiple exist', async () => {
@@ -82,11 +80,11 @@ describe('api-keys repository', () => {
 		});
 
 		it('throws when id is not a valid uuid', async () => {
-			await expect(getApiKeyById('not-a-uuid', logger)).rejects.toThrow('Invalid id: not-a-uuid');
+			await expect(getApiKeyById('not-a-uuid', logger)).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a ApiKey');
 		});
 
 		it('throws when id is an empty string', async () => {
-			await expect(getApiKeyById('', logger)).rejects.toThrow('Invalid id:');
+			await expect(getApiKeyById('', logger)).rejects.toThrow('The value "" is not a valid ID for a ApiKey');
 		});
 	});
 
@@ -204,7 +202,7 @@ describe('api-keys repository', () => {
 		it('throws for non-existent api key', async () => {
 			await expect(
 				updateApiKey(crypto.randomUUID(), { ...baseApiKeyData, userId: testUserId }, testUserId, logger),
-			).rejects.toThrow('updateApiKey: updated 0 records instead of 1');
+			).rejects.toThrow('Expected 1 ApiKey record(s), but found 0');
 		});
 
 		it('does not affect other api keys', async () => {

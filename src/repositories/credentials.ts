@@ -1,9 +1,10 @@
 import { eq } from 'drizzle-orm';
-
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { credentials } from '@/models';
 import type { Credential, CredentialInsert } from '@/types';
+import { validateUuid } from './utils';
 
 export async function createCredential(newCredential: CredentialInsert, logger: RzLogger): Promise<Credential> {
 	logger.debug(`Creating credential for user ${newCredential.userId}`);
@@ -21,19 +22,28 @@ export async function getCredentialsByUserId(userId: string, logger: RzLogger): 
 }
 
 export async function getCredentialById(credentialId: string, logger: RzLogger): Promise<Credential> {
+	// credentialId is a WebAuthn credential identifier, not an internal UUID — no UUID validation
 	logger.debug(`Fetching credential ${credentialId}`);
 	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.credentialId, credentialId));
 
 	if (matchedCredentials.length !== 1) {
-		throw new Error(`getCredentialById: matchedCredentials length is ${matchedCredentials.length} for id ${credentialId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedCredentials.length, 1, 'Credential']);
 	}
 
 	return matchedCredentials[0];
 }
 
 export async function updateCredentialCounter(credentialId: string, counter: number, logger: RzLogger): Promise<void> {
+	if (!validateUuid(credentialId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [credentialId, 'Credential']);
+	}
+
 	logger.debug(`Updating credential counter for ${credentialId}`);
-	await db.update(credentials).set({ counter }).where(eq(credentials.id, credentialId));
+	const updated = await db.update(credentials).set({ counter }).where(eq(credentials.id, credentialId)).returning();
+
+	if (updated.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [updated.length, 1, 'Credential']);
+	}
 
 	logger.info(`Updated credential counter for ${credentialId} to ${counter}`);
 }

@@ -10,6 +10,26 @@ See [ADR-0005](../../docs/decisions/0005-repository-sync-operations.md) for the 
 - Sync operations for multi-table entities where a parent record owns a set of children (see ADR-0005)
 - Data integrity guards at the DB boundary — narrow checks for constraints the database engine cannot enforce itself (e.g. UUID format validation before a query that would silently misbehave on bad input)
 
+## Error handling
+
+All repository errors use `RzRepositoryError` from `@/classes`, not plain `Error`. This gives callers a typed `type` property to distinguish error categories:
+
+```ts
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
+
+// Invalid input — thrown before the query runs
+throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [id, 'Recipe']);
+// → "The value "abc" is not a valid ID for a Recipe"
+
+// Unexpected DB state — thrown after a query returns the wrong count
+throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [actual, expected, 'Recipe']);
+// → "Expected 1 Recipe record(s), but found 0"
+```
+
+**UUID validation** — all ID lookup and update functions that operate on an internal DB UUID (i.e. query on the `id` column) must call `validateUuid` from `./utils` before executing the query. Functions that operate on non-UUID identifiers (e.g. `getCredentialById`, which queries on `credentials.credentialId`, a WebAuthn credential ID) do not apply UUID validation.
+
+**Record count checks** — after any query that expects exactly one result (lookups, updates with `.returning()`), check that the count is 1 and throw `UnexpectedRecordCount` if not. This surfaces unexpected DB state rather than letting `undefined` silently propagate.
+
 ## What they don't do
 
 - Schema or form validation — data should be validated before it reaches a repository
