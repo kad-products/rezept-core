@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { createApiKey, getApiKeyById, getApiKeysByUserId, updateApiKey } from '../api-keys';
+import { createApiKey, getApiKeyById, getApiKeyByKey, getApiKeysByUserId, updateApiKey } from '../api-keys';
 
 const logger = new Logger();
 
@@ -152,6 +152,40 @@ describe('api-keys repository', () => {
 			const key2 = await createApiKey({ ...baseApiKeyData, userId: testUserId, name: 'Key 2' }, testUserId, logger);
 
 			expect(key1.id).not.toBe(key2.id);
+		});
+	});
+
+	describe('getApiKeyByKey', () => {
+		it('returns api key by key string', async () => {
+			const created = await createApiKey({ ...baseApiKeyData, userId: testUserId }, testUserId, logger);
+
+			const result = await getApiKeyByKey(created.apiKey, logger);
+			expect(result.id).toBe(created.id);
+			expect(result.apiKey).toBe(created.apiKey);
+		});
+
+		it('returns correct key when multiple exist', async () => {
+			await createApiKey({ ...baseApiKeyData, userId: testUserId, name: 'Key 1' }, testUserId, logger);
+			const target = await createApiKey({ ...baseApiKeyData, userId: testUserId, name: 'Key 2' }, testUserId, logger);
+
+			const result = await getApiKeyByKey(target.apiKey, logger);
+			expect(result.id).toBe(target.id);
+			expect(result.name).toBe('Key 2');
+		});
+
+		it('throws when key does not exist', async () => {
+			await expect(getApiKeyByKey('rz_std_nonexistent', logger)).rejects.toThrow('Expected 1 ApiKey record(s), but found 0');
+		});
+
+		it('searches by apiKey value not internal id', async () => {
+			const created = await createApiKey({ ...baseApiKeyData, userId: testUserId }, testUserId, logger);
+
+			// Looking up by the apiKey string value finds it
+			const found = await getApiKeyByKey(created.apiKey, logger);
+			expect(found).toBeDefined();
+
+			// Looking up by internal id should not find it
+			await expect(getApiKeyByKey(created.id, logger)).rejects.toThrow('Expected 1 ApiKey record(s), but found 0');
 		});
 	});
 

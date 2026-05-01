@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeScrapes } from '@/models';
@@ -32,7 +33,7 @@ export async function updateRecipeScrapeStatus(
 	logger: RzLogger,
 ): Promise<RecipeScrape> {
 	if (!validateUuid(recipeScrapeId)) {
-		throw new Error(`Invalid id: ${recipeScrapeId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeScrapeId, 'RecipeScrape']);
 	}
 
 	logger.debug(`Updating scrape ${recipeScrapeId} status to ${status}`);
@@ -48,7 +49,7 @@ export async function updateRecipeScrapeStatus(
 		.returning();
 
 	if (updatedScrapes.length !== 1) {
-		throw new Error(`updateRecipeScrapeStatus: updated ${updatedScrapes.length} records instead of 1`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [updatedScrapes.length, 1, 'RecipeScrape']);
 	}
 
 	logger.info(`Updated scrape ${recipeScrapeId} status to ${status}`);

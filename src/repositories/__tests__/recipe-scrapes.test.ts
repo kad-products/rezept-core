@@ -81,13 +81,15 @@ describe('updateRecipeScrapeStatus', () => {
 	});
 
 	it('throws for an invalid uuid', async () => {
-		await expect(updateRecipeScrapeStatus('not-a-uuid', 'FAILED', 'text', userId, logger)).rejects.toThrow('Invalid id');
+		await expect(updateRecipeScrapeStatus('not-a-uuid', 'FAILED', 'text', userId, logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a RecipeScrape',
+		);
 	});
 
 	it('throws when id does not exist', async () => {
 		const nonExistentId = crypto.randomUUID();
 		await expect(updateRecipeScrapeStatus(nonExistentId, 'TRANSFORMED', 'text', userId, logger)).rejects.toThrow(
-			'updated 0 records instead of 1',
+			'Expected 1 RecipeScrape record(s), but found 0',
 		);
 	});
 
