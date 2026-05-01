@@ -1,5 +1,5 @@
 import { except, prefix, render, route } from 'rwsdk/router';
-import { defineApp } from 'rwsdk/worker';
+import { defineApp, type RequestInfo } from 'rwsdk/worker';
 import apiRoutes from '@/api/routes';
 import { Document } from '@/Document';
 import headersMiddleware from '@/middleware/headers';
@@ -30,7 +30,7 @@ export default defineApp([
 	permissionsMiddleware,
 	render(Document, [
 		route('/', Pages__root),
-		except(error => <RootErrorHandler error={error as Error} />),
+		except<RequestInfo>(error => <RootErrorHandler error={error as Error} />),
 		prefix('/api', apiRoutes),
 		prefix('/auth', authRoutes),
 		prefix('/profile', profileRoutes),
