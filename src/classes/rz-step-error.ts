@@ -4,11 +4,10 @@ export class RzStepError extends Error {
 	constructor(
 		public code: number,
 		public publicMessage: string,
-		devMessage?: string,
+		devMessage: string,
 	) {
-		const dev = devMessage ?? publicMessage;
-		super(dev);
+		super(devMessage);
 		this.name = 'RzStepError';
-		this.devMessage = dev;
+		this.devMessage = devMessage;
 	}
 }
