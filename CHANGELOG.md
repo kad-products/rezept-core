@@ -1,3 +1,9 @@
+## [1.19.1](https://github.com/kad-products/rezept-core/compare/v1.19.0...v1.19.1) (2026-05-01)
+
+### Bug Fixes
+
+* makes all schemas into form and api validators ([56b83c5](https://github.com/kad-products/rezept-core/commit/56b83c5ad130166802e7aa064c75b93b17054ce6))
+
 ## [1.19.0](https://github.com/kad-products/rezept-core/compare/v1.18.21...v1.19.0) (2026-05-01)
 
 ### Features
