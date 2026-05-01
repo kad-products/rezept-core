@@ -1,3 +1,9 @@
+## [1.19.2](https://github.com/kad-products/rezept-core/compare/v1.19.1...v1.19.2) (2026-05-01)
+
+### Bug Fixes
+
+* align repositories to standard validation and errors ([486b31c](https://github.com/kad-products/rezept-core/commit/486b31c96422e6b17d0e64fdd5ea9b5590bfb4b3))
+
 ## [1.19.1](https://github.com/kad-products/rezept-core/compare/v1.19.0...v1.19.1) (2026-05-01)
 
 ### Bug Fixes
