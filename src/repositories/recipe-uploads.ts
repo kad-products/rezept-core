@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeUploads } from '@/models';
@@ -35,16 +36,14 @@ export async function getRecipeUploads(userId: string, logger: RzLogger): Promis
 
 export async function getRecipeUploadById(recipeUploadId: string, logger: RzLogger): Promise<RecipeUpload> {
 	if (!validateUuid(recipeUploadId)) {
-		throw new Error(`Invalid id: ${recipeUploadId}`);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeUploadId, 'RecipeUpload']);
 	}
 
 	logger.debug(`Fetching recipe upload ${recipeUploadId}`);
 	const matchedRecipeUploads = await db.select().from(recipeUploads).where(eq(recipeUploads.id, recipeUploadId));
 
 	if (matchedRecipeUploads.length !== 1) {
-		throw new Error(
-			`getRecipeUploadById: matchedRecipeUploads length is ${matchedRecipeUploads.length} for id ${recipeUploadId}`,
-		);
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedRecipeUploads.length, 1, 'RecipeUpload']);
 	}
 
 	return matchedRecipeUploads[0];

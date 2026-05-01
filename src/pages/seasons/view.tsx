@@ -6,13 +6,9 @@ import { getIngredientsBySeasonId, getSeasonById } from '@/repositories';
 export default async function Pages__seasons__view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;
 	const [season, seasonalIngredients] = await Promise.all([
-		seasonId ? getSeasonById(seasonId, ctx.logger) : Promise.resolve(undefined),
-		seasonId ? getIngredientsBySeasonId(seasonId, ctx.logger) : Promise.resolve(undefined),
+		getSeasonById(seasonId, ctx.logger),
+		getIngredientsBySeasonId(seasonId, ctx.logger),
 	]);
-
-	if (!season) {
-		return <p>Season not found</p>;
-	}
 	return (
 		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading season...</div>}>
