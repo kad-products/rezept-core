@@ -1,10 +1,7 @@
 import { z } from 'zod';
 import permissions from '@/data/permissions';
+import type { PermissionKey } from '@/types';
 import { requiredUuid } from './utils';
-
-type PermissionKey = {
-	[K in keyof typeof permissions]: `${K & string}:${keyof (typeof permissions)[K] & string}`;
-}[keyof typeof permissions];
 
 const permissionValues = Object.entries(permissions).flatMap(([resource, actions]) =>
 	Object.keys(actions).map(action => `${resource}:${action}`),
