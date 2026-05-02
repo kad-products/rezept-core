@@ -1,3 +1,9 @@
+## [1.19.11](https://github.com/kad-products/rezept-core/compare/v1.19.10...v1.19.11) (2026-05-02)
+
+### Bug Fixes
+
+* use the recipe form schema directly in recipe form validation ([47f1535](https://github.com/kad-products/rezept-core/commit/47f15359dee9327328ae36d54d865f3d2c9a269f))
+
 ## [1.19.10](https://github.com/kad-products/rezept-core/compare/v1.19.9...v1.19.10) (2026-05-02)
 
 ### Bug Fixes
