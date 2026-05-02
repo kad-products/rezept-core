@@ -1,3 +1,9 @@
+## [1.19.6](https://github.com/kad-products/rezept-core/compare/v1.19.5...v1.19.6) (2026-05-02)
+
+### Bug Fixes
+
+* avoid view link if season hasn't been viewed ([398049c](https://github.com/kad-products/rezept-core/commit/398049cd2540fc0c7ff9492f746c4ef0c10f026f))
+
 ## [1.19.5](https://github.com/kad-products/rezept-core/compare/v1.19.4...v1.19.5) (2026-05-02)
 
 ### Bug Fixes
