@@ -104,7 +104,7 @@ flowchart TD
 | Directory | Type | Role |
 |---|---|---|
 | `src/middleware/` | Middleware | Global request enrichment and guards; runs before route matching |
-| `src/interrupters/` | Interruptors | Per-route guards; `return` a Response to halt with a known response, `throw` to route to `RootErrorHandler` |
+| `src/interrupters/` | Interruptors | Per-route guards; `return` a Response to halt with a known response, `throw` to surface to the nearest `except` handler |
 | `src/pages/` | Pages | Route handlers for browser navigation; async RSCs that fetch from repositories |
 | `src/api/` | API handlers | Route handlers for HTTP endpoints; return `Response.json()` |
 | `src/actions/` | Actions | Server functions for form mutations; return `ActionState<T>` |
@@ -134,7 +134,7 @@ Utilities live close to their consumers — there is no shared `src/utils/` dire
 - **Pages call repositories directly** — not steps or actions
 - **Actions and API handlers call repositories or steps** — not each other
 - **Steps are for shared logic only** — if only one caller uses it, it doesn't need to be a step
-- **Return vs throw is the same in middleware and interrupters** — `return Response` sends that response directly; `throw` routes to `RootErrorHandler` via rwsdk's error chain. The only real distinction between middleware and interrupters is global vs per-route scope.
+- **Return vs throw is the same in middleware and interrupters** — `return Response` sends that response directly; `throw` routes to the nearest `except` handler via rwsdk's error chain. rwsdk walks backwards through the flat compiled route list to find the handler — page routes reach `RootErrorHandler` (HTML), API routes reach `apiErrorResponse` (JSON). The only real distinction between middleware and interrupters is global vs per-route scope.
 - **Utilities live near their consumers** — no shared utils grab-bag
 
 ## Each type in detail
