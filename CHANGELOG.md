@@ -1,3 +1,10 @@
+## [1.19.7](https://github.com/kad-products/rezept-core/compare/v1.19.6...v1.19.7) (2026-05-02)
+
+### Bug Fixes
+
+* remove unused credentials schema ([4460ecf](https://github.com/kad-products/rezept-core/commit/4460ecf708bd191edba981ce92ae5e4812736647))
+* start using the users schema on registration ([629743f](https://github.com/kad-products/rezept-core/commit/629743feee39193f66296969082514b6a19ddfcb))
+
 ## [1.19.6](https://github.com/kad-products/rezept-core/compare/v1.19.5...v1.19.6) (2026-05-02)
 
 ### Bug Fixes
