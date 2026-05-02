@@ -1,3 +1,9 @@
+## [1.19.8](https://github.com/kad-products/rezept-core/compare/v1.19.7...v1.19.8) (2026-05-02)
+
+### Bug Fixes
+
+* no relative imports ([600d478](https://github.com/kad-products/rezept-core/commit/600d47857ed3fc0e947a3fb9099eeafcfee83a9e))
+
 ## [1.19.7](https://github.com/kad-products/rezept-core/compare/v1.19.6...v1.19.7) (2026-05-02)
 
 ### Bug Fixes
