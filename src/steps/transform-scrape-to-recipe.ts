@@ -1,22 +1,6 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
-import type { JsonLdPayload } from '@/types';
-
-type ParsedRecipeScrapeSection = {
-	order: number;
-	ingredients: { raw: string; order: number }[];
-	instructions: { stepNumber: number; instruction: string }[];
-};
-
-export type ParsedRecipeScrape = {
-	title: string;
-	description?: string;
-	source?: string;
-	servings?: number;
-	prepTime?: number;
-	cookTime?: number;
-	sections: ParsedRecipeScrapeSection[];
-};
+import type { JsonLdPayload, ParsedRecipeScrape } from '@/types';
 
 type JsonLdNode = Record<string, unknown>;
 
