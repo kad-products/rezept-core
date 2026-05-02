@@ -1,8 +1,7 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { recipesSchemas } from '@/schemas';
-import type { RecipeScrapeData } from '@/types';
-import type { ParsedRecipeScrape } from './transform-scrape-to-recipe';
+import type { ParsedRecipeScrape, RecipeScrapeData } from '@/types';
 
 export async function validateAsRecipe(
 	transformedRecipe: ParsedRecipeScrape,

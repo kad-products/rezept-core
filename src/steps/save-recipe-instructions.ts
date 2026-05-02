@@ -1,12 +1,7 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { updateRecipeInstructions } from '@/repositories';
-import type { RecipeInstruction, RecipeInstructionFormSave } from '@/types';
-
-type IncomingInstructionsData = {
-	sectionId: string;
-	instructions: RecipeInstructionFormSave[] | undefined;
-};
+import type { IncomingInstructionsData, RecipeInstruction, RecipeInstructionFormSave } from '@/types';
 
 export async function saveRecipeInstructions(
 	recipeId: string,
