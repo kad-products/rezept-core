@@ -1,3 +1,9 @@
+## [1.19.9](https://github.com/kad-products/rezept-core/compare/v1.19.8...v1.19.9) (2026-05-02)
+
+### Bug Fixes
+
+* don't import requestInfo and destructure ctx ([14b1835](https://github.com/kad-products/rezept-core/commit/14b18351f2000dc04a0360ab08904500a0b6390e))
+
 ## [1.19.8](https://github.com/kad-products/rezept-core/compare/v1.19.7...v1.19.8) (2026-05-02)
 
 ### Bug Fixes
