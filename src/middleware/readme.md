@@ -16,6 +16,6 @@ The clearest distinguishing rule: **middleware writes to `ctx` to enrich it for 
 
 - **Default exports** — one middleware function per file, exported as default.
 - **No factory wrapper unless you need configuration** — export the function directly. Only wrap in a factory if the middleware needs options passed at setup time.
-- **Return a `Response` to halt** — if a condition means the request should go no further, return a `Response`. Execution stops and that response is sent.
-- **Throw a `Response` to halt with centralized handling** — the global chain wraps each middleware in `try/catch`, so a thrown Response routes to the except handler rather than bypassing it. Use this when you want consistent error processing. See #121.
+- **Return a `Response` to halt** — when you know exactly what the response should be. Redirects, auth walls, intentional 4xx responses. Execution stops and that response is sent.
+- **Throw** — only for unexpected errors you cannot handle. These propagate to the error boundary (currently `RootErrorHandler.tsx`). Never throw a redirect or a known error shape — if you know what the response should be, return it.
 - **Return nothing in normal operation** — if middleware ran successfully, don't return anything.

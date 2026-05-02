@@ -29,6 +29,9 @@ const mockRequestInfo = {
 		logger: new Logger(),
 	} as any,
 	request: new Request('https://example.com/test'),
+	response: {
+		headers: new Headers(),
+	},
 };
 
 describe('userMiddleware', () => {
@@ -38,6 +41,7 @@ describe('userMiddleware', () => {
 			logger: new Logger(),
 		};
 		mockRequestInfo.request = new Request('https://example.com/test');
+		mockRequestInfo.response = { headers: new Headers() };
 	});
 
 	it('does nothing when there is no session', async () => {

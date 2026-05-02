@@ -71,27 +71,18 @@ describe('setupPasskeyAuth', () => {
 	it('redirects to login on 401 error', async () => {
 		vi.mocked(sessions.load).mockRejectedValue(new ErrorResponse(401, 'Unauthorized'));
 
-		await expect(sessionMiddleware(mockRequestInfo)).rejects.toThrow(Response);
+		const result = await sessionMiddleware(mockRequestInfo);
 
-		try {
-			await sessionMiddleware(mockRequestInfo);
-		} catch (error) {
-			expect(error).toBeInstanceOf(Response);
-			expect((error as Response).status).toBe(302);
-			expect((error as Response).headers.get('Location')).toBe('/auth/login');
-		}
-
+		expect(result).toBeInstanceOf(Response);
+		expect((result as Response).status).toBe(302);
+		expect((result as Response).headers.get('Location')).toBe('/auth/login');
 		expect(sessions.remove).toHaveBeenCalledWith(mockRequestInfo.request, mockRequestInfo.response.headers);
 	});
 
 	it('removes session before redirecting on 401', async () => {
 		vi.mocked(sessions.load).mockRejectedValue(new ErrorResponse(401, 'Unauthorized'));
 
-		try {
-			await sessionMiddleware(mockRequestInfo);
-		} catch {
-			// Expected
-		}
+		await sessionMiddleware(mockRequestInfo);
 
 		expect(sessions.remove).toHaveBeenCalledWith(mockRequestInfo.request, mockRequestInfo.response.headers);
 	});
@@ -115,11 +106,8 @@ describe('setupPasskeyAuth', () => {
 	it('sets Location header correctly on redirect', async () => {
 		vi.mocked(sessions.load).mockRejectedValue(new ErrorResponse(401, 'Unauthorized'));
 
-		try {
-			await sessionMiddleware(mockRequestInfo);
-		} catch (error) {
-			const response = error as Response;
-			expect(response.headers.get('Location')).toBe('/auth/login');
-		}
+		const result = await sessionMiddleware(mockRequestInfo);
+
+		expect((result as Response).headers.get('Location')).toBe('/auth/login');
 	});
 });
