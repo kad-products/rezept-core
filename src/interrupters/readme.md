@@ -19,9 +19,9 @@ The clearest distinguishing rule: **interrupters only read `ctx` to decide wheth
 ## Guidelines
 
 - **Named exports** — not default exports.
-- **Never throw** — the per-route handler chain has no `try/catch`, so a thrown value will bubble up unhandled. Always `return`.
-- **Return a `Response` to halt, return nothing to continue** — no other return values.
+- **Return a `Response` to halt, return nothing to continue** — no other return values in the normal case.
+- **Return vs throw** — same rule as middleware: return when you know exactly what the response should be (redirects, `Response.json()` 401s). Throw when you want `RootErrorHandler` to handle and render the error — both paths are caught by rwsdk and routed appropriately. See the middleware readme for the full explanation.
 - **One check per function** — combine them in the route definition rather than bundling multiple checks into one function.
-- **Return `Response.json()` for API routes, a redirect or rendered error for page routes** — match what the caller expects.
+- **Match what the caller expects** — `Response.json()` for API routes; redirect or throw for page routes depending on whether you want a bare redirect or an error page with context.
 - **Keep them lightweight** — interrupters aren't the primary data processing type. Data access in an interrupter makes performance troubleshooting harder since the work happens in the chain rather than the handler where it's expected.
 - **Re-export everything from `index.ts`** so consumers import from `@/interrupters`, not individual files.

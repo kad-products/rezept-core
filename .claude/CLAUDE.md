@@ -82,7 +82,7 @@ Each `src/` directory has a `readme.md` defining the pattern for that type. Read
 
 ### Type boundaries (brief)
 - **Middleware** — global, enriches `ctx`, runs before route matching
-- **Interrupters** — per-route guards, halt with `return`, never `throw`
+- **Interrupters** — per-route guards; `return` Response to halt with a known response, `throw` to surface through `RootErrorHandler`; same throw/return semantics as middleware — only distinction is per-route vs global
 - **Actions** — form entry points; `serverAction()` wrapper + `_fn` private impl; return `ActionState<T>`
 - **API handlers** — HTTP entry points; default export `{ method: [...chain, _handler] }`; return `Response.json()`
 - **Steps** — shared pipeline logic called by actions and API handlers; throw `RzStepError`; accept `logger` as argument
