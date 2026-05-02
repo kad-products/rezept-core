@@ -1,3 +1,11 @@
+## [1.19.5](https://github.com/kad-products/rezept-core/compare/v1.19.4...v1.19.5) (2026-05-02)
+
+### Bug Fixes
+
+* move flattened permissions to source data file ([27f5224](https://github.com/kad-products/rezept-core/commit/27f522447056c54fae5f39bfa5ff2afa75a7a732))
+* move permissions values to source data file ([0252e6e](https://github.com/kad-products/rezept-core/commit/0252e6e07c7b42fbe57fa58cdb5716206f599d1d))
+* move PermissionsKey to types file ([ad6092c](https://github.com/kad-products/rezept-core/commit/ad6092c2d32cdd84ddd841d97f75d35ad8b7cc7f))
+
 ## [1.19.4](https://github.com/kad-products/rezept-core/compare/v1.19.3...v1.19.4) (2026-05-01)
 
 ### Bug Fixes
