@@ -1,3 +1,9 @@
+## [1.19.10](https://github.com/kad-products/rezept-core/compare/v1.19.9...v1.19.10) (2026-05-02)
+
+### Bug Fixes
+
+* adjust middleware return pattern ([e717b8a](https://github.com/kad-products/rezept-core/commit/e717b8ac70e1da9f663328d352bab6ce33cf18f4))
+
 ## [1.19.9](https://github.com/kad-products/rezept-core/compare/v1.19.8...v1.19.9) (2026-05-02)
 
 ### Bug Fixes
