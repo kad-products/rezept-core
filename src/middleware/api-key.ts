@@ -1,4 +1,4 @@
-import { type DefaultAppContext, type RequestInfo, requestInfo } from 'rwsdk/worker';
+import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { errorResponse } from '@/api/utils';
 import { getApiKeyByKey } from '@/repositories';
 
@@ -21,7 +21,7 @@ export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<Def
 		ctx.session = { userId: apiKey.userId, createdAt: now, lastAccessedAt: now };
 		ctx.apiKey = apiKey;
 	} catch (err) {
-		requestInfo.ctx.logger.warn(`Error in API middleware: ${err}`);
+		ctx.logger.warn(`Error in API middleware: ${err}`);
 		return errorResponse('Invalid API key', 403);
 	}
 }
