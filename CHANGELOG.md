@@ -1,3 +1,13 @@
+## [1.20.0](https://github.com/kad-products/rezept-core/compare/v1.19.12...v1.20.0) (2026-05-02)
+
+### Features
+
+* throw RzAccessError from interrupters; add nested error handling ([43b4734](https://github.com/kad-products/rezept-core/commit/43b4734dce98754e0917156e03a529277b635dd6))
+
+### Bug Fixes
+
+* prepare for api vs browser error handling ([3745926](https://github.com/kad-products/rezept-core/commit/37459262fbfa245445ea3bbf02bbf3370cf5edd8))
+
 ## [1.19.12](https://github.com/kad-products/rezept-core/compare/v1.19.11...v1.19.12) (2026-05-02)
 
 ### Bug Fixes
