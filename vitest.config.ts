@@ -6,9 +6,8 @@ export default defineConfig({
 		globals: true,
 		environment: 'node',
 		coverage: {
-			provider: 'v8', // or 'istanbul'
+			provider: 'v8',
 			reporter: ['text', 'json-summary'],
-			include: ['src/actions/**', 'src/middleware/**', 'src/repositories/**', 'src/schemas/**', 'src/session/**', 'src/utils/**'],
 			exclude: [
 				'**/*.md',
 				'**/__tests__/**',
@@ -18,13 +17,24 @@ export default defineConfig({
 				'src/pages/**',
 				'src/layouts/**',
 				'src/styles/**',
-				'src/session/store.ts', // Just config
 			],
 			thresholds: {
 				branches: 20,
 				lines: 30, // using this to make sure we don't miss something big or have dead code
 				'src/actions/**': {
 					branches: 85,
+				},
+				'src/api/**': {
+					branches: 84,
+				},
+				'src/classes/**': {
+					branches: 60,
+				},
+				'src/durable-objects/**': {
+					branches: 100,
+				},
+				'src/interrupters/**': {
+					branches: 50,
 				},
 				'src/middleware/**': {
 					branches: 100,
@@ -35,11 +45,8 @@ export default defineConfig({
 				'src/schemas/**': {
 					branches: 100,
 				},
-				'src/session/**': {
-					branches: 100,
-				},
-				'src/utils/**': {
-					branches: 100,
+				'src/steps/**': {
+					branches: 74,
 				},
 			},
 		},
