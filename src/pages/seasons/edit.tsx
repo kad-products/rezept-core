@@ -30,9 +30,11 @@ export default async function Pages__seasons__edit({ ctx, params }: RequestInfo)
 		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading season...</div>}>
 				<h3>{seasonId ? `Edit ${season.name}` : 'New Season'}</h3>
-				<nav className="in-page-nav">
-					<a href={`/seasons/${season.id}`}>View</a>
-				</nav>
+				{seasonId && (
+					<nav className="in-page-nav">
+						<a href={`/seasons/${season.id}`}>View</a>
+					</nav>
+				)}
 				<Season
 					season={season}
 					ingredientOptions={ingredientOptions}
