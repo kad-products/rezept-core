@@ -1,3 +1,9 @@
+## [1.19.12](https://github.com/kad-products/rezept-core/compare/v1.19.11...v1.19.12) (2026-05-02)
+
+### Bug Fixes
+
+* move more types to correct place ([9f281bd](https://github.com/kad-products/rezept-core/commit/9f281bd1ed8c71c078e9b67eb0917faeec6e96c9))
+
 ## [1.19.11](https://github.com/kad-products/rezept-core/compare/v1.19.10...v1.19.11) (2026-05-02)
 
 ### Bug Fixes
