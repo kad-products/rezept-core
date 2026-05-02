@@ -1,7 +1,10 @@
 import { env } from 'cloudflare:workers';
-import { RzStepError } from '@/classes';
+import { RzAccessError, RzStepError } from '@/classes';
 
 export function apiErrorResponse(err: unknown, fallbackMessage: string = 'An error occurred'): Response {
+	if (err instanceof RzAccessError) {
+		return Response.json({ success: false, error: err.message }, { status: err.code });
+	}
 	if (err instanceof RzStepError) {
 		const message = env.REZEPT_ENV === 'production' ? err.publicMessage : err.devMessage;
 		return Response.json({ success: false, error: message }, { status: err.code });

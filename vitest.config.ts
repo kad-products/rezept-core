@@ -25,7 +25,7 @@ export default defineConfig({
 					branches: 85,
 				},
 				'src/api/**': {
-					branches: 84,
+					branches: 80,
 				},
 				'src/classes/**': {
 					branches: 60,

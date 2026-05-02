@@ -29,9 +29,16 @@ export default defineApp([
 	userMiddleware,
 	permissionsMiddleware,
 	render(Document, [
-		route('/', Pages__root),
-		except<RequestInfo>(error => <RootErrorHandler error={error as Error} />),
+		// API routes first. The prefix carries its own except handler (see src/api/routes.ts)
+		// which catches API errors and returns JSON. Because rwsdk's except handler search walks
+		// backwards through the flat compiled array with no path filtering, the API except must
+		// sit at a higher compiled index than the page-level except below — otherwise the page
+		// handler would catch API errors first.
 		prefix('/api', apiRoutes),
+		// Page-level error boundary. Sits between the API prefix and all page routes so that
+		// page-route errors reach this handler before the API's except handler above.
+		except<RequestInfo>(error => <RootErrorHandler error={error as Error} />),
+		route('/', Pages__root),
 		prefix('/auth', authRoutes),
 		prefix('/profile', profileRoutes),
 		prefix('/recipes', recipeRoutes),

@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { RzAccessError } from '@/classes';
 
 const mockRequestInfo = {
 	ctx: {
@@ -33,42 +34,30 @@ describe('requirePermissions', () => {
 		expect(result).toBeUndefined();
 	});
 
-	it('returns a 403 Response when user is missing all required permissions', async () => {
+	it('throws RzAccessError 403 when user is missing all required permissions', async () => {
 		mockRequestInfo.ctx.permissions = [];
 
 		const middleware = requirePermissions('recipes:create');
-		const result = await middleware();
 
-		expect(result).toBeInstanceOf(Response);
-		expect(result?.status).toBe(403);
-
-		const body = (await result?.json()) as { error: string; missing: string[] };
-		expect(body.error).toBe('Forbidden');
-		expect(body.missing).toContain('recipes:create');
+		await expect(middleware()).rejects.toThrow(RzAccessError);
+		await expect(middleware()).rejects.toMatchObject({ code: 403 });
 	});
 
-	it('returns a 403 Response when user is missing some required permissions', async () => {
+	it('throws RzAccessError 403 when user is missing some required permissions', async () => {
 		mockRequestInfo.ctx.permissions = ['recipes:create'];
 
 		const middleware = requirePermissions('recipes:create', 'recipes:delete');
-		const result = await middleware();
 
-		expect(result).toBeInstanceOf(Response);
-		expect(result?.status).toBe(403);
-
-		const body = (await result?.json()) as { error: string; missing: string[] };
-		expect(body.missing).toContain('recipes:delete');
-		expect(body.missing).not.toContain('recipes:create');
+		await expect(middleware()).rejects.toThrow(RzAccessError);
+		await expect(middleware()).rejects.toMatchObject({ code: 403 });
 	});
 
-	it('returns a 403 Response when ctx.permissions is undefined', async () => {
+	it('throws RzAccessError 403 when ctx.permissions is undefined', async () => {
 		mockRequestInfo.ctx.permissions = undefined as any;
 
 		const middleware = requirePermissions('recipes:create');
-		const result = await middleware();
 
-		expect(result).toBeInstanceOf(Response);
-		expect(result?.status).toBe(403);
+		await expect(middleware()).rejects.toThrow(RzAccessError);
 	});
 
 	it('allows api key request with sufficient permissions', async () => {
@@ -81,14 +70,13 @@ describe('requirePermissions', () => {
 		expect(result).toBeUndefined();
 	});
 
-	it('blocks api key request with insufficient permissions', async () => {
+	it('throws RzAccessError 403 for api key request with insufficient permissions', async () => {
 		mockRequestInfo.ctx.apiKey = { permissions: ['recipes:upload'] };
 		mockRequestInfo.ctx.permissions = ['recipes:upload'];
 
 		const middleware = requirePermissions('recipes:delete');
-		const result = await middleware();
 
-		expect(result).toBeInstanceOf(Response);
-		expect(result?.status).toBe(403);
+		await expect(middleware()).rejects.toThrow(RzAccessError);
+		await expect(middleware()).rejects.toMatchObject({ code: 403 });
 	});
 });

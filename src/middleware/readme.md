@@ -16,6 +16,8 @@ The clearest distinguishing rule: **middleware writes to `ctx` to enrich it for 
 
 - **Default exports** — one middleware function per file, exported as default.
 - **No factory wrapper unless you need configuration** — export the function directly. Only wrap in a factory if the middleware needs options passed at setup time.
-- **Return a `Response` to halt** — when you know exactly what the response should be. Redirects, auth walls, intentional 4xx responses. Execution stops and that response is sent.
-- **Throw** — only for unexpected errors you cannot handle. These propagate to the error boundary (currently `RootErrorHandler.tsx`). Never throw a redirect or a known error shape — if you know what the response should be, return it.
+- **Return a `Response` to halt** — when you know exactly what the response should be. Redirects, auth walls, intentional 4xx responses. Execution stops and that response is sent directly.
+- **Throw** — when you want `RootErrorHandler` to handle the error. rwsdk wraps both global middleware and per-route interrupters in `try/catch` that routes thrown errors to the nearest `except` handler. Use this for conditions you want to surface through the error UI rather than handle as a specific response.
 - **Return nothing in normal operation** — if middleware ran successfully, don't return anything.
+
+Note: the return/throw distinction is **the same for middleware and interrupters** — the only real difference between the two is global vs per-route scope. Both are caught by rwsdk's error handling chain.
