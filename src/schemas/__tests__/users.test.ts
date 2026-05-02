@@ -1,184 +1,106 @@
-// src/schemas/__tests__/user.test.ts
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { usersSchemas } from '../users';
 
-describe('CreateUser form schema', () => {
-	it('accepts valid user with username', () => {
-		const validData = {
-			username: 'johndoe',
-		};
-
-		const result = usersSchemas.create.safeParse(validData);
-		expect(result.success).toBe(true);
-	});
-
-	it('accepts username with various valid characters', () => {
-		const validUsernames = ['user123', 'john_doe', 'jane-smith', 'user.name', 'CamelCase', 'lowercase', 'UPPERCASE'];
-
-		validUsernames.forEach(username => {
-			const validData = { username };
-			const result = usersSchemas.create.safeParse(validData);
+describe('usersSchemas.form', () => {
+	describe('create (no id)', () => {
+		it('accepts valid username', () => {
+			const result = usersSchemas.form.safeParse({ username: 'johndoe' });
 			expect(result.success).toBe(true);
+		});
+
+		it('trims whitespace from username', () => {
+			const result = usersSchemas.form.safeParse({ username: '  johndoe  ' });
+			expect(result.success).toBe(true);
+			if (result.success) {
+				expect(result.data.username).toBe('johndoe');
+			}
+		});
+
+		it('accepts username with various valid characters', () => {
+			const usernames = ['user123', 'john_doe', 'jane-smith', 'user.name', 'CamelCase', 'lowercase', 'UPPERCASE'];
+			for (const username of usernames) {
+				expect(usersSchemas.form.safeParse({ username }).success).toBe(true);
+			}
+		});
+
+		it('accepts username exactly 50 characters', () => {
+			expect(usersSchemas.form.safeParse({ username: 'a'.repeat(50) }).success).toBe(true);
+		});
+
+		it('accepts single character username', () => {
+			expect(usersSchemas.form.safeParse({ username: 'a' }).success).toBe(true);
+		});
+
+		it('rejects missing username', () => {
+			const result = usersSchemas.form.safeParse({});
+			expect(result.success).toBe(false);
+			if (!result.success) {
+				expect(result.error.issues.map(i => i.path[0])).toContain('username');
+			}
+		});
+
+		it('rejects empty username', () => {
+			const result = usersSchemas.form.safeParse({ username: '' });
+			expect(result.success).toBe(false);
+			if (!result.success) {
+				expect(result.error.issues.map(i => i.path[0])).toContain('username');
+			}
+		});
+
+		it('rejects whitespace-only username after trim', () => {
+			const result = usersSchemas.form.safeParse({ username: '   ' });
+			expect(result.success).toBe(false);
+			if (!result.success) {
+				expect(result.error.issues.map(i => i.path[0])).toContain('username');
+			}
+		});
+
+		it('rejects username longer than 50 characters', () => {
+			const result = usersSchemas.form.safeParse({ username: 'a'.repeat(51) });
+			expect(result.success).toBe(false);
+			if (!result.success) {
+				expect(result.error.issues.map(i => i.path[0])).toContain('username');
+			}
 		});
 	});
 
-	it('trims whitespace from username', () => {
-		const validData = {
-			username: '  johndoe  ',
-		};
+	describe('update (with id)', () => {
+		it('accepts valid UUID id with username', () => {
+			const result = usersSchemas.form.safeParse({ id: randomUUID(), username: 'updated_username' });
+			expect(result.success).toBe(true);
+		});
 
-		const result = usersSchemas.create.safeParse(validData);
-		expect(result.success).toBe(true);
-		if (result.success) {
-			expect(result.data.username).toBe('johndoe');
-		}
-	});
+		it('rejects invalid UUID format for id', () => {
+			const result = usersSchemas.form.safeParse({ id: 'not-a-uuid', username: 'johndoe' });
+			expect(result.success).toBe(false);
+			if (!result.success) {
+				expect(result.error.issues.map(i => i.path[0])).toContain('id');
+			}
+		});
 
-	it('rejects missing username', () => {
-		const invalidData = {};
+		it('transforms empty string id to undefined', () => {
+			const result = usersSchemas.form.safeParse({ id: '', username: 'johndoe' });
+			expect(result.success).toBe(true);
+			if (result.success) {
+				expect(result.data.id).toBeUndefined();
+			}
+		});
 
-		const result = usersSchemas.create.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('username');
-		}
-	});
+		it('applies username validation rules regardless of whether id is present', () => {
+			const id = randomUUID();
 
-	it('rejects empty username', () => {
-		const invalidData = {
-			username: '',
-		};
+			const emptyAfterTrim = usersSchemas.form.safeParse({ id, username: '   ' });
+			expect(emptyAfterTrim.success).toBe(false);
 
-		const result = usersSchemas.create.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('username');
-		}
-	});
+			const tooLong = usersSchemas.form.safeParse({ id, username: 'a'.repeat(51) });
+			expect(tooLong.success).toBe(false);
 
-	it('rejects empty username after trim', () => {
-		const invalidData = {
-			username: '   ',
-		};
-
-		const result = usersSchemas.create.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('username');
-		}
-	});
-
-	it('rejects username longer than 50 characters', () => {
-		const invalidData = {
-			username: 'a'.repeat(51),
-		};
-
-		const result = usersSchemas.create.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('username');
-		}
-	});
-
-	it('accepts username exactly 50 characters', () => {
-		const validData = {
-			username: 'a'.repeat(50),
-		};
-
-		const result = usersSchemas.create.safeParse(validData);
-		expect(result.success).toBe(true);
-	});
-
-	it('accepts single character username', () => {
-		const validData = {
-			username: 'a',
-		};
-
-		const result = usersSchemas.create.safeParse(validData);
-		expect(result.success).toBe(true);
-	});
-});
-
-describe('UpdateUser form schema', () => {
-	it('accepts valid update with username', () => {
-		const validData = {
-			id: randomUUID(),
-			username: 'updated_username',
-		};
-
-		const result = usersSchemas.update.safeParse(validData);
-		expect(result.success).toBe(true);
-	});
-
-	it('rejects update missing required id', () => {
-		const invalidData = {
-			username: 'johndoe',
-		};
-
-		const result = usersSchemas.update.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('id');
-		}
-	});
-
-	it('rejects update missing required username', () => {
-		const invalidData = {
-			id: randomUUID(),
-		};
-
-		const result = usersSchemas.update.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('username');
-		}
-	});
-
-	it('rejects invalid UUID format for id', () => {
-		const invalidData = {
-			id: 'not-a-uuid',
-			username: 'johndoe',
-		};
-
-		const result = usersSchemas.update.safeParse(invalidData);
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const paths = result.error.issues.map(i => i.path[0]);
-			expect(paths).toContain('id');
-		}
-	});
-
-	it('applies same validation rules as create schema', () => {
-		// Empty username
-		const emptyUsername = {
-			id: randomUUID(),
-			username: '   ',
-		};
-		expect(usersSchemas.update.safeParse(emptyUsername).success).toBe(false);
-
-		// Too long username
-		const longUsername = {
-			id: randomUUID(),
-			username: 'a'.repeat(51),
-		};
-		expect(usersSchemas.update.safeParse(longUsername).success).toBe(false);
-
-		// Valid with trim
-		const withWhitespace = {
-			id: randomUUID(),
-			username: '  validuser  ',
-		};
-		const result = usersSchemas.update.safeParse(withWhitespace);
-		expect(result.success).toBe(true);
-		if (result.success) {
-			expect(result.data.username).toBe('validuser');
-		}
+			const withWhitespace = usersSchemas.form.safeParse({ id, username: '  validuser  ' });
+			expect(withWhitespace.success).toBe(true);
+			if (withWhitespace.success) {
+				expect(withWhitespace.data.username).toBe('validuser');
+			}
+		});
 	});
 });

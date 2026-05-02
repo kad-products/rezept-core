@@ -4,11 +4,17 @@ import { requestInfo } from 'rwsdk/worker';
 import { UAParser as uap } from 'ua-parser-js';
 import { sessions } from '@/durable-objects/store';
 import { createCredential, createUser } from '@/repositories';
+import { usersSchemas } from '@/schemas';
 import type { ActionState } from '@/types';
 import { errorResponse, successResponse } from './utils';
 import { getWebAuthnConfig } from './webauthn';
 
 export async function startPasskeyRegistration(username: string): Promise<ActionState<PublicKeyCredentialCreationOptionsJSON>> {
+	const parsed = usersSchemas.form.safeParse({ username });
+	if (!parsed.success) {
+		return errorResponse(parsed.error.flatten().fieldErrors, 400);
+	}
+
 	try {
 		const { rpName, rpID } = getWebAuthnConfig(requestInfo.request);
 		const { response } = requestInfo;
@@ -16,7 +22,7 @@ export async function startPasskeyRegistration(username: string): Promise<Action
 		const options = await generateRegistrationOptions({
 			rpName,
 			rpID,
-			userName: username,
+			userName: parsed.data.username,
 			authenticatorSelection: {
 				// Require the authenticator to store the credential, enabling a username-less login experience
 				residentKey: 'required',
@@ -60,7 +66,12 @@ export async function finishPasskeyRegistration(
 
 	await sessions.save(response.headers, { challenge: null });
 
-	const user = await createUser(username, requestInfo.ctx.logger);
+	const userParsed = usersSchemas.form.safeParse({ username });
+	if (!userParsed.success) {
+		return errorResponse(userParsed.error.flatten().fieldErrors, 400);
+	}
+
+	const user = await createUser(userParsed.data.username, requestInfo.ctx.logger);
 
 	await createCredential(
 		{

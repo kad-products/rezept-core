@@ -127,6 +127,13 @@ describe('startPasskeyRegistration', () => {
 		expect(sessions.save).toHaveBeenCalledWith(expect.anything(), { challenge: mockOptions.challenge });
 	});
 
+	it('returns a validation error for an invalid username', async () => {
+		const result = await startPasskeyRegistration('');
+		expect(result.success).toBe(false);
+		expect(result.errors?.username).toBeDefined();
+		expect(generateRegistrationOptions).not.toHaveBeenCalled();
+	});
+
 	it('returns an error when generateRegistrationOptions throws', async () => {
 		vi.mocked(generateRegistrationOptions).mockRejectedValue(new Error('WebAuthn unavailable'));
 		const result = await startPasskeyRegistration('testuser');
@@ -230,6 +237,13 @@ describe('finishPasskeyRegistration', () => {
 		mockRequestInfo.request = new Request('https://example.com/', { headers: { 'User-Agent': '' } });
 		await finishPasskeyRegistration('testuser', mockRegistration as any);
 		expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ name: 'Unknown Device' }), expect.anything());
+	});
+
+	it('returns a validation error for an invalid username', async () => {
+		const result = await finishPasskeyRegistration('', mockRegistration as any);
+		expect(result.success).toBe(false);
+		expect(result.errors?.username).toBeDefined();
+		expect(createUser).not.toHaveBeenCalled();
 	});
 
 	it('returns success when all steps complete', async () => {
