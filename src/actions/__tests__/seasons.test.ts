@@ -46,7 +46,7 @@ vi.mock('rwsdk/worker', () => ({
 import { randomUUID } from 'node:crypto';
 import { requireAuthentication } from '@/interrupters';
 import { createSeason, updateSeason } from '@/repositories';
-import type { SeasonFormSave } from '@/types';
+import type { SeasonWriteInput } from '@/types';
 import { _saveSeason } from '../seasons';
 
 describe('saveSeason', () => {
@@ -92,7 +92,7 @@ describe('saveSeason', () => {
 		});
 
 		it('validates required fields', async () => {
-			const data = {} as SeasonFormSave;
+			const data = {} as SeasonWriteInput;
 
 			const result = await _saveSeason(data);
 

@@ -3,7 +3,7 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { seasons } from '@/models';
-import type { SeasonDBRead, SeasonFormSave } from '@/types';
+import type { SeasonDBRead, SeasonWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getSeasons(logger: RzLogger): Promise<SeasonDBRead[]> {
@@ -28,7 +28,7 @@ export async function getSeasonById(seasonId: string, logger: RzLogger): Promise
 	return matchedSeasons[0];
 }
 
-export async function createSeason(season: SeasonFormSave, userId: string, logger: RzLogger): Promise<SeasonDBRead> {
+export async function createSeason(season: SeasonWriteInput, userId: string, logger: RzLogger): Promise<SeasonDBRead> {
 	logger.debug('Creating season');
 
 	const createdSeasons = await db
@@ -46,7 +46,7 @@ export async function createSeason(season: SeasonFormSave, userId: string, logge
 
 export async function updateSeason(
 	seasonId: string,
-	seasonData: SeasonFormSave,
+	seasonData: SeasonWriteInput,
 	userId: string,
 	logger: RzLogger,
 ): Promise<SeasonDBRead> {

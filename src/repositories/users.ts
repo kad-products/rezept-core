@@ -11,7 +11,6 @@ export async function createUser(username: string, logger: RzLogger): Promise<Us
 	const user: UserWriteInput = {
 		id: crypto.randomUUID(),
 		username,
-		createdAt: new Date().toISOString(),
 	};
 	const [insertedUser] = await db.insert(users).values(user).returning();
 	logger.info(`Created user ${insertedUser.id}`);

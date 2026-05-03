@@ -1,7 +1,7 @@
 import type { seasons } from '@/models';
 
 export type SeasonDBRead = typeof seasons.$inferSelect;
-export type SeasonFormSave = Omit<
+export type SeasonWriteInput = Omit<
 	typeof seasons.$inferInsert,
 	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;
