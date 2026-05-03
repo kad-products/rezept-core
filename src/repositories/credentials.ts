@@ -3,10 +3,10 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { credentials } from '@/models';
-import type { CredentialDBRead, CredentialDBWrite } from '@/types';
+import type { CredentialDBRead, CredentialWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createCredential(newCredential: CredentialDBWrite, logger: RzLogger): Promise<CredentialDBRead> {
+export async function createCredential(newCredential: CredentialWriteInput, logger: RzLogger): Promise<CredentialDBRead> {
 	logger.debug(`Creating credential for user ${newCredential.userId}`);
 
 	const [insertedCredential] = await db.insert(credentials).values(newCredential).returning();
