@@ -32,7 +32,7 @@ export async function createRecipeScrape(
 export async function updateRecipeScrapeStatus(
 	recipeScrapeId: string,
 	status: RecipeScrapeStatus,
-	statusText: string,
+	statusText: string | null,
 	userId: string,
 	logger: RzLogger,
 ): Promise<RecipeScrapeDBRead> {
