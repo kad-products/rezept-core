@@ -3,17 +3,17 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { seasons } from '@/models';
-import type { Season, SeasonFormSave } from '@/types';
+import type { SeasonDBRead, SeasonFormSave } from '@/types';
 import { validateUuid } from './utils';
 
-export async function getSeasons(logger: RzLogger): Promise<Season[]> {
+export async function getSeasons(logger: RzLogger): Promise<SeasonDBRead[]> {
 	logger.debug('Fetching all seasons');
 	const allSeasons = await db.select().from(seasons);
 	logger.debug(`Fetched ${allSeasons.length} seasons`);
 	return allSeasons;
 }
 
-export async function getSeasonById(seasonId: string, logger: RzLogger): Promise<Season> {
+export async function getSeasonById(seasonId: string, logger: RzLogger): Promise<SeasonDBRead> {
 	if (!validateUuid(seasonId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [seasonId, 'Season']);
 	}
@@ -28,7 +28,7 @@ export async function getSeasonById(seasonId: string, logger: RzLogger): Promise
 	return matchedSeasons[0];
 }
 
-export async function createSeason(season: SeasonFormSave, userId: string, logger: RzLogger): Promise<Season> {
+export async function createSeason(season: SeasonFormSave, userId: string, logger: RzLogger): Promise<SeasonDBRead> {
 	logger.debug('Creating season');
 
 	const createdSeasons = await db
@@ -49,7 +49,7 @@ export async function updateSeason(
 	seasonData: SeasonFormSave,
 	userId: string,
 	logger: RzLogger,
-): Promise<Season> {
+): Promise<SeasonDBRead> {
 	logger.debug(`Updating season ${seasonId}`);
 
 	const updatedSeasons = await db
