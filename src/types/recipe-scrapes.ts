@@ -28,7 +28,3 @@ export type RecipeScrapeStatus =
 	| 'COMPLETED'
 	| 'FAILED';
 export type RecipeScrapeDBRead = typeof recipeScrapes.$inferSelect;
-export type RecipeScrapeFormData = Omit<
-	typeof recipeScrapes.$inferInsert,
-	'userId' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
->;
