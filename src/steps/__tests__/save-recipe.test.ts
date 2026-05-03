@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { RzStepError } from '@/classes';
 import Logger from '@/logger';
 import { saveRecipe } from '@/steps';
-import type { RecipeDBRead, RecipeFormSave } from '@/types';
+import type { RecipeDBRead, RecipeWriteInput } from '@/types';
 
 vi.mock('@/repositories', () => ({
 	createRecipe: vi.fn(),
@@ -14,7 +14,7 @@ import { createRecipe, updateRecipe } from '@/repositories';
 const logger = new Logger();
 const userId = '00000000-0000-0000-0000-000000000001';
 const mockRecipe = { id: 'recipe-123', title: 'Test Recipe', authorId: userId } as unknown as RecipeDBRead;
-const baseData: RecipeFormSave = { authorId: userId, title: 'Test Recipe' } as unknown as RecipeFormSave;
+const baseData: RecipeWriteInput = { authorId: userId, title: 'Test Recipe' } as unknown as RecipeWriteInput;
 
 describe('saveRecipe', () => {
 	beforeEach(() => {
@@ -33,7 +33,7 @@ describe('saveRecipe', () => {
 
 	it('calls updateRecipe when an id is present and returns the result', async () => {
 		vi.mocked(updateRecipe).mockResolvedValue(mockRecipe);
-		const dataWithId: RecipeFormSave = { ...baseData, id: 'recipe-123' } as unknown as RecipeFormSave;
+		const dataWithId: RecipeWriteInput = { ...baseData, id: 'recipe-123' } as unknown as RecipeWriteInput;
 
 		const result = await saveRecipe(dataWithId, userId, logger);
 
@@ -51,7 +51,7 @@ describe('saveRecipe', () => {
 
 	it('throws RzStepError 400 when updateRecipe fails', async () => {
 		vi.mocked(updateRecipe).mockRejectedValue(new Error('DB connection error'));
-		const dataWithId: RecipeFormSave = { ...baseData, id: 'recipe-123' } as unknown as RecipeFormSave;
+		const dataWithId: RecipeWriteInput = { ...baseData, id: 'recipe-123' } as unknown as RecipeWriteInput;
 
 		await expect(saveRecipe(dataWithId, userId, logger)).rejects.toThrow(RzStepError);
 		await expect(saveRecipe(dataWithId, userId, logger)).rejects.toMatchObject({ code: 400 });

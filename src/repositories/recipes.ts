@@ -3,7 +3,7 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipes } from '@/models';
-import type { RecipeDBRead, RecipeFormSave } from '@/types';
+import type { RecipeDBRead, RecipeWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getRecipes(logger: RzLogger): Promise<RecipeDBRead[]> {
@@ -28,7 +28,7 @@ export async function getRecipeById(recipeId: string, logger: RzLogger): Promise
 	return matchedRecipes[0];
 }
 
-export async function createRecipe(recipe: RecipeFormSave, userId: string, logger: RzLogger): Promise<RecipeDBRead> {
+export async function createRecipe(recipe: RecipeWriteInput, userId: string, logger: RzLogger): Promise<RecipeDBRead> {
 	logger.debug('Creating recipe');
 
 	const insertedRecipes = await db
@@ -46,7 +46,7 @@ export async function createRecipe(recipe: RecipeFormSave, userId: string, logge
 
 export async function updateRecipe(
 	recipeId: string,
-	recipeData: RecipeFormSave,
+	recipeData: RecipeWriteInput,
 	userId: string,
 	logger: RzLogger,
 ): Promise<RecipeDBRead> {

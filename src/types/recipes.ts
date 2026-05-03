@@ -4,7 +4,7 @@ import type { recipesSchemas } from '@/schemas';
 import type { RecipeIngredientDBRead, RecipeInstructionDBRead, RecipeSectionDBRead } from '@/types';
 
 export type RecipeDBRead = typeof recipes.$inferSelect;
-export type RecipeFormSave = Omit<
+export type RecipeWriteInput = Omit<
 	typeof recipes.$inferInsert,
 	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;

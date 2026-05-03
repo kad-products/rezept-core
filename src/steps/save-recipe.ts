@@ -1,9 +1,9 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { createRecipe, updateRecipe } from '@/repositories';
-import type { RecipeDBRead, RecipeFormSave } from '@/types';
+import type { RecipeDBRead, RecipeWriteInput } from '@/types';
 
-export async function saveRecipe(recipeData: RecipeFormSave, userId: string, logger: RzLogger): Promise<RecipeDBRead> {
+export async function saveRecipe(recipeData: RecipeWriteInput, userId: string, logger: RzLogger): Promise<RecipeDBRead> {
 	let recipe: RecipeDBRead;
 	try {
 		if (recipeData.id) {
