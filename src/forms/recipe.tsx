@@ -5,7 +5,7 @@ import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveRecipe } from '@/actions/recipes';
 import { recipesSchemas } from '@/schemas';
-import type { ActionState, IngredientDBRead, RecipeFormData, RecipeWithSections } from '@/types';
+import type { ActionState, IngredientDBRead, RecipeFormInput, RecipeWithSections } from '@/types';
 import { useAppForm } from './context';
 
 export default function Recipe({
@@ -17,7 +17,7 @@ export default function Recipe({
 	allIngredients?: IngredientDBRead[];
 	currentUserId: string | undefined;
 }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<RecipeFormData>>();
+	const [formState, setFormState] = useState<ActionState<RecipeFormInput>>();
 
 	const newRecipeDefaults = {
 		title: '',
@@ -27,11 +27,11 @@ export default function Recipe({
 
 	const form = useAppForm({
 		formId: 'recipe',
-		defaultValues: (recipe ? recipe : newRecipeDefaults) as RecipeFormData,
+		defaultValues: (recipe ? recipe : newRecipeDefaults) as RecipeFormInput,
 		validators: {
 			onBlur: recipesSchemas.form,
 		},
-		onSubmit: async ({ value: formDataObj }: { value: RecipeFormData }): Promise<void> => {
+		onSubmit: async ({ value: formDataObj }: { value: RecipeFormInput }): Promise<void> => {
 			setFormState(await saveRecipe(formDataObj));
 		},
 	});

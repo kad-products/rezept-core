@@ -12,7 +12,7 @@ import { recipesSchemas } from '@/schemas';
 import type {
 	ActionState,
 	RecipeDBRead,
-	RecipeFormData,
+	RecipeFormInput,
 	RecipeIngredientDBRead,
 	RecipeIngredientWriteInput,
 	RecipeInstructionDBRead,
@@ -32,7 +32,7 @@ export const saveRecipe = serverAction([
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState<RecipeFormData>> {
+export async function _saveRecipe(formData: RecipeFormInput): Promise<ActionState<RecipeFormInput>> {
 	const { ctx } = requestInfo;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
@@ -42,7 +42,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	const parsed = recipesSchemas.form.safeParse(formData);
 
 	if (parsed.error) {
-		return errorResponse<RecipeFormData>(parsed.error.flatten().fieldErrors, 400);
+		return errorResponse<RecipeFormInput>(parsed.error.flatten().fieldErrors, 400);
 	}
 
 	requestInfo.ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
@@ -61,7 +61,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 		requestInfo.ctx.logger.info(`Recipe ${recipe.id} saved`);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error saving recipe: ${error} `);
-		return errorResponse<RecipeFormData>(error, 400, 'Failed to save recipe');
+		return errorResponse<RecipeFormInput>(error, 400, 'Failed to save recipe');
 	}
 
 	//  _______ _______ _______ _______ _____  _____  __   _ _______
@@ -79,7 +79,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 		requestInfo.ctx.logger.info(`Recipe sections saved for ${recipe.id}: ${JSON.stringify(sections, null, 4)}`);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error saving sections: ${error} `);
-		return errorResponse<RecipeFormData>(error, 400, 'Failed to save recipe sections');
+		return errorResponse<RecipeFormInput>(error, 400, 'Failed to save recipe sections');
 	}
 
 	//  _____ __   _ _______ _______  ______ _     _ _______ _______ _____  _____  __   _ _______
@@ -101,7 +101,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 			requestInfo.ctx.logger.info(`Recipe instructions saved for recipe ${recipe.id} section ${savedSection.id}`);
 		} catch (error) {
 			requestInfo.ctx.logger.info(`Error saving section instructions: ${error} `);
-			return errorResponse<RecipeFormData>(error, 400, 'Failed to save recipe instructions');
+			return errorResponse<RecipeFormInput>(error, 400, 'Failed to save recipe instructions');
 		}
 	}
 
@@ -124,11 +124,11 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 			requestInfo.ctx.logger.info(`Recipe ingredients saved for recipe ${recipe.id} section ${section.id}`);
 		} catch (error) {
 			requestInfo.ctx.logger.info(`Error saving section ingredients: ${error} `);
-			return errorResponse<RecipeFormData>(error, 400, 'Failed to save recipe ingredients');
+			return errorResponse<RecipeFormInput>(error, 400, 'Failed to save recipe ingredients');
 		}
 	}
 
-	return successResponse<RecipeFormData>(
+	return successResponse<RecipeFormInput>(
 		{
 			...recipe,
 			sections: sections?.map(s => ({
@@ -136,7 +136,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 				instructions: savedInstructions[s.id],
 				ingredients: savedIngredients[s.id],
 			})),
-		} as unknown as RecipeFormData,
+		} as unknown as RecipeFormInput,
 		200,
 	);
 }

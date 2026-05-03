@@ -12,7 +12,7 @@ export type RecipeWriteInput = Omit<
 // Input type (what the form submits — pre-transform). Use z.input so optional fields
 // stay optional, matching what actions receive and tests pass. The post-transform
 // output type (with string | null) is used internally via parsed.data.
-export type RecipeFormData = z.input<typeof recipesSchemas.form>;
+export type RecipeFormInput = z.input<typeof recipesSchemas.form>;
 
 // Output type (post-transform) of the scrape schema — what validateAsRecipe returns.
 export type RecipeScrapeData = z.output<typeof recipesSchemas.scrape>;
