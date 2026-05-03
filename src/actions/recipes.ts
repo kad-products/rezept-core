@@ -15,7 +15,7 @@ import type {
 	RecipeFormData,
 	RecipeIngredientDBRead,
 	RecipeIngredientFormSave,
-	RecipeInstruction,
+	RecipeInstructionDBRead,
 	RecipeInstructionFormSave,
 	RecipeSection,
 	RecipeSectionFormSave,
@@ -87,7 +87,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	//  __|__ |  \_| ______|    |    |    \_ |_____| |_____     |    __|__ |_____| |  \_| ______|
 	//
 	// remove instructions with empty instruction text and no id, we assume that means it is the empty "new instruction" field
-	const savedInstructions: Record<string, RecipeInstruction[]> = {};
+	const savedInstructions: Record<string, RecipeInstructionDBRead[]> = {};
 	for (const [index, section] of (parsed.data.sections || []).entries()) {
 		// use the saved section so we can ensure it has an ID (wouldn't be in the incoming data for a new section)
 		const savedSection = sections[index];

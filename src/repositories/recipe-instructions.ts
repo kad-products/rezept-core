@@ -2,9 +2,12 @@ import { eq } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeInstructions } from '@/models';
-import type { RecipeInstruction, RecipeInstructionFormSave } from '@/types';
+import type { RecipeInstructionDBRead, RecipeInstructionFormSave } from '@/types';
 
-export async function getInstructionsByRecipeSectionId(recipeSectionId: string, logger: RzLogger): Promise<RecipeInstruction[]> {
+export async function getInstructionsByRecipeSectionId(
+	recipeSectionId: string,
+	logger: RzLogger,
+): Promise<RecipeInstructionDBRead[]> {
 	logger.debug(`Fetching instructions for section ${recipeSectionId}`);
 	const instructions = await db.select().from(recipeInstructions).where(eq(recipeInstructions.recipeSectionId, recipeSectionId));
 	logger.debug(`Fetched ${instructions.length} instructions for section ${recipeSectionId}`);
@@ -16,7 +19,7 @@ export async function updateRecipeInstructions(
 	instructionsData: RecipeInstructionFormSave[],
 	userId: string,
 	logger: RzLogger,
-): Promise<RecipeInstruction[]> {
+): Promise<RecipeInstructionDBRead[]> {
 	logger.debug(`Updating instructions for section ${recipeSectionId}`);
 
 	// get existing instructions for the recipe
