@@ -1,8 +1,8 @@
 import type { seasonalIngredients } from '@/models';
 import type { IngredientDBRead } from './ingredients';
 
-export type SeasonalIngredient = typeof seasonalIngredients.$inferSelect;
+export type SeasonalIngredientDBRead = typeof seasonalIngredients.$inferSelect;
 
-export type SeasonalIngredientWithRelations = SeasonalIngredient & {
+export type SeasonalIngredientWithRelations = SeasonalIngredientDBRead & {
 	ingredient: IngredientDBRead;
 };
