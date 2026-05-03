@@ -3,12 +3,12 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { users } from '@/models';
-import type { UserDBRead, UserInsert } from '@/types';
+import type { UserDBRead, UserWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function createUser(username: string, logger: RzLogger): Promise<UserDBRead> {
 	logger.debug(`Creating user ${username}`);
-	const user: UserInsert = {
+	const user: UserWriteInput = {
 		id: crypto.randomUUID(),
 		username,
 		createdAt: new Date().toISOString(),

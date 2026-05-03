@@ -36,7 +36,7 @@ Types that represent data moving through the request pipeline follow a consisten
         ↓
 *ValidatedInput                  post-Zod, source-agnostic
         ↓
-*DBWrite                         insert/update payload, system fields stripped
+*UserWriteInput                  insert/update payload, system fields stripped
         ↓  ←— database —→
 *DBRead                          row as returned by a query
 ```
@@ -73,11 +73,10 @@ The result of passing any raw input through a Zod schema. Source-agnostic — fo
 export type SeasonValidatedInput = z.infer<typeof seasonSchemas.form>;
 ```
 
-**`*DBWrite`**
-The payload passed to a repository `create` or `update` call. Derived from Drizzle's `$inferInsert` with system-managed fields removed (audit timestamps, soft-delete fields, etc.). Represents data ready to be written to the database.
+**`*UserWriteInput payload passed to a repository `create` or `update` call. Derived from Drizzle's `$inferInsert` with system-managed fields removed (audit timestamps, soft-delete fields, etc.). Represents data ready to be written to the database.
 
 ```ts
-export type SeasonDBWrite = Omit<
+export type SeasonUserWriteInput<
   typeof seasons.$inferInsert,
   'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;
