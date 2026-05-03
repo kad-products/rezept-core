@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 import type { recipes } from '@/models';
 import type { recipesSchemas } from '@/schemas';
-import type { RecipeIngredient, RecipeInstruction, RecipeSection } from '@/types';
+import type { RecipeIngredientDBRead, RecipeInstruction, RecipeSection } from '@/types';
 
 export type Recipe = typeof recipes.$inferSelect;
 export type RecipeFormSave = Omit<
@@ -20,7 +20,7 @@ export type RecipeScrapeData = z.output<typeof recipesSchemas.scrape>;
 export type RecipeWithSections = Recipe & {
 	sections: Array<
 		RecipeSection & {
-			ingredients: RecipeIngredient[];
+			ingredients: RecipeIngredientDBRead[];
 			instructions: RecipeInstruction[];
 		}
 	>;

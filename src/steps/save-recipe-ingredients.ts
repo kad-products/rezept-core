@@ -1,18 +1,18 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { updateRecipeIngredients } from '@/repositories';
-import type { IncomingIngredientsData, RecipeIngredient, RecipeIngredientFormSave } from '@/types';
+import type { IncomingIngredientsData, RecipeIngredientDBRead, RecipeIngredientFormSave } from '@/types';
 
 export async function saveRecipeIngredients(
 	recipeId: string,
 	ingredientsData: IncomingIngredientsData[] | undefined,
 	userId: string,
 	logger: RzLogger,
-): Promise<Record<string, RecipeIngredient[]>> {
+): Promise<Record<string, RecipeIngredientDBRead[]>> {
 	if (!ingredientsData) {
 		return {};
 	}
-	const savedIngredients: Record<string, RecipeIngredient[]> = {};
+	const savedIngredients: Record<string, RecipeIngredientDBRead[]> = {};
 	for (const section of ingredientsData) {
 		try {
 			savedIngredients[section.sectionId] = await updateRecipeIngredients(
