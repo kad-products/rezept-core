@@ -6,13 +6,13 @@ vi.mock('@/repositories', () => ({
 	getUserById: vi.fn(),
 }));
 
-vi.mock('@/durable-objects/store', () => ({
+vi.mock('@/durable-objects', () => ({
 	sessions: {
 		remove: vi.fn(),
 	},
 }));
 
-import { sessions } from '@/durable-objects/store';
+import { sessions } from '@/durable-objects';
 import { getUserById } from '@/repositories';
 import userMiddleware from '../user';
 

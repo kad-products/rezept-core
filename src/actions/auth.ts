@@ -5,7 +5,7 @@ import {
 	verifyAuthenticationResponse,
 } from '@simplewebauthn/server';
 import { requestInfo } from 'rwsdk/worker';
-import { sessions } from '@/durable-objects/store';
+import { sessions } from '@/durable-objects';
 import { getCredentialById, getUserById, updateCredentialCounter } from '@/repositories';
 import type { ActionState, Credential } from '@/types';
 import { errorResponse, successResponse } from './utils';

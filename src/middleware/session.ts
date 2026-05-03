@@ -1,6 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { ErrorResponse } from 'rwsdk/worker';
-import { sessions } from '@/durable-objects/store';
+import { sessions } from '@/durable-objects';
 
 export default async function sessionMiddleware({
 	ctx,

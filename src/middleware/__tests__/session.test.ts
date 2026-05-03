@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import sessionMiddleware from '../session';
 
 // Mock the dependencies
-vi.mock('@/durable-objects/store', () => ({
+vi.mock('@/durable-objects', () => ({
 	sessions: {
 		load: vi.fn(),
 		remove: vi.fn(),
@@ -36,7 +36,7 @@ vi.mock('rwsdk/worker', () => {
 });
 
 // Import after mocking
-import { sessions } from '@/durable-objects/store';
+import { sessions } from '@/durable-objects';
 
 describe('setupPasskeyAuth', () => {
 	let mockRequestInfo: any;
