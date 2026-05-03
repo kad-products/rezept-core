@@ -3,11 +3,11 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeUploads } from '@/models';
-import type { RecipeUploadDBRead, RecipeUploadFormData } from '@/types';
+import type { RecipeUploadDBRead, RecipeUploadWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function createRecipeUpload(
-	recipeUpload: RecipeUploadFormData,
+	recipeUpload: RecipeUploadWriteInput,
 	userId: string,
 	logger: RzLogger,
 ): Promise<RecipeUploadDBRead> {
