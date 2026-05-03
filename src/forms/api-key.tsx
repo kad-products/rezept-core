@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { saveApiKey } from '@/actions/api-keys';
 import permissions from '@/data/permissions';
 import { apiKeysSchemas } from '@/schemas';
-import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
+import type { ActionState, ApiKey, ApiKeyFormInput } from '@/types';
 import { useAppForm } from './context';
 
 export default function FormApiKey({
@@ -16,7 +16,7 @@ export default function FormApiKey({
 	apiKey?: ApiKey;
 	currentUserId: string | undefined;
 }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<ApiKeyFormData>>();
+	const [formState, setFormState] = useState<ActionState<ApiKeyFormInput>>();
 
 	const newApiKeyDefaults = {
 		permissions: [],
@@ -24,11 +24,11 @@ export default function FormApiKey({
 	};
 
 	const form = useAppForm({
-		defaultValues: (apiKey ? apiKey : newApiKeyDefaults) as ApiKeyFormData,
+		defaultValues: (apiKey ? apiKey : newApiKeyDefaults) as ApiKeyFormInput,
 		validators: {
 			onBlur: apiKeysSchemas.form,
 		},
-		onSubmit: async ({ value: formDataObj }: { value: ApiKeyFormData }): Promise<void> => {
+		onSubmit: async ({ value: formDataObj }: { value: ApiKeyFormInput }): Promise<void> => {
 			setFormState(await saveApiKey(formDataObj));
 		},
 	});

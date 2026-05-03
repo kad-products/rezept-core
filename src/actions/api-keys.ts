@@ -4,7 +4,7 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createApiKey, updateApiKey } from '@/repositories';
 import { apiKeysSchemas } from '@/schemas';
-import type { ActionState, ApiKey, ApiKeyFormData } from '@/types';
+import type { ActionState, ApiKey, ApiKeyFormInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
 // biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
@@ -17,7 +17,7 @@ export const saveApiKey = serverAction([
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState<ApiKeyFormData>> {
+export async function _saveApiKey(formData: ApiKeyFormInput): Promise<ActionState<ApiKeyFormInput>> {
 	const { ctx } = requestInfo;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
@@ -27,7 +27,7 @@ export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState
 	const parsed = apiKeysSchemas.form.safeParse(formData);
 
 	if (parsed.error) {
-		return errorResponse<ApiKeyFormData>(parsed.error.flatten().fieldErrors, 400);
+		return errorResponse<ApiKeyFormInput>(parsed.error.flatten().fieldErrors, 400);
 	}
 
 	requestInfo.ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
@@ -41,9 +41,9 @@ export async function _saveApiKey(formData: ApiKeyFormData): Promise<ActionState
 		}
 		requestInfo.ctx.logger.info(`API Key ${apiKey.id} saved`);
 
-		return successResponse<ApiKeyFormData>(apiKey, 200);
+		return successResponse<ApiKeyFormInput>(apiKey, 200);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error saving API Key: ${error} `);
-		return errorResponse<ApiKeyFormData>(error, 400, 'Failed to save item');
+		return errorResponse<ApiKeyFormInput>(error, 400, 'Failed to save item');
 	}
 }

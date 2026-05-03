@@ -2,7 +2,7 @@ import type { apiKeys } from '@/models';
 
 export type ApiKey = typeof apiKeys.$inferSelect;
 
-export type ApiKeyFormData = {
+export type ApiKeyFormInput = {
 	name: string;
 	id?: string | undefined;
 	userId: string;

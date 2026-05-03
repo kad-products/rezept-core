@@ -3,7 +3,7 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { apiKeys } from '@/models';
-import type { ApiKey, ApiKeyFormData } from '@/types';
+import type { ApiKey, ApiKeyFormInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getApiKeysByUserId(userId: string, logger: RzLogger): Promise<ApiKey[]> {
@@ -39,7 +39,7 @@ export async function getApiKeyByKey(key: string, logger: RzLogger): Promise<Api
 	return matchedApiKeys[0];
 }
 
-export async function createApiKey(apiKey: ApiKeyFormData, userId: string, logger: RzLogger): Promise<ApiKey> {
+export async function createApiKey(apiKey: ApiKeyFormInput, userId: string, logger: RzLogger): Promise<ApiKey> {
 	logger.debug('Creating API key');
 
 	const insertedRecipes = await db
@@ -55,7 +55,7 @@ export async function createApiKey(apiKey: ApiKeyFormData, userId: string, logge
 	return result;
 }
 
-export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormData, userId: string, logger: RzLogger): Promise<ApiKey> {
+export async function updateApiKey(apiKeyId: string, apiKey: ApiKeyFormInput, userId: string, logger: RzLogger): Promise<ApiKey> {
 	logger.debug(`Updating API key ${apiKeyId}`);
 
 	const updatedApiKeys = await db
