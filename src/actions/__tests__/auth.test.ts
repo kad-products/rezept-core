@@ -11,7 +11,7 @@ vi.mock('@simplewebauthn/server', () => ({
 	verifyAuthenticationResponse: vi.fn(),
 }));
 
-vi.mock('@/durable-objects/store', () => ({
+vi.mock('@/durable-objects', () => ({
 	sessions: {
 		save: vi.fn(),
 		load: vi.fn(),
@@ -51,7 +51,7 @@ vi.mock('rwsdk/worker', () => ({
 }));
 
 import { generateAuthenticationOptions, verifyAuthenticationResponse } from '@simplewebauthn/server';
-import { sessions } from '@/durable-objects/store';
+import { sessions } from '@/durable-objects';
 import { getCredentialById, getUserById, updateCredentialCounter } from '@/repositories';
 import { finishPasskeyLogin, startPasskeyLogin } from '../auth';
 

@@ -2,7 +2,7 @@
 import { generateRegistrationOptions, type RegistrationResponseJSON, verifyRegistrationResponse } from '@simplewebauthn/server';
 import { requestInfo } from 'rwsdk/worker';
 import { UAParser as uap } from 'ua-parser-js';
-import { sessions } from '@/durable-objects/store';
+import { sessions } from '@/durable-objects';
 import { createCredential, createUser } from '@/repositories';
 import { usersSchemas } from '@/schemas';
 import type { ActionState } from '@/types';

@@ -1,5 +1,5 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
-import { sessions } from '@/durable-objects/store';
+import { sessions } from '@/durable-objects';
 import { getUserById } from '@/repositories';
 
 export default async function userMiddleware({
