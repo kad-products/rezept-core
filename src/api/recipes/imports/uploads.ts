@@ -3,7 +3,7 @@ import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { apiErrorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createRecipeUpload } from '@/repositories';
-import type { RecipeUpload } from '@/types';
+import type { RecipeUploadDBRead } from '@/types';
 
 export default {
 	post: [requireAuthentication, requirePermissions('recipes:upload'), _postHandler] as const,
@@ -30,7 +30,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		},
 	});
 
-	let uploadedRecipe: RecipeUpload;
+	let uploadedRecipe: RecipeUploadDBRead;
 	try {
 		uploadedRecipe = await createRecipeUpload(
 			{

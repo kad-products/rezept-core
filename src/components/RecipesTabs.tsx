@@ -1,7 +1,7 @@
 'use client';
 import { Tabs } from 'radix-ui';
 import RzCard from '@/components/RzCard';
-import type { ApiKeyDBRead, Recipe, RecipeUpload } from '@/types';
+import type { ApiKeyDBRead, Recipe, RecipeUploadDBRead } from '@/types';
 import BookmarkletInstall from './BookmarkletInstall';
 
 export default function RecipesTabs({
@@ -14,7 +14,7 @@ export default function RecipesTabs({
 	apiKeys: ApiKeyDBRead[];
 	userId: string | undefined;
 	recipes: Recipe[];
-	recipeUploads: RecipeUpload[];
+	recipeUploads: RecipeUploadDBRead[];
 	permissions?: string[];
 }): React.ReactNode {
 	return (

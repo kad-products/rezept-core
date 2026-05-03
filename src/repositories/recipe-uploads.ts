@@ -3,14 +3,14 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeUploads } from '@/models';
-import type { RecipeUpload, RecipeUploadFormData } from '@/types';
+import type { RecipeUploadDBRead, RecipeUploadFormData } from '@/types';
 import { validateUuid } from './utils';
 
 export async function createRecipeUpload(
 	recipeUpload: RecipeUploadFormData,
 	userId: string,
 	logger: RzLogger,
-): Promise<RecipeUpload> {
+): Promise<RecipeUploadDBRead> {
 	logger.debug('Creating recipe upload');
 
 	const recipesUploaded = await db
@@ -27,14 +27,14 @@ export async function createRecipeUpload(
 	return result;
 }
 
-export async function getRecipeUploads(userId: string, logger: RzLogger): Promise<RecipeUpload[]> {
+export async function getRecipeUploads(userId: string, logger: RzLogger): Promise<RecipeUploadDBRead[]> {
 	logger.debug(`Fetching recipe uploads for user ${userId}`);
 	const results = await db.select().from(recipeUploads).where(eq(recipeUploads.userId, userId));
 	logger.debug(`Fetched ${results.length} recipe uploads`);
 	return results;
 }
 
-export async function getRecipeUploadById(recipeUploadId: string, logger: RzLogger): Promise<RecipeUpload> {
+export async function getRecipeUploadById(recipeUploadId: string, logger: RzLogger): Promise<RecipeUploadDBRead> {
 	if (!validateUuid(recipeUploadId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeUploadId, 'RecipeUpload']);
 	}
