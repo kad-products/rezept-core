@@ -3,10 +3,10 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { users } from '@/models';
-import type { User, UserInsert } from '@/types';
+import type { UserDBRead, UserInsert } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createUser(username: string, logger: RzLogger): Promise<User> {
+export async function createUser(username: string, logger: RzLogger): Promise<UserDBRead> {
 	logger.debug(`Creating user ${username}`);
 	const user: UserInsert = {
 		id: crypto.randomUUID(),
@@ -33,7 +33,7 @@ export async function deleteUser(id: string, logger: RzLogger): Promise<void> {
 	logger.info(`Deleted user ${id}`);
 }
 
-export async function getUserById(id: string, logger: RzLogger): Promise<User> {
+export async function getUserById(id: string, logger: RzLogger): Promise<UserDBRead> {
 	if (!validateUuid(id)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [id, 'User']);
 	}
