@@ -20,7 +20,6 @@ function createCredentialData(userId: string, overrides?: Partial<CredentialDBWr
 		credentialId: `cred-${crypto.randomUUID()}`,
 		publicKey: new Uint8Array([1, 2, 3, 4, 5]),
 		counter: 0,
-		createdAt: new Date().toISOString(),
 		...overrides,
 	};
 }
