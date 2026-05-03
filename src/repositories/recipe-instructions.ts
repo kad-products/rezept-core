@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeInstructions } from '@/models';
-import type { RecipeInstructionDBRead, RecipeInstructionFormSave } from '@/types';
+import type { RecipeInstructionDBRead, RecipeInstructionWriteInput } from '@/types';
 
 export async function getInstructionsByRecipeSectionId(
 	recipeSectionId: string,
@@ -16,7 +16,7 @@ export async function getInstructionsByRecipeSectionId(
 
 export async function updateRecipeInstructions(
 	recipeSectionId: string,
-	instructionsData: RecipeInstructionFormSave[],
+	instructionsData: RecipeInstructionWriteInput[],
 	userId: string,
 	logger: RzLogger,
 ): Promise<RecipeInstructionDBRead[]> {
@@ -41,7 +41,7 @@ export async function updateRecipeInstructions(
 
 	// update or insert instructions from instructionsData
 	const savedInstructions = await Promise.all(
-		instructionsData.map(async (instData: RecipeInstructionFormSave) => {
+		instructionsData.map(async (instData: RecipeInstructionWriteInput) => {
 			if (instData.id) {
 				// update existing instruction
 				const [updatedInstruction] = await db
