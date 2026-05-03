@@ -9,7 +9,6 @@ import { validateUuid } from './utils';
 export async function createUser(username: string, logger: RzLogger): Promise<UserDBRead> {
 	logger.debug(`Creating user ${username}`);
 	const user: UserWriteInput = {
-		id: crypto.randomUUID(),
 		username,
 	};
 	const [insertedUser] = await db.insert(users).values(user).returning();

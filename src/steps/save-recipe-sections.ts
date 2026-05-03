@@ -1,11 +1,11 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { updateRecipeSections } from '@/repositories';
-import type { RecipeSectionDBRead, RecipeSectionFormSave } from '@/types';
+import type { RecipeSectionDBRead, RecipeSectionWriteInput } from '@/types';
 
 export async function saveRecipeSections(
 	recipeId: string,
-	sectionsData: RecipeSectionFormSave[],
+	sectionsData: RecipeSectionWriteInput[],
 	userId: string,
 	logger: RzLogger,
 ): Promise<RecipeSectionDBRead[]> {
