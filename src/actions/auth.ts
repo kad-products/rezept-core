@@ -7,7 +7,7 @@ import {
 import { requestInfo } from 'rwsdk/worker';
 import { sessions } from '@/durable-objects';
 import { getCredentialById, getUserById, updateCredentialCounter } from '@/repositories';
-import type { ActionState, Credential } from '@/types';
+import type { ActionState, CredentialDBRead } from '@/types';
 import { errorResponse, successResponse } from './utils';
 import { getWebAuthnConfig } from './webauthn';
 
@@ -46,7 +46,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 			return errorResponse('No challenge found in session', 400);
 		}
 
-		let credential: Credential;
+		let credential: CredentialDBRead;
 		try {
 			credential = await getCredentialById(login.id, requestInfo.ctx.logger);
 
