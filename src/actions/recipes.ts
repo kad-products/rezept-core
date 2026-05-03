@@ -11,7 +11,7 @@ import {
 import { recipesSchemas } from '@/schemas';
 import type {
 	ActionState,
-	Recipe,
+	RecipeDBRead,
 	RecipeFormData,
 	RecipeIngredientDBRead,
 	RecipeIngredientFormSave,
@@ -51,7 +51,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	//  |_____/ |______ |         |   |_____] |______
 	//  |    \_ |______ |_____  __|__ |       |______
 	//
-	let recipe: Recipe;
+	let recipe: RecipeDBRead;
 	try {
 		if (parsed.data.id) {
 			recipe = await updateRecipe(parsed.data.id, parsed.data, userId, requestInfo.ctx.logger);

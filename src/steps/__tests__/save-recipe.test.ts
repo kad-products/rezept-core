@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { RzStepError } from '@/classes';
 import Logger from '@/logger';
 import { saveRecipe } from '@/steps';
-import type { Recipe, RecipeFormSave } from '@/types';
+import type { RecipeDBRead, RecipeFormSave } from '@/types';
 
 vi.mock('@/repositories', () => ({
 	createRecipe: vi.fn(),
@@ -13,7 +13,7 @@ import { createRecipe, updateRecipe } from '@/repositories';
 
 const logger = new Logger();
 const userId = '00000000-0000-0000-0000-000000000001';
-const mockRecipe = { id: 'recipe-123', title: 'Test Recipe', authorId: userId } as unknown as Recipe;
+const mockRecipe = { id: 'recipe-123', title: 'Test Recipe', authorId: userId } as unknown as RecipeDBRead;
 const baseData: RecipeFormSave = { authorId: userId, title: 'Test Recipe' } as unknown as RecipeFormSave;
 
 describe('saveRecipe', () => {

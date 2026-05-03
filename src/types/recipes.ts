@@ -3,7 +3,7 @@ import type { recipes } from '@/models';
 import type { recipesSchemas } from '@/schemas';
 import type { RecipeIngredientDBRead, RecipeInstructionDBRead, RecipeSectionDBRead } from '@/types';
 
-export type Recipe = typeof recipes.$inferSelect;
+export type RecipeDBRead = typeof recipes.$inferSelect;
 export type RecipeFormSave = Omit<
 	typeof recipes.$inferInsert,
 	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
@@ -17,7 +17,7 @@ export type RecipeFormData = z.input<typeof recipesSchemas.form>;
 // Output type (post-transform) of the scrape schema — what validateAsRecipe returns.
 export type RecipeScrapeData = z.output<typeof recipesSchemas.scrape>;
 
-export type RecipeWithSections = Recipe & {
+export type RecipeWithSections = RecipeDBRead & {
 	sections: Array<
 		RecipeSectionDBRead & {
 			ingredients: RecipeIngredientDBRead[];
