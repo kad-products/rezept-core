@@ -4,8 +4,7 @@ Cloudflare Durable Objects used by the application. Each file implements a singl
 
 ## Contents
 
-- **`durable-object.ts`** — `SessionDurableObject`: stores and manages user session state (userId, challenge, expiry). Exported from `worker.tsx` for Cloudflare to bind.
-- **`store.ts`** — `sessions`: the `defineDurableSession` instance used by middleware and auth actions to read/write sessions via the Durable Object.
+- **`sessions.ts`** — `SessionDurableObject`: stores and manages user session state (userId, challenge, expiry) as well as defines the `defineDurableSession` instance used by middleware and auth actions to read/write sessions via the Durable Object.. Exported from `worker.tsx` for Cloudflare to bind.
 
 ## Guidelines
 

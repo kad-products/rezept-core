@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { type Session, SessionDurableObject } from '../durable-object';
+import type { Session } from '@/types';
+import { SessionDurableObject } from '../sessions';
 
 // Mock Cloudflare Durable Object infrastructure
 class MockDurableObjectStorage {

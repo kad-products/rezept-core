@@ -1,14 +1,12 @@
-import { DurableObject } from 'cloudflare:workers';
-import { MAX_SESSION_DURATION } from 'rwsdk/auth';
+import { DurableObject, env } from 'cloudflare:workers';
+import { defineDurableSession, MAX_SESSION_DURATION } from 'rwsdk/auth';
+import type { Session, SessionError } from '@/types';
 
-type SessionError = 'Invalid session' | 'Session expired';
-
-export interface Session {
-	userId?: string | null;
-	challenge?: string | null;
-	createdAt: number;
-	lastAccessedAt: number;
-}
+// biome-ignore lint/nursery/useExplicitType: SessionStoreFromDurableObject return type is not exported from rwsdk
+export const sessions = defineDurableSession({
+	secretKey: env.SESSION_SECRET_KEY,
+	sessionDurableObject: env.SESSION_DURABLE_OBJECT,
+});
 
 export class SessionDurableObject extends DurableObject {
 	private session: Session | undefined = undefined;
