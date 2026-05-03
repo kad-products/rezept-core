@@ -1,4 +1,6 @@
+import type { z } from 'zod';
 import type { seasons } from '@/models';
+import type { seasonsSchemas } from '@/schemas';
 
 export type SeasonDBRead = typeof seasons.$inferSelect;
 export type SeasonWriteInput = Omit<
@@ -6,14 +8,4 @@ export type SeasonWriteInput = Omit<
 	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;
 
-export type SeasonFormData = {
-	name: string;
-	id?: string | undefined;
-	description?: string | undefined | null;
-	country: string;
-	region?: string | null;
-	startMonth: number;
-	endMonth: number;
-	notes?: string | null;
-	ingredients?: string[];
-};
+export type SeasonFormInput = z.input<typeof seasonsSchemas.form>;
