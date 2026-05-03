@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 import type { recipes } from '@/models';
 import type { recipesSchemas } from '@/schemas';
-import type { RecipeIngredientDBRead, RecipeInstructionDBRead, RecipeSectionDBRead } from '@/types';
+import type { ParsedRecipeScrapeSection, RecipeIngredientDBRead, RecipeInstructionDBRead, RecipeSectionDBRead } from '@/types';
 
 export type RecipeDBRead = typeof recipes.$inferSelect;
 export type RecipeWriteInput = Omit<
@@ -24,4 +24,14 @@ export type RecipeWithSections = RecipeDBRead & {
 			instructions: RecipeInstructionDBRead[];
 		}
 	>;
+};
+
+export type ParsedRecipeScrape = {
+	title: string;
+	description?: string;
+	source?: string;
+	servings?: number;
+	prepTime?: number;
+	cookTime?: number;
+	sections: ParsedRecipeScrapeSection[];
 };
