@@ -1,6 +1,6 @@
 import type { apiKeys } from '@/models';
 
-export type ApiKey = typeof apiKeys.$inferSelect;
+export type ApiKeyDBRead = typeof apiKeys.$inferSelect;
 
 export type ApiKeyFormInput = {
 	name: string;

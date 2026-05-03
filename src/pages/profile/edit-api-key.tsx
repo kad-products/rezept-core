@@ -3,14 +3,14 @@ import type { RequestInfo } from 'rwsdk/worker';
 import FormApiKey from '@/forms/api-key';
 import StandardLayout from '@/layouts/standard';
 import { getApiKeyById } from '@/repositories';
-import type { ApiKey } from '@/types';
+import type { ApiKeyDBRead } from '@/types';
 
 export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const apiKeyId = params.apiKeyId;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in route chain
 	const userId = ctx.user!.id;
 
-	let apiKey: ApiKey | undefined;
+	let apiKey: ApiKeyDBRead | undefined;
 
 	if (!apiKeyId) {
 		apiKey = undefined;

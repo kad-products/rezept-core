@@ -1,7 +1,7 @@
 'use client';
 import { Tabs } from 'radix-ui';
 import RzCard from '@/components/RzCard';
-import type { ApiKey, Recipe, RecipeUpload } from '@/types';
+import type { ApiKeyDBRead, Recipe, RecipeUpload } from '@/types';
 import BookmarkletInstall from './BookmarkletInstall';
 
 export default function RecipesTabs({
@@ -11,7 +11,7 @@ export default function RecipesTabs({
 	recipeUploads,
 	permissions = [],
 }: {
-	apiKeys: ApiKey[];
+	apiKeys: ApiKeyDBRead[];
 	userId: string | undefined;
 	recipes: Recipe[];
 	recipeUploads: RecipeUpload[];

@@ -4,7 +4,7 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createApiKey, updateApiKey } from '@/repositories';
 import { apiKeysSchemas } from '@/schemas';
-import type { ActionState, ApiKey, ApiKeyFormInput } from '@/types';
+import type { ActionState, ApiKeyDBRead, ApiKeyFormInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
 // biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
@@ -32,7 +32,7 @@ export async function _saveApiKey(formData: ApiKeyFormInput): Promise<ActionStat
 
 	requestInfo.ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
 
-	let apiKey: ApiKey;
+	let apiKey: ApiKeyDBRead;
 	try {
 		if (parsed.data.id) {
 			apiKey = await updateApiKey(parsed.data.id, parsed.data, userId, requestInfo.ctx.logger);

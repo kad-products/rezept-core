@@ -6,14 +6,14 @@ import { useState } from 'react';
 import { saveApiKey } from '@/actions/api-keys';
 import permissions from '@/data/permissions';
 import { apiKeysSchemas } from '@/schemas';
-import type { ActionState, ApiKey, ApiKeyFormInput } from '@/types';
+import type { ActionState, ApiKeyDBRead, ApiKeyFormInput } from '@/types';
 import { useAppForm } from './context';
 
 export default function FormApiKey({
 	apiKey,
 	currentUserId,
 }: {
-	apiKey?: ApiKey;
+	apiKey?: ApiKeyDBRead;
 	currentUserId: string | undefined;
 }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<ApiKeyFormInput>>();

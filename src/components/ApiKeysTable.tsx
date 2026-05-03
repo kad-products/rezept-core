@@ -1,9 +1,9 @@
 'use client';
 import { CopyIcon } from '@radix-ui/react-icons';
-import type { ApiKey, RzTableColumn } from '@/types';
+import type { ApiKeyDBRead, RzTableColumn } from '@/types';
 import RzTable from './RzTable';
 
-export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKey[] }): React.ReactNode {
+export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKeyDBRead[] }): React.ReactNode {
 	const apiColumns: RzTableColumn[] = [
 		{ label: 'API Key', key: 'apiKey', render: (apiKey: string): string => apiKey.substring(0, 12) },
 		{ label: 'Name', key: 'name' },
