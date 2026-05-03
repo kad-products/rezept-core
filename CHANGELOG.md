@@ -1,3 +1,9 @@
+## [1.20.1](https://github.com/kad-products/rezept-core/compare/v1.20.0...v1.20.1) (2026-05-03)
+
+### Code Refactoring
+
+* rename sessions DO to be actually named sessions ([8d0c63c](https://github.com/kad-products/rezept-core/commit/8d0c63c4680a2e30dc8231ef19a074ce0fd4b1fd))
+
 ## [1.20.0](https://github.com/kad-products/rezept-core/compare/v1.19.12...v1.20.0) (2026-05-02)
 
 ### Features
