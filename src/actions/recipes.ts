@@ -14,7 +14,7 @@ import type {
 	RecipeDBRead,
 	RecipeFormData,
 	RecipeIngredientDBRead,
-	RecipeIngredientFormSave,
+	RecipeIngredientWriteInput,
 	RecipeInstructionDBRead,
 	RecipeInstructionWriteInput,
 	RecipeSectionDBRead,
@@ -117,7 +117,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 		try {
 			savedIngredients[savedSection.id] = await updateRecipeIngredients(
 				savedSection.id,
-				section.ingredients as RecipeIngredientFormSave[],
+				section.ingredients as RecipeIngredientWriteInput[],
 				userId,
 				requestInfo.ctx.logger,
 			);

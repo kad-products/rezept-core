@@ -1,7 +1,7 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { updateRecipeIngredients } from '@/repositories';
-import type { IncomingIngredientsData, RecipeIngredientDBRead, RecipeIngredientFormSave } from '@/types';
+import type { IncomingIngredientsData, RecipeIngredientDBRead, RecipeIngredientWriteInput } from '@/types';
 
 export async function saveRecipeIngredients(
 	recipeId: string,
@@ -17,7 +17,7 @@ export async function saveRecipeIngredients(
 		try {
 			savedIngredients[section.sectionId] = await updateRecipeIngredients(
 				section.sectionId,
-				section.ingredients as RecipeIngredientFormSave[],
+				section.ingredients as RecipeIngredientWriteInput[],
 				userId,
 				logger,
 			);
