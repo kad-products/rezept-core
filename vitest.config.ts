@@ -5,6 +5,7 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'node',
+		exclude: ['**/*.workers.test.ts', 'node_modules/**'],
 		coverage: {
 			provider: 'v8',
 			reporter: ['text', 'json-summary'],
