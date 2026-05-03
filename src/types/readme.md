@@ -44,10 +44,19 @@ Types that represent data moving through the request pipeline follow a consisten
 ### Suffixes
 
 **`*FormInput`**
-Raw data submitted from a browser form, before validation. Typically `z.input<schema>` so optional fields stay optional and pre-transform types are preserved. Used as both the form's initial-value type and its submit type — the same shape serves both because data is always mapped to `*FormInput` before the form opens.
+Raw data submitted from a browser form, before validation. Used as both the form's initial-value type and its submit type — the same shape serves both because data is always mapped to `*FormInput` before the form opens.
+
+Prefer inferring from the Zod schema rather than defining statically — the schema is the source of truth and the type stays in sync automatically:
 
 ```ts
 export type SeasonFormInput = z.input<typeof seasonSchemas.form>;
+```
+
+If the form needs fields beyond what the schema validates (UI-only state, post-creation display data), extend with an intersection rather than duplicating the full shape:
+
+```ts
+// apiKey is populated after creation and displayed in the form but never submitted to the DB
+export type ApiKeyFormInput = z.input<typeof apiKeySchemas.form> & { apiKey?: string };
 ```
 
 **`*ApiInput`**

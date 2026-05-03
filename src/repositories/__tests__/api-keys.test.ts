@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { createUser } from '@/repositories';
+import type { ApiKeyFormInput } from '@/types';
 import { resetDb } from '../../../tests/mocks/db';
 import { createApiKey, getApiKeyById, getApiKeyByKey, getApiKeysByUserId, updateApiKey } from '../api-keys';
 
 const logger = new Logger();
 
-const baseApiKeyData = {
+const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'permissions'> = {
 	name: 'Test API Key',
 	permissions: ['recipes:upload'],
 };
@@ -117,7 +118,11 @@ describe('api-keys repository', () => {
 		});
 
 		it('creates key with empty permissions', async () => {
-			const result = await createApiKey({ ...baseApiKeyData, userId: testUserId, permissions: [] }, testUserId, logger);
+			const result = await createApiKey(
+				{ ...baseApiKeyData, userId: testUserId, permissions: [] as ApiKeyFormInput['permissions'] },
+				testUserId,
+				logger,
+			);
 
 			expect(result.permissions).toEqual([]);
 		});

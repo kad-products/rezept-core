@@ -16,7 +16,7 @@ export default function FormApiKey({
 	apiKey?: ApiKeyDBRead;
 	currentUserId: string | undefined;
 }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<ApiKeyFormInput>>();
+	const [formState, setFormState] = useState<ActionState<ApiKeyDBRead>>();
 
 	const newApiKeyDefaults = {
 		permissions: [],

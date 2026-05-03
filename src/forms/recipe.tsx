@@ -5,7 +5,7 @@ import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveRecipe } from '@/actions/recipes';
 import { recipesSchemas } from '@/schemas';
-import type { ActionState, Ingredient, RecipeFormData, RecipeWithSections } from '@/types';
+import type { ActionState, IngredientDBRead, RecipeFormData, RecipeWithSections } from '@/types';
 import { useAppForm } from './context';
 
 export default function Recipe({
@@ -14,7 +14,7 @@ export default function Recipe({
 	currentUserId,
 }: {
 	recipe?: RecipeWithSections;
-	allIngredients?: Ingredient[];
+	allIngredients?: IngredientDBRead[];
 	currentUserId: string | undefined;
 }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<RecipeFormData>>();

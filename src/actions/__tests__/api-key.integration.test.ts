@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 import { createUser, getApiKeyById, getApiKeysByUserId } from '@/repositories';
+import type { ApiKeyFormInput } from '@/types';
 import { resetDb } from '../../../tests/mocks/db';
 
 vi.mock('cloudflare:workers', () => ({
@@ -31,7 +32,7 @@ vi.mock('rwsdk/worker', () => ({
 
 import { _saveApiKey } from '../api-keys';
 
-const baseApiKeyData = {
+const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'userId' | 'permissions'> = {
 	name: 'Test API Key',
 	userId: 'test-user-id',
 	permissions: ['recipes:upload'],
