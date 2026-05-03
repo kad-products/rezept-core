@@ -1,3 +1,3 @@
 import type { ingredientUnits } from '@/models';
 
-export type IngredientUnit = typeof ingredientUnits.$inferSelect;
+export type IngredientUnitDBRead = typeof ingredientUnits.$inferSelect;
