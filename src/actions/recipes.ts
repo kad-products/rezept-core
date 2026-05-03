@@ -17,7 +17,7 @@ import type {
 	RecipeIngredientFormSave,
 	RecipeInstructionDBRead,
 	RecipeInstructionFormSave,
-	RecipeSection,
+	RecipeSectionDBRead,
 	RecipeSectionFormSave,
 } from '@/types';
 import { errorResponse, successResponse } from './utils';
@@ -68,7 +68,7 @@ export async function _saveRecipe(formData: RecipeFormData): Promise<ActionState
 	//  |______ |______ |          |      |   |     | | \  | |______
 	//  ______| |______ |_____     |    __|__ |_____| |  \_| ______|
 	//
-	let sections: RecipeSection[];
+	let sections: RecipeSectionDBRead[];
 	try {
 		sections = await updateRecipeSections(
 			recipe.id,

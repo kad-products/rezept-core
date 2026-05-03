@@ -2,9 +2,9 @@ import { eq } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeSections } from '@/models';
-import type { RecipeSection, RecipeSectionFormSave } from '@/types';
+import type { RecipeSectionDBRead, RecipeSectionFormSave } from '@/types';
 
-export async function getSectionsByRecipeId(recipeId: string, logger: RzLogger): Promise<RecipeSection[]> {
+export async function getSectionsByRecipeId(recipeId: string, logger: RzLogger): Promise<RecipeSectionDBRead[]> {
 	logger.debug(`Fetching sections for recipe ${recipeId}`);
 	const sections = await db.select().from(recipeSections).where(eq(recipeSections.recipeId, recipeId));
 	logger.debug(`Fetched ${sections.length} sections for recipe ${recipeId}`);
@@ -16,7 +16,7 @@ export async function updateRecipeSections(
 	sectionsData: RecipeSectionFormSave[],
 	userId: string,
 	logger: RzLogger,
-): Promise<RecipeSection[]> {
+): Promise<RecipeSectionDBRead[]> {
 	logger.debug(`Updating sections for recipe ${recipeId}`);
 
 	// get existing sections
