@@ -12,7 +12,7 @@ import {
 	transformScrapeToRecipe,
 	validateAsRecipe,
 } from '@/steps';
-import type { RecipeScrape } from '@/types';
+import type { RecipeScrapeDBRead } from '@/types';
 
 export default {
 	post: [requireAuthentication, requirePermissions('recipes:scrape'), _postHandler] as const,
@@ -25,7 +25,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication interrupter
 	const userId = ctx.user!.id;
 
-	let recipeScrape: RecipeScrape | undefined;
+	let recipeScrape: RecipeScrapeDBRead | undefined;
 	try {
 		const parsedBodyJson = await parseBodyJson(request);
 

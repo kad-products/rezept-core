@@ -27,7 +27,7 @@ export type RecipeScrapeStatus =
 	| 'INSTRUCTIONS_SAVED'
 	| 'COMPLETED'
 	| 'FAILED';
-export type RecipeScrape = typeof recipeScrapes.$inferSelect;
+export type RecipeScrapeDBRead = typeof recipeScrapes.$inferSelect;
 export type RecipeScrapeFormData = Omit<
 	typeof recipeScrapes.$inferInsert,
 	'userId' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
