@@ -1,3 +1,9 @@
+## [1.21.1](https://github.com/kad-products/rezept-core/compare/v1.21.0...v1.21.1) (2026-05-04)
+
+### Bug Fixes
+
+* javascript can't handle the nulls ([558ba6c](https://github.com/kad-products/rezept-core/commit/558ba6cec13b4ce716f21af4a028194251ef1d29))
+
 ## [1.21.0](https://github.com/kad-products/rezept-core/compare/v1.20.2...v1.21.0) (2026-05-04)
 
 ### Features
