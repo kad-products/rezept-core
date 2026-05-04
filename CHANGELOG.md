@@ -1,3 +1,42 @@
+## [1.20.2](https://github.com/kad-products/rezept-core/compare/v1.20.1...v1.20.2) (2026-05-04)
+
+### Bug Fixes
+
+* basic worker pool tests and handling serverAction errors ([593fb13](https://github.com/kad-products/rezept-core/commit/593fb13ec8ecd3c85448f319eeacd54349ac343c))
+* make scrape status text optional ([b8352cb](https://github.com/kad-products/rezept-core/commit/b8352cb79ed7412a306f069d21caf7fcfe73681f))
+* remove unused RecipeScrapeWriteInput type ([fd625fe](https://github.com/kad-products/rezept-core/commit/fd625fee234025e242fec9057a2a41a8d73bb354))
+
+### Code Refactoring
+
+* align ingredient-units types to standard ([3da949f](https://github.com/kad-products/rezept-core/commit/3da949f1eeae34ad7cfa407836661ed2ad9cb644))
+* api key and ingredient types to standard ([d0190e7](https://github.com/kad-products/rezept-core/commit/d0190e73a36e7bc1386f764e2a244449da8872ad))
+* more type shuffling ([8b09b55](https://github.com/kad-products/rezept-core/commit/8b09b5563bb26a303efef4ea0cc17c29d50f877b))
+* move credentials types to new standards ([9e2b8ee](https://github.com/kad-products/rezept-core/commit/9e2b8eefa39263c305160db43b7d838471884cc1))
+* move recipe types to correct files ([2279a3b](https://github.com/kad-products/rezept-core/commit/2279a3bf3bab730469fbde71abf1eca470e610a9))
+* omit fields from CredentialDBWrite to match standard ([9a0e24b](https://github.com/kad-products/rezept-core/commit/9a0e24b8d5e5cda1527bccc34c41a7c1ba7642b2))
+* remove unused UserFormInput type ([a8642bd](https://github.com/kad-products/rezept-core/commit/a8642bdb79955a036d2f36750c567437e3a52cea))
+* rename api key form input type ([60fb0c6](https://github.com/kad-products/rezept-core/commit/60fb0c663670443d8999a680c8772112f3d28371))
+* rename ApiKeyDBRead type to new standard ([723d8b6](https://github.com/kad-products/rezept-core/commit/723d8b6db2c29e49fd54bb5dfec451757e277ca9))
+* use CredentialWriteInput to align to standards ([473f3a8](https://github.com/kad-products/rezept-core/commit/473f3a850f451c71eaa2b34997641974851114ee))
+* use RecipeDBRead to follow standards ([ed2d201](https://github.com/kad-products/rezept-core/commit/ed2d201fa67912003bbb52e9291762dc42f0fc55))
+* use RecipeFormInput to align with standards ([abf8d48](https://github.com/kad-products/rezept-core/commit/abf8d484d0fd7b21a277b8cac62e80a5d5b4e072))
+* use RecipeIngredientDBRead for type to be standard ([f4608e3](https://github.com/kad-products/rezept-core/commit/f4608e37104af03cb042143b1a6e08845b3c1048))
+* use RecipeIngredientWriteInput to follow standards ([c46d9d0](https://github.com/kad-products/rezept-core/commit/c46d9d012c9e5b421fc505a03c39a9bdc976619a))
+* use RecipeInstructionDBRead to follow standards ([3326d38](https://github.com/kad-products/rezept-core/commit/3326d38027f56c016ead034942aacbff1b75febb))
+* use RecipeInstructionWriteInput to follow standards ([8948d88](https://github.com/kad-products/rezept-core/commit/8948d88d33f1c5a900a440794851e757ebdc9295))
+* use RecipeScrapeDBRead to follow standards ([2da563a](https://github.com/kad-products/rezept-core/commit/2da563ad8ed14f49e7699813a712baa9786e8674))
+* use RecipeSectionDBRead to follow standards ([7a82c48](https://github.com/kad-products/rezept-core/commit/7a82c48999e404961d74f937ea7170d45f38fe8f))
+* use RecipeSectionWriteInput to follow standards ([c7a9d47](https://github.com/kad-products/rezept-core/commit/c7a9d47a492763335e1e28a52704f1fb0bb5c44c))
+* use RecipeUploadDBRead to follow standards ([6e3e46b](https://github.com/kad-products/rezept-core/commit/6e3e46b42b37188b5718d881433fc5b87b0b42d1))
+* use RecipeUploadWriteInput to follow standards ([1d7775e](https://github.com/kad-products/rezept-core/commit/1d7775ec13d06f74f6423bbfa8d5735727046536))
+* use RecipeWriteInput to follow standards ([f56ced1](https://github.com/kad-products/rezept-core/commit/f56ced1489ffb8bdbc8248b03db817763b1d1c47))
+* use SeasonalIngredientDBRead to follow standards ([6911f53](https://github.com/kad-products/rezept-core/commit/6911f53dfe64d9471b25421ec30dc01d1e747ed3))
+* use SeasonDBRead to follow standards ([f1287bb](https://github.com/kad-products/rezept-core/commit/f1287bbefc24937e6dc722b7ae6031286218fdda))
+* use SeasonFormInput to align to standards ([990c335](https://github.com/kad-products/rezept-core/commit/990c3350b2a4484d330b45d3af63b32eb70df413))
+* use SeasonWriteInput to follow standards ([f463ffd](https://github.com/kad-products/rezept-core/commit/f463ffdf19ca9992cef12fe30a52e01ceda629f9))
+* use UserDBRead to follow standards ([fc905de](https://github.com/kad-products/rezept-core/commit/fc905dea83d23567e1542b5377b7060e3c53e5c8))
+* use UserWriteInput to follow standards ([e412662](https://github.com/kad-products/rezept-core/commit/e41266293290963aa7ca26ca111eeb0008b213e6))
+
 ## [1.20.1](https://github.com/kad-products/rezept-core/compare/v1.20.0...v1.20.1) (2026-05-03)
 
 ### Code Refactoring
