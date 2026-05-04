@@ -1,0 +1,1 @@
+ALTER TABLE `recipe_scrapes` DROP COLUMN `raw_json`;

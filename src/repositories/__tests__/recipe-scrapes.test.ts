@@ -6,43 +6,44 @@ import { createRecipeScrape, updateRecipeScrapeStatus } from '../recipe-scrapes'
 
 const logger = new Logger();
 
-const rawJson = JSON.stringify({ url: 'https://example.com/recipe', jsonld: [] });
+const bodySize = 42;
 
 describe('createRecipeScrape', () => {
 	let userId: string;
+	let scrapeId: string;
 
 	beforeEach(async () => {
 		await resetDb();
 		const user = await createUser('testuser2', logger);
 		userId = user.id;
+		scrapeId = crypto.randomUUID();
 	});
 
 	it('creates a scrape record and returns it', async () => {
-		const result = await createRecipeScrape(rawJson, userId, logger);
+		const result = await createRecipeScrape(scrapeId, bodySize, userId, logger);
 
 		expect(result).toBeDefined();
-		expect(result.id).toBeDefined();
+		expect(result.id).toBe(scrapeId);
 		expect(result.userId).toBe(userId);
-		expect(result.rawJson).toBe(rawJson);
-		expect(result.bodySize).toBe(rawJson.length);
+		expect(result.bodySize).toBe(bodySize);
 		expect(result.createdBy).toBe(userId);
 	});
 
 	it('sets status to SCRAPED on creation', async () => {
-		const result = await createRecipeScrape(rawJson, userId, logger);
+		const result = await createRecipeScrape(scrapeId, bodySize, userId, logger);
 
 		expect(result.status).toBe('SCRAPED');
 	});
 
 	it('stores the correct body size', async () => {
-		const result = await createRecipeScrape(rawJson, userId, logger);
+		const result = await createRecipeScrape(scrapeId, bodySize, userId, logger);
 
-		expect(result.bodySize).toBe(rawJson.length);
+		expect(result.bodySize).toBe(bodySize);
 	});
 
 	it('creates distinct records for multiple scrapes', async () => {
-		const first = await createRecipeScrape(rawJson, userId, logger);
-		const second = await createRecipeScrape(rawJson, userId, logger);
+		const first = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		const second = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
 
 		expect(first.id).not.toBe(second.id);
 	});
@@ -56,7 +57,7 @@ describe('updateRecipeScrapeStatus', () => {
 		await resetDb();
 		const user = await createUser('testuser', logger);
 		userId = user.id;
-		const scrape = await createRecipeScrape(rawJson, userId, logger);
+		const scrape = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
 		scrapeId = scrape.id;
 	});
 

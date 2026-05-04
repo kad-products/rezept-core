@@ -120,6 +120,13 @@
 			"when": 1773892458411,
 			"tag": "0016_sweet_wolfsbane",
 			"breakpoints": true
+		},
+		{
+			"idx": 17,
+			"version": "6",
+			"when": 1777859769498,
+			"tag": "0017_watery_lady_bullseye",
+			"breakpoints": true
 		}
 	]
 }

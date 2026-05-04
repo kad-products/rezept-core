@@ -7,6 +7,10 @@ const mockEnv = vi.hoisted(() => ({
 	rezept_recipe_uploads: {
 		put: vi.fn(),
 	},
+	rezept_recipe_scrapes: {
+		put: vi.fn(),
+		delete: vi.fn(),
+	},
 }));
 
 vi.mock('cloudflare:workers', () => ({ env: mockEnv }));
