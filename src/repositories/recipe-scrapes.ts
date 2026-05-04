@@ -7,18 +7,18 @@ import type { RecipeScrapeDBRead, RecipeScrapeStatus } from '@/types';
 import { validateUuid } from './utils';
 
 export async function createRecipeScrape(
-	stringifiedRawJson: string,
+	id: string,
+	bodySize: number,
 	userId: string,
 	logger: RzLogger,
 ): Promise<RecipeScrapeDBRead> {
-	const bodySize = stringifiedRawJson.length;
 	logger.debug(`Creating recipe scrape with body size ${bodySize}`);
 
 	const recipeScraped = await db
 		.insert(recipeScrapes)
 		.values({
+			id,
 			userId,
-			rawJson: stringifiedRawJson,
 			bodySize,
 			createdBy: userId,
 		})

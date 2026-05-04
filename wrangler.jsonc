@@ -41,6 +41,10 @@
 		{
 			"binding": "rezept_recipe_uploads",
 			"bucket_name": "rezept-recipe-uploads-local"
+		},
+		{
+			"binding": "rezept_recipe_scrapes",
+			"bucket_name": "rezept-recipe-scrapes-local"
 		}
 	],
 	"env": {
@@ -65,6 +69,10 @@
 				{
 					"binding": "rezept_recipe_uploads",
 					"bucket_name": "rezept-recipe-uploads-integration"
+				},
+				{
+					"binding": "rezept_recipe_scrapes",
+					"bucket_name": "rezept-recipe-scrapes-integration"
 				}
 			],
 			"vars": {
@@ -75,6 +83,12 @@
 			"workers_dev": true
 		},
 		"staging": {
+			"r2_buckets": [
+				{
+					"binding": "rezept_recipe_scrapes",
+					"bucket_name": "rezept-recipe-scrapes-staging"
+				}
+			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
 				"REZEPT_ENV": "staging",
@@ -83,6 +97,12 @@
 			"workers_dev": true
 		},
 		"production": {
+			"r2_buckets": [
+				{
+					"binding": "rezept_recipe_scrapes",
+					"bucket_name": "rezept-recipe-scrapes-production"
+				}
+			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
 				"REZEPT_ENV": "production",
