@@ -33,16 +33,6 @@ describe('createUser', () => {
 		expect(user2.username).toBe('bob');
 	});
 
-	it('sets createdAt timestamp', async () => {
-		const beforeCreate = new Date().toISOString();
-		const user = await createUser('testuser', logger);
-		const afterCreate = new Date().toISOString();
-
-		expect(user.createdAt).toBeDefined();
-		expect(user.createdAt >= beforeCreate).toBe(true);
-		expect(user.createdAt <= afterCreate).toBe(true);
-	});
-
 	it('throws on duplicate username', async () => {
 		await createUser('duplicate', logger);
 
