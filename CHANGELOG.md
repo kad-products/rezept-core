@@ -1,3 +1,9 @@
+## [1.21.0](https://github.com/kad-products/rezept-core/compare/v1.20.2...v1.21.0) (2026-05-04)
+
+### Features
+
+* moves raw scrape data to R2 ([cf8436d](https://github.com/kad-products/rezept-core/commit/cf8436d306cb7d5f0039c02dc2137a0892f3a4eb))
+
 ## [1.20.2](https://github.com/kad-products/rezept-core/compare/v1.20.1...v1.20.2) (2026-05-04)
 
 ### Bug Fixes
