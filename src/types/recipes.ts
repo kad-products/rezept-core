@@ -8,10 +8,6 @@ export type RecipeWriteInput = Omit<
 	typeof recipes.$inferInsert,
 	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;
-
-// Input type (what the form submits — pre-transform). Use z.input so optional fields
-// stay optional, matching what actions receive and tests pass. The post-transform
-// output type (with string | null) is used internally via parsed.data.
 export type RecipeFormInput = z.input<typeof recipesSchemas.form>;
 
 export type RecipeWithSections = RecipeDBRead & {
