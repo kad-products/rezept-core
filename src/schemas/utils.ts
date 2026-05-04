@@ -22,6 +22,14 @@ export const coercedInt = (min?: number, max?: number): z.ZodNumber => {
 	return schema as z.ZodNumber;
 };
 
+// Handles null and empty string from form inputs before coercing — z.coerce.number() turns both into 0 without this
+export const optionalCoercedInt = (min?: number, max?: number) => {
+	const inner = coercedInt(min, max);
+	return z
+		.union([z.null().transform((): undefined => undefined), z.literal('').transform((): undefined => undefined), inner])
+		.optional();
+};
+
 export const requiredString = (field: string, max?: number): z.ZodString => {
 	const base = z.string().trim().min(1, `${field} is required`);
 	return max !== undefined ? base.max(max, `${field} must be ${max} characters or less`) : base;
