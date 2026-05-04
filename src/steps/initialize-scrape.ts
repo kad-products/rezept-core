@@ -1,9 +1,9 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { createRecipeScrape } from '@/repositories';
-import type { RecipeScrape } from '@/types';
+import type { RecipeScrapeDBRead } from '@/types';
 
-export async function initializeScrape(parsedBody: unknown, userId: string, logger: RzLogger): Promise<RecipeScrape> {
+export async function initializeScrape(parsedBody: unknown, userId: string, logger: RzLogger): Promise<RecipeScrapeDBRead> {
 	try {
 		const result = await createRecipeScrape(JSON.stringify(parsedBody), userId, logger);
 		logger.info(`Scrape initialized: ${result.id}`);

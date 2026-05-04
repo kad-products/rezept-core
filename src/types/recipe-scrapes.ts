@@ -1,20 +1,9 @@
+import type { z } from 'zod';
 import type { recipeScrapes } from '@/models';
+import type { recipesSchemas } from '@/schemas';
 
-export type ParsedRecipeScrapeSection = {
-	order: number;
-	ingredients: { raw: string; order: number }[];
-	instructions: { stepNumber: number; instruction: string }[];
-};
-
-export type ParsedRecipeScrape = {
-	title: string;
-	description?: string;
-	source?: string;
-	servings?: number;
-	prepTime?: number;
-	cookTime?: number;
-	sections: ParsedRecipeScrapeSection[];
-};
+// Output type (post-transform) of the scrape schema — what validateAsRecipe returns.
+export type RecipeScrapeData = z.output<typeof recipesSchemas.scrape>;
 
 // should match the model's enum
 export type RecipeScrapeStatus =
@@ -27,8 +16,4 @@ export type RecipeScrapeStatus =
 	| 'INSTRUCTIONS_SAVED'
 	| 'COMPLETED'
 	| 'FAILED';
-export type RecipeScrape = typeof recipeScrapes.$inferSelect;
-export type RecipeScrapeFormData = Omit<
-	typeof recipeScrapes.$inferInsert,
-	'userId' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
->;
+export type RecipeScrapeDBRead = typeof recipeScrapes.$inferSelect;

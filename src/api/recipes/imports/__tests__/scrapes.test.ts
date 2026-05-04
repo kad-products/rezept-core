@@ -118,48 +118,18 @@ describe('_postHandler', () => {
 		it('updates scrape status after each successful step', async () => {
 			await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledTimes(6);
-			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
-				'scrape-id',
-				'TRANSFORMED',
-				expect.any(String),
-				'user-id',
-				expect.anything(),
-			);
-			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
-				'scrape-id',
-				'VALIDATED',
-				expect.any(String),
-				'user-id',
-				expect.anything(),
-			);
-			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
-				'scrape-id',
-				'RECIPE_SAVED',
-				expect.any(String),
-				'user-id',
-				expect.anything(),
-			);
-			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
-				'scrape-id',
-				'SECTIONS_SAVED',
-				expect.any(String),
-				'user-id',
-				expect.anything(),
-			);
+			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'TRANSFORMED', null, 'user-id', expect.anything());
+			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'VALIDATED', null, 'user-id', expect.anything());
+			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'RECIPE_SAVED', null, 'user-id', expect.anything());
+			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'SECTIONS_SAVED', null, 'user-id', expect.anything());
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
 				'scrape-id',
 				'INSTRUCTIONS_SAVED',
-				expect.any(String),
+				null,
 				'user-id',
 				expect.anything(),
 			);
-			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
-				'scrape-id',
-				'INGREDIENTS_SAVED',
-				expect.any(String),
-				'user-id',
-				expect.anything(),
-			);
+			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'INGREDIENTS_SAVED', null, 'user-id', expect.anything());
 		});
 
 		it('maps instructions and ingredients to their saved section IDs', async () => {

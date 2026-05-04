@@ -5,7 +5,7 @@ import { monthOptions } from '@/data/months';
 import Season from '@/forms/season';
 import StandardLayout from '@/layouts/standard';
 import { getIngredients, getIngredientsBySeasonId, getSeasonById } from '@/repositories';
-import type { Season as SeasonModel } from '@/types';
+import type { SeasonDBRead } from '@/types';
 
 export default async function Pages__seasons__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;
@@ -16,7 +16,7 @@ export default async function Pages__seasons__edit({ ctx, params }: RequestInfo)
 	]);
 
 	if (!seasonId) {
-		season = {} as SeasonModel;
+		season = {} as SeasonDBRead;
 	} else if (!season) {
 		return <p>Season not found</p>;
 	}

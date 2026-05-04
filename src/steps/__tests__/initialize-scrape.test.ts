@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { RzStepError } from '@/classes';
 import Logger from '@/logger';
 import { initializeScrape } from '@/steps';
-import type { RecipeScrape } from '@/types';
+import type { RecipeScrapeDBRead } from '@/types';
 
 vi.mock('@/repositories', () => ({
 	createRecipeScrape: vi.fn(),
@@ -12,7 +12,7 @@ import { createRecipeScrape } from '@/repositories';
 
 const logger = new Logger();
 const userId = '00000000-0000-0000-0000-000000000001';
-const mockScrape = { id: 'scrape-123', userId } as unknown as RecipeScrape;
+const mockScrape = { id: 'scrape-123', userId } as unknown as RecipeScrapeDBRead;
 
 describe('initializeScrape', () => {
 	beforeEach(() => {

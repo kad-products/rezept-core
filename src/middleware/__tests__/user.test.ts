@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Logger from '@/logger';
-import type { User } from '@/types';
+import type { UserDBRead } from '@/types';
 
 vi.mock('@/repositories', () => ({
 	getUserById: vi.fn(),
@@ -22,7 +22,7 @@ const mockUser = {
 	role: 'BASIC',
 	createdAt: new Date().toString(),
 	updatedAt: null,
-} as User;
+} as UserDBRead;
 
 const mockRequestInfo = {
 	ctx: {

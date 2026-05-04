@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { RzStepError } from '@/classes';
 import Logger from '@/logger';
 import { saveRecipeInstructions } from '@/steps';
-import type { IncomingInstructionsData, RecipeInstruction } from '@/types';
+import type { IncomingInstructionsData, RecipeInstructionDBRead } from '@/types';
 
 vi.mock('@/repositories', () => ({
 	updateRecipeInstructions: vi.fn(),
@@ -16,7 +16,7 @@ const userId = '00000000-0000-0000-0000-000000000001';
 const sectionId = 'section-456';
 const mockInstructions = [
 	{ id: 'instr-1', recipeSectionId: sectionId, stepNumber: 1, instruction: 'Mix well' },
-] as unknown as RecipeInstruction[];
+] as unknown as RecipeInstructionDBRead[];
 
 describe('saveRecipeInstructions', () => {
 	beforeEach(() => {

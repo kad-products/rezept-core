@@ -1,12 +1,8 @@
+import type { z } from 'zod';
 import type { apiKeys } from '@/models';
+import type { apiKeysSchemas } from '@/schemas';
 
-export type ApiKey = typeof apiKeys.$inferSelect;
-
-export type ApiKeyFormData = {
-	name: string;
-	id?: string | undefined;
-	userId: string;
-	permissions: string[];
-	revokeAt?: string | null;
-	apiKey?: string;
+export type ApiKeyDBRead = typeof apiKeys.$inferSelect;
+export type ApiKeyFormInput = z.input<typeof apiKeysSchemas.form> & {
+	apiKey?: string; // populated after creation, not submitted to DB
 };

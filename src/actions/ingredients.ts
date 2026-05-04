@@ -3,7 +3,7 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createIngredient } from '@/repositories';
 import { ingredientsSchemas } from '@/schemas';
-import type { ActionState, IngredientFormSave } from '@/types';
+import type { ActionState, IngredientFormInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
 // biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
@@ -16,7 +16,7 @@ export const saveIngredient = serverAction([
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _addIngredient(formData: IngredientFormSave): Promise<ActionState<IngredientFormSave>> {
+export async function _addIngredient(formData: IngredientFormInput): Promise<ActionState<IngredientFormInput>> {
 	const { ctx } = requestInfo;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
@@ -25,12 +25,12 @@ export async function _addIngredient(formData: IngredientFormSave): Promise<Acti
 		const parsed = ingredientsSchemas.form.safeParse(formData);
 		if (!parsed.success) {
 			requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
-			return errorResponse<IngredientFormSave>(parsed.error.flatten().fieldErrors, 400);
+			return errorResponse<IngredientFormInput>(parsed.error.flatten().fieldErrors, 400);
 		}
 		const createdIngredient = await createIngredient({ name: parsed.data.name }, userId, requestInfo.ctx.logger);
-		return successResponse<IngredientFormSave>(createdIngredient, 201);
+		return successResponse<IngredientFormInput>(createdIngredient, 201);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error adding ingredient: ${error} `);
-		return errorResponse<IngredientFormSave>(error, 500, 'Failed to add ingredient');
+		return errorResponse<IngredientFormInput>(error, 500, 'Failed to add ingredient');
 	}
 }

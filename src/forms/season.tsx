@@ -5,7 +5,7 @@ import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveSeason } from '@/actions/seasons';
 import { seasonsSchemas } from '@/schemas';
-import type { ActionState, SeasonalIngredientWithRelations, SeasonFormData, Season as SeasonModel } from '@/types';
+import type { ActionState, SeasonalIngredientWithRelations, SeasonDBRead, SeasonFormInput } from '@/types';
 import { useAppForm } from './context';
 
 export default function Season({
@@ -15,13 +15,13 @@ export default function Season({
 	countryOptions,
 	monthOptions,
 }: {
-	season?: SeasonModel;
+	season?: SeasonDBRead;
 	ingredientOptions: { value: string; label: string }[];
 	seasonalIngredients?: SeasonalIngredientWithRelations[];
 	countryOptions: { value: string; label: string }[];
 	monthOptions: { value: number; label: string }[];
 }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<SeasonFormData>>();
+	const [formState, setFormState] = useState<ActionState<SeasonFormInput>>();
 
 	const schema = seasonsSchemas.form;
 
@@ -31,11 +31,11 @@ export default function Season({
 					...season,
 					ingredients: seasonalIngredients?.map(si => si.ingredientId) || [],
 				}
-			: ({} as SeasonFormData),
+			: ({} as SeasonFormInput),
 		validators: {
 			onBlur: schema,
 		},
-		onSubmit: async ({ value: formDataObj }: { value: SeasonFormData }): Promise<void> => {
+		onSubmit: async ({ value: formDataObj }: { value: SeasonFormInput }): Promise<void> => {
 			setFormState(await saveSeason(formDataObj));
 		},
 	});

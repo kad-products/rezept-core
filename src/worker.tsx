@@ -9,13 +9,14 @@ import authRoutes from '@/pages/auth/routes';
 import profileRoutes from '@/pages/profile/routes';
 import recipeRoutes from '@/pages/recipes/routes';
 import seasonRoutes from '@/pages/seasons/routes';
-import RootErrorHandler from './components/RootErrorHandler';
 import apiKeyMiddleware from './middleware/api-key';
 import botMiddleware from './middleware/bot';
 import corsMiddleware from './middleware/cors';
 import loggerMiddleware from './middleware/logger';
 import permissionsMiddleware from './middleware/permissions';
 import Pages__root from './pages/root';
+import testBridgeRoutes from './test-bridge';
+import { handlePageError } from './worker-error';
 
 export { SessionDurableObject } from '@/durable-objects';
 
@@ -28,6 +29,7 @@ export default defineApp([
 	apiKeyMiddleware,
 	userMiddleware,
 	permissionsMiddleware,
+	...testBridgeRoutes,
 	render(Document, [
 		// API routes first. The prefix carries its own except handler (see src/api/routes.ts)
 		// which catches API errors and returns JSON. Because rwsdk's except handler search walks
@@ -37,7 +39,7 @@ export default defineApp([
 		prefix('/api', apiRoutes),
 		// Page-level error boundary. Sits between the API prefix and all page routes so that
 		// page-route errors reach this handler before the API's except handler above.
-		except<RequestInfo>(error => <RootErrorHandler error={error as Error} />),
+		except<RequestInfo>(handlePageError),
 		route('/', Pages__root),
 		prefix('/auth', authRoutes),
 		prefix('/profile', profileRoutes),

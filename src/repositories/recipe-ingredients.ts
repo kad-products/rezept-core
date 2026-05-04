@@ -2,9 +2,12 @@ import { eq } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeIngredients } from '@/models';
-import type { RecipeIngredient, RecipeIngredientFormSave } from '@/types';
+import type { RecipeIngredientDBRead, RecipeIngredientWriteInput } from '@/types';
 
-export async function getIngredientsByRecipeSectionId(recipeSectionId: string, logger: RzLogger): Promise<RecipeIngredient[]> {
+export async function getIngredientsByRecipeSectionId(
+	recipeSectionId: string,
+	logger: RzLogger,
+): Promise<RecipeIngredientDBRead[]> {
 	logger.debug(`Fetching ingredients for section ${recipeSectionId}`);
 	const results = await db.query.recipeIngredients.findMany({
 		where: eq(recipeIngredients.recipeSectionId, recipeSectionId),
@@ -18,10 +21,10 @@ export async function getIngredientsByRecipeSectionId(recipeSectionId: string, l
 
 export async function updateRecipeIngredients(
 	recipeSectionId: string,
-	ingredientsData: RecipeIngredientFormSave[],
+	ingredientsData: RecipeIngredientWriteInput[],
 	userId: string,
 	logger: RzLogger,
-): Promise<RecipeIngredient[]> {
+): Promise<RecipeIngredientDBRead[]> {
 	logger.debug(`Updating ingredients for section ${recipeSectionId}`);
 
 	// get existing ingredients for the recipe
@@ -41,7 +44,7 @@ export async function updateRecipeIngredients(
 
 	// update or insert ingredients from ingredientsData
 	const savedIngredients = await Promise.all(
-		ingredientsData.map(async (ingData: RecipeIngredientFormSave) => {
+		ingredientsData.map(async (ingData: RecipeIngredientWriteInput) => {
 			if (ingData.id) {
 				// update existing ingredients
 				const [updatedIngredient] = await db

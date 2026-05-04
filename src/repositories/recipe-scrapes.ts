@@ -3,10 +3,14 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeScrapes } from '@/models';
-import type { RecipeScrape, RecipeScrapeStatus } from '@/types';
+import type { RecipeScrapeDBRead, RecipeScrapeStatus } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createRecipeScrape(stringifiedRawJson: string, userId: string, logger: RzLogger): Promise<RecipeScrape> {
+export async function createRecipeScrape(
+	stringifiedRawJson: string,
+	userId: string,
+	logger: RzLogger,
+): Promise<RecipeScrapeDBRead> {
 	const bodySize = stringifiedRawJson.length;
 	logger.debug(`Creating recipe scrape with body size ${bodySize}`);
 
@@ -28,10 +32,10 @@ export async function createRecipeScrape(stringifiedRawJson: string, userId: str
 export async function updateRecipeScrapeStatus(
 	recipeScrapeId: string,
 	status: RecipeScrapeStatus,
-	statusText: string,
+	statusText: string | null,
 	userId: string,
 	logger: RzLogger,
-): Promise<RecipeScrape> {
+): Promise<RecipeScrapeDBRead> {
 	if (!validateUuid(recipeScrapeId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeScrapeId, 'RecipeScrape']);
 	}

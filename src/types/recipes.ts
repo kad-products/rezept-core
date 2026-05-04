@@ -1,27 +1,30 @@
 import type { z } from 'zod';
 import type { recipes } from '@/models';
 import type { recipesSchemas } from '@/schemas';
-import type { RecipeIngredient, RecipeInstruction, RecipeSection } from '@/types';
+import type { ParsedRecipeScrapeSection, RecipeIngredientDBRead, RecipeInstructionDBRead, RecipeSectionDBRead } from '@/types';
 
-export type Recipe = typeof recipes.$inferSelect;
-export type RecipeFormSave = Omit<
+export type RecipeDBRead = typeof recipes.$inferSelect;
+export type RecipeWriteInput = Omit<
 	typeof recipes.$inferInsert,
 	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;
+export type RecipeFormInput = z.input<typeof recipesSchemas.form>;
 
-// Input type (what the form submits — pre-transform). Use z.input so optional fields
-// stay optional, matching what actions receive and tests pass. The post-transform
-// output type (with string | null) is used internally via parsed.data.
-export type RecipeFormData = z.input<typeof recipesSchemas.form>;
-
-// Output type (post-transform) of the scrape schema — what validateAsRecipe returns.
-export type RecipeScrapeData = z.output<typeof recipesSchemas.scrape>;
-
-export type RecipeWithSections = Recipe & {
+export type RecipeWithSections = RecipeDBRead & {
 	sections: Array<
-		RecipeSection & {
-			ingredients: RecipeIngredient[];
-			instructions: RecipeInstruction[];
+		RecipeSectionDBRead & {
+			ingredients: RecipeIngredientDBRead[];
+			instructions: RecipeInstructionDBRead[];
 		}
 	>;
+};
+
+export type ParsedRecipeScrape = {
+	title: string;
+	description?: string;
+	source?: string;
+	servings?: number;
+	prepTime?: number;
+	cookTime?: number;
+	sections: ParsedRecipeScrapeSection[];
 };

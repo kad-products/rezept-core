@@ -3,10 +3,10 @@ import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { credentials } from '@/models';
-import type { Credential, CredentialInsert } from '@/types';
+import type { CredentialDBRead, CredentialWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createCredential(newCredential: CredentialInsert, logger: RzLogger): Promise<Credential> {
+export async function createCredential(newCredential: CredentialWriteInput, logger: RzLogger): Promise<CredentialDBRead> {
 	logger.debug(`Creating credential for user ${newCredential.userId}`);
 
 	const [insertedCredential] = await db.insert(credentials).values(newCredential).returning();
@@ -14,14 +14,14 @@ export async function createCredential(newCredential: CredentialInsert, logger: 
 	return insertedCredential;
 }
 
-export async function getCredentialsByUserId(userId: string, logger: RzLogger): Promise<Credential[]> {
+export async function getCredentialsByUserId(userId: string, logger: RzLogger): Promise<CredentialDBRead[]> {
 	logger.debug(`Fetching credentials for user ${userId}`);
 	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.userId, userId));
 	logger.debug(`Fetched ${matchedCredentials.length} credentials for user ${userId}`);
 	return matchedCredentials;
 }
 
-export async function getCredentialById(credentialId: string, logger: RzLogger): Promise<Credential> {
+export async function getCredentialById(credentialId: string, logger: RzLogger): Promise<CredentialDBRead> {
 	// credentialId is a WebAuthn credential identifier, not an internal UUID — no UUID validation
 	logger.debug(`Fetching credential ${credentialId}`);
 	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.credentialId, credentialId));

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { saveApiKey } from '@/actions/api-keys';
-import type { ApiKey } from '@/types';
+import type { ApiKeyDBRead } from '@/types';
 
 const SCRAPE_PERMISSION = 'recipes:scrape';
 
@@ -28,12 +28,12 @@ export default function BookmarkletInstall({
 	apiKeys,
 	userId,
 }: {
-	apiKeys: ApiKey[];
+	apiKeys: ApiKeyDBRead[];
 	userId: string | undefined;
 }): React.ReactNode {
 	const scrapeKeys = apiKeys.filter(k => k.permissions.includes(SCRAPE_PERMISSION) && !k.deletedAt);
 
-	const [selectedKey, setSelectedKey] = useState<ApiKey | null>(scrapeKeys.length === 1 ? scrapeKeys[0] : null);
+	const [selectedKey, setSelectedKey] = useState<ApiKeyDBRead | null>(scrapeKeys.length === 1 ? scrapeKeys[0] : null);
 	const [isCreating, setIsCreating] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const linkRef = useRef<HTMLAnchorElement>(null);
@@ -58,7 +58,7 @@ export default function BookmarkletInstall({
 				permissions: [SCRAPE_PERMISSION],
 			});
 			if (result?.success && result.data) {
-				setSelectedKey(result.data as unknown as ApiKey);
+				setSelectedKey(result.data as unknown as ApiKeyDBRead);
 			} else {
 				setError('Failed to create API key. Please try again.');
 			}

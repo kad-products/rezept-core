@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
-import type { CredentialInsert } from '@/types';
+import type { CredentialWriteInput } from '@/types';
 import { resetDb } from '../../../tests/mocks/db';
 import { createCredential, getCredentialById, getCredentialsByUserId, updateCredentialCounter } from '../credentials';
 import { createUser, deleteUser } from '../users';
@@ -13,14 +13,13 @@ beforeEach(async () => {
 });
 
 // Helper to create a valid credential insert object
-function createCredentialData(userId: string, overrides?: Partial<CredentialInsert>): CredentialInsert {
+function createCredentialData(userId: string, overrides?: Partial<CredentialWriteInput>): CredentialWriteInput {
 	return {
 		id: crypto.randomUUID(),
 		userId,
 		credentialId: `cred-${crypto.randomUUID()}`,
 		publicKey: new Uint8Array([1, 2, 3, 4, 5]),
 		counter: 0,
-		createdAt: new Date().toISOString(),
 		...overrides,
 	};
 }

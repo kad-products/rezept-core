@@ -1,16 +1,20 @@
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { ingredients } from '@/models';
-import type { Ingredient, IngredientFormSave } from '@/types';
+import type { IngredientDBRead, IngredientFormInput } from '@/types';
 
-export async function getIngredients(logger: RzLogger): Promise<Ingredient[]> {
+export async function getIngredients(logger: RzLogger): Promise<IngredientDBRead[]> {
 	logger.debug('Fetching all ingredients');
 	const ingredientsList = await db.select().from(ingredients);
 	logger.debug(`Fetched ${ingredientsList.length} ingredients`);
 	return ingredientsList;
 }
 
-export async function createIngredient(ingredient: IngredientFormSave, userId: string, logger: RzLogger): Promise<Ingredient> {
+export async function createIngredient(
+	ingredient: IngredientFormInput,
+	userId: string,
+	logger: RzLogger,
+): Promise<IngredientDBRead> {
 	logger.debug(`Creating ingredient ${ingredient.name}`);
 	const [newIngredient] = await db
 		.insert(ingredients)

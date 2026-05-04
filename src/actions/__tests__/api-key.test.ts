@@ -45,9 +45,10 @@ vi.mock('rwsdk/worker', () => ({
 import { randomUUID } from 'node:crypto';
 import { requireAuthentication } from '@/interrupters';
 import { createApiKey, updateApiKey } from '@/repositories';
+import type { ApiKeyFormInput } from '@/types';
 import { _saveApiKey } from '../api-keys';
 
-const baseApiKeyData = {
+const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'userId' | 'permissions'> = {
 	name: 'Test API Key',
 	userId: randomUUID(),
 	permissions: ['recipes:upload'],
@@ -184,7 +185,7 @@ describe('_saveApiKey', () => {
 			const data = {
 				...baseApiKeyData,
 				id: randomUUID(),
-				permissions: ['recipes:upload', 'recipes:read'],
+				permissions: ['recipes:upload', 'recipes:read'] as ApiKeyFormInput['permissions'],
 			};
 
 			const result = await _saveApiKey(data);
