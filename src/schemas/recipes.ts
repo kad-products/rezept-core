@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { coercedInt, optionalStringMax, optionalUuid, requiredString, requiredUuid } from './utils';
+import { coercedInt, optionalCoercedInt, optionalStringMax, optionalUuid, requiredString, requiredUuid } from './utils';
 
 const ingredientRawSchema = z.object({
 	id: optionalUuid,
@@ -46,9 +46,9 @@ const recipeFormSchema = z.object({
 	title: requiredString('Title', 200),
 	description: optionalStringMax(1000, 'Description'),
 	source: optionalStringMax(500, 'Source'),
-	servings: coercedInt(0).optional(),
-	prepTime: coercedInt(0).optional(),
-	cookTime: coercedInt(0).optional(),
+	servings: optionalCoercedInt(0),
+	prepTime: optionalCoercedInt(0),
+	cookTime: optionalCoercedInt(0),
 	sections: z.array(recipeSectionSchema).optional(),
 });
 

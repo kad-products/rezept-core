@@ -148,6 +148,42 @@ describe('recipesSchemas.form', () => {
 			expect(result.success).toBe(false);
 		});
 
+		it('coerces null numeric fields to undefined', () => {
+			const data = {
+				authorId: randomUUID(),
+				title: 'Test',
+				servings: null as any,
+				prepTime: null as any,
+				cookTime: null as any,
+			};
+
+			const result = recipesSchemas.form.safeParse(data);
+			expect(result.success).toBe(true);
+			if (result.success) {
+				expect(result.data.servings).toBeUndefined();
+				expect(result.data.prepTime).toBeUndefined();
+				expect(result.data.cookTime).toBeUndefined();
+			}
+		});
+
+		it('coerces empty string numeric fields to undefined', () => {
+			const data = {
+				authorId: randomUUID(),
+				title: 'Test',
+				servings: '' as any,
+				prepTime: '' as any,
+				cookTime: '' as any,
+			};
+
+			const result = recipesSchemas.form.safeParse(data);
+			expect(result.success).toBe(true);
+			if (result.success) {
+				expect(result.data.servings).toBeUndefined();
+				expect(result.data.prepTime).toBeUndefined();
+				expect(result.data.cookTime).toBeUndefined();
+			}
+		});
+
 		it('transforms empty string id to undefined', () => {
 			const validData = {
 				id: '',
@@ -611,6 +647,11 @@ describe('recipesSchemas.form', () => {
 			const result = recipesSchemas.form.safeParse(recipeData);
 			// expect(result).toBe({});
 			expect(result.success).toBe(true);
+			if (result.success) {
+				expect(result.data.servings).toBeUndefined();
+				expect(result.data.prepTime).toBeUndefined();
+				expect(result.data.cookTime).toBeUndefined();
+			}
 		});
 		it('should handle a scraped and transformed recipe', () => {
 			const recipeData = {
