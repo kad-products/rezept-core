@@ -1,0 +1,6 @@
+# Local development secrets — copy this file to .dev.vars and fill in values
+# .dev.vars is gitignored and must never be committed
+
+# Used to sign session cookies via the SessionDurableObject.
+# Any random string works locally; generate one with: openssl rand -base64 32
+SESSION_SECRET_KEY=replace-with-a-random-string-at-least-32-characters-long
