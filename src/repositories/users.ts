@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -19,13 +19,17 @@ export async function createUser(username: string, actingUserId: string | null, 
 	return insertedUser;
 }
 
-export async function deleteUser(id: string, logger: RzLogger): Promise<void> {
+export async function deleteUser(id: string, actingUserId: string | null, logger: RzLogger): Promise<void> {
 	if (!validateUuid(id)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [id, 'User']);
 	}
 
 	logger.debug(`Deleting user ${id}`);
-	const deleted = await db.delete(users).where(eq(users.id, id)).returning();
+	const deleted = await db
+		.update(users)
+		.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: actingUserId })
+		.where(eq(users.id, id))
+		.returning();
 
 	if (deleted.length !== 1) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [deleted.length, 1, 'User']);

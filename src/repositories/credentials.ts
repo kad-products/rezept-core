@@ -21,6 +21,25 @@ export async function createCredential(
 	return insertedCredential;
 }
 
+export async function deleteCredential(credentialId: string, actingUserId: string, logger: RzLogger): Promise<void> {
+	if (!validateUuid(credentialId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [credentialId, 'Credential']);
+	}
+
+	logger.debug(`Deleting credential ${credentialId}`);
+	const deleted = await db
+		.update(credentials)
+		.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: actingUserId })
+		.where(eq(credentials.id, credentialId))
+		.returning();
+
+	if (deleted.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [deleted.length, 1, 'Credential']);
+	}
+
+	logger.info(`Deleted credential ${credentialId}`);
+}
+
 export async function getCredentialsByUserId(userId: string, logger: RzLogger): Promise<CredentialDBRead[]> {
 	logger.debug(`Fetching credentials for user ${userId}`);
 	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.userId, userId));

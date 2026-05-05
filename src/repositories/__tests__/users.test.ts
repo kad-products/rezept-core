@@ -143,30 +143,44 @@ describe('getUserById', () => {
 });
 
 describe('deleteUser', () => {
-	it('deletes the user', async () => {
+	it('sets deletedAt and deletedBy on the user record', async () => {
 		const user = await createUser('tobedeleted', null, logger);
 
-		await deleteUser(user.id, logger);
+		await deleteUser(user.id, null, logger);
 
-		await expect(getUserById(user.id, logger)).rejects.toThrow('Expected 1 User record(s), but found 0');
+		// Record still exists — getUserById will filter soft-deleted records once #240 is implemented
+		const found = await getUserById(user.id, logger);
+		expect(found.deletedAt).not.toBeNull();
+		expect(found.deletedBy).toBeNull();
+	});
+
+	it('records the actingUserId as deletedBy', async () => {
+		const actor = await createUser('admin', null, logger);
+		const target = await createUser('tobedeleted', null, logger);
+
+		await deleteUser(target.id, actor.id, logger);
+
+		const found = await getUserById(target.id, logger);
+		expect(found.deletedBy).toBe(actor.id);
 	});
 
 	it('does not affect other users', async () => {
 		const user1 = await createUser('delete-me', null, logger);
 		const user2 = await createUser('keep-me', null, logger);
 
-		await deleteUser(user1.id, logger);
+		await deleteUser(user1.id, null, logger);
 
 		const found = await getUserById(user2.id, logger);
 		expect(found.username).toBe('keep-me');
+		expect(found.deletedAt).toBeNull();
 	});
 
 	it('throws when user does not exist', async () => {
-		await expect(deleteUser(crypto.randomUUID(), logger)).rejects.toThrow('Expected 1 User record(s), but found 0');
+		await expect(deleteUser(crypto.randomUUID(), null, logger)).rejects.toThrow('Expected 1 User record(s), but found 0');
 	});
 
 	it('throws when id is not a valid uuid', async () => {
-		await expect(deleteUser('not-a-uuid', logger)).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a User');
+		await expect(deleteUser('not-a-uuid', null, logger)).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a User');
 	});
 });
 

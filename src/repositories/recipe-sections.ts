@@ -25,7 +25,14 @@ export async function updateRecipeSections(
 	// remove ones that are not present in sectionsData
 	const removedSectionIds = existingSections.map(s => s.id).filter(id => !sectionsData.some(sd => sd.id === id));
 
-	await Promise.all(removedSectionIds.map(id => db.delete(recipeSections).where(eq(recipeSections.id, id))));
+	await Promise.all(
+		removedSectionIds.map(id =>
+			db
+				.update(recipeSections)
+				.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: userId })
+				.where(eq(recipeSections.id, id)),
+		),
+	);
 
 	if (removedSectionIds.length > 0) {
 		logger.info(`Deleted ${removedSectionIds.length} sections for recipe ${recipeId}`);

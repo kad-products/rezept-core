@@ -44,6 +44,25 @@ export async function createSeason(season: SeasonWriteInput, userId: string, log
 	return result;
 }
 
+export async function deleteSeason(seasonId: string, actingUserId: string, logger: RzLogger): Promise<void> {
+	if (!validateUuid(seasonId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [seasonId, 'Season']);
+	}
+
+	logger.debug(`Deleting season ${seasonId}`);
+	const deleted = await db
+		.update(seasons)
+		.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: actingUserId })
+		.where(eq(seasons.id, seasonId))
+		.returning();
+
+	if (deleted.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [deleted.length, 1, 'Season']);
+	}
+
+	logger.info(`Deleted season ${seasonId}`);
+}
+
 export async function updateSeason(
 	seasonId: string,
 	seasonData: SeasonWriteInput,

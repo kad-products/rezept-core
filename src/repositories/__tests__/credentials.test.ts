@@ -108,15 +108,16 @@ describe('createCredential', () => {
 		await expect(createCredential(createCredentialData(user.id, { credentialId }), null, logger)).rejects.toThrow();
 	});
 
-	it('cascades delete when user is deleted', async () => {
+	it('leaves credentials intact when user is soft deleted', async () => {
 		const user = await createUser('tobedeleted', null, logger);
 		await createCredential(createCredentialData(user.id), null, logger);
 		await createCredential(createCredentialData(user.id), null, logger);
 
-		await deleteUser(user.id, logger);
+		await deleteUser(user.id, null, logger);
 
+		// Soft delete does not cascade — credentials remain and are still queryable
 		const remaining = await getCredentialsByUserId(user.id, logger);
-		expect(remaining).toHaveLength(0);
+		expect(remaining).toHaveLength(2);
 	});
 });
 

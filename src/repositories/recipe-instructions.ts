@@ -33,7 +33,14 @@ export async function updateRecipeInstructions(
 		.map(i => i.id)
 		.filter(id => !instructionsData.some(idData => idData.id === id));
 
-	await Promise.all(removedInstructionIds.map(id => db.delete(recipeInstructions).where(eq(recipeInstructions.id, id))));
+	await Promise.all(
+		removedInstructionIds.map(id =>
+			db
+				.update(recipeInstructions)
+				.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: userId })
+				.where(eq(recipeInstructions.id, id)),
+		),
+	);
 
 	if (removedInstructionIds.length > 0) {
 		logger.info(`Deleted ${removedInstructionIds.length} instructions for section ${recipeSectionId}`);

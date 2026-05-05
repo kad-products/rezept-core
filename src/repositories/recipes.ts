@@ -44,6 +44,25 @@ export async function createRecipe(recipe: RecipeWriteInput, actingUserId: strin
 	return result;
 }
 
+export async function deleteRecipe(recipeId: string, actingUserId: string, logger: RzLogger): Promise<void> {
+	if (!validateUuid(recipeId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeId, 'Recipe']);
+	}
+
+	logger.debug(`Deleting recipe ${recipeId}`);
+	const deleted = await db
+		.update(recipes)
+		.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: actingUserId })
+		.where(eq(recipes.id, recipeId))
+		.returning();
+
+	if (deleted.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [deleted.length, 1, 'Recipe']);
+	}
+
+	logger.info(`Deleted recipe ${recipeId}`);
+}
+
 export async function updateRecipe(
 	recipeId: string,
 	recipeData: RecipeWriteInput,

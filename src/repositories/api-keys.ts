@@ -55,6 +55,25 @@ export async function createApiKey(apiKey: ApiKeyFormInput, actingUserId: string
 	return result;
 }
 
+export async function deleteApiKey(apiKeyId: string, actingUserId: string, logger: RzLogger): Promise<void> {
+	if (!validateUuid(apiKeyId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [apiKeyId, 'ApiKey']);
+	}
+
+	logger.debug(`Deleting API key ${apiKeyId}`);
+	const deleted = await db
+		.update(apiKeys)
+		.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: actingUserId })
+		.where(eq(apiKeys.id, apiKeyId))
+		.returning();
+
+	if (deleted.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [deleted.length, 1, 'ApiKey']);
+	}
+
+	logger.info(`Deleted API key ${apiKeyId}`);
+}
+
 export async function updateApiKey(
 	apiKeyId: string,
 	apiKey: ApiKeyFormInput,
