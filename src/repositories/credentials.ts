@@ -6,12 +6,16 @@ import { credentials } from '@/models';
 import type { CredentialDBRead, CredentialWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createCredential(newCredential: CredentialWriteInput, logger: RzLogger): Promise<CredentialDBRead> {
+export async function createCredential(
+	newCredential: CredentialWriteInput,
+	actingUserId: string | null,
+	logger: RzLogger,
+): Promise<CredentialDBRead> {
 	logger.debug(`Creating credential for user ${newCredential.userId}`);
 
 	const [insertedCredential] = await db
 		.insert(credentials)
-		.values({ ...newCredential, createdBy: newCredential.userId })
+		.values({ ...newCredential, createdBy: actingUserId })
 		.returning();
 	logger.info(`Created credential ${insertedCredential.id}`);
 	return insertedCredential;

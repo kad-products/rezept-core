@@ -208,7 +208,7 @@ describe('finishPasskeyRegistration', () => {
 
 	it('creates a new user with the provided username', async () => {
 		await finishPasskeyRegistration('testuser', mockRegistration as any);
-		expect(createUser).toHaveBeenCalledWith('testuser', expect.anything());
+		expect(createUser).toHaveBeenCalledWith('testuser', null, expect.anything());
 	});
 
 	// The credential record is what the server uses in future logins to verify the user.
@@ -222,6 +222,7 @@ describe('finishPasskeyRegistration', () => {
 				publicKey: mockVerification.registrationInfo.credential.publicKey,
 				counter: 0,
 			}),
+			'user-id',
 			expect.anything(),
 		);
 	});
@@ -236,7 +237,11 @@ describe('finishPasskeyRegistration', () => {
 	it('falls back to "Unknown Device" when the User-Agent header is absent', async () => {
 		mockRequestInfo.request = new Request('https://example.com/', { headers: { 'User-Agent': '' } });
 		await finishPasskeyRegistration('testuser', mockRegistration as any);
-		expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ name: 'Unknown Device' }), expect.anything());
+		expect(createCredential).toHaveBeenCalledWith(
+			expect.objectContaining({ name: 'Unknown Device' }),
+			'user-id',
+			expect.anything(),
+		);
 	});
 
 	it('returns a validation error for an invalid username', async () => {

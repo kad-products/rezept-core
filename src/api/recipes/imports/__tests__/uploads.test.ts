@@ -79,6 +79,7 @@ describe('_postHandler', () => {
 					status: 'UPLOADED',
 				}),
 				'user-id',
+				'user-id',
 				expect.anything(),
 			);
 		});

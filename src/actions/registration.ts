@@ -81,6 +81,7 @@ export async function finishPasskeyRegistration(
 			counter: verification.registrationInfo.credential.counter,
 			name: deviceNameFromUA(request.headers.get('User-Agent') || ''),
 		},
+		user.id,
 		requestInfo.ctx.logger,
 	);
 

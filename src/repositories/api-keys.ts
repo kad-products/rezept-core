@@ -39,14 +39,14 @@ export async function getApiKeyByKey(key: string, logger: RzLogger): Promise<Api
 	return matchedApiKeys[0];
 }
 
-export async function createApiKey(apiKey: ApiKeyFormInput, userId: string, logger: RzLogger): Promise<ApiKeyDBRead> {
+export async function createApiKey(apiKey: ApiKeyFormInput, actingUserId: string, logger: RzLogger): Promise<ApiKeyDBRead> {
 	logger.debug('Creating API key');
 
 	const insertedRecipes = await db
 		.insert(apiKeys)
 		.values({
 			...apiKey,
-			createdBy: userId,
+			createdBy: actingUserId,
 		})
 		.returning();
 
@@ -58,7 +58,7 @@ export async function createApiKey(apiKey: ApiKeyFormInput, userId: string, logg
 export async function updateApiKey(
 	apiKeyId: string,
 	apiKey: ApiKeyFormInput,
-	userId: string,
+	actingUserId: string,
 	logger: RzLogger,
 ): Promise<ApiKeyDBRead> {
 	logger.debug(`Updating API key ${apiKeyId}`);
@@ -67,7 +67,7 @@ export async function updateApiKey(
 		.update(apiKeys)
 		.set({
 			...apiKey,
-			updatedBy: userId,
+			updatedBy: actingUserId,
 		})
 		.where(eq(apiKeys.id, apiKeyId))
 		.returning();
