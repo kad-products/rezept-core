@@ -1,3 +1,10 @@
+## [1.23.0](https://github.com/kad-products/rezept-core/compare/v1.22.0...v1.23.0) (2026-05-05)
+
+### Features
+
+* actually use soft delete fields to filter results ([041ac0f](https://github.com/kad-products/rezept-core/commit/041ac0fc5cefa5b6b5d417d347c1340c290cd874))
+* added initial delete methods to key repositories ([03b5a66](https://github.com/kad-products/rezept-core/commit/03b5a669d2c2e1b409daae64807c5345772d7e5f))
+
 ## [1.22.0](https://github.com/kad-products/rezept-core/compare/v1.21.1...v1.22.0) (2026-05-05)
 
 ### Features
