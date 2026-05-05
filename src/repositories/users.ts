@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -19,7 +19,7 @@ export async function createUser(username: string, actingUserId: string | null, 
 	return insertedUser;
 }
 
-export async function deleteUser(id: string, actingUserId: string | null, logger: RzLogger): Promise<void> {
+export async function deleteUser(id: string, actingUserId: string | null, logger: RzLogger): Promise<UserDBRead> {
 	if (!validateUuid(id)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [id, 'User']);
 	}
@@ -36,6 +36,7 @@ export async function deleteUser(id: string, actingUserId: string | null, logger
 	}
 
 	logger.info(`Deleted user ${id}`);
+	return deleted[0];
 }
 
 export async function getUserById(id: string, logger: RzLogger): Promise<UserDBRead> {
@@ -44,7 +45,10 @@ export async function getUserById(id: string, logger: RzLogger): Promise<UserDBR
 	}
 
 	logger.debug(`Fetching user ${id}`);
-	const matchedUsers = await db.select().from(users).where(eq(users.id, id));
+	const matchedUsers = await db
+		.select()
+		.from(users)
+		.where(and(eq(users.id, id), isNull(users.deletedAt)));
 
 	if (matchedUsers.length !== 1) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedUsers.length, 1, 'User']);

@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -30,7 +30,10 @@ export async function createRecipeUpload(
 
 export async function getRecipeUploads(userId: string, logger: RzLogger): Promise<RecipeUploadDBRead[]> {
 	logger.debug(`Fetching recipe uploads for user ${userId}`);
-	const results = await db.select().from(recipeUploads).where(eq(recipeUploads.userId, userId));
+	const results = await db
+		.select()
+		.from(recipeUploads)
+		.where(and(eq(recipeUploads.userId, userId), isNull(recipeUploads.deletedAt)));
 	logger.debug(`Fetched ${results.length} recipe uploads`);
 	return results;
 }
@@ -41,7 +44,10 @@ export async function getRecipeUploadById(recipeUploadId: string, logger: RzLogg
 	}
 
 	logger.debug(`Fetching recipe upload ${recipeUploadId}`);
-	const matchedRecipeUploads = await db.select().from(recipeUploads).where(eq(recipeUploads.id, recipeUploadId));
+	const matchedRecipeUploads = await db
+		.select()
+		.from(recipeUploads)
+		.where(and(eq(recipeUploads.id, recipeUploadId), isNull(recipeUploads.deletedAt)));
 
 	if (matchedRecipeUploads.length !== 1) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedRecipeUploads.length, 1, 'RecipeUpload']);

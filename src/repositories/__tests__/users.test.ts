@@ -146,22 +146,19 @@ describe('deleteUser', () => {
 	it('sets deletedAt and deletedBy on the user record', async () => {
 		const user = await createUser('tobedeleted', null, logger);
 
-		await deleteUser(user.id, null, logger);
+		const deleted = await deleteUser(user.id, null, logger);
 
-		// Record still exists — getUserById will filter soft-deleted records once #240 is implemented
-		const found = await getUserById(user.id, logger);
-		expect(found.deletedAt).not.toBeNull();
-		expect(found.deletedBy).toBeNull();
+		expect(deleted.deletedAt).not.toBeNull();
+		expect(deleted.deletedBy).toBeNull();
 	});
 
 	it('records the actingUserId as deletedBy', async () => {
 		const actor = await createUser('admin', null, logger);
 		const target = await createUser('tobedeleted', null, logger);
 
-		await deleteUser(target.id, actor.id, logger);
+		const deleted = await deleteUser(target.id, actor.id, logger);
 
-		const found = await getUserById(target.id, logger);
-		expect(found.deletedBy).toBe(actor.id);
+		expect(deleted.deletedBy).toBe(actor.id);
 	});
 
 	it('does not affect other users', async () => {

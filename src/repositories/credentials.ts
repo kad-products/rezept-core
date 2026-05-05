@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -21,7 +21,7 @@ export async function createCredential(
 	return insertedCredential;
 }
 
-export async function deleteCredential(credentialId: string, actingUserId: string, logger: RzLogger): Promise<void> {
+export async function deleteCredential(credentialId: string, actingUserId: string, logger: RzLogger): Promise<CredentialDBRead> {
 	if (!validateUuid(credentialId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [credentialId, 'Credential']);
 	}
@@ -38,11 +38,15 @@ export async function deleteCredential(credentialId: string, actingUserId: strin
 	}
 
 	logger.info(`Deleted credential ${credentialId}`);
+	return deleted[0];
 }
 
 export async function getCredentialsByUserId(userId: string, logger: RzLogger): Promise<CredentialDBRead[]> {
 	logger.debug(`Fetching credentials for user ${userId}`);
-	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.userId, userId));
+	const matchedCredentials = await db
+		.select()
+		.from(credentials)
+		.where(and(eq(credentials.userId, userId), isNull(credentials.deletedAt)));
 	logger.debug(`Fetched ${matchedCredentials.length} credentials for user ${userId}`);
 	return matchedCredentials;
 }
@@ -50,7 +54,10 @@ export async function getCredentialsByUserId(userId: string, logger: RzLogger): 
 export async function getCredentialById(credentialId: string, logger: RzLogger): Promise<CredentialDBRead> {
 	// credentialId is a WebAuthn credential identifier, not an internal UUID — no UUID validation
 	logger.debug(`Fetching credential ${credentialId}`);
-	const matchedCredentials = await db.select().from(credentials).where(eq(credentials.credentialId, credentialId));
+	const matchedCredentials = await db
+		.select()
+		.from(credentials)
+		.where(and(eq(credentials.credentialId, credentialId), isNull(credentials.deletedAt)));
 
 	if (matchedCredentials.length !== 1) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedCredentials.length, 1, 'Credential']);

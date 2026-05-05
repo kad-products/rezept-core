@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -8,7 +8,7 @@ import { validateUuid } from './utils';
 
 export async function getSeasons(logger: RzLogger): Promise<SeasonDBRead[]> {
 	logger.debug('Fetching all seasons');
-	const allSeasons = await db.select().from(seasons);
+	const allSeasons = await db.select().from(seasons).where(isNull(seasons.deletedAt));
 	logger.debug(`Fetched ${allSeasons.length} seasons`);
 	return allSeasons;
 }
@@ -19,7 +19,10 @@ export async function getSeasonById(seasonId: string, logger: RzLogger): Promise
 	}
 
 	logger.debug(`Fetching season ${seasonId}`);
-	const matchedSeasons = await db.select().from(seasons).where(eq(seasons.id, seasonId));
+	const matchedSeasons = await db
+		.select()
+		.from(seasons)
+		.where(and(eq(seasons.id, seasonId), isNull(seasons.deletedAt)));
 
 	if (matchedSeasons.length !== 1) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedSeasons.length, 1, 'Season']);
@@ -44,7 +47,7 @@ export async function createSeason(season: SeasonWriteInput, userId: string, log
 	return result;
 }
 
-export async function deleteSeason(seasonId: string, actingUserId: string, logger: RzLogger): Promise<void> {
+export async function deleteSeason(seasonId: string, actingUserId: string, logger: RzLogger): Promise<SeasonDBRead> {
 	if (!validateUuid(seasonId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [seasonId, 'Season']);
 	}
@@ -61,6 +64,7 @@ export async function deleteSeason(seasonId: string, actingUserId: string, logge
 	}
 
 	logger.info(`Deleted season ${seasonId}`);
+	return deleted[0];
 }
 
 export async function updateSeason(

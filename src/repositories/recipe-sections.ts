@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeSections } from '@/models';
@@ -6,7 +6,10 @@ import type { RecipeSectionDBRead, RecipeSectionWriteInput } from '@/types';
 
 export async function getSectionsByRecipeId(recipeId: string, logger: RzLogger): Promise<RecipeSectionDBRead[]> {
 	logger.debug(`Fetching sections for recipe ${recipeId}`);
-	const sections = await db.select().from(recipeSections).where(eq(recipeSections.recipeId, recipeId));
+	const sections = await db
+		.select()
+		.from(recipeSections)
+		.where(and(eq(recipeSections.recipeId, recipeId), isNull(recipeSections.deletedAt)));
 	logger.debug(`Fetched ${sections.length} sections for recipe ${recipeId}`);
 	return sections.sort((a, b) => a.order - b.order);
 }

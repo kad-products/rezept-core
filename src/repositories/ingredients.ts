@@ -1,3 +1,4 @@
+import { isNull } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { ingredients } from '@/models';
@@ -5,7 +6,7 @@ import type { IngredientDBRead, IngredientFormInput } from '@/types';
 
 export async function getIngredients(logger: RzLogger): Promise<IngredientDBRead[]> {
 	logger.debug('Fetching all ingredients');
-	const ingredientsList = await db.select().from(ingredients);
+	const ingredientsList = await db.select().from(ingredients).where(isNull(ingredients.deletedAt));
 	logger.debug(`Fetched ${ingredientsList.length} ingredients`);
 	return ingredientsList;
 }

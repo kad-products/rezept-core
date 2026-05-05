@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { createRecipe, getRecipeById, getRecipes, updateRecipe } from '../recipes';
+import { createRecipe, deleteRecipe, getRecipeById, getRecipes, updateRecipe } from '../recipes';
 
 const logger = new Logger();
 
@@ -134,6 +134,38 @@ describe('recipes repository', () => {
 			const recipe2 = await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
 
 			expect(recipe1.id).not.toBe(recipe2.id);
+		});
+	});
+
+	describe('deleteRecipe', () => {
+		it('soft-deletes the recipe and returns it with deletedAt set', async () => {
+			const created = await createRecipe(baseRecipeData, testUserId, logger);
+
+			const deleted = await deleteRecipe(created.id, testUserId, logger);
+
+			expect(deleted.id).toBe(created.id);
+			expect(deleted.deletedAt).not.toBeNull();
+			expect(deleted.deletedBy).toBe(testUserId);
+		});
+
+		it('does not return deleted recipe from getRecipes', async () => {
+			const created = await createRecipe(baseRecipeData, testUserId, logger);
+			await deleteRecipe(created.id, testUserId, logger);
+
+			const result = await getRecipes(logger);
+			expect(result).toHaveLength(0);
+		});
+
+		it('throws when recipe does not exist', async () => {
+			await expect(deleteRecipe(crypto.randomUUID(), testUserId, logger)).rejects.toThrow(
+				'Expected 1 Recipe record(s), but found 0',
+			);
+		});
+
+		it('throws when id is not a valid uuid', async () => {
+			await expect(deleteRecipe('not-a-uuid', testUserId, logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a Recipe',
+			);
 		});
 	});
 
