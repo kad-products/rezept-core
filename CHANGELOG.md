@@ -1,3 +1,14 @@
+## [1.22.0](https://github.com/kad-products/rezept-core/compare/v1.21.1...v1.22.0) (2026-05-05)
+
+### Features
+
+* allow createdBy and ownership userId to be different at repo level ([39d0da9](https://github.com/kad-products/rezept-core/commit/39d0da947ce5d0a77c3c10de842efb32daea7e40))
+
+### Bug Fixes
+
+* add audit fields to users and credentials ([01b7570](https://github.com/kad-products/rezept-core/commit/01b7570e775eb9896a6c3e84dd89d1f97ad0d8ee))
+* populate the updated* fields in repo layer ([04925a5](https://github.com/kad-products/rezept-core/commit/04925a5bdbef8169508e4428c2bb7281ef50c4ca))
+
 ## [1.21.1](https://github.com/kad-products/rezept-core/compare/v1.21.0...v1.21.1) (2026-05-04)
 
 ### Bug Fixes
