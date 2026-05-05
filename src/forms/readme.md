@@ -92,6 +92,12 @@ export function TextInput({ label }: { label: string }) {
 
 Not all input components follow this pattern yet — `Select` and `Textarea` use native HTML. Bringing them in line is tracked in the audit phase.
 
+## File uploads
+
+File uploads are not handled through TanStack Form. The current approach (`src/api/recipes/imports/uploads.ts`) reads the file directly from `request.formData()` in the API handler and streams it to R2 — TanStack Form is not involved.
+
+If more file upload surfaces are added it is worth considering a shared component or helper that standardises the upload interaction (progress state, error handling, R2 key format). No centralised pattern exists yet.
+
 ## Validation
 
 Forms validate with `validators: { onBlur: schema }` — validation runs when a field loses focus. This is the current standard but is under review for UX reasons; see #126.
