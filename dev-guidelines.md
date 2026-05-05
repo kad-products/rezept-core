@@ -19,24 +19,28 @@ See [Testing Guide](./testing-guide.md) for comprehensive testing patterns. Key 
 
 ## Form Handling
 
-### Current: Native FormData
+Forms use **TanStack Form** for state and validation and **Radix UI Form** for accessible structure. See `src/forms/readme.md` for the full pattern including field components, validation setup, and the Radix/TanStack bridge.
 
-Currently using browser `FormData` API directly:
+Key rules:
+- Always import `useAppForm` from `./context`, never directly from `@tanstack/react-form`
+- Validation runs `onBlur` against the Zod schema — under review for UX reasons (see #126)
+- File uploads are not handled through TanStack Form; use `request.formData()` in the API handler directly
 
-```typescript
-const formData = new FormData();
-formData.set('name', 'Spring');
-formData.set('country', 'US');
+---
 
-await saveAction(null, formData);
-```
+## Data Patterns
 
-### Future: TanStack Form
+### Audit fields
 
-Plan to migrate to TanStack Form for better type safety and validation integration. When we do:
-- Server action signatures will change (no more `prevState`)
-- Form state will be more declarative
-- Validation will run client-side before submission
+All content tables have `createdAt`, `createdBy`, `updatedAt`, `updatedBy`. Repositories are responsible for setting these — actions and API handlers never set audit fields directly. `createdAt` is set via `$defaultFn`; `createdBy` and `updatedBy` come from the `userId` parameter passed to the repository function.
+
+### Soft deletes
+
+All content tables have `deletedAt` and `deletedBy`. Hard deletes are not used. Delete operations set these fields; all SELECT queries must filter `WHERE deletedAt IS NULL`. See `docs/development/data-patterns.md` for full detail and known gaps.
+
+### Data sync after mutations
+
+After auth operations use `navigate()` to force a full page reload. After form mutations the form shows an inline success/error message — there is no automatic revalidation of list views or other page data. See `docs/development/data-patterns.md`.
 
 ---
 
