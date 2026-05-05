@@ -98,6 +98,7 @@ describe('_postHandler', () => {
 				expect.objectContaining({ originalFilename: 'my-recipe.csv', r2Key: '/raw/my-recipe.csv' }),
 				expect.anything(),
 				expect.anything(),
+				expect.anything(),
 			);
 		});
 	});
