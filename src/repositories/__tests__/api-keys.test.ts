@@ -17,7 +17,7 @@ describe('api-keys repository', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		testUserId = user.id;
 	});
 
@@ -37,7 +37,7 @@ describe('api-keys repository', () => {
 		});
 
 		it('only returns keys for the specified user', async () => {
-			const otherUser = await createUser('otheruser', logger);
+			const otherUser = await createUser('otheruser', null, logger);
 			await createApiKey({ ...baseApiKeyData, userId: testUserId }, testUserId, logger);
 			await createApiKey({ ...baseApiKeyData, userId: otherUser.id }, otherUser.id, logger);
 

@@ -71,7 +71,7 @@ export async function finishPasskeyRegistration(
 		return errorResponse(userParsed.error.flatten().fieldErrors, 400);
 	}
 
-	const user = await createUser(userParsed.data.username, requestInfo.ctx.logger);
+	const user = await createUser(userParsed.data.username, null, requestInfo.ctx.logger);
 
 	await createCredential(
 		{

@@ -26,7 +26,7 @@ function createCredentialData(userId: string, overrides?: Partial<CredentialWrit
 
 describe('createCredential', () => {
 	it('creates a credential with all required fields', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credData = createCredentialData(user.id);
 
 		const credential = await createCredential(credData, logger);
@@ -38,7 +38,7 @@ describe('createCredential', () => {
 	});
 
 	it('creates credential with custom counter', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credData = createCredentialData(user.id, { counter: 42 });
 
 		const credential = await createCredential(credData, logger);
@@ -47,7 +47,7 @@ describe('createCredential', () => {
 	});
 
 	it('creates credential with name', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credData = createCredentialData(user.id, { name: 'My Yubikey' });
 
 		const credential = await createCredential(credData, logger);
@@ -56,7 +56,7 @@ describe('createCredential', () => {
 	});
 
 	it('creates credential without name', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credData = createCredentialData(user.id);
 
 		const credential = await createCredential(credData, logger);
@@ -65,7 +65,7 @@ describe('createCredential', () => {
 	});
 
 	it('creates multiple credentials for same user', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 
 		const cred1 = await createCredential(createCredentialData(user.id), logger);
 		const cred2 = await createCredential(createCredentialData(user.id), logger);
@@ -77,8 +77,8 @@ describe('createCredential', () => {
 	});
 
 	it('creates credentials for different users', async () => {
-		const user1 = await createUser('user1', logger);
-		const user2 = await createUser('user2', logger);
+		const user1 = await createUser('user1', null, logger);
+		const user2 = await createUser('user2', null, logger);
 
 		const cred1 = await createCredential(createCredentialData(user1.id), logger);
 		const cred2 = await createCredential(createCredentialData(user2.id), logger);
@@ -88,7 +88,7 @@ describe('createCredential', () => {
 	});
 
 	it('stores publicKey as binary data', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const publicKey = new Uint8Array([10, 20, 30, 40, 50]);
 		const credData = createCredentialData(user.id, { publicKey });
 
@@ -99,7 +99,7 @@ describe('createCredential', () => {
 	});
 
 	it('handles unique credentialId constraint', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credentialId = `unique-cred-${randomUUID()}`;
 
 		await createCredential(createCredentialData(user.id, { credentialId }), logger);
@@ -109,7 +109,7 @@ describe('createCredential', () => {
 	});
 
 	it('cascades delete when user is deleted', async () => {
-		const user = await createUser('tobedeleted', logger);
+		const user = await createUser('tobedeleted', null, logger);
 		await createCredential(createCredentialData(user.id, { name: 'My Key' }), logger);
 		await createCredential(createCredentialData(user.id, { name: 'My Other Key' }), logger);
 
@@ -122,7 +122,7 @@ describe('createCredential', () => {
 
 describe('getCredentialsByUserId', () => {
 	it('returns empty array when user has no credentials', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 
 		const credentials = await getCredentialsByUserId(user.id, logger);
 
@@ -130,7 +130,7 @@ describe('getCredentialsByUserId', () => {
 	});
 
 	it('returns single credential for user', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const created = await createCredential(createCredentialData(user.id), logger);
 
 		const credentials = await getCredentialsByUserId(user.id, logger);
@@ -140,7 +140,7 @@ describe('getCredentialsByUserId', () => {
 	});
 
 	it('returns multiple credentials for user', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 
 		const cred1 = await createCredential(createCredentialData(user.id, { name: 'Yubikey 1' }), logger);
 		const cred2 = await createCredential(createCredentialData(user.id, { name: 'Yubikey 2' }), logger);
@@ -157,8 +157,8 @@ describe('getCredentialsByUserId', () => {
 	});
 
 	it('returns only credentials for specified user', async () => {
-		const user1 = await createUser('user1', logger);
-		const user2 = await createUser('user2', logger);
+		const user1 = await createUser('user1', null, logger);
+		const user2 = await createUser('user2', null, logger);
 
 		await createCredential(createCredentialData(user1.id), logger);
 		const user2Cred = await createCredential(createCredentialData(user2.id), logger);
@@ -178,7 +178,7 @@ describe('getCredentialsByUserId', () => {
 	});
 
 	it('returns credentials with all fields', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		await createCredential(
 			createCredentialData(user.id, {
 				name: 'Test Key',
@@ -201,7 +201,7 @@ describe('getCredentialsByUserId', () => {
 
 describe('getCredentialById', () => {
 	it('returns credential when found', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const created = await createCredential(createCredentialData(user.id), logger);
 
 		const found = await getCredentialById(created.credentialId, logger);
@@ -215,7 +215,7 @@ describe('getCredentialById', () => {
 	});
 
 	it('returns correct credential when multiple exist', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 
 		await createCredential(createCredentialData(user.id), logger);
 		const target = await createCredential(createCredentialData(user.id), logger);
@@ -228,7 +228,7 @@ describe('getCredentialById', () => {
 	});
 
 	it('returns credential with all fields intact', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const publicKey = new Uint8Array([100, 200, 30]);
 		const created = await createCredential(
 			createCredentialData(user.id, {
@@ -247,7 +247,7 @@ describe('getCredentialById', () => {
 	});
 
 	it('searches by credentialId not internal id', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const created = await createCredential(createCredentialData(user.id), logger);
 
 		// Using credentialId (the WebAuthn credential ID)
@@ -261,7 +261,7 @@ describe('getCredentialById', () => {
 
 describe('updateCredentialCounter', () => {
 	it('updates counter for credential', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credential = await createCredential(createCredentialData(user.id), logger);
 
 		await updateCredentialCounter(credential.id, 5, logger);
@@ -271,7 +271,7 @@ describe('updateCredentialCounter', () => {
 	});
 
 	it('increments counter over multiple updates', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credential = await createCredential(createCredentialData(user.id), logger);
 
 		await updateCredentialCounter(credential.id, 1, logger);
@@ -283,7 +283,7 @@ describe('updateCredentialCounter', () => {
 	});
 
 	it('updates only specified credential', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const cred1 = await createCredential(createCredentialData(user.id), logger);
 		const cred2 = await createCredential(createCredentialData(user.id), logger);
 
@@ -297,7 +297,7 @@ describe('updateCredentialCounter', () => {
 	});
 
 	it('can set counter to 0', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credential = await createCredential(createCredentialData(user.id, { counter: 100 }), logger);
 
 		await updateCredentialCounter(credential.id, 0, logger);
@@ -307,7 +307,7 @@ describe('updateCredentialCounter', () => {
 	});
 
 	it('can set counter to large values', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const credential = await createCredential(createCredentialData(user.id), logger);
 
 		await updateCredentialCounter(credential.id, 999999, logger);
@@ -317,7 +317,7 @@ describe('updateCredentialCounter', () => {
 	});
 
 	it('does not modify other credential fields', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		const publicKey = new Uint8Array([50, 60, 70]);
 		const credential = await createCredential(
 			createCredentialData(user.id, {
@@ -352,7 +352,7 @@ describe('updateCredentialCounter', () => {
 
 describe('integration: credential lifecycle', () => {
 	it('can create, retrieve, and update credential', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 
 		// Create
 		const created = await createCredential(createCredentialData(user.id, { name: 'My Key' }), logger);
@@ -371,7 +371,7 @@ describe('integration: credential lifecycle', () => {
 	});
 
 	it('can manage multiple credentials per user', async () => {
-		const user = await createUser('multikey-user', logger);
+		const user = await createUser('multikey-user', null, logger);
 
 		// Create multiple credentials
 		const yubikey = await createCredential(createCredentialData(user.id, { name: 'Yubikey' }), logger);

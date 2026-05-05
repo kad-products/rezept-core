@@ -11,7 +11,7 @@ beforeEach(async () => {
 
 describe('createUser', () => {
 	it('creates a user with username', async () => {
-		const user = await createUser('johndoe', logger);
+		const user = await createUser('johndoe', null, logger);
 
 		expect(user.username).toBe('johndoe');
 		expect(user.id).toBeDefined();
@@ -19,28 +19,28 @@ describe('createUser', () => {
 	});
 
 	it('creates unique IDs for each user', async () => {
-		const user1 = await createUser('alice', logger);
-		const user2 = await createUser('bob', logger);
+		const user1 = await createUser('alice', null, logger);
+		const user2 = await createUser('bob', null, logger);
 
 		expect(user1.id).not.toBe(user2.id);
 	});
 
 	it('creates users with different usernames', async () => {
-		const user1 = await createUser('alice', logger);
-		const user2 = await createUser('bob', logger);
+		const user1 = await createUser('alice', null, logger);
+		const user2 = await createUser('bob', null, logger);
 
 		expect(user1.username).toBe('alice');
 		expect(user2.username).toBe('bob');
 	});
 
 	it('throws on duplicate username', async () => {
-		await createUser('duplicate', logger);
+		await createUser('duplicate', null, logger);
 
-		await expect(createUser('duplicate', logger)).rejects.toThrow();
+		await expect(createUser('duplicate', null, logger)).rejects.toThrow();
 	});
 
 	it('handles usernames with special characters', async () => {
-		const user = await createUser('user_name-123', logger);
+		const user = await createUser('user_name-123', null, logger);
 
 		expect(user.username).toBe('user_name-123');
 	});
@@ -48,20 +48,20 @@ describe('createUser', () => {
 	it('handles empty string username', async () => {
 		// Depending on your validation, this might succeed or fail
 		// Adjust based on your actual requirements
-		const user = await createUser('', logger);
+		const user = await createUser('', null, logger);
 
 		expect(user.username).toBe('');
 	});
 
 	it('handles very long usernames', async () => {
 		const longUsername = 'a'.repeat(100);
-		const user = await createUser(longUsername, logger);
+		const user = await createUser(longUsername, null, logger);
 
 		expect(user.username).toBe(longUsername);
 	});
 
 	it('returns user with all expected fields', async () => {
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 
 		expect(user).toHaveProperty('id');
 		expect(user).toHaveProperty('username');
@@ -72,14 +72,14 @@ describe('createUser', () => {
 
 describe('getUserById', () => {
 	it('returns user when found', async () => {
-		const created = await createUser('testuser', logger);
+		const created = await createUser('testuser', null, logger);
 		const found = await getUserById(created.id, logger);
 
 		expect(found).toEqual(created);
 	});
 
 	it('returns user with correct username', async () => {
-		const created = await createUser('specificuser', logger);
+		const created = await createUser('specificuser', null, logger);
 		const found = await getUserById(created.id, logger);
 
 		expect(found?.username).toBe('specificuser');
@@ -106,9 +106,9 @@ describe('getUserById', () => {
 	});
 
 	it('returns correct user when multiple users exist', async () => {
-		const _user1 = await createUser('alice', logger);
-		const user2 = await createUser('bob', logger);
-		const _user3 = await createUser('charlie', logger);
+		const _user1 = await createUser('alice', null, logger);
+		const user2 = await createUser('bob', null, logger);
+		const _user3 = await createUser('charlie', null, logger);
 
 		const found = await getUserById(user2.id, logger);
 
@@ -117,7 +117,7 @@ describe('getUserById', () => {
 	});
 
 	it('returns user with valid UUID', async () => {
-		const created = await createUser('testuser', logger);
+		const created = await createUser('testuser', null, logger);
 		const found = await getUserById(created.id, logger);
 
 		// UUID format validation
@@ -126,7 +126,7 @@ describe('getUserById', () => {
 	});
 
 	it('preserves all user fields', async () => {
-		const created = await createUser('fulltest', logger);
+		const created = await createUser('fulltest', null, logger);
 		const found = await getUserById(created.id, logger);
 
 		expect(found?.id).toBe(created.id);
@@ -144,7 +144,7 @@ describe('getUserById', () => {
 
 describe('deleteUser', () => {
 	it('deletes the user', async () => {
-		const user = await createUser('tobedeleted', logger);
+		const user = await createUser('tobedeleted', null, logger);
 
 		await deleteUser(user.id, logger);
 
@@ -152,8 +152,8 @@ describe('deleteUser', () => {
 	});
 
 	it('does not affect other users', async () => {
-		const user1 = await createUser('delete-me', logger);
-		const user2 = await createUser('keep-me', logger);
+		const user1 = await createUser('delete-me', null, logger);
+		const user2 = await createUser('keep-me', null, logger);
 
 		await deleteUser(user1.id, logger);
 
@@ -172,14 +172,18 @@ describe('deleteUser', () => {
 
 describe('integration: createUser and getUserById', () => {
 	it('can create and retrieve user in sequence', async () => {
-		const created = await createUser('integration-test', logger);
+		const created = await createUser('integration-test', null, logger);
 		const retrieved = await getUserById(created.id, logger);
 
 		expect(retrieved).toEqual(created);
 	});
 
 	it('can create multiple users and retrieve each one', async () => {
-		const users = await Promise.all([createUser('user1', logger), createUser('user2', logger), createUser('user3', logger)]);
+		const users = await Promise.all([
+			createUser('user1', null, logger),
+			createUser('user2', null, logger),
+			createUser('user3', null, logger),
+		]);
 
 		for (const user of users) {
 			const found = await getUserById(user.id, logger);
@@ -188,8 +192,8 @@ describe('integration: createUser and getUserById', () => {
 	});
 
 	it('maintains data integrity across operations', async () => {
-		const user1 = await createUser('first', logger);
-		const user2 = await createUser('second', logger);
+		const user1 = await createUser('first', null, logger);
+		const user2 = await createUser('second', null, logger);
 
 		const found1 = await getUserById(user1.id, logger);
 		const found2 = await getUserById(user2.id, logger);

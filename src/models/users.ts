@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import { relations, sql } from 'drizzle-orm';
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { type AnySQLiteColumn, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { credentials } from './credentials';
 
 export const users = sqliteTable('users', {
@@ -10,7 +10,11 @@ export const users = sqliteTable('users', {
 	username: text().notNull().unique(),
 	role: text({ enum: ['ADMIN', 'BASIC'] }).default('BASIC'),
 	createdAt: text().notNull().default(sql`(datetime('now', 'localtime'))`),
+	createdBy: text().references((): AnySQLiteColumn => users.id),
 	updatedAt: text(),
+	updatedBy: text().references((): AnySQLiteColumn => users.id),
+	deletedAt: text(),
+	deletedBy: text().references((): AnySQLiteColumn => users.id),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

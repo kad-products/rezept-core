@@ -15,7 +15,7 @@ Every content table carries four audit fields that track who created and last mo
 
 `createdBy` and `updatedBy` are always set server-side from the authenticated user's ID. Actions and API handlers pass `userId` down to the repository — they never set audit fields directly, and clients never supply them.
 
-**Exception:** `users` and `credentials` are auth system tables. They only have `createdAt` and `updatedAt` — no `createdBy`/`updatedBy`, since the concept of "who created this user" doesn't apply the same way.
+**`users` table:** `createdBy` is nullable. During self-registration there is no prior actor, so `createdBy` is set to `null`. If an admin creates a user on behalf of someone else, the admin's ID would be recorded. The null is semantically meaningful (self-registered), not a gap.
 
 **Known gap:** `updatedAt` is not currently being set on update — tracked in [#242](https://github.com/kad-products/rezept-core/issues/242).
 

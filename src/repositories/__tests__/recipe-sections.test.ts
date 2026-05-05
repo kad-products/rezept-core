@@ -13,7 +13,7 @@ describe('recipe-sections repository', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		testUserId = user.id;
 		const recipe = await createRecipe({ authorId: testUserId, title: 'Test Recipe' }, testUserId, logger);
 		testRecipeId = recipe.id;

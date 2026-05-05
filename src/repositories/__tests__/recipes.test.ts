@@ -12,7 +12,7 @@ describe('recipes repository', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		testUserId = user.id;
 		baseRecipeData = { authorId: testUserId, title: 'Test Recipe' };
 	});

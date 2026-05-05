@@ -9,7 +9,10 @@ import { validateUuid } from './utils';
 export async function createCredential(newCredential: CredentialWriteInput, logger: RzLogger): Promise<CredentialDBRead> {
 	logger.debug(`Creating credential for user ${newCredential.userId}`);
 
-	const [insertedCredential] = await db.insert(credentials).values(newCredential).returning();
+	const [insertedCredential] = await db
+		.insert(credentials)
+		.values({ ...newCredential, createdBy: newCredential.userId })
+		.returning();
 	logger.info(`Created credential ${insertedCredential.id}`);
 	return insertedCredential;
 }

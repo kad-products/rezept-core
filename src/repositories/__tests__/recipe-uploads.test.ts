@@ -18,7 +18,7 @@ describe('recipe-uploads repository', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		testUserId = user.id;
 	});
 
@@ -77,7 +77,7 @@ describe('recipe-uploads repository', () => {
 		});
 
 		it('returns only uploads for specified user', async () => {
-			const otherUser = await createUser('otheruser', logger);
+			const otherUser = await createUser('otheruser', null, logger);
 
 			await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/mine.pdf' }, testUserId, logger);
 			await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/theirs.pdf' }, otherUser.id, logger);
@@ -88,7 +88,7 @@ describe('recipe-uploads repository', () => {
 		});
 
 		it('returns empty array for user with no uploads even when others have uploads', async () => {
-			const otherUser = await createUser('otheruser', logger);
+			const otherUser = await createUser('otheruser', null, logger);
 			await createRecipeUpload(baseUploadData, otherUser.id, logger);
 
 			const result = await getRecipeUploads(testUserId, logger);

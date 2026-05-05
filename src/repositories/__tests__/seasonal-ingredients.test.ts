@@ -21,7 +21,7 @@ describe('seasonal-ingredients repository', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		testUserId = user.id;
 		const season = await createSeason(baseSeasonData, testUserId, logger);
 		testSeasonId = season.id;

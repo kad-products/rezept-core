@@ -14,7 +14,7 @@ describe('createRecipeScrape', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser2', logger);
+		const user = await createUser('testuser2', null, logger);
 		userId = user.id;
 		scrapeId = crypto.randomUUID();
 	});
@@ -55,7 +55,7 @@ describe('updateRecipeScrapeStatus', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser', logger);
+		const user = await createUser('testuser', null, logger);
 		userId = user.id;
 		const scrape = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
 		scrapeId = scrape.id;
