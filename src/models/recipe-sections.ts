@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { recipeIngredients } from './recipe-ingredients';
 import { recipeInstructions } from './recipe-instructions';
@@ -31,7 +31,7 @@ export const recipeSections = sqliteTable(
 	table => [
 		index('recipe_sections_recipe_id_idx').on(table.recipeId),
 		index('recipe_sections_recipe_id_order_idx').on(table.recipeId, table.order),
-		uniqueIndex('recipe_sections_recipe_id_order_unique').on(table.recipeId, table.order),
+		uniqueIndex('recipe_sections_recipe_id_order_unique').on(table.recipeId, table.order).where(sql`"deleted_at" IS NULL`),
 	],
 );
 

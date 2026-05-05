@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeIngredients } from '@/models';
@@ -10,7 +10,7 @@ export async function getIngredientsByRecipeSectionId(
 ): Promise<RecipeIngredientDBRead[]> {
 	logger.debug(`Fetching ingredients for section ${recipeSectionId}`);
 	const results = await db.query.recipeIngredients.findMany({
-		where: eq(recipeIngredients.recipeSectionId, recipeSectionId),
+		where: and(eq(recipeIngredients.recipeSectionId, recipeSectionId), isNull(recipeIngredients.deletedAt)),
 		with: {
 			unit: true,
 		},
@@ -31,12 +31,19 @@ export async function updateRecipeIngredients(
 	const existingIngredients = await db
 		.select()
 		.from(recipeIngredients)
-		.where(eq(recipeIngredients.recipeSectionId, recipeSectionId));
+		.where(and(eq(recipeIngredients.recipeSectionId, recipeSectionId), isNull(recipeIngredients.deletedAt)));
 
 	// remove ones that are not present in ingredientsData
 	const removedIngredientIds = existingIngredients.map(i => i.id).filter(id => !ingredientsData.some(idData => idData.id === id));
 
-	await Promise.all(removedIngredientIds.map(id => db.delete(recipeIngredients).where(eq(recipeIngredients.id, id))));
+	await Promise.all(
+		removedIngredientIds.map(id =>
+			db
+				.update(recipeIngredients)
+				.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: userId })
+				.where(eq(recipeIngredients.id, id)),
+		),
+	);
 
 	if (removedIngredientIds.length > 0) {
 		logger.info(`Deleted ${removedIngredientIds.length} ingredients for section ${recipeSectionId}`);

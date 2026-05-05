@@ -28,9 +28,8 @@ All content tables have `deletedAt` (nullable timestamp) and `deletedBy` (nullab
 - All SELECT queries filter `WHERE deletedAt IS NULL`
 - Hard `DELETE` statements are not used
 
-**Current gaps:**
-- No soft delete functions exist in any repository — there is currently no way to delete records from the app ([#241](https://github.com/kad-products/rezept-core/issues/241))
-- No queries currently filter by `deletedAt` — soft-deleted records would appear in results if any existed ([#240](https://github.com/kad-products/rezept-core/issues/240))
+**Current gap:**
+- No queries currently filter by `deletedAt` — soft-deleted records would appear in results ([#240](https://github.com/kad-products/rezept-core/issues/240))
 
 ## Optimistic updates
 

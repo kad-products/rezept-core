@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -8,7 +8,7 @@ import { validateUuid } from './utils';
 
 export async function getRecipes(logger: RzLogger): Promise<RecipeDBRead[]> {
 	logger.debug('Fetching all recipes');
-	const allRecipes = await db.select().from(recipes);
+	const allRecipes = await db.select().from(recipes).where(isNull(recipes.deletedAt));
 	logger.debug(`Fetched ${allRecipes.length} recipes`);
 	return allRecipes;
 }
@@ -19,7 +19,10 @@ export async function getRecipeById(recipeId: string, logger: RzLogger): Promise
 	}
 
 	logger.debug(`Fetching recipe ${recipeId}`);
-	const matchedRecipes = await db.select().from(recipes).where(eq(recipes.id, recipeId));
+	const matchedRecipes = await db
+		.select()
+		.from(recipes)
+		.where(and(eq(recipes.id, recipeId), isNull(recipes.deletedAt)));
 
 	if (matchedRecipes.length !== 1) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedRecipes.length, 1, 'Recipe']);
@@ -42,6 +45,26 @@ export async function createRecipe(recipe: RecipeWriteInput, actingUserId: strin
 	const result = insertedRecipes[0];
 	logger.info(`Created recipe ${result.id}`);
 	return result;
+}
+
+export async function deleteRecipe(recipeId: string, actingUserId: string, logger: RzLogger): Promise<RecipeDBRead> {
+	if (!validateUuid(recipeId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeId, 'Recipe']);
+	}
+
+	logger.debug(`Deleting recipe ${recipeId}`);
+	const deleted = await db
+		.update(recipes)
+		.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: actingUserId })
+		.where(eq(recipes.id, recipeId))
+		.returning();
+
+	if (deleted.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [deleted.length, 1, 'Recipe']);
+	}
+
+	logger.info(`Deleted recipe ${recipeId}`);
+	return deleted[0];
 }
 
 export async function updateRecipe(

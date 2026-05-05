@@ -3,7 +3,7 @@ import Logger from '@/logger';
 import { createUser } from '@/repositories';
 import type { ApiKeyFormInput } from '@/types';
 import { resetDb } from '../../../tests/mocks/db';
-import { createApiKey, getApiKeyById, getApiKeyByKey, getApiKeysByUserId, updateApiKey } from '../api-keys';
+import { createApiKey, deleteApiKey, getApiKeyById, getApiKeyByKey, getApiKeysByUserId, updateApiKey } from '../api-keys';
 
 const logger = new Logger();
 
@@ -191,6 +191,38 @@ describe('api-keys repository', () => {
 
 			// Looking up by internal id should not find it
 			await expect(getApiKeyByKey(created.id, logger)).rejects.toThrow('Expected 1 ApiKey record(s), but found 0');
+		});
+	});
+
+	describe('deleteApiKey', () => {
+		it('soft-deletes the key and returns it with deletedAt set', async () => {
+			const created = await createApiKey({ ...baseApiKeyData, userId: testUserId }, testUserId, logger);
+
+			const deleted = await deleteApiKey(created.id, testUserId, logger);
+
+			expect(deleted.id).toBe(created.id);
+			expect(deleted.deletedAt).not.toBeNull();
+			expect(deleted.deletedBy).toBe(testUserId);
+		});
+
+		it('does not return deleted key from getApiKeysByUserId', async () => {
+			const created = await createApiKey({ ...baseApiKeyData, userId: testUserId }, testUserId, logger);
+			await deleteApiKey(created.id, testUserId, logger);
+
+			const result = await getApiKeysByUserId(testUserId, logger);
+			expect(result).toHaveLength(0);
+		});
+
+		it('throws when key does not exist', async () => {
+			await expect(deleteApiKey(crypto.randomUUID(), testUserId, logger)).rejects.toThrow(
+				'Expected 1 ApiKey record(s), but found 0',
+			);
+		});
+
+		it('throws when id is not a valid uuid', async () => {
+			await expect(deleteApiKey('not-a-uuid', testUserId, logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a ApiKey',
+			);
 		});
 	});
 

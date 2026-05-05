@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { createSeason, getSeasonById, getSeasons, updateSeason } from '../seasons';
+import { createSeason, deleteSeason, getSeasonById, getSeasons, updateSeason } from '../seasons';
 
 const logger = new Logger();
 
@@ -134,6 +134,38 @@ describe('seasons repository', () => {
 			const season2 = await createSeason({ ...baseSeasonData, name: 'Season 2' }, testUserId, logger);
 
 			expect(season1.id).not.toBe(season2.id);
+		});
+	});
+
+	describe('deleteSeason', () => {
+		it('soft-deletes the season and returns it with deletedAt set', async () => {
+			const created = await createSeason(baseSeasonData, testUserId, logger);
+
+			const deleted = await deleteSeason(created.id, testUserId, logger);
+
+			expect(deleted.id).toBe(created.id);
+			expect(deleted.deletedAt).not.toBeNull();
+			expect(deleted.deletedBy).toBe(testUserId);
+		});
+
+		it('does not return deleted season from getSeasons', async () => {
+			const created = await createSeason(baseSeasonData, testUserId, logger);
+			await deleteSeason(created.id, testUserId, logger);
+
+			const result = await getSeasons(logger);
+			expect(result).toHaveLength(0);
+		});
+
+		it('throws when season does not exist', async () => {
+			await expect(deleteSeason(crypto.randomUUID(), testUserId, logger)).rejects.toThrow(
+				'Expected 1 Season record(s), but found 0',
+			);
+		});
+
+		it('throws when id is not a valid uuid', async () => {
+			await expect(deleteSeason('not-a-uuid', testUserId, logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a Season',
+			);
 		});
 	});
 

@@ -3,7 +3,13 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import type { CredentialWriteInput } from '@/types';
 import { resetDb } from '../../../tests/mocks/db';
-import { createCredential, getCredentialById, getCredentialsByUserId, updateCredentialCounter } from '../credentials';
+import {
+	createCredential,
+	deleteCredential,
+	getCredentialById,
+	getCredentialsByUserId,
+	updateCredentialCounter,
+} from '../credentials';
 import { createUser, deleteUser } from '../users';
 
 const logger = new Logger();
@@ -108,15 +114,16 @@ describe('createCredential', () => {
 		await expect(createCredential(createCredentialData(user.id, { credentialId }), null, logger)).rejects.toThrow();
 	});
 
-	it('cascades delete when user is deleted', async () => {
+	it('leaves credentials intact when user is soft deleted', async () => {
 		const user = await createUser('tobedeleted', null, logger);
 		await createCredential(createCredentialData(user.id), null, logger);
 		await createCredential(createCredentialData(user.id), null, logger);
 
-		await deleteUser(user.id, logger);
+		await deleteUser(user.id, null, logger);
 
+		// Soft delete does not cascade — credentials remain and are still queryable
 		const remaining = await getCredentialsByUserId(user.id, logger);
-		expect(remaining).toHaveLength(0);
+		expect(remaining).toHaveLength(2);
 	});
 });
 
@@ -258,6 +265,41 @@ describe('getCredentialById', () => {
 
 		// Using internal id should not find it (this is by credentialId)
 		await expect(getCredentialById(created.id, logger)).rejects.toThrow();
+	});
+});
+
+describe('deleteCredential', () => {
+	it('soft-deletes the credential and returns it with deletedAt set', async () => {
+		const user = await createUser('testuser', null, logger);
+		const created = await createCredential(createCredentialData(user.id), null, logger);
+
+		const deleted = await deleteCredential(created.id, user.id, logger);
+
+		expect(deleted.id).toBe(created.id);
+		expect(deleted.deletedAt).not.toBeNull();
+		expect(deleted.deletedBy).toBe(user.id);
+	});
+
+	it('does not return deleted credential from getCredentialsByUserId', async () => {
+		const user = await createUser('testuser', null, logger);
+		const created = await createCredential(createCredentialData(user.id), null, logger);
+		await deleteCredential(created.id, user.id, logger);
+
+		const remaining = await getCredentialsByUserId(user.id, logger);
+		expect(remaining).toHaveLength(0);
+	});
+
+	it('throws when credential does not exist', async () => {
+		const randomId = crypto.randomUUID();
+		await expect(deleteCredential(randomId, 'some-user-id', logger)).rejects.toThrow(
+			'Expected 1 Credential record(s), but found 0',
+		);
+	});
+
+	it('throws when id is not a valid uuid', async () => {
+		await expect(deleteCredential('not-a-uuid', 'some-user-id', logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a Credential',
+		);
 	});
 });
 
