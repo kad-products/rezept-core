@@ -79,6 +79,7 @@ describe('_postHandler', () => {
 					status: 'UPLOADED',
 				}),
 				'user-id',
+				'user-id',
 				expect.anything(),
 			);
 		});
@@ -95,6 +96,7 @@ describe('_postHandler', () => {
 			expect(mockEnv.rezept_recipe_uploads.put).toHaveBeenCalledWith('/raw/my-recipe.csv', expect.anything(), expect.anything());
 			expect(createRecipeUpload).toHaveBeenCalledWith(
 				expect.objectContaining({ originalFilename: 'my-recipe.csv', r2Key: '/raw/my-recipe.csv' }),
+				expect.anything(),
 				expect.anything(),
 				expect.anything(),
 			);

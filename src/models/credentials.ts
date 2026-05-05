@@ -13,7 +13,11 @@ export const credentials = sqliteTable(
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		createdAt: text().notNull().default(sql`(datetime('now', 'localtime'))`),
+		createdBy: text().references(() => users.id),
 		updatedAt: text(),
+		updatedBy: text().references(() => users.id),
+		deletedAt: text(),
+		deletedBy: text().references(() => users.id),
 		credentialId: text().notNull().unique(),
 		publicKey: blob().$type<Uint8Array>().notNull(),
 		counter: integer().notNull().default(0),

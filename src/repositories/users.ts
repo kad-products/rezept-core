@@ -6,12 +6,15 @@ import { users } from '@/models';
 import type { UserDBRead, UserWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
-export async function createUser(username: string, logger: RzLogger): Promise<UserDBRead> {
+export async function createUser(username: string, actingUserId: string | null, logger: RzLogger): Promise<UserDBRead> {
 	logger.debug(`Creating user ${username}`);
 	const user: UserWriteInput = {
 		username,
 	};
-	const [insertedUser] = await db.insert(users).values(user).returning();
+	const [insertedUser] = await db
+		.insert(users)
+		.values({ ...user, createdBy: actingUserId })
+		.returning();
 	logger.info(`Created user ${insertedUser.id}`);
 	return insertedUser;
 }

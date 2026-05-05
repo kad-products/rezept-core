@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -28,14 +28,14 @@ export async function getRecipeById(recipeId: string, logger: RzLogger): Promise
 	return matchedRecipes[0];
 }
 
-export async function createRecipe(recipe: RecipeWriteInput, userId: string, logger: RzLogger): Promise<RecipeDBRead> {
+export async function createRecipe(recipe: RecipeWriteInput, actingUserId: string, logger: RzLogger): Promise<RecipeDBRead> {
 	logger.debug('Creating recipe');
 
 	const insertedRecipes = await db
 		.insert(recipes)
 		.values({
 			...recipe,
-			createdBy: userId,
+			createdBy: actingUserId,
 		})
 		.returning();
 
@@ -47,7 +47,7 @@ export async function createRecipe(recipe: RecipeWriteInput, userId: string, log
 export async function updateRecipe(
 	recipeId: string,
 	recipeData: RecipeWriteInput,
-	userId: string,
+	actingUserId: string,
 	logger: RzLogger,
 ): Promise<RecipeDBRead> {
 	logger.debug(`Updating recipe ${recipeId}`);
@@ -56,7 +56,8 @@ export async function updateRecipe(
 		.update(recipes)
 		.set({
 			...recipeData,
-			updatedBy: userId,
+			updatedAt: sql`(datetime('now', 'localtime'))`,
+			updatedBy: actingUserId,
 		})
 		.where(eq(recipes.id, recipeId))
 		.returning();

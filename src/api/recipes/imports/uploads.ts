@@ -41,6 +41,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 				status: 'UPLOADED',
 			},
 			userId,
+			userId,
 			ctx.logger,
 		);
 	} catch (err) {

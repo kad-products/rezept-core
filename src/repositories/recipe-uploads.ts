@@ -9,6 +9,7 @@ import { validateUuid } from './utils';
 export async function createRecipeUpload(
 	recipeUpload: RecipeUploadWriteInput,
 	userId: string,
+	actingUserId: string,
 	logger: RzLogger,
 ): Promise<RecipeUploadDBRead> {
 	logger.debug('Creating recipe upload');
@@ -18,7 +19,7 @@ export async function createRecipeUpload(
 		.values({
 			...recipeUpload,
 			userId,
-			createdBy: userId,
+			createdBy: actingUserId,
 		})
 		.returning();
 

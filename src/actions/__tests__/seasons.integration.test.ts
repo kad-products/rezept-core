@@ -35,7 +35,7 @@ describe('_saveSeason integration', () => {
 
 	beforeEach(async () => {
 		await resetDb();
-		const user = await createUser('testuser', mockRequestInfo.ctx.logger);
+		const user = await createUser('testuser', null, mockRequestInfo.ctx.logger);
 		testUserId = user.id;
 		mockRequestInfo.ctx.user = { id: testUserId };
 
