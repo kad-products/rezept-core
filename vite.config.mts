@@ -1,4 +1,5 @@
 import { cloudflare } from '@cloudflare/vite-plugin';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { redwood } from 'rwsdk/vite';
 import { defineConfig, loadEnv } from 'vite';
 
@@ -22,6 +23,7 @@ export default defineConfig(({ mode }) => {
 				viteEnvironment: { name: 'worker' },
 			}),
 			redwood(),
+			visualizer({ open: false, filename: 'stats.html' }),
 		],
 	};
 });
