@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -47,6 +47,7 @@ export async function updateRecipeScrapeStatus(
 		.set({
 			status,
 			statusText,
+			updatedAt: sql`(datetime('now', 'localtime'))`,
 			updatedBy: userId,
 		})
 		.where(eq(recipeScrapes.id, recipeScrapeId))

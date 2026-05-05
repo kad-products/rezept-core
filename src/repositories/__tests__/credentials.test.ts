@@ -266,7 +266,7 @@ describe('updateCredentialCounter', () => {
 		const user = await createUser('testuser', null, logger);
 		const credential = await createCredential(createCredentialData(user.id), null, logger);
 
-		await updateCredentialCounter(credential.id, 5, logger);
+		await updateCredentialCounter(credential.id, 5, credential.userId, logger);
 
 		const updated = await getCredentialById(credential.credentialId, logger);
 		expect(updated?.counter).toBe(5);
@@ -276,9 +276,9 @@ describe('updateCredentialCounter', () => {
 		const user = await createUser('testuser', null, logger);
 		const credential = await createCredential(createCredentialData(user.id), null, logger);
 
-		await updateCredentialCounter(credential.id, 1, logger);
-		await updateCredentialCounter(credential.id, 2, logger);
-		await updateCredentialCounter(credential.id, 3, logger);
+		await updateCredentialCounter(credential.id, 1, credential.userId, logger);
+		await updateCredentialCounter(credential.id, 2, credential.userId, logger);
+		await updateCredentialCounter(credential.id, 3, credential.userId, logger);
 
 		const updated = await getCredentialById(credential.credentialId, logger);
 		expect(updated?.counter).toBe(3);
@@ -289,7 +289,7 @@ describe('updateCredentialCounter', () => {
 		const cred1 = await createCredential(createCredentialData(user.id), null, logger);
 		const cred2 = await createCredential(createCredentialData(user.id), null, logger);
 
-		await updateCredentialCounter(cred1.id, 10, logger);
+		await updateCredentialCounter(cred1.id, 10, cred1.userId, logger);
 
 		const updated1 = await getCredentialById(cred1.credentialId, logger);
 		const updated2 = await getCredentialById(cred2.credentialId, logger);
@@ -302,7 +302,7 @@ describe('updateCredentialCounter', () => {
 		const user = await createUser('testuser', null, logger);
 		const credential = await createCredential(createCredentialData(user.id), null, logger);
 
-		await updateCredentialCounter(credential.id, 0, logger);
+		await updateCredentialCounter(credential.id, 0, credential.userId, logger);
 
 		const updated = await getCredentialById(credential.credentialId, logger);
 		expect(updated?.counter).toBe(0);
@@ -312,7 +312,7 @@ describe('updateCredentialCounter', () => {
 		const user = await createUser('testuser', null, logger);
 		const credential = await createCredential(createCredentialData(user.id), null, logger);
 
-		await updateCredentialCounter(credential.id, 999999, logger);
+		await updateCredentialCounter(credential.id, 999999, credential.userId, logger);
 
 		const updated = await getCredentialById(credential.credentialId, logger);
 		expect(updated?.counter).toBe(999999);
@@ -330,7 +330,7 @@ describe('updateCredentialCounter', () => {
 			logger,
 		);
 
-		await updateCredentialCounter(credential.id, 42, logger);
+		await updateCredentialCounter(credential.id, 42, credential.userId, logger);
 
 		const updated = await getCredentialById(credential.credentialId, logger);
 		expect(updated?.name).toBe('Test Key');
@@ -341,13 +341,13 @@ describe('updateCredentialCounter', () => {
 	it('throws when updating non-existent credential', async () => {
 		const nonexistentId = randomUUID();
 
-		await expect(updateCredentialCounter(nonexistentId, 5, logger)).rejects.toThrow(
+		await expect(updateCredentialCounter(nonexistentId, 5, 'some-user-id', logger)).rejects.toThrow(
 			'Expected 1 Credential record(s), but found 0',
 		);
 	});
 
 	it('throws when id is not a valid uuid', async () => {
-		await expect(updateCredentialCounter('not-a-uuid', 5, logger)).rejects.toThrow(
+		await expect(updateCredentialCounter('not-a-uuid', 5, 'some-user-id', logger)).rejects.toThrow(
 			'The value "not-a-uuid" is not a valid ID for a Credential',
 		);
 	});
@@ -366,7 +366,7 @@ describe('integration: credential lifecycle', () => {
 		expect(found?.name).toBe('My Key');
 
 		// Update counter
-		await updateCredentialCounter(created.id, 1, logger);
+		await updateCredentialCounter(created.id, 1, created.userId, logger);
 
 		// Verify update
 		const updated = await getCredentialById(created.credentialId, logger);
@@ -381,8 +381,8 @@ describe('integration: credential lifecycle', () => {
 		const iphone = await createCredential(createCredentialData(user.id, { name: 'iPhone' }), null, logger);
 
 		// Update each independently
-		await updateCredentialCounter(yubikey.id, 5, logger);
-		await updateCredentialCounter(iphone.id, 3, logger);
+		await updateCredentialCounter(yubikey.id, 5, yubikey.userId, logger);
+		await updateCredentialCounter(iphone.id, 3, iphone.userId, logger);
 
 		// Verify both updated correctly
 		const allCreds = await getCredentialsByUserId(user.id, logger);

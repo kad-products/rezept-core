@@ -17,7 +17,7 @@ Every content table carries four audit fields that track who created and last mo
 
 **`users` table:** `createdBy` is nullable. During self-registration there is no prior actor, so `createdBy` is set to `null`. If an admin creates a user on behalf of someone else, the admin's ID would be recorded. The null is semantically meaningful (self-registered), not a gap.
 
-**Known gap:** `updatedAt` is not currently being set on update — tracked in [#242](https://github.com/kad-products/rezept-core/issues/242).
+`updatedAt` is set on every update using `sql\`(datetime('now', 'localtime'))\`` in the `.set()` call — the same format used for `createdAt`.
 
 ## Soft deletes
 

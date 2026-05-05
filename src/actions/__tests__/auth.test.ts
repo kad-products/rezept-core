@@ -218,6 +218,7 @@ describe('finishPasskeyLogin', () => {
 		expect(updateCredentialCounter).toHaveBeenCalledWith(
 			mockLogin.id,
 			mockVerification.authenticationInfo.newCounter,
+			expect.any(String),
 			expect.anything(),
 		);
 	});

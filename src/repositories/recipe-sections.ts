@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeSections } from '@/models';
@@ -42,6 +42,7 @@ export async function updateRecipeSections(
 				.set({
 					title: section.title,
 					order: section.order,
+					updatedAt: sql`(datetime('now', 'localtime'))`,
 					updatedBy: userId,
 				})
 				.where(eq(recipeSections.id, section.id))

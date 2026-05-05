@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -40,13 +40,22 @@ export async function getCredentialById(credentialId: string, logger: RzLogger):
 	return matchedCredentials[0];
 }
 
-export async function updateCredentialCounter(credentialId: string, counter: number, logger: RzLogger): Promise<void> {
+export async function updateCredentialCounter(
+	credentialId: string,
+	counter: number,
+	actingUserId: string,
+	logger: RzLogger,
+): Promise<void> {
 	if (!validateUuid(credentialId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [credentialId, 'Credential']);
 	}
 
 	logger.debug(`Updating credential counter for ${credentialId}`);
-	const updated = await db.update(credentials).set({ counter }).where(eq(credentials.id, credentialId)).returning();
+	const updated = await db
+		.update(credentials)
+		.set({ counter, updatedAt: sql`(datetime('now', 'localtime'))`, updatedBy: actingUserId })
+		.where(eq(credentials.id, credentialId))
+		.returning();
 
 	if (updated.length !== 1) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [updated.length, 1, 'Credential']);

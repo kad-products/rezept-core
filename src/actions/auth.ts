@@ -74,7 +74,12 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 			return errorResponse('Invalid passkey login', 400);
 		}
 
-		await updateCredentialCounter(login.id, verification.authenticationInfo.newCounter, requestInfo.ctx.logger);
+		await updateCredentialCounter(
+			login.id,
+			verification.authenticationInfo.newCounter,
+			credential.userId,
+			requestInfo.ctx.logger,
+		);
 
 		const user = await getUserById(credential.userId, requestInfo.ctx.logger);
 

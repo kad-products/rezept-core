@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
@@ -67,6 +67,7 @@ export async function updateApiKey(
 		.update(apiKeys)
 		.set({
 			...apiKey,
+			updatedAt: sql`(datetime('now', 'localtime'))`,
 			updatedBy: actingUserId,
 		})
 		.where(eq(apiKeys.id, apiKeyId))
