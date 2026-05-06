@@ -17,6 +17,9 @@ pnpm-debug.log*
 # Vite build output
 dist
 
+# Rollup bundle visualizer output
+bundle-stats*.html
+
 # TypeScript
 *.tsbuildinfo
 
