@@ -42,7 +42,8 @@
 			"!**/.terraform",
 			"!**/node_modules",
 			"!**/dist",
-			"!**/.wrangler"
+			"!**/.wrangler",
+			"!**/bundle-stats*.html"
 		]
 	},
 	"overrides": [
