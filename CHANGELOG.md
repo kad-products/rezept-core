@@ -1,3 +1,9 @@
+## [1.24.0](https://github.com/kad-products/rezept-core/compare/v1.23.0...v1.24.0) (2026-05-06)
+
+### Features
+
+* wire up cloudflare beacon token ([8cce511](https://github.com/kad-products/rezept-core/commit/8cce51188a1afaefd77ef42951226e8c222d5871))
+
 ## [1.23.0](https://github.com/kad-products/rezept-core/compare/v1.22.0...v1.23.0) (2026-05-05)
 
 ### Features
