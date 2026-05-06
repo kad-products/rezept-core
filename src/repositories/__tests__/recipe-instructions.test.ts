@@ -204,6 +204,43 @@ describe('recipe-instructions repository', () => {
 			expect(instructions).toContain('Brand New');
 		});
 
+		it('handles reordering stepNumbers that causes transient constraint conflicts', async () => {
+			// Existing: step 1 = "Do things", step 2 = "Do more things"
+			// Goal:     step 1 = "Start things" (new), step 2 = "Do things", step 3 = "Do more things"
+			//
+			// The concurrent Promise.all() updates attempt to set step1.stepNumber=2 while step2 still
+			// holds stepNumber=2, violating the unique constraint on (recipeSectionId, stepNumber).
+			// This test should FAIL until the transactional two-phase update is implemented (see #30).
+
+			const initial = await updateRecipeInstructions(
+				testSectionId,
+				[
+					{ stepNumber: 1, instruction: 'Do things' },
+					{ stepNumber: 2, instruction: 'Do more things' },
+				],
+				testUserId,
+				logger,
+			);
+			const [step1, step2] = initial.sort((a, b) => a.stepNumber - b.stepNumber);
+
+			const result = await updateRecipeInstructions(
+				testSectionId,
+				[
+					{ id: step1.id, stepNumber: 2, instruction: 'Do things' }, // conflicts: step 2 already exists
+					{ id: step2.id, stepNumber: 3, instruction: 'Do more things' },
+					{ stepNumber: 1, instruction: 'Start things' },
+				],
+				testUserId,
+				logger,
+			);
+
+			expect(result).toHaveLength(3);
+			const sorted = result.sort((a, b) => a.stepNumber - b.stepNumber);
+			expect(sorted[0].instruction).toBe('Start things');
+			expect(sorted[1].instruction).toBe('Do things');
+			expect(sorted[2].instruction).toBe('Do more things');
+		});
+
 		it('does not affect instructions in other sections', async () => {
 			const recipe = await createRecipe({ authorId: testUserId, title: 'Other Recipe' }, testUserId, logger);
 			const [otherSection] = await updateRecipeSections(recipe.id, [{ title: 'Other', order: 1 }], testUserId, logger);
