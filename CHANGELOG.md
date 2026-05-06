@@ -1,3 +1,9 @@
+## [1.24.1](https://github.com/kad-products/rezept-core/compare/v1.24.0...v1.24.1) (2026-05-06)
+
+### Bug Fixes
+
+* solve for step reordering race condition ([0453d2d](https://github.com/kad-products/rezept-core/commit/0453d2ddc7395c7aff96f96b3716df64ce6d1511))
+
 ## [1.24.0](https://github.com/kad-products/rezept-core/compare/v1.23.0...v1.24.0) (2026-05-06)
 
 ### Features

@@ -1,6 +1,6 @@
 {
 	"name": "@redwoodjs/starter",
-	"version": "1.24.0",
+	"version": "1.24.1",
 	"description": "A bare-bones RedwoodSDK starter",
 	"main": "index.js",
 	"type": "module",
