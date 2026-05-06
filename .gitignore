@@ -18,7 +18,7 @@ pnpm-debug.log*
 dist
 
 # Rollup bundle visualizer output
-stats.html
+bundle-stats*.html
 
 # TypeScript
 *.tsbuildinfo

@@ -27,4 +27,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: bundle-stats
-          path: stats.html
+          path: bundle-stats*.html

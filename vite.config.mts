@@ -23,7 +23,14 @@ export default defineConfig(({ mode }) => {
 				viteEnvironment: { name: 'worker' },
 			}),
 			redwood(),
-			visualizer({ open: false, filename: 'stats.html' }),
+			{
+				...visualizer({ open: false, filename: 'bundle-stats-client.html' }),
+				applyToEnvironment: (env: { name: string }) => env.name === 'client',
+			},
+			{
+				...visualizer({ open: false, filename: 'bundle-stats-worker.html' }),
+				applyToEnvironment: (env: { name: string }) => env.name === 'worker',
+			},
 		],
 	};
 });
