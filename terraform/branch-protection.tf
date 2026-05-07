@@ -1,11 +1,12 @@
 resource "github_branch_protection" "main" {
-  repository_id = var.repository_name
+  repository_id = "rezept-core"
   pattern       = "main"
 
   required_status_checks {
     strict = true
     contexts = [
-      "commitlint / commitlint"
+      "commitlint / commitlint",
+      "Unit Tests / unit-tests",
     ]
   }
 

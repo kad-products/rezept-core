@@ -13,5 +13,5 @@ provider "github" {
 }
 
 data "github_user" "admin" {
-  username = var.admin_username
+  username = "arsdehnel"
 }

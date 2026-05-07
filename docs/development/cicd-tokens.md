@@ -1,3 +1,25 @@
+## Terraform Token (local dev)
+
+Used when running `terraform apply` locally against the GitHub provider. Not stored as a repo secret — set as `GITHUB_TOKEN` in your shell before running Terraform.
+
+```bash
+export GITHUB_TOKEN=github_pat_...
+cd terraform && terraform apply
+```
+
+- Issued under Adam's profile as [fine-grained token](https://github.com/settings/personal-access-tokens)
+- Named `rezept-core-terraform`
+- Resource owner: `kad-products`
+- Repository access: Only `kad-products/rezept-core`
+- No org permissions
+- Repository permissions:
+  - Read/write `administration` — repo settings (`allow_auto_merge`, etc.) and branch protection rules
+  - Read/write `secrets` — Actions secrets (`RENOVATE_TOKEN`, etc.)
+  - Read `metadata` (required, auto-granted)
+- Rotate 90 days
+
+---
+
 ## GitHub Token
 
 - Issued under Adam's profile as [fine-grained token](https://github.com/settings/personal-access-tokens)
