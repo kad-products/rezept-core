@@ -1,3 +1,9 @@
+## [1.25.0](https://github.com/kad-products/rezept-core/compare/v1.24.1...v1.25.0) (2026-05-07)
+
+### Features
+
+* setup renovate ([fcdd62a](https://github.com/kad-products/rezept-core/commit/fcdd62a00e908bbba64b63e5523f5f9408d2b232))
+
 ## [1.24.1](https://github.com/kad-products/rezept-core/compare/v1.24.0...v1.24.1) (2026-05-06)
 
 ### Bug Fixes
