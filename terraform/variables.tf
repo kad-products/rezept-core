@@ -1,9 +1,5 @@
-variable "repository_name" {
-  description = "GitHub repository name (owner/repo)"
+variable "renovate_token" {
+  description = "Fine-grained PAT used by the self-hosted Renovate workflow to open and automerge dependency PRs. See docs/development/renovate-setup.md."
   type        = string
-}
-
-variable "admin_username" {
-  description = "GitHub username allowed to push directly"
-  type        = string
+  sensitive   = true
 }

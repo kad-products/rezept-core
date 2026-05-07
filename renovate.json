@@ -1,0 +1,36 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": ["config:recommended"],
+	"minimumReleaseAge": "3 days",
+	"labels": ["dependencies"],
+	"dependencyDashboard": true,
+	"packageRules": [
+		{
+			"description": "Group and automerge non-major devDependency updates. CI must pass before merge.",
+			"matchDepTypes": ["devDependencies"],
+			"matchUpdateTypes": ["minor", "patch"],
+			"groupName": "devDependencies (non-major)",
+			"automerge": true,
+			"automergeType": "pr",
+			"platformAutomerge": true
+		},
+		{
+			"description": "Group Drizzle packages together. No automerge — migrations may be needed.",
+			"matchPackageNames": ["drizzle-orm", "drizzle-kit", "drizzle-zod", "drizzle-seed", "drizzle-mermaid-generator"],
+			"groupName": "Drizzle",
+			"automerge": false
+		},
+		{
+			"description": "Group Cloudflare packages together. No automerge — wrangler and worker types often have behaviour changes.",
+			"matchPackageNames": ["wrangler", "@cloudflare/workers-types", "@cloudflare/vite-plugin"],
+			"groupName": "Cloudflare",
+			"automerge": false
+		},
+		{
+			"description": "Group RedwoodSDK packages together.",
+			"matchPackageNames": ["rwsdk"],
+			"groupName": "RedwoodSDK",
+			"automerge": false
+		}
+	]
+}
