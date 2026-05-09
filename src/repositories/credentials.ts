@@ -72,15 +72,11 @@ export async function updateCredentialCounter(
 	actingUserId: string,
 	logger: RzLogger,
 ): Promise<void> {
-	if (!validateUuid(credentialId)) {
-		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [credentialId, 'Credential']);
-	}
-
 	logger.debug(`Updating credential counter for ${credentialId}`);
 	const updated = await db
 		.update(credentials)
 		.set({ counter, updatedAt: sql`(datetime('now', 'localtime'))`, updatedBy: actingUserId })
-		.where(eq(credentials.id, credentialId))
+		.where(eq(credentials.credentialId, credentialId))
 		.returning();
 
 	if (updated.length !== 1) {

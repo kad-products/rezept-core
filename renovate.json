@@ -3,7 +3,6 @@
 	"extends": ["config:recommended"],
 	"minimumReleaseAge": "3 days",
 	"labels": ["dependencies"],
-	"dependencyDashboard": true,
 	"packageRules": [
 		{
 			"description": "Group and automerge non-major devDependency updates. CI must pass before merge.",
