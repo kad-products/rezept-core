@@ -1,3 +1,9 @@
+## [1.25.1](https://github.com/kad-products/rezept-core/compare/v1.25.0...v1.25.1) (2026-05-09)
+
+### Bug Fixes
+
+* use the correct credential ID in the repository methods ([086c141](https://github.com/kad-products/rezept-core/commit/086c141df29ef127185a3886519b1ee1cffd862d))
+
 ## [1.25.0](https://github.com/kad-products/rezept-core/compare/v1.24.1...v1.25.0) (2026-05-07)
 
 ### Features
