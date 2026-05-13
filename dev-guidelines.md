@@ -66,6 +66,25 @@ After auth operations use `navigate()` to force a full page reload. After form m
 - Simpler configuration
 - Growing ecosystem
 
+## TypeScript Patterns
+
+### `satisfies` on Zod schema utils
+
+Zod schema utility constants in `src/schemas/utils.ts` use `satisfies z.ZodType<OutputType>` to document their output contract:
+
+```ts
+export const optionalString = z
+    .union([z.string(), z.null()])
+    .transform(val => val?.trim() || undefined)
+    .optional() satisfies z.ZodType<string | undefined>;
+```
+
+A normal type annotation isn't practical here — the full Zod chain type is too complex to write by hand (which is why `src/schemas/` is excluded from the Biome `useExplicitType` rule). `satisfies` checks the output contract at compile time without widening the variable's inferred type, so chaining (`.pipe()` etc.) still works at call sites.
+
+Apply this only to schema utils in `src/schemas/utils.ts`. Don't add `satisfies` to config objects or lookup maps unless there's a concrete reason to preserve literal types downstream.
+
+---
+
 ## Documentation
 
 ### When to Document
