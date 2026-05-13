@@ -5,10 +5,10 @@
 	"labels": ["dependencies"],
 	"packageRules": [
 		{
-			"description": "Group and automerge non-major devDependency updates. CI must pass before merge.",
-			"matchDepTypes": ["devDependencies"],
+			"description": "Group and automerge non-major dependency updates. CI must pass before merge.",
+			"matchDepTypes": ["devDependencies", "dependencies"],
 			"matchUpdateTypes": ["minor", "patch"],
-			"groupName": "devDependencies (non-major)",
+			"groupName": "dependency (non-major)",
 			"automerge": true,
 			"automergeType": "pr",
 			"platformAutomerge": true
