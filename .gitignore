@@ -55,6 +55,8 @@ bundle-stats*.html
 
 # Claude Code local settings (personal permissions/preferences — not team config)
 .claude/settings.local.json
+# Claude Code agent worktrees (temporary, created per-agent run)
+.claude/worktrees/
 
 # dotenv environment variables file
 .env.local
