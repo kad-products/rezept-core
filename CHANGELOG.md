@@ -1,3 +1,9 @@
+## [1.25.2](https://github.com/kad-products/rezept-core/compare/v1.25.1...v1.25.2) (2026-05-17)
+
+### Bug Fixes
+
+* add satisfies annotation to schema utils ([5c939ff](https://github.com/kad-products/rezept-core/commit/5c939fff04a8c02b5646f314e7934f71eda74c3c))
+
 ## [1.25.1](https://github.com/kad-products/rezept-core/compare/v1.25.0...v1.25.1) (2026-05-09)
 
 ### Bug Fixes
