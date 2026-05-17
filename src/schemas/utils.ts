@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const optionalString = z
 	.union([z.string(), z.null()])
 	.transform(val => val?.trim() || undefined)
-	.optional();
+	.optional() satisfies z.ZodType<string | undefined>;
 
 export const optionalStringMax = (max: number, field: string) =>
 	optionalString.pipe(z.string().max(max, `${field} must be ${max} characters or less`).optional());
@@ -11,7 +11,7 @@ export const optionalStringMax = (max: number, field: string) =>
 export const optionalUuid = z
 	.union([z.string().uuid('Must be a valid UUID'), z.null(), z.literal('')])
 	.transform(val => (val === '' || val === null ? undefined : val))
-	.optional();
+	.optional() satisfies z.ZodType<string | undefined>;
 
 export const requiredUuid = z.string().uuid('Must be a valid UUID');
 
