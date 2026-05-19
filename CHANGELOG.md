@@ -1,3 +1,10 @@
+## [1.25.4](https://github.com/kad-products/rezept-core/compare/v1.25.3...v1.25.4) (2026-05-19)
+
+### Bug Fixes
+
+* **ci:** pass CI=true to Renovate container so pnpm runs non-interactively ([000d8de](https://github.com/kad-products/rezept-core/commit/000d8de88ebdcec55208dc7bc800ba45c10a7e62))
+* revert wrangler to avoid goofy typing setup ([125f6b0](https://github.com/kad-products/rezept-core/commit/125f6b01ba2ab4f7d8d7395a0a39e8c56db2ee9c))
+
 ## [1.25.3](https://github.com/kad-products/rezept-core/compare/v1.25.2...v1.25.3) (2026-05-17)
 
 ### Bug Fixes
