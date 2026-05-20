@@ -1,3 +1,9 @@
+## [1.25.5](https://github.com/kad-products/rezept-core/compare/v1.25.4...v1.25.5) (2026-05-20)
+
+### Bug Fixes
+
+* try another version match ([7c35fe3](https://github.com/kad-products/rezept-core/commit/7c35fe334252d4c273e4bea93fcac997eecb6304))
+
 ## [1.25.4](https://github.com/kad-products/rezept-core/compare/v1.25.3...v1.25.4) (2026-05-19)
 
 ### Bug Fixes
