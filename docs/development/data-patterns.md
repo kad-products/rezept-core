@@ -6,12 +6,12 @@ Conventions for how data is stored, tracked, and kept consistent across the appl
 
 Every content table carries four audit fields that track who created and last modified a record and when:
 
-| Field | Type | Set by |
-|---|---|---|
-| `createdAt` | ISO timestamp string | Drizzle `$defaultFn` on insert — never passed by callers |
-| `createdBy` | User ID (FK → users) | Repository, from the `userId` parameter |
-| `updatedAt` | ISO timestamp string, nullable | Repository on update — null until first update |
-| `updatedBy` | User ID (FK → users), nullable | Repository, from the `userId` parameter on update |
+| Field       | Type                           | Set by                                                   |
+| ----------- | ------------------------------ | -------------------------------------------------------- |
+| `createdAt` | ISO timestamp string           | Drizzle `$defaultFn` on insert — never passed by callers |
+| `createdBy` | User ID (FK → users)           | Repository, from the `userId` parameter                  |
+| `updatedAt` | ISO timestamp string, nullable | Repository on update — null until first update           |
+| `updatedBy` | User ID (FK → users), nullable | Repository, from the `userId` parameter on update        |
 
 `createdBy` and `updatedBy` are always set server-side from the authenticated user's ID. Actions and API handlers pass `userId` down to the repository — they never set audit fields directly, and clients never supply them.
 
@@ -41,9 +41,8 @@ This is intentional for now given the complexity of reconciling optimistic state
 
 After a successful mutation, data is refreshed differently depending on context:
 
-| Context | Current behavior |
-|---|---|
-| Auth (login/logout) | `navigate()` to a new route — forces a full page load which refetches from the server |
-| Form mutations (recipe, season, api key) | Form shows inline success/error message; no navigation or revalidation |
-
-**Known gap:** After a create or update via a form, list views and other page data do not refresh without a manual page reload. There is no SWR, React Query, or RSC revalidation mechanism in place — tracked in [#243](https://github.com/kad-products/rezept-core/issues/243).
+| Context              | Current behavior                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| Auth (login/logout)  | `navigate()` to a new route — forces a full page load which refetches from the server |
+| Create Form Mutation | `navigate()` to the view route of the created resource                                |
+| Update Form Mutation | `navigate()` to the view route of the updated resource                                |
