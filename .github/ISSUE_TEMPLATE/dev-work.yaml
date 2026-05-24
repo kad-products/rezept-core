@@ -1,0 +1,28 @@
+name: Development Work
+description: A specific work task related to a higher-level feature or bug
+title: "[Dev]: "
+labels: ["dev"]
+body:
+  - type: textarea
+    id: overview
+    attributes:
+      label: Work Overview
+      description: A overview of what this task is all about
+    validations:
+      required: true
+
+  - type: textarea
+    id: def-of-done
+    attributes:
+      label: Definition of Done
+      description: What does done look like and include
+    validations:
+      required: true
+
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of Scope
+      description: What is NOT included in this work
+    validations:
+      required: true
