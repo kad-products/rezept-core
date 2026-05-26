@@ -74,6 +74,11 @@ describe('recipe-instructions repository', () => {
 	});
 
 	describe('updateRecipeInstructions', () => {
+		it('returns empty array when called with no instructions and none exist', async () => {
+			const result = await updateRecipeInstructions(testSectionId, [], testUserId, logger);
+			expect(result).toEqual([]);
+		});
+
 		it('inserts new instructions when none exist', async () => {
 			const result = await updateRecipeInstructions(
 				testSectionId,

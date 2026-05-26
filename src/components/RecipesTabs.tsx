@@ -39,7 +39,18 @@ export default function RecipesTabs({
 							<RzCard
 								key={r.id}
 								title={r.title}
-								body={r.description || ''}
+								body={
+									<div>
+										<div className="recipe-cover-image">
+											{r.coverImageId ? (
+												<img src={`/api/images/${r.coverImageId}`} alt={`${r.title} cover`} />
+											) : (
+												<div>No cover image</div>
+											)}
+										</div>
+										<p>{r.description || ''}</p>
+									</div>
+								}
 								actions={[
 									{
 										href: `/recipes/${r.id}`,
