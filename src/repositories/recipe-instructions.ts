@@ -1,4 +1,5 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
+import type { BatchItem } from 'drizzle-orm/batch';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { recipeInstructions } from '@/models';
@@ -25,82 +26,93 @@ export async function updateRecipeInstructions(
 ): Promise<RecipeInstructionDBRead[]> {
 	logger.debug(`Updating instructions for section ${recipeSectionId}`);
 
-	return db.transaction(async tx => {
-		// get existing instructions for the section
-		const existingInstructions = await tx
-			.select()
-			.from(recipeInstructions)
-			.where(and(eq(recipeInstructions.recipeSectionId, recipeSectionId), isNull(recipeInstructions.deletedAt)));
+	// get existing instructions for the section (must happen before batch so we know what to mutate)
+	const existingInstructions = await db
+		.select()
+		.from(recipeInstructions)
+		.where(and(eq(recipeInstructions.recipeSectionId, recipeSectionId), isNull(recipeInstructions.deletedAt)));
 
-		// soft-delete removed instructions
-		const removedInstructionIds = existingInstructions
-			.map(i => i.id)
-			.filter(id => !instructionsData.some(idData => idData.id === id));
+	logger.debug(`Found ${existingInstructions.length} existing instructions for section ${recipeSectionId}`);
 
-		await Promise.all(
-			removedInstructionIds.map(id =>
-				tx
-					.update(recipeInstructions)
-					.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: userId })
-					.where(eq(recipeInstructions.id, id)),
-			),
-		);
+	// soft-delete removed instructions
+	const removedInstructionIds = existingInstructions
+		.map(i => i.id)
+		.filter(id => !instructionsData.some(idData => idData.id === id));
 
-		if (removedInstructionIds.length > 0) {
-			logger.info(`Deleted ${removedInstructionIds.length} instructions for section ${recipeSectionId}`);
+	logger.debug(`Soft-deleting ${removedInstructionIds.length} removed instructions for section ${recipeSectionId}`);
+
+	// Phase 1: move all existing instructions being updated to temporary negative stepNumbers.
+	// This clears the positive number space so Phase 2 can assign final values without hitting
+	// the (recipeSectionId, stepNumber) unique constraint.
+	const existingUpdates = instructionsData.filter(i => i.id);
+
+	// All mutations are batched into a single D1 batch call (D1 does not support BEGIN transactions).
+	// Statements execute sequentially within the batch, so Phase 1 completes before Phase 2 runs,
+	// preserving the two-phase step-number swap. The batch result array mirrors statement order,
+	// so we track the counts of each phase to slice out the Phase 2 returning() rows at the end.
+	const deleteCount = removedInstructionIds.length;
+	const phase1Count = existingUpdates.length;
+
+	const deleteStatements = removedInstructionIds.map(id =>
+		db
+			.update(recipeInstructions)
+			.set({ deletedAt: sql`(datetime('now', 'localtime'))`, deletedBy: userId })
+			.where(eq(recipeInstructions.id, id)),
+	) as BatchItem<'sqlite'>[];
+
+	const phase1Statements = existingUpdates.map((instData, index) =>
+		db
+			.update(recipeInstructions)
+			.set({ stepNumber: -(index + 1) })
+			.where(eq(recipeInstructions.id, instData.id!)),
+	) as BatchItem<'sqlite'>[];
+
+	// Phase 2: apply final stepNumbers to existing instructions and insert new ones.
+	// All existing instructions are now at negative stepNumbers, so no constraint conflicts can occur.
+	const phase2Statements = instructionsData.map(instData => {
+		if (instData.id) {
+			return db
+				.update(recipeInstructions)
+				.set({
+					stepNumber: instData.stepNumber,
+					instruction: instData.instruction,
+					updatedAt: sql`(datetime('now', 'localtime'))`,
+					updatedBy: userId,
+				})
+				.where(eq(recipeInstructions.id, instData.id))
+				.returning();
 		}
+		return db
+			.insert(recipeInstructions)
+			.values({
+				recipeSectionId,
+				stepNumber: instData.stepNumber,
+				instruction: instData.instruction,
+				createdBy: userId,
+			})
+			.returning();
+	}) as BatchItem<'sqlite'>[];
 
-		// Phase 1: move all existing instructions being updated to temporary negative stepNumbers.
-		// This clears the positive number space so Phase 2 can assign final values concurrently
-		// without hitting the (recipeSectionId, stepNumber) unique constraint.
-		const existingUpdates = instructionsData.filter(i => i.id);
-		if (existingUpdates.length > 0) {
-			await Promise.all(
-				existingUpdates.map((instData, index) =>
-					tx
-						.update(recipeInstructions)
-						.set({ stepNumber: -(index + 1) })
-						.where(eq(recipeInstructions.id, instData.id!)),
-				),
-			);
-		}
+	const allStatements = [...deleteStatements, ...phase1Statements, ...phase2Statements];
 
-		// Phase 2: apply final stepNumbers to existing instructions and insert new ones.
-		// All existing instructions are now at negative stepNumbers, so no constraint conflicts can occur.
-		const savedInstructions = await Promise.all(
-			instructionsData.map(async (instData: RecipeInstructionWriteInput) => {
-				if (instData.id) {
-					const [updatedInstruction] = await tx
-						.update(recipeInstructions)
-						.set({
-							stepNumber: instData.stepNumber,
-							instruction: instData.instruction,
-							updatedAt: sql`(datetime('now', 'localtime'))`,
-							updatedBy: userId,
-						})
-						.where(eq(recipeInstructions.id, instData.id))
-						.returning();
+	if (allStatements.length === 0) {
+		return [];
+	}
 
-					logger.info(`Updated instruction ${instData.id}`);
-					return updatedInstruction;
-				} else {
-					const [newInstruction] = await tx
-						.insert(recipeInstructions)
-						.values({
-							recipeSectionId,
-							stepNumber: instData.stepNumber,
-							instruction: instData.instruction,
-							createdBy: userId,
-						})
-						.returning();
+	if (deleteCount > 0) {
+		logger.info(`Deleting ${deleteCount} instructions for section ${recipeSectionId}`);
+	}
+	logger.debug(`Moving ${phase1Count} existing instructions to temporary stepNumbers for section ${recipeSectionId}`);
 
-					logger.info(`Created instruction ${newInstruction.id} for section ${recipeSectionId}`);
-					return newInstruction;
-				}
-			}),
-		);
+	const batchResults = await db.batch(allStatements as [BatchItem<'sqlite'>, ...BatchItem<'sqlite'>[]]);
 
-		logger.info(`Updated ${savedInstructions.length} instructions for section ${recipeSectionId}`);
-		return savedInstructions;
-	});
+	if (deleteCount > 0) {
+		logger.info(`Deleted ${deleteCount} instructions for section ${recipeSectionId}`);
+	}
+
+	const phase2Start = deleteCount + phase1Count;
+	const savedInstructions = (batchResults.slice(phase2Start) as RecipeInstructionDBRead[][]).flatMap(rows => rows);
+
+	logger.info(`Updated ${savedInstructions.length} instructions for section ${recipeSectionId}`);
+	return savedInstructions;
 }
