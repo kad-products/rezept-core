@@ -20,13 +20,13 @@ export const recipes = sqliteTable(
 		servings: integer(),
 		prepTime: integer(), // minutes
 		cookTime: integer(), // minutes
+		coverImageId: text().references(() => images.id),
 		createdAt: text()
 			.notNull()
 			.$defaultFn(() => new Date().toISOString()),
 		createdBy: text()
 			.notNull()
 			.references(() => users.id),
-		coverImageId: text().references(() => images.id),
 		updatedAt: text(),
 		updatedBy: text().references(() => users.id),
 		deletedAt: text(),
