@@ -9,7 +9,7 @@ export default function RzCard({
 	actions,
 }: {
 	title: string;
-	body?: string;
+	body?: string | React.ReactNode;
 	actions: CardAction[];
 }): React.ReactNode {
 	return (

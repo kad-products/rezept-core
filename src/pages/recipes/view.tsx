@@ -2,6 +2,7 @@ import { Fragment, Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import StandardLayout from '@/layouts/standard';
 import {
+	getImageById,
 	getIngredientsByRecipeSectionId,
 	getInstructionsByRecipeSectionId,
 	getRecipeById,
@@ -26,7 +27,13 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 						<a href={`/recipes/${recipe.id}/edit`}>Edit</a>
 					</nav>
 				)}
-
+				<div className="recipe-cover-image">
+					{recipe.coverImageId ? (
+						<img src={`/api/images/${recipe.coverImageId}`} alt={`${recipe.title} cover`} />
+					) : (
+						<div>No cover image</div>
+					)}
+				</div>
 				<p>Author: {author?.username}</p>
 				<p>Source: {recipe.source}</p>
 				<p>Servings: {recipe.servings}</p>
