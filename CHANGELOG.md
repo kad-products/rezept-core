@@ -1,3 +1,9 @@
+## [1.26.0](https://github.com/kad-products/rezept-core/compare/v1.25.5...v1.26.0) (2026-05-26)
+
+### Features
+
+* add images data model, repositories, and migrations ([#293](https://github.com/kad-products/rezept-core/issues/293)) ([9ae2d5f](https://github.com/kad-products/rezept-core/commit/9ae2d5f33911d31cf29549544b2b146b827d6149))
+
 ## [1.25.5](https://github.com/kad-products/rezept-core/compare/v1.25.4...v1.25.5) (2026-05-20)
 
 ### Bug Fixes
