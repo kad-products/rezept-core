@@ -1,3 +1,13 @@
+## [1.27.0](https://github.com/kad-products/rezept-core/compare/v1.26.0...v1.27.0) (2026-05-26)
+
+### Features
+
+* update scrape processing to include cover image ([#295](https://github.com/kad-products/rezept-core/issues/295)) ([8b04ae3](https://github.com/kad-products/rezept-core/commit/8b04ae3dc711c2fa3a8a7d05199fb472d1db1b16))
+
+### Bug Fixes
+
+* remove rezept_images from staging/production until ready to deploy ([924c828](https://github.com/kad-products/rezept-core/commit/924c8287fadf4f58e2226f5318c5f0c3ea2294c1))
+
 ## [1.26.0](https://github.com/kad-products/rezept-core/compare/v1.25.5...v1.26.0) (2026-05-26)
 
 ### Features
