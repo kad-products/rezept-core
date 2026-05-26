@@ -45,6 +45,10 @@
 		{
 			"binding": "rezept_recipe_scrapes",
 			"bucket_name": "rezept-recipe-scrapes-local"
+		},
+		{
+			"binding": "rezept_images",
+			"bucket_name": "rezept-images-local"
 		}
 	],
 	"env": {
@@ -73,6 +77,10 @@
 				{
 					"binding": "rezept_recipe_scrapes",
 					"bucket_name": "rezept-recipe-scrapes-integration"
+				},
+				{
+					"binding": "rezept_images",
+					"bucket_name": "rezept-images-integration"
 				}
 			],
 			"vars": {
