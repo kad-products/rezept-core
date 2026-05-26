@@ -111,7 +111,7 @@ export async function updateRecipeInstructions(
 	}
 
 	const phase2Start = deleteCount + phase1Count;
-	const savedInstructions = (batchResults.slice(phase2Start) as RecipeInstructionDBRead[][]).flatMap(rows => rows);
+	const savedInstructions = (batchResults.slice(phase2Start) as RecipeInstructionDBRead[][]).flat();
 
 	logger.info(`Updated ${savedInstructions.length} instructions for section ${recipeSectionId}`);
 	return savedInstructions;

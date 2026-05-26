@@ -2,7 +2,6 @@ import { Fragment, Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import StandardLayout from '@/layouts/standard';
 import {
-	getImageById,
 	getIngredientsByRecipeSectionId,
 	getInstructionsByRecipeSectionId,
 	getRecipeById,
