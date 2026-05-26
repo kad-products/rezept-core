@@ -1,5 +1,7 @@
 export * from './api-keys';
 export * from './credentials';
+export * from './image-types';
+export * from './images';
 export * from './ingredient-units';
 export * from './ingredients';
 export * from './recipe-ingredients';

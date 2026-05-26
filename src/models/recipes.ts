@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { relations } from 'drizzle-orm';
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { images } from './images';
 import { recipeSections } from './recipe-sections';
 import { users } from './users';
 
@@ -19,6 +20,7 @@ export const recipes = sqliteTable(
 		servings: integer(),
 		prepTime: integer(), // minutes
 		cookTime: integer(), // minutes
+		coverImageId: text().references(() => images.id),
 		createdAt: text()
 			.notNull()
 			.$defaultFn(() => new Date().toISOString()),
@@ -44,5 +46,10 @@ export const recipesRelations = relations(recipes, ({ many, one }) => ({
 		fields: [recipes.createdBy],
 		references: [users.id],
 		relationName: 'recipeCreator',
+	}),
+	coverImage: one(images, {
+		fields: [recipes.coverImageId],
+		references: [images.id],
+		relationName: 'recipeCoverImage',
 	}),
 }));

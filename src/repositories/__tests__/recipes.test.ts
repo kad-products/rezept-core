@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
-import { createUser } from '@/repositories';
+import { createUser, getImageTypeByName } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
+import { createImage } from '../images';
 import { createRecipe, deleteRecipe, getRecipeById, getRecipes, updateRecipe } from '../recipes';
 
 const logger = new Logger();
@@ -127,6 +128,19 @@ describe('recipes repository', () => {
 			expect(result.servings).toBeNull();
 			expect(result.prepTime).toBeNull();
 			expect(result.cookTime).toBeNull();
+			expect(result.coverImageId).toBeNull();
+		});
+
+		it('creates recipe with a cover image', async () => {
+			const imageType = await getImageTypeByName('RECIPE_COVER_IMAGE', logger);
+			const image = await createImage(
+				{ imageTypeId: imageType.id, name: 'test-image', originalFilename: 'test.jpg', mimeType: 'image/jpeg', fileSize: 1024 },
+				testUserId,
+				logger,
+			);
+
+			const result = await createRecipe({ ...baseRecipeData, coverImageId: image.id }, testUserId, logger);
+			expect(result.coverImageId).toBe(image.id);
 		});
 
 		it('creates multiple recipes with unique ids', async () => {
@@ -206,6 +220,25 @@ describe('recipes repository', () => {
 
 			const result = await updateRecipe(created.id, baseRecipeData, testUserId, logger);
 			expect(result.description).toBe('Original description');
+		});
+
+		it('sets coverImageId on update', async () => {
+			const imageType = await getImageTypeByName('RECIPE_COVER_IMAGE', logger);
+			const image = await createImage(
+				{ imageTypeId: imageType.id, name: 'cover-image', originalFilename: 'cover.jpg', mimeType: 'image/jpeg', fileSize: 2048 },
+				testUserId,
+				logger,
+			);
+			const created = await createRecipe(baseRecipeData, testUserId, logger);
+			expect(created.coverImageId).toBeNull();
+
+			const result = await updateRecipe(created.id, { ...baseRecipeData, coverImageId: image.id }, testUserId, logger);
+			expect(result.coverImageId).toBe(image.id);
+		});
+
+		it('creates recipe without coverImageId when not provided', async () => {
+			const result = await createRecipe(baseRecipeData, testUserId, logger);
+			expect(result.coverImageId).toBeNull();
 		});
 	});
 });
