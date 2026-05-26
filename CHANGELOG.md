@@ -1,3 +1,13 @@
+## [1.28.0](https://github.com/kad-products/rezept-core/compare/v1.27.0...v1.28.0) (2026-05-26)
+
+### Features
+
+* basic view for cover images ([3869264](https://github.com/kad-products/rezept-core/commit/3869264a093eac989aced71cb61bed2079eefd54))
+
+### Bug Fixes
+
+* d1 doesn't support full transaction syntax ([9548bb4](https://github.com/kad-products/rezept-core/commit/9548bb445e49d2b10f498bc53373a5ab67ff099a))
+
 ## [1.27.0](https://github.com/kad-products/rezept-core/compare/v1.26.0...v1.27.0) (2026-05-26)
 
 ### Features
