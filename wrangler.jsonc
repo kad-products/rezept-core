@@ -95,10 +95,6 @@
 				{
 					"binding": "rezept_recipe_scrapes",
 					"bucket_name": "rezept-recipe-scrapes-staging"
-				},
-				{
-					"binding": "rezept_images",
-					"bucket_name": "rezept-images-staging"
 				}
 			],
 			"vars": {
@@ -113,10 +109,6 @@
 				{
 					"binding": "rezept_recipe_scrapes",
 					"bucket_name": "rezept-recipe-scrapes-production"
-				},
-				{
-					"binding": "rezept_images",
-					"bucket_name": "rezept-images-production"
 				}
 			],
 			"vars": {
