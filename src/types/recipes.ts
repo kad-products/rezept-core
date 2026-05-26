@@ -19,6 +19,12 @@ export type RecipeWithSections = RecipeDBRead & {
 	>;
 };
 
+export type ParsedRecipeScrapeImage = {
+	url: string;
+	width?: number;
+	height?: number;
+};
+
 export type ParsedRecipeScrape = {
 	title: string;
 	description?: string;
@@ -26,5 +32,6 @@ export type ParsedRecipeScrape = {
 	servings?: number;
 	prepTime?: number;
 	cookTime?: number;
+	coverImage?: ParsedRecipeScrapeImage;
 	sections: ParsedRecipeScrapeSection[];
 };

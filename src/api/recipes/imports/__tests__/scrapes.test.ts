@@ -19,6 +19,7 @@ vi.mock('@/steps', () => ({
 	parseBodyJson: vi.fn(),
 	initializeScrape: vi.fn(),
 	transformScrapeToRecipe: vi.fn(),
+	fetchAndStoreCoverImage: vi.fn(),
 	validateAsRecipe: vi.fn(),
 	saveRecipe: vi.fn(),
 	saveRecipeSections: vi.fn(),
@@ -39,6 +40,7 @@ import { RzStepError } from '@/classes';
 import { requireAuthentication } from '@/interrupters';
 import { updateRecipeScrapeStatus } from '@/repositories';
 import {
+	fetchAndStoreCoverImage,
 	initializeScrape,
 	parseBodyJson,
 	saveRecipe,
@@ -92,6 +94,7 @@ describe('_postHandler', () => {
 		vi.mocked(parseBodyJson).mockResolvedValue({ url: 'https://example.com/recipe' } as any);
 		vi.mocked(initializeScrape).mockResolvedValue(mockScrape as any);
 		vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipe as any);
+		vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(null);
 		vi.mocked(validateAsRecipe).mockResolvedValue(mockValidatedRecipe as any);
 		vi.mocked(saveRecipe).mockResolvedValue(mockSavedRecipe as any);
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
@@ -280,6 +283,7 @@ describe('route handler', () => {
 		vi.mocked(parseBodyJson).mockResolvedValue({ url: 'https://example.com/recipe' } as any);
 		vi.mocked(initializeScrape).mockResolvedValue(mockScrape as any);
 		vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipe as any);
+		vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(null);
 		vi.mocked(validateAsRecipe).mockResolvedValue(mockValidatedRecipe as any);
 		vi.mocked(saveRecipe).mockResolvedValue(mockSavedRecipe as any);
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);

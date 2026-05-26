@@ -1,6 +1,6 @@
 import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
-import type { JsonLdPayload, ParsedRecipeScrape } from '@/types';
+import type { JsonLdPayload, ParsedRecipeScrape, ParsedRecipeScrapeImage } from '@/types';
 
 type JsonLdNode = Record<string, unknown>;
 
@@ -42,6 +42,7 @@ export async function transformScrapeToRecipe(parsedBody: JsonLdPayload, logger:
 			servings: parseServings(recipe.recipeYield),
 			prepTime: typeof recipe.prepTime === 'string' ? parseDuration(recipe.prepTime) : undefined,
 			cookTime: typeof recipe.cookTime === 'string' ? parseDuration(recipe.cookTime) : undefined,
+			coverImage: parseImageField(recipe.image),
 			sections,
 		};
 
@@ -143,4 +144,30 @@ function parseServings(raw: unknown): number | undefined {
 	const str = String(raw).trim();
 	const num = parseInt(str, 10);
 	return Number.isNaN(num) ? undefined : num;
+}
+
+function parseImageField(raw: unknown): ParsedRecipeScrapeImage | undefined {
+	// Handle array — take the first element
+	if (Array.isArray(raw)) {
+		return raw.length > 0 ? parseImageField(raw[0]) : undefined;
+	}
+
+	// Plain string URL
+	if (typeof raw === 'string' && raw.length > 0) {
+		return { url: raw };
+	}
+
+	// ImageObject
+	if (raw && typeof raw === 'object') {
+		const obj = raw as JsonLdNode;
+		const url = typeof obj.url === 'string' ? obj.url : undefined;
+		if (!url) return undefined;
+		return {
+			url,
+			width: typeof obj.width === 'number' ? obj.width : undefined,
+			height: typeof obj.height === 'number' ? obj.height : undefined,
+		};
+	}
+
+	return undefined;
 }

@@ -144,4 +144,67 @@ describe('transformScrapeToRecipe', () => {
 	it('throws RzStepError 400 when the recipe name is not a string', async () => {
 		await expect(transformScrapeToRecipe(payload({ ...baseRecipe, name: 42 }), logger)).rejects.toThrow(RzStepError);
 	});
+
+	describe('cover image extraction', () => {
+		it('extracts image from an ImageObject', async () => {
+			const result = await transformScrapeToRecipe(
+				payload({
+					...baseRecipe,
+					image: { '@type': 'ImageObject', url: 'https://example.com/photo.jpg', width: 1500, height: 1125 },
+				}),
+				logger,
+			);
+
+			expect(result.coverImage).toEqual({ url: 'https://example.com/photo.jpg', width: 1500, height: 1125 });
+		});
+
+		it('extracts image from a plain string URL', async () => {
+			const result = await transformScrapeToRecipe(payload({ ...baseRecipe, image: 'https://example.com/photo.jpg' }), logger);
+
+			expect(result.coverImage).toEqual({ url: 'https://example.com/photo.jpg' });
+		});
+
+		it('extracts image from an array, using the first element', async () => {
+			const result = await transformScrapeToRecipe(
+				payload({
+					...baseRecipe,
+					image: [
+						{ '@type': 'ImageObject', url: 'https://example.com/first.jpg', width: 1500, height: 1125 },
+						{ '@type': 'ImageObject', url: 'https://example.com/second.jpg', width: 400, height: 300 },
+					],
+				}),
+				logger,
+			);
+
+			expect(result.coverImage?.url).toBe('https://example.com/first.jpg');
+		});
+
+		it('extracts image from an ImageObject missing width/height', async () => {
+			const result = await transformScrapeToRecipe(
+				payload({ ...baseRecipe, image: { '@type': 'ImageObject', url: 'https://example.com/photo.jpg' } }),
+				logger,
+			);
+
+			expect(result.coverImage).toEqual({ url: 'https://example.com/photo.jpg' });
+		});
+
+		it('returns undefined coverImage when image field is absent', async () => {
+			const result = await transformScrapeToRecipe(payload(baseRecipe), logger);
+			expect(result.coverImage).toBeUndefined();
+		});
+
+		it('returns undefined coverImage when ImageObject has no url', async () => {
+			const result = await transformScrapeToRecipe(
+				payload({ ...baseRecipe, image: { '@type': 'ImageObject', thumbnailUrl: 'https://example.com/thumb.jpg' } }),
+				logger,
+			);
+
+			expect(result.coverImage).toBeUndefined();
+		});
+
+		it('returns undefined coverImage when image array is empty', async () => {
+			const result = await transformScrapeToRecipe(payload({ ...baseRecipe, image: [] }), logger);
+			expect(result.coverImage).toBeUndefined();
+		});
+	});
 });

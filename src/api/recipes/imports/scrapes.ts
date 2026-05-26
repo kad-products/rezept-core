@@ -3,6 +3,7 @@ import { apiErrorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { updateRecipeScrapeStatus } from '@/repositories';
 import {
+	fetchAndStoreCoverImage,
 	initializeScrape,
 	parseBodyJson,
 	saveRecipe,
@@ -34,10 +35,13 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		const transformedRecipe = await transformScrapeToRecipe(parsedBodyJson, ctx.logger);
 		await updateRecipeScrapeStatus(recipeScrape.id, 'TRANSFORMED', null, userId, ctx.logger);
 
+		// Non-fatal: image fetch failure logs and returns null rather than failing the scrape
+		const coverImage = await fetchAndStoreCoverImage(transformedRecipe.coverImage, userId, ctx.logger);
+
 		const validatedRecipe = await validateAsRecipe(transformedRecipe, userId, ctx.logger);
 		await updateRecipeScrapeStatus(recipeScrape.id, 'VALIDATED', null, userId, ctx.logger);
 
-		const savedRecipe = await saveRecipe(validatedRecipe, userId, ctx.logger);
+		const savedRecipe = await saveRecipe({ ...validatedRecipe, coverImageId: coverImage?.id ?? null }, userId, ctx.logger);
 		await updateRecipeScrapeStatus(recipeScrape.id, 'RECIPE_SAVED', null, userId, ctx.logger);
 
 		const savedSections = await saveRecipeSections(savedRecipe.id, validatedRecipe.sections, userId, ctx.logger);
