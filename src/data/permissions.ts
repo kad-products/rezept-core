@@ -24,6 +24,10 @@ const permissions = {
 		update: ['ADMIN'],
 		delete: ['ADMIN'],
 	},
+	jobs: {
+		trigger: ['ADMIN'],
+		read: ['ADMIN'],
+	},
 	recipes: {
 		create: ['ADMIN', 'BASIC'],
 		read: ['*'],

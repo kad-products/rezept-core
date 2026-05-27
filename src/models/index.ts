@@ -1,4 +1,5 @@
 export * from './api-keys';
+export * from './background-jobs';
 export * from './credentials';
 export * from './image-types';
 export * from './images';
