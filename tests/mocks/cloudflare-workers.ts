@@ -1,3 +1,5 @@
+export const env: Record<string, unknown> = {};
+
 export class DurableObject {
 	ctx: DurableObjectState;
 	env: Env;
@@ -20,10 +22,12 @@ export interface DurableObjectStorage {
 	get<T>(key: string): Promise<T | undefined>;
 	put<T>(key: string, value: T): Promise<void>;
 	delete(key: string): Promise<void>;
+	list(options?: { prefix?: string }): Promise<Map<string, unknown>>;
 }
 
 export interface DurableObjectId {
 	toString(): string;
+	name?: string;
 }
 
 export interface Env {

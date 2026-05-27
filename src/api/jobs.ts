@@ -1,3 +1,4 @@
+import { env } from 'cloudflare:workers';
 import type { RequestInfo } from 'rwsdk/worker';
 import { errorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
@@ -20,8 +21,11 @@ export async function _getHandler({ params, ctx }: RequestInfo): Promise<Respons
 	if (!job) {
 		return errorResponse(`No jobs found for: ${jobName}`, 404);
 	}
+	const doId = env.JOB_DURABLE_OBJECT.idFromName(job.id);
+	const jobDurableObject = env.JOB_DURABLE_OBJECT.get(doId);
+	const totalCount = await jobDurableObject.getTotalCount();
 
-	return successResponse(job);
+	return successResponse({ job, do: { totalCount, id: doId.toString() } });
 }
 
 /**
@@ -39,5 +43,9 @@ export async function _postHandler({ params, ctx }: RequestInfo): Promise<Respon
 
 	const job = await createBackgroundJob(jobName, userId, ctx.logger);
 
-	return successResponse(job, 201);
+	const doId = env.JOB_DURABLE_OBJECT.idFromName(job.id);
+	const jobDurableObject = env.JOB_DURABLE_OBJECT.get(doId);
+	await jobDurableObject.initialize(userId);
+
+	return successResponse({ job, do: { id: doId.toString() } }, 201);
 }

@@ -18,7 +18,7 @@ import Pages__root from './pages/root';
 import testBridgeRoutes from './test-bridge';
 import { handlePageError } from './worker-error';
 
-export { SessionDurableObject } from '@/durable-objects';
+export { JobDurableObject, SessionDurableObject } from '@/durable-objects';
 
 export default defineApp([
 	botMiddleware,

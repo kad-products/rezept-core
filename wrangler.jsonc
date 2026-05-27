@@ -18,6 +18,10 @@
 		{
 			"tag": "v1",
 			"new_sqlite_classes": ["SessionDurableObject"]
+		},
+		{
+			"tag": "v2",
+			"new_sqlite_classes": ["JobDurableObject"]
 		}
 	],
 	// Top-level bindings used by wrangler dev (local/miniflare)
@@ -26,6 +30,10 @@
 			{
 				"name": "SESSION_DURABLE_OBJECT",
 				"class_name": "SessionDurableObject"
+			},
+			{
+				"name": "JOB_DURABLE_OBJECT",
+				"class_name": "JobDurableObject"
 			}
 		]
 	},

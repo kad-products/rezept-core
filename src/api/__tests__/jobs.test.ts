@@ -1,6 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Logger from '@/logger';
 
+const mockJobDO = vi.hoisted(() => ({
+	initialize: vi.fn(),
+	getTotalCount: vi.fn().mockResolvedValue(0),
+}));
+
+const mockEnv = vi.hoisted(() => ({
+	JOB_DURABLE_OBJECT: {
+		idFromName: vi.fn().mockReturnValue({ toString: () => 'mock-do-id' }),
+		get: vi.fn().mockReturnValue(mockJobDO),
+	},
+}));
+
+vi.mock('cloudflare:workers', () => ({ env: mockEnv }));
+
 vi.mock('@/interrupters', () => ({
 	requireAuthentication: vi.fn(),
 	requirePermissions: vi.fn(() => vi.fn()),
@@ -26,11 +40,17 @@ const makeRequestInfo = (method: string, jobName: string) => ({
 	ctx: makeCtx(),
 });
 
+const mockJob = { id: 'job-123', name: 'test-job', status: 'PENDING' };
+
 describe('jobs API', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 		vi.mocked(requireAuthentication).mockResolvedValue(undefined);
 		vi.mocked(requirePermissions).mockReturnValue(vi.fn().mockResolvedValue(undefined));
+		mockJobDO.initialize.mockResolvedValue(undefined);
+		mockJobDO.getTotalCount.mockResolvedValue(0);
+		mockEnv.JOB_DURABLE_OBJECT.idFromName.mockReturnValue({ toString: () => 'mock-do-id' });
+		mockEnv.JOB_DURABLE_OBJECT.get.mockReturnValue(mockJobDO);
 	});
 
 	describe('route handler', () => {
@@ -62,16 +82,26 @@ describe('jobs API', () => {
 			expect(body.success).toBe(false);
 		});
 
-		it('returns job data when found', async () => {
-			const mockJob = { id: 'job-123', name: 'test-job', status: 'PENDING' };
+		it('returns job data and DO status when job is found', async () => {
 			vi.mocked(getLatestBackgroundJobByName).mockResolvedValue(mockJob as any);
+			mockJobDO.getTotalCount.mockResolvedValue(10);
 
 			const response = await _getHandler(makeRequestInfo('GET', 'test-job') as any);
 
 			expect(response.status).toBe(200);
 			const body = (await response.json()) as any;
 			expect(body.success).toBe(true);
-			expect(body.data.id).toBe('job-123');
+			expect(body.data.job.id).toBe('job-123');
+			expect(body.data.do.totalCount).toBe(10);
+			expect(body.data.do.id).toBe('mock-do-id');
+		});
+
+		it('looks up DO using the job id as the DO name', async () => {
+			vi.mocked(getLatestBackgroundJobByName).mockResolvedValue(mockJob as any);
+
+			await _getHandler(makeRequestInfo('GET', 'test-job') as any);
+
+			expect(mockEnv.JOB_DURABLE_OBJECT.idFromName).toHaveBeenCalledWith('job-123');
 		});
 	});
 
@@ -89,5 +119,15 @@ describe('jobs API', () => {
 
 			expect(createBackgroundJob).not.toHaveBeenCalled();
 		});
+
+		it('does not initialize DO for unknown job name', async () => {
+			await _postHandler(makeRequestInfo('POST', 'unknown-job') as any);
+
+			expect(mockJobDO.initialize).not.toHaveBeenCalled();
+		});
+
+		// The 201 path (valid job name) is not testable until at least one name
+		// is added to backgroundJobName in src/models/background-jobs.ts.
+		// Add tests here when the first job is implemented.
 	});
 });
