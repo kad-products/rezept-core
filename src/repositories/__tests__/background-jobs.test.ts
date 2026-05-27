@@ -102,6 +102,7 @@ describe('background-jobs repository', () => {
 
 		it('returns the most recent job when multiple exist', async () => {
 			await createBackgroundJob(TEST_JOB_NAME, testUserId, logger);
+			await new Promise(resolve => setTimeout(resolve, 10)); // ensure a different createdAt timestamp
 			const latest = await createBackgroundJob(TEST_JOB_NAME, testUserId, logger);
 			const result = await getLatestBackgroundJobByName(TEST_JOB_NAME, logger);
 
