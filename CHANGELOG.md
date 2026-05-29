@@ -1,3 +1,9 @@
+## [1.30.1](https://github.com/kad-products/rezept-core/compare/v1.30.0...v1.30.1) (2026-05-29)
+
+### Code Refactoring
+
+* set r2 key for uploads to the upload ID for consistency ([e04ddf7](https://github.com/kad-products/rezept-core/commit/e04ddf75ac4cba234abf5e5b62636495a14da45b))
+
 ## [1.30.0](https://github.com/kad-products/rezept-core/compare/v1.29.0...v1.30.0) (2026-05-29)
 
 ### Features
