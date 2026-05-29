@@ -1,3 +1,19 @@
+## [1.29.0](https://github.com/kad-products/rezept-core/compare/v1.28.0...v1.29.0) (2026-05-29)
+
+### Features
+
+* add jobs DO and incorporate into API ([47b88d9](https://github.com/kad-products/rezept-core/commit/47b88d96c5d9ff0d5ba20edbc6938b11153467e2))
+* link recipe scrape to created recipe ([290bdb3](https://github.com/kad-products/rezept-core/commit/290bdb3ac7499ce87e8cc5087e6e3608c40721e5))
+* repo, model, and api for background jobs ([890f88e](https://github.com/kad-products/rezept-core/commit/890f88ed7adea7bb3c7cb51afb8c1834c58611d8))
+
+### Bug Fixes
+
+* remove job durable objects ([edf34a2](https://github.com/kad-products/rezept-core/commit/edf34a2a36918fdcc928144d09f16ae66c63713c))
+* remove never used jobs D1 setup ([5b3a3c2](https://github.com/kad-products/rezept-core/commit/5b3a3c24970c93cdddc5e3658db4778e7d8e3101))
+* remove never used jobs permissions ([4b89622](https://github.com/kad-products/rezept-core/commit/4b896227ecfa4304a1df064cb8afade6a80b9779))
+* remove never-used jobs api ([cca1c38](https://github.com/kad-products/rezept-core/commit/cca1c3829c64be326e8e1c974dff656b78f04da3))
+* remove never-used jobs repositories ([f9ea2c7](https://github.com/kad-products/rezept-core/commit/f9ea2c70132a5db835e94684e5a0370f879223bf))
+
 ## [1.28.0](https://github.com/kad-products/rezept-core/compare/v1.27.0...v1.28.0) (2026-05-26)
 
 ### Features
