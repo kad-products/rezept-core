@@ -1,3 +1,9 @@
+## [1.30.0](https://github.com/kad-products/rezept-core/compare/v1.29.0...v1.30.0) (2026-05-29)
+
+### Features
+
+* move the scrape processing attempt to child table ([3658b11](https://github.com/kad-products/rezept-core/commit/3658b11ca6df9bafbf740dc7264e02fcbb82086d))
+
 ## [1.29.0](https://github.com/kad-products/rezept-core/compare/v1.28.0...v1.29.0) (2026-05-29)
 
 ### Features
