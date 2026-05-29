@@ -77,6 +77,11 @@ coverage
 # Wrangler
 .wrangler
 
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
+
 # Terraform files
 .terraform/
 .terraform.lock.hcl

@@ -43,7 +43,10 @@
 			"!**/node_modules",
 			"!**/dist",
 			"!**/.wrangler",
-			"!**/bundle-stats*.html"
+			"!**/bundle-stats*.html",
+			"!playwright-report",
+			"!test-results",
+			"!playwright/.cache"
 		]
 	},
 	"overrides": [

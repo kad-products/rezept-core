@@ -31,6 +31,21 @@ Point your browser to the URL displayed in the terminal (e.g. `http://localhost:
 - `/src/repositories`: Data access methods to be used throughout the rest of the application.
 - `/src/styles`: CSS and LESS files for styling the application
 
+## Visual Tests
+
+Component tests use Playwright CT (`@playwright/experimental-ct-react`). Snapshot images are stored in Git LFS and must be generated on Linux to match the CI container. Run the following to update snapshots locally:
+
+```sh
+docker run --rm \
+  -v $(pwd):/work/ \
+  -v /work/node_modules \
+  -w /work/ \
+  mcr.microsoft.com/playwright:v1.60.0-noble \
+  /bin/sh -c "npm install -g pnpm && pnpm install && pnpm playwright-ct:update"
+```
+
+Then commit the updated snapshots (via LFS) alongside your changes.
+
 ## Database 
 
 Using D1 for essentially everything but session objects.
