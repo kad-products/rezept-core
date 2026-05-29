@@ -120,6 +120,6 @@ export async function getRecipeScrapeById(recipeScrapeId: string, logger: RzLogg
 		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [scrapes.length, 1, 'RecipeScrape']);
 	}
 
-	logger.info(`Fetched scrape with ID ${recipeScrapeId}: ${scrapes[0] ? 'found' : 'not found'}`);
+	logger.info(`Fetched scrape with ID ${recipeScrapeId}`);
 	return scrapes[0];
 }
