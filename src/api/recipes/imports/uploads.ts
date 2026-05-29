@@ -1,4 +1,5 @@
 import { env } from 'cloudflare:workers';
+import crypto from 'node:crypto';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { apiErrorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
@@ -22,9 +23,11 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 	ctx.logger.info(formData);
 	ctx.logger.info(file);
 
+	// Generate the ID upfront so it can be used as the R2 key (id == R2 key by convention)
+	const uploadId = crypto.randomUUID();
+
 	// Stream the file directly to R2
-	const r2ObjectKey = `/raw/${file.name}`;
-	const results = await env.rezept_recipe_uploads.put(r2ObjectKey, file.stream(), {
+	const results = await env.rezept_recipe_uploads.put(uploadId, file.stream(), {
 		httpMetadata: {
 			contentType: file.type,
 		},
@@ -34,8 +37,8 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 	try {
 		uploadedRecipe = await createRecipeUpload(
 			{
+				id: uploadId,
 				originalFilename: file.name,
-				r2Key: r2ObjectKey,
 				mimeType: file.type,
 				fileSize: file.size,
 				status: 'UPLOADED',

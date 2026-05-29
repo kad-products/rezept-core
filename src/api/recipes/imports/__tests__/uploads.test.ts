@@ -38,7 +38,6 @@ const makeRequest = (file = makeFile()) => {
 const mockUpload = {
 	id: 'upload-id',
 	originalFilename: 'recipe.csv',
-	r2Key: '/raw/recipe.csv',
 	mimeType: 'text/csv',
 	fileSize: 36,
 	status: 'UPLOADED',
@@ -56,15 +55,17 @@ describe('_postHandler', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockEnv.REZEPT_ENV = 'development';
-		mockEnv.rezept_recipe_uploads.put.mockResolvedValue({ key: '/raw/recipe.csv' });
+		mockEnv.rezept_recipe_uploads.put.mockResolvedValue({});
 		vi.mocked(createRecipeUpload).mockResolvedValue(mockUpload as any);
 		ctx = { user: { id: 'user-id' }, logger: new Logger() };
 	});
 
+	const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
 	describe('file upload', () => {
-		it('uploads the file to R2 at /raw/<filename>', async () => {
+		it('uploads the file to R2 using a UUID as the key', async () => {
 			await _postHandler({ request: makeRequest(), ctx } as any);
-			expect(mockEnv.rezept_recipe_uploads.put).toHaveBeenCalledWith('/raw/recipe.csv', expect.anything(), {
+			expect(mockEnv.rezept_recipe_uploads.put).toHaveBeenCalledWith(expect.stringMatching(uuidPattern), expect.anything(), {
 				httpMetadata: { contentType: 'text/csv' },
 			});
 		});
@@ -73,8 +74,8 @@ describe('_postHandler', () => {
 			await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(createRecipeUpload).toHaveBeenCalledWith(
 				expect.objectContaining({
+					id: expect.stringMatching(uuidPattern),
 					originalFilename: 'recipe.csv',
-					r2Key: '/raw/recipe.csv',
 					mimeType: 'text/csv',
 					status: 'UPLOADED',
 				}),
@@ -84,6 +85,13 @@ describe('_postHandler', () => {
 			);
 		});
 
+		it('uses the same UUID for the R2 key and the upload record id', async () => {
+			await _postHandler({ request: makeRequest(), ctx } as any);
+			const r2Key = mockEnv.rezept_recipe_uploads.put.mock.calls[0][0];
+			const uploadId = vi.mocked(createRecipeUpload).mock.calls[0][0].id;
+			expect(r2Key).toBe(uploadId);
+		});
+
 		it('returns 200 with the created upload record', async () => {
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(response.status).toBe(200);
@@ -91,11 +99,10 @@ describe('_postHandler', () => {
 			expect(body).toMatchObject({ data: { id: 'upload-id', originalFilename: 'recipe.csv' } });
 		});
 
-		it('uses the original file name in the R2 key', async () => {
+		it('stores the original filename correctly regardless of file name', async () => {
 			await _postHandler({ request: makeRequest(makeFile('my-recipe.csv')), ctx } as any);
-			expect(mockEnv.rezept_recipe_uploads.put).toHaveBeenCalledWith('/raw/my-recipe.csv', expect.anything(), expect.anything());
 			expect(createRecipeUpload).toHaveBeenCalledWith(
-				expect.objectContaining({ originalFilename: 'my-recipe.csv', r2Key: '/raw/my-recipe.csv' }),
+				expect.objectContaining({ originalFilename: 'my-recipe.csv' }),
 				expect.anything(),
 				expect.anything(),
 				expect.anything(),
@@ -138,7 +145,7 @@ describe('route handler', () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		mockEnv.rezept_recipe_uploads.put.mockResolvedValue({ key: '/raw/recipe.csv' });
+		mockEnv.rezept_recipe_uploads.put.mockResolvedValue({});
 		vi.mocked(createRecipeUpload).mockResolvedValue(mockUpload as any);
 		authCheck = handler.post[0] as ReturnType<typeof vi.fn>;
 		vi.mocked(authCheck).mockReturnValue(undefined); // passes through by default

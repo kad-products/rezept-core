@@ -74,7 +74,6 @@ export default function RecipesTabs({
 							<tr>
 								<th>ID</th>
 								<th>Filename</th>
-								<th>R2 Key</th>
 								<th>MIME Type</th>
 								<th>File Size</th>
 								<th>Status</th>
@@ -88,7 +87,6 @@ export default function RecipesTabs({
 									<tr key={rI.id}>
 										<td>{rI.id}</td>
 										<td>{rI.originalFilename}</td>
-										<td>{rI.r2Key}</td>
 										<td>{rI.mimeType}</td>
 										<td>{rI.fileSize}</td>
 										<td>{rI.status}</td>
