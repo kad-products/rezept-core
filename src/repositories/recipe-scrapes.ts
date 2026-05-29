@@ -1,9 +1,9 @@
-import { eq, inArray, sql } from 'drizzle-orm';
+import { asc, eq, inArray, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
-import { recipeScrapes } from '@/models';
-import type { RecipeScrapeDBRead, RecipeScrapeStatus } from '@/types';
+import { recipeScrapeAttempts, recipeScrapes } from '@/models';
+import type { RecipeScrapeAttemptDBRead, RecipeScrapeAttemptSource, RecipeScrapeDBRead, RecipeScrapeStatus } from '@/types';
 import { validateUuid } from './utils';
 
 export async function createRecipeScrape(
@@ -27,6 +27,39 @@ export async function createRecipeScrape(
 	const result = recipeScraped[0];
 	logger.info(`Created recipe scrape ${result.id}`);
 	return result;
+}
+
+export async function createRecipeScrapeAttempt(
+	recipeScrapeId: string,
+	source: RecipeScrapeAttemptSource,
+	workflowInstanceId: string | null,
+	status: RecipeScrapeStatus,
+	statusText: string | null,
+	appVersion: string | null,
+	userId: string,
+	logger: RzLogger,
+): Promise<RecipeScrapeAttemptDBRead> {
+	if (!validateUuid(recipeScrapeId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeScrapeId, 'RecipeScrape']);
+	}
+
+	logger.debug(`Creating scrape attempt for ${recipeScrapeId}: ${status}`);
+
+	const [attempt] = await db
+		.insert(recipeScrapeAttempts)
+		.values({
+			recipeScrapeId,
+			source,
+			workflowInstanceId,
+			status,
+			statusText,
+			appVersion,
+			createdBy: userId,
+		})
+		.returning();
+
+	logger.info(`Created scrape attempt for ${recipeScrapeId}: ${status}`);
+	return attempt;
 }
 
 export async function updateRecipeScrapeStatus(
@@ -122,4 +155,21 @@ export async function getRecipeScrapeById(recipeScrapeId: string, logger: RzLogg
 
 	logger.info(`Fetched scrape with ID ${recipeScrapeId}`);
 	return scrapes[0];
+}
+
+export async function getRecipeScrapeAttempts(recipeScrapeId: string, logger: RzLogger): Promise<RecipeScrapeAttemptDBRead[]> {
+	if (!validateUuid(recipeScrapeId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeScrapeId, 'RecipeScrape']);
+	}
+
+	logger.debug(`Fetching attempts for scrape ${recipeScrapeId}`);
+
+	const attempts = await db
+		.select()
+		.from(recipeScrapeAttempts)
+		.where(eq(recipeScrapeAttempts.recipeScrapeId, recipeScrapeId))
+		.orderBy(asc(recipeScrapeAttempts.createdAt));
+
+	logger.info(`Fetched ${attempts.length} attempts for scrape ${recipeScrapeId}`);
+	return attempts;
 }

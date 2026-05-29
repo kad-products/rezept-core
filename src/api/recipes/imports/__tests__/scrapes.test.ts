@@ -28,6 +28,7 @@ vi.mock('@/steps', () => ({
 }));
 
 vi.mock('@/repositories', () => ({
+	createRecipeScrapeAttempt: vi.fn(),
 	updateRecipeScrapeStatus: vi.fn(),
 	linkRecipeScrapeToRecipe: vi.fn(),
 }));
@@ -39,7 +40,7 @@ vi.mock('@/interrupters', () => ({
 
 import { RzStepError } from '@/classes';
 import { requireAuthentication } from '@/interrupters';
-import { linkRecipeScrapeToRecipe, updateRecipeScrapeStatus } from '@/repositories';
+import { createRecipeScrapeAttempt, linkRecipeScrapeToRecipe, updateRecipeScrapeStatus } from '@/repositories';
 import {
 	fetchAndStoreCoverImage,
 	initializeScrape,
@@ -101,7 +102,8 @@ describe('_postHandler', () => {
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
 		vi.mocked(saveRecipeInstructions).mockResolvedValue({} as any);
 		vi.mocked(saveRecipeIngredients).mockResolvedValue({} as any);
-		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(undefined as any);
+		vi.mocked(createRecipeScrapeAttempt).mockResolvedValue(undefined as any);
+		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(mockScrape as any);
 		vi.mocked(linkRecipeScrapeToRecipe).mockResolvedValue(undefined as any);
 	});
 
@@ -126,7 +128,7 @@ describe('_postHandler', () => {
 
 		it('updates scrape status after each successful step', async () => {
 			await _postHandler({ request: makeRequest(), ctx } as any);
-			expect(updateRecipeScrapeStatus).toHaveBeenCalledTimes(6);
+			expect(updateRecipeScrapeStatus).toHaveBeenCalledTimes(7);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'TRANSFORMED', null, 'user-id', expect.anything());
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'VALIDATED', null, 'user-id', expect.anything());
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'RECIPE_SAVED', null, 'user-id', expect.anything());
@@ -139,6 +141,22 @@ describe('_postHandler', () => {
 				expect.anything(),
 			);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'INGREDIENTS_SAVED', null, 'user-id', expect.anything());
+			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'COMPLETED', null, 'user-id', expect.anything());
+		});
+
+		it('writes one attempt record on success with COMPLETED status', async () => {
+			await _postHandler({ request: makeRequest(), ctx } as any);
+			expect(createRecipeScrapeAttempt).toHaveBeenCalledTimes(1);
+			expect(createRecipeScrapeAttempt).toHaveBeenCalledWith(
+				'scrape-id',
+				'api',
+				null,
+				'COMPLETED',
+				null,
+				null,
+				'user-id',
+				expect.anything(),
+			);
 		});
 
 		it('maps instructions and ingredients to their saved section IDs', async () => {
@@ -169,6 +187,7 @@ describe('_postHandler', () => {
 				expect.anything(),
 				expect.anything(),
 			);
+			expect(createRecipeScrapeAttempt).not.toHaveBeenCalled();
 			expect(response.status).toBe(400);
 		});
 
@@ -182,6 +201,7 @@ describe('_postHandler', () => {
 				expect.anything(),
 				expect.anything(),
 			);
+			expect(createRecipeScrapeAttempt).not.toHaveBeenCalled();
 			expect(response.status).toBe(500);
 		});
 
@@ -192,6 +212,16 @@ describe('_postHandler', () => {
 				'scrape-id',
 				'FAILED',
 				'Transform failed',
+				'user-id',
+				expect.anything(),
+			);
+			expect(createRecipeScrapeAttempt).toHaveBeenCalledWith(
+				'scrape-id',
+				'api',
+				null,
+				'FAILED',
+				'Transform failed',
+				null,
 				'user-id',
 				expect.anything(),
 			);
@@ -208,6 +238,16 @@ describe('_postHandler', () => {
 				'user-id',
 				expect.anything(),
 			);
+			expect(createRecipeScrapeAttempt).toHaveBeenCalledWith(
+				'scrape-id',
+				'api',
+				null,
+				'FAILED',
+				'Validation failed',
+				null,
+				'user-id',
+				expect.anything(),
+			);
 			expect(response.status).toBe(422);
 		});
 
@@ -215,6 +255,16 @@ describe('_postHandler', () => {
 			vi.mocked(saveRecipe).mockRejectedValue(new RzStepError(500, 'Save failed', 'Save failed'));
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'FAILED', 'Save failed', 'user-id', expect.anything());
+			expect(createRecipeScrapeAttempt).toHaveBeenCalledWith(
+				'scrape-id',
+				'api',
+				null,
+				'FAILED',
+				'Save failed',
+				null,
+				'user-id',
+				expect.anything(),
+			);
 			expect(response.status).toBe(500);
 		});
 
@@ -225,6 +275,16 @@ describe('_postHandler', () => {
 				'scrape-id',
 				'FAILED',
 				'Sections failed',
+				'user-id',
+				expect.anything(),
+			);
+			expect(createRecipeScrapeAttempt).toHaveBeenCalledWith(
+				'scrape-id',
+				'api',
+				null,
+				'FAILED',
+				'Sections failed',
+				null,
 				'user-id',
 				expect.anything(),
 			);
@@ -241,6 +301,16 @@ describe('_postHandler', () => {
 				'user-id',
 				expect.anything(),
 			);
+			expect(createRecipeScrapeAttempt).toHaveBeenCalledWith(
+				'scrape-id',
+				'api',
+				null,
+				'FAILED',
+				'Instructions failed',
+				null,
+				'user-id',
+				expect.anything(),
+			);
 			expect(response.status).toBe(500);
 		});
 
@@ -251,6 +321,16 @@ describe('_postHandler', () => {
 				'scrape-id',
 				'FAILED',
 				'Ingredients failed',
+				'user-id',
+				expect.anything(),
+			);
+			expect(createRecipeScrapeAttempt).toHaveBeenCalledWith(
+				'scrape-id',
+				'api',
+				null,
+				'FAILED',
+				'Ingredients failed',
+				null,
 				'user-id',
 				expect.anything(),
 			);
@@ -291,7 +371,8 @@ describe('route handler', () => {
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
 		vi.mocked(saveRecipeInstructions).mockResolvedValue({} as any);
 		vi.mocked(saveRecipeIngredients).mockResolvedValue({} as any);
-		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(undefined as any);
+		vi.mocked(createRecipeScrapeAttempt).mockResolvedValue(undefined as any);
+		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(mockScrape as any);
 		authCheck = handler.post[0] as ReturnType<typeof vi.fn>;
 		vi.mocked(authCheck).mockReturnValue(undefined); // passes through by default
 		// handler.post[1] is the function returned by requirePermissions() at module init

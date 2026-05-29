@@ -155,6 +155,13 @@
 			"when": 1780062526341,
 			"tag": "0021_steep_blade",
 			"breakpoints": true
+		},
+		{
+			"idx": 22,
+			"version": "6",
+			"when": 1780066579202,
+			"tag": "0022_parched_gwen_stacy",
+			"breakpoints": true
 		}
 	]
 }

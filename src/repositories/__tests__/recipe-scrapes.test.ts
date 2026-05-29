@@ -4,6 +4,8 @@ import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import {
 	createRecipeScrape,
+	createRecipeScrapeAttempt,
+	getRecipeScrapeAttempts,
 	getRecipeScrapeById,
 	getRecipeScrapesByStatus,
 	linkRecipeScrapeToRecipe,
@@ -275,5 +277,117 @@ describe('getRecipeScrapeById', () => {
 	it('throws when id does not exist', async () => {
 		const nonExistentId = crypto.randomUUID();
 		await expect(getRecipeScrapeById(nonExistentId, logger)).rejects.toThrow('Expected 1 RecipeScrape record(s), but found 0');
+	});
+});
+
+describe('createRecipeScrapeAttempt', () => {
+	let userId: string;
+	let scrapeId: string;
+
+	beforeEach(async () => {
+		await resetDb();
+		const user = await createUser('testuser', null, logger);
+		userId = user.id;
+		const scrape = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		scrapeId = scrape.id;
+	});
+
+	it('creates an attempt and returns it', async () => {
+		const result = await createRecipeScrapeAttempt(scrapeId, 'api', null, 'TRANSFORMED', 'Transformed', null, userId, logger);
+
+		expect(result).toBeDefined();
+		expect(result.recipeScrapeId).toBe(scrapeId);
+		expect(result.status).toBe('TRANSFORMED');
+		expect(result.statusText).toBe('Transformed');
+		expect(result.createdBy).toBe(userId);
+	});
+
+	it('stores source as api', async () => {
+		const result = await createRecipeScrapeAttempt(scrapeId, 'api', null, 'TRANSFORMED', null, null, userId, logger);
+
+		expect(result.source).toBe('api');
+	});
+
+	it('accepts workflow source and workflowInstanceId', async () => {
+		const instanceId = crypto.randomUUID();
+		const result = await createRecipeScrapeAttempt(scrapeId, 'workflow', instanceId, 'TRANSFORMED', null, null, userId, logger);
+
+		expect(result.source).toBe('workflow');
+		expect(result.workflowInstanceId).toBe(instanceId);
+	});
+
+	it('stores appVersion when provided', async () => {
+		const result = await createRecipeScrapeAttempt(scrapeId, 'api', null, 'TRANSFORMED', null, '1.2.3', userId, logger);
+
+		expect(result.appVersion).toBe('1.2.3');
+	});
+
+	it('stores null workflowInstanceId when passed null', async () => {
+		const result = await createRecipeScrapeAttempt(scrapeId, 'api', null, 'TRANSFORMED', null, null, userId, logger);
+
+		expect(result.workflowInstanceId).toBeNull();
+	});
+
+	it('throws for an invalid uuid', async () => {
+		await expect(createRecipeScrapeAttempt('not-a-uuid', 'api', null, 'TRANSFORMED', null, null, userId, logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a RecipeScrape',
+		);
+	});
+
+	it('creates multiple attempts for the same scrape', async () => {
+		await createRecipeScrapeAttempt(scrapeId, 'api', null, 'TRANSFORMED', null, null, userId, logger);
+		await createRecipeScrapeAttempt(scrapeId, 'api', null, 'VALIDATED', null, null, userId, logger);
+
+		const attempts = await getRecipeScrapeAttempts(scrapeId, logger);
+		expect(attempts).toHaveLength(2);
+	});
+});
+
+describe('getRecipeScrapeAttempts', () => {
+	let userId: string;
+	let scrapeId: string;
+
+	beforeEach(async () => {
+		await resetDb();
+		const user = await createUser('testuser', null, logger);
+		userId = user.id;
+		const scrape = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		scrapeId = scrape.id;
+	});
+
+	it('returns empty array when no attempts exist', async () => {
+		const result = await getRecipeScrapeAttempts(scrapeId, logger);
+
+		expect(result).toEqual([]);
+	});
+
+	it('returns attempts in ascending createdAt order', async () => {
+		await createRecipeScrapeAttempt(scrapeId, 'api', null, 'TRANSFORMED', null, null, userId, logger);
+		await new Promise(resolve => setTimeout(resolve, 10));
+		await createRecipeScrapeAttempt(scrapeId, 'api', null, 'VALIDATED', null, null, userId, logger);
+
+		const result = await getRecipeScrapeAttempts(scrapeId, logger);
+
+		expect(result[0].status).toBe('TRANSFORMED');
+		expect(result[1].status).toBe('VALIDATED');
+	});
+
+	it('only returns attempts for the given scrape', async () => {
+		const otherUser = await createUser('otheruser', null, logger);
+		const otherScrape = await createRecipeScrape(crypto.randomUUID(), bodySize, otherUser.id, logger);
+
+		await createRecipeScrapeAttempt(scrapeId, 'api', null, 'TRANSFORMED', null, null, userId, logger);
+		await createRecipeScrapeAttempt(otherScrape.id, 'api', null, 'TRANSFORMED', null, null, otherUser.id, logger);
+
+		const result = await getRecipeScrapeAttempts(scrapeId, logger);
+
+		expect(result).toHaveLength(1);
+		expect(result[0].recipeScrapeId).toBe(scrapeId);
+	});
+
+	it('throws for an invalid uuid', async () => {
+		await expect(getRecipeScrapeAttempts('not-a-uuid', logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a RecipeScrape',
+		);
 	});
 });

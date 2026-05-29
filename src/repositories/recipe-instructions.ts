@@ -44,7 +44,7 @@ export async function updateRecipeInstructions(
 	// Phase 1: move all existing instructions being updated to temporary negative stepNumbers.
 	// This clears the positive number space so Phase 2 can assign final values without hitting
 	// the (recipeSectionId, stepNumber) unique constraint.
-	const existingUpdates = instructionsData.filter(i => i.id);
+	const existingUpdates = instructionsData.filter((i): i is RecipeInstructionWriteInput & { id: string } => i.id !== undefined);
 
 	// All mutations are batched into a single D1 batch call (D1 does not support BEGIN transactions).
 	// Statements execute sequentially within the batch, so Phase 1 completes before Phase 2 runs,
@@ -64,7 +64,7 @@ export async function updateRecipeInstructions(
 		db
 			.update(recipeInstructions)
 			.set({ stepNumber: -(index + 1) })
-			.where(eq(recipeInstructions.id, instData.id!)),
+			.where(eq(recipeInstructions.id, instData.id)),
 	) as BatchItem<'sqlite'>[];
 
 	// Phase 2: apply final stepNumbers to existing instructions and insert new ones.
