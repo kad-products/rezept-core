@@ -19,6 +19,7 @@ Directories to audit (in order):
 - `src/types/`
 - `src/models/`
 - `src/durable-objects/`
+- `src/workflows/`
 
 ## Process for each directory
 

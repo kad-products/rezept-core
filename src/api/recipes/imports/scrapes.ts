@@ -1,7 +1,7 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { apiErrorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import { updateRecipeScrapeStatus } from '@/repositories';
+import { linkRecipeScrapeToRecipe, updateRecipeScrapeStatus } from '@/repositories';
 import {
 	fetchAndStoreCoverImage,
 	initializeScrape,
@@ -42,6 +42,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		await updateRecipeScrapeStatus(recipeScrape.id, 'VALIDATED', null, userId, ctx.logger);
 
 		const savedRecipe = await saveRecipe({ ...validatedRecipe, coverImageId: coverImage?.id ?? null }, userId, ctx.logger);
+		await linkRecipeScrapeToRecipe(recipeScrape.id, savedRecipe.id, userId, ctx.logger);
 		await updateRecipeScrapeStatus(recipeScrape.id, 'RECIPE_SAVED', null, userId, ctx.logger);
 
 		const savedSections = await saveRecipeSections(savedRecipe.id, validatedRecipe.sections, userId, ctx.logger);

@@ -29,6 +29,7 @@ vi.mock('@/steps', () => ({
 
 vi.mock('@/repositories', () => ({
 	updateRecipeScrapeStatus: vi.fn(),
+	linkRecipeScrapeToRecipe: vi.fn(),
 }));
 
 vi.mock('@/interrupters', () => ({
@@ -38,7 +39,7 @@ vi.mock('@/interrupters', () => ({
 
 import { RzStepError } from '@/classes';
 import { requireAuthentication } from '@/interrupters';
-import { updateRecipeScrapeStatus } from '@/repositories';
+import { linkRecipeScrapeToRecipe, updateRecipeScrapeStatus } from '@/repositories';
 import {
 	fetchAndStoreCoverImage,
 	initializeScrape,
@@ -101,6 +102,7 @@ describe('_postHandler', () => {
 		vi.mocked(saveRecipeInstructions).mockResolvedValue({} as any);
 		vi.mocked(saveRecipeIngredients).mockResolvedValue({} as any);
 		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(undefined as any);
+		vi.mocked(linkRecipeScrapeToRecipe).mockResolvedValue(undefined as any);
 	});
 
 	describe('happy path', () => {

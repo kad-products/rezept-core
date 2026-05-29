@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { relations } from 'drizzle-orm';
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { recipes } from './recipes';
 import { users } from './users';
 
 export const recipeScrapeStatus = [
@@ -27,6 +28,7 @@ export const recipeScrapes = sqliteTable(
 		// Raw JSON is stored in R2 using the scrape ID as the object key (rezept_recipe_scrapes bucket)
 		bodySize: integer().notNull(), // bytes
 		status: text({ enum: recipeScrapeStatus }).notNull().default('SCRAPED'),
+		recipeId: text().references(() => recipes.id),
 		statusText: text(),
 		createdAt: text()
 			.notNull()
@@ -52,5 +54,10 @@ export const recipeScrapesRelations = relations(recipeScrapes, ({ one }) => ({
 		fields: [recipeScrapes.createdBy],
 		references: [users.id],
 		relationName: 'recipeScrapeCreator',
+	}),
+	recipe: one(recipes, {
+		fields: [recipeScrapes.recipeId],
+		references: [recipes.id],
+		relationName: 'recipeScrapeRecipe',
 	}),
 }));
