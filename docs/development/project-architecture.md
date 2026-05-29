@@ -26,6 +26,18 @@ Client component
         └── Repositories (data access)
 ```
 
+**Background workflows** are triggered by API calls and run outside the request cycle via Cloudflare Workflows:
+
+```
+API handler
+  └── env.MY_WORKFLOW.create(params)   ← returns instance ID; handler returns immediately
+        └── WorkflowEntrypoint.run()   ← executes on CF infrastructure, not in the request
+              ├── step.do(...)          ← each step is independently retried on failure
+              └── Repositories (data access — same db module, same env injection)
+```
+
+Workflow step logic is implemented as standalone exported async functions, keeping it unit-testable independently of the Workflow runtime. See `src/workflows/readme.md` for conventions.
+
 ## Import/usage diagram
 
 ```mermaid
@@ -35,6 +47,7 @@ flowchart TD
     subgraph infra["Infrastructure"]
         MW[middleware/]
         DO[durable-objects/]
+        WF[workflows/]
         INT[interrupters/]
     end
 
@@ -79,6 +92,10 @@ flowchart TD
     API --> SCH
     API --> ST
     API --> REPO
+    API -.->|triggers| WF
+
+    WF --> ST
+    WF --> REPO
 
     ACT --> SCH
     ACT --> ST
@@ -117,6 +134,7 @@ flowchart TD
 | `src/types/` | Types | All shared TypeScript types; barrel-exported from `index.ts` |
 | `src/models/` | Models | Drizzle table schemas and relations; source of truth for migrations |
 | `src/durable-objects/` | Durable Objects | Cloudflare Durable Object classes (currently: session management) |
+| `src/workflows/` | Workflows | Cloudflare Workflow classes for durable background processing; triggered via API, each step independently retried |
 | `src/data/` | Static data | Reference data used by forms and pages (countries, months, permissions) |
 
 ## Internal utilities
