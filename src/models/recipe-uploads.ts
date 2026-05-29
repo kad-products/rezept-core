@@ -15,7 +15,6 @@ export const recipeUploads = sqliteTable(
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		originalFilename: text().notNull(),
-		r2Key: text().notNull(),
 		mimeType: text().notNull(),
 		fileSize: integer().notNull(), // bytes
 		status: text({ enum: recipeUploadStatus }).notNull().default('UPLOADED'),

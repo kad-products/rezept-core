@@ -8,7 +8,6 @@ const logger = new Logger();
 
 const baseUploadData = {
 	originalFilename: 'recipe.pdf',
-	r2Key: 'uploads/recipe.pdf',
 	mimeType: 'application/pdf',
 	fileSize: 102400,
 };
@@ -28,7 +27,6 @@ describe('recipe-uploads repository', () => {
 
 			expect(result.id).toBeDefined();
 			expect(result.originalFilename).toBe('recipe.pdf');
-			expect(result.r2Key).toBe('uploads/recipe.pdf');
 			expect(result.mimeType).toBe('application/pdf');
 			expect(result.fileSize).toBe(102400);
 		});
@@ -54,8 +52,8 @@ describe('recipe-uploads repository', () => {
 		});
 
 		it('creates multiple uploads with unique ids', async () => {
-			const upload1 = await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/a.pdf' }, testUserId, testUserId, logger);
-			const upload2 = await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/b.pdf' }, testUserId, testUserId, logger);
+			const upload1 = await createRecipeUpload(baseUploadData, testUserId, testUserId, logger);
+			const upload2 = await createRecipeUpload(baseUploadData, testUserId, testUserId, logger);
 
 			expect(upload1.id).not.toBe(upload2.id);
 		});
@@ -68,9 +66,9 @@ describe('recipe-uploads repository', () => {
 		});
 
 		it('returns all uploads for user', async () => {
-			await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/a.pdf' }, testUserId, testUserId, logger);
-			await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/b.pdf' }, testUserId, testUserId, logger);
-			await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/c.pdf' }, testUserId, testUserId, logger);
+			await createRecipeUpload(baseUploadData, testUserId, testUserId, logger);
+			await createRecipeUpload(baseUploadData, testUserId, testUserId, logger);
+			await createRecipeUpload(baseUploadData, testUserId, testUserId, logger);
 
 			const result = await getRecipeUploads(testUserId, logger);
 			expect(result).toHaveLength(3);
@@ -79,8 +77,8 @@ describe('recipe-uploads repository', () => {
 		it('returns only uploads for specified user', async () => {
 			const otherUser = await createUser('otheruser', null, logger);
 
-			await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/mine.pdf' }, testUserId, testUserId, logger);
-			await createRecipeUpload({ ...baseUploadData, r2Key: 'uploads/theirs.pdf' }, otherUser.id, otherUser.id, logger);
+			await createRecipeUpload(baseUploadData, testUserId, testUserId, logger);
+			await createRecipeUpload(baseUploadData, otherUser.id, otherUser.id, logger);
 
 			const result = await getRecipeUploads(testUserId, logger);
 			expect(result).toHaveLength(1);
@@ -106,18 +104,8 @@ describe('recipe-uploads repository', () => {
 		});
 
 		it('returns correct upload when multiple exist', async () => {
-			await createRecipeUpload(
-				{ ...baseUploadData, r2Key: 'uploads/a.pdf', originalFilename: 'a.pdf' },
-				testUserId,
-				testUserId,
-				logger,
-			);
-			const target = await createRecipeUpload(
-				{ ...baseUploadData, r2Key: 'uploads/b.pdf', originalFilename: 'b.pdf' },
-				testUserId,
-				testUserId,
-				logger,
-			);
+			await createRecipeUpload({ ...baseUploadData, originalFilename: 'a.pdf' }, testUserId, testUserId, logger);
+			const target = await createRecipeUpload({ ...baseUploadData, originalFilename: 'b.pdf' }, testUserId, testUserId, logger);
 
 			const result = await getRecipeUploadById(target.id, logger);
 			expect(result.id).toBe(target.id);

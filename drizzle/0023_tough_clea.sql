@@ -1,0 +1,1 @@
+ALTER TABLE `recipe_uploads` DROP COLUMN `r2_key`;
