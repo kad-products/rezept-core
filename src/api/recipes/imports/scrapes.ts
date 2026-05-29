@@ -1,7 +1,7 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { apiErrorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import { linkRecipeScrapeToRecipe, updateRecipeScrapeStatus } from '@/repositories';
+import { createRecipeScrapeAttempt, linkRecipeScrapeToRecipe, updateRecipeScrapeStatus } from '@/repositories';
 import {
 	fetchAndStoreCoverImage,
 	initializeScrape,
@@ -70,10 +70,14 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 			}),
 		);
 		await saveRecipeIngredients(savedRecipe.id, ingredientsData, userId, ctx.logger);
-		recipeScrape = await updateRecipeScrapeStatus(recipeScrape.id, 'INGREDIENTS_SAVED', null, userId, ctx.logger);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'INGREDIENTS_SAVED', null, userId, ctx.logger);
+
+		recipeScrape = await updateRecipeScrapeStatus(recipeScrape.id, 'COMPLETED', null, userId, ctx.logger);
+		await createRecipeScrapeAttempt(recipeScrape.id, 'api', null, 'COMPLETED', null, null, userId, ctx.logger);
 	} catch (err) {
 		if (recipeScrape) {
 			await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', (err as Error).message, userId, ctx.logger);
+			await createRecipeScrapeAttempt(recipeScrape.id, 'api', null, 'FAILED', (err as Error).message, null, userId, ctx.logger);
 		}
 		return apiErrorResponse(err, 'Error processing recipe scrape');
 	}

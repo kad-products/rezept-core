@@ -9,6 +9,7 @@ export * from './json-ld-payload';
 export * from './permissions';
 export * from './recipe-ingredients';
 export * from './recipe-instructions';
+export * from './recipe-scrape-attempts';
 export * from './recipe-scrapes';
 export * from './recipe-sections';
 export * from './recipe-uploads';
