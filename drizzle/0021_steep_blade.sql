@@ -1,0 +1,1 @@
+ALTER TABLE `recipe_scrapes` ADD `recipe_id` text REFERENCES recipes(id);

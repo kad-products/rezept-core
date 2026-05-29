@@ -148,6 +148,13 @@
 			"when": 1779755486872,
 			"tag": "0020_melted_jasper_sitwell",
 			"breakpoints": true
+		},
+		{
+			"idx": 21,
+			"version": "6",
+			"when": 1780062526341,
+			"tag": "0021_steep_blade",
+			"breakpoints": true
 		}
 	]
 }

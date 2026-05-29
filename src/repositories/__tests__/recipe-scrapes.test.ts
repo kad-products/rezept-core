@@ -2,7 +2,14 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { createRecipeScrape, updateRecipeScrapeStatus } from '../recipe-scrapes';
+import {
+	createRecipeScrape,
+	getRecipeScrapeById,
+	getRecipeScrapesByStatus,
+	linkRecipeScrapeToRecipe,
+	updateRecipeScrapeStatus,
+} from '../recipe-scrapes';
+import { createRecipe } from '../recipes';
 
 const logger = new Logger();
 
@@ -111,5 +118,162 @@ describe('updateRecipeScrapeStatus', () => {
 
 		expect(result.status).toBe('FAILED');
 		expect(result.statusText).toBe('Parse error: unexpected token');
+	});
+});
+
+describe('linkRecipeScrapeToRecipe', () => {
+	let userId: string;
+	let scrapeId: string;
+	let recipeId: string;
+
+	beforeEach(async () => {
+		await resetDb();
+		const user = await createUser('testuser', null, logger);
+		userId = user.id;
+		const scrape = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		scrapeId = scrape.id;
+		const recipe = await createRecipe({ authorId: userId, title: 'Test Recipe' }, userId, logger);
+		recipeId = recipe.id;
+	});
+
+	it('sets recipeId on the scrape', async () => {
+		const result = await linkRecipeScrapeToRecipe(scrapeId, recipeId, userId, logger);
+
+		expect(result.recipeId).toBe(recipeId);
+	});
+
+	it('returns the updated scrape', async () => {
+		const result = await linkRecipeScrapeToRecipe(scrapeId, recipeId, userId, logger);
+
+		expect(result.id).toBe(scrapeId);
+	});
+
+	it('sets updatedBy', async () => {
+		const result = await linkRecipeScrapeToRecipe(scrapeId, recipeId, userId, logger);
+
+		expect(result.updatedBy).toBe(userId);
+	});
+
+	it('throws for an invalid scrape uuid', async () => {
+		await expect(linkRecipeScrapeToRecipe('not-a-uuid', recipeId, userId, logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a RecipeScrape',
+		);
+	});
+
+	it('throws for an invalid recipe uuid', async () => {
+		await expect(linkRecipeScrapeToRecipe(scrapeId, 'not-a-uuid', userId, logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a Recipe',
+		);
+	});
+
+	it('throws when scrape does not exist', async () => {
+		const nonExistentId = crypto.randomUUID();
+		await expect(linkRecipeScrapeToRecipe(nonExistentId, recipeId, userId, logger)).rejects.toThrow(
+			'Expected 1 RecipeScrape record(s), but found 0',
+		);
+	});
+});
+
+describe('getRecipeScrapesByStatus', () => {
+	let userId: string;
+
+	beforeEach(async () => {
+		await resetDb();
+		const user = await createUser('testuser', null, logger);
+		userId = user.id;
+	});
+
+	it('returns empty array when no scrapes exist', async () => {
+		const result = await getRecipeScrapesByStatus(['SCRAPED'], logger);
+
+		expect(result).toEqual([]);
+	});
+
+	it('returns scrapes matching the requested status', async () => {
+		const scrape = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+
+		const result = await getRecipeScrapesByStatus(['SCRAPED'], logger);
+
+		expect(result).toHaveLength(1);
+		expect(result[0].id).toBe(scrape.id);
+	});
+
+	it('does not return scrapes with a different status', async () => {
+		const scrape = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		await updateRecipeScrapeStatus(scrape.id, 'COMPLETED', null, userId, logger);
+
+		const result = await getRecipeScrapesByStatus(['SCRAPED'], logger);
+
+		expect(result).toHaveLength(0);
+	});
+
+	it('returns scrapes matching any of the requested statuses', async () => {
+		const scrape1 = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		const scrape2 = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		await updateRecipeScrapeStatus(scrape2.id, 'FAILED', 'error', userId, logger);
+
+		const result = await getRecipeScrapesByStatus(['SCRAPED', 'FAILED'], logger);
+
+		expect(result).toHaveLength(2);
+		expect(result.map(s => s.id)).toContain(scrape1.id);
+		expect(result.map(s => s.id)).toContain(scrape2.id);
+	});
+
+	it('returns results ordered by createdAt ascending', async () => {
+		const first = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		await new Promise(resolve => setTimeout(resolve, 10));
+		const second = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+
+		const result = await getRecipeScrapesByStatus(['SCRAPED'], logger);
+
+		expect(result[0].id).toBe(first.id);
+		expect(result[1].id).toBe(second.id);
+	});
+
+	it('returns empty array for empty status list', async () => {
+		await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+
+		const result = await getRecipeScrapesByStatus([], logger);
+
+		expect(result).toEqual([]);
+	});
+});
+
+describe('getRecipeScrapeById', () => {
+	let userId: string;
+	let scrapeId: string;
+
+	beforeEach(async () => {
+		await resetDb();
+		const user = await createUser('testuser', null, logger);
+		userId = user.id;
+		const scrape = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+		scrapeId = scrape.id;
+	});
+
+	it('returns the scrape by id', async () => {
+		const result = await getRecipeScrapeById(scrapeId, logger);
+
+		expect(result.id).toBe(scrapeId);
+	});
+
+	it('returns the correct scrape when multiple exist', async () => {
+		const other = await createRecipeScrape(crypto.randomUUID(), bodySize, userId, logger);
+
+		const result = await getRecipeScrapeById(scrapeId, logger);
+
+		expect(result.id).toBe(scrapeId);
+		expect(result.id).not.toBe(other.id);
+	});
+
+	it('throws for an invalid uuid', async () => {
+		await expect(getRecipeScrapeById('not-a-uuid', logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a RecipeScrape',
+		);
+	});
+
+	it('throws when id does not exist', async () => {
+		const nonExistentId = crypto.randomUUID();
+		await expect(getRecipeScrapeById(nonExistentId, logger)).rejects.toThrow('Expected 1 RecipeScrape record(s), but found 0');
 	});
 });
