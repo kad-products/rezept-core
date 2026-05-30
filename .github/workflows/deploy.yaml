@@ -1,0 +1,166 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to deploy (e.g. v1.2.3)'
+        required: true
+        type: string
+
+concurrency:
+  group: deploy-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-integration:
+    name: Deploy to Integration
+    runs-on: ubuntu-latest
+    environment: integration
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_ENV: integration
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm release
+
+      - name: Update status
+        run: |
+          VERSION="${{ inputs.tag }}"
+          VERSION="${VERSION#v}"
+          DEPLOYED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          git fetch origin gh-pages
+          git show origin/gh-pages:status.json > current-status.json
+
+          mkdir -p _status
+          jq --arg v "$VERSION" --arg d "$DEPLOYED_AT" \
+            '.environments.integration = {version: $v, deployedAt: $d}' \
+            current-status.json > _status/status.json
+
+      - name: Publish status to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_status
+          keep_files: true
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: deploy-integration
+    environment: staging
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_ENV: staging
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm release
+
+      - name: Update status
+        run: |
+          VERSION="${{ inputs.tag }}"
+          VERSION="${VERSION#v}"
+          DEPLOYED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          git fetch origin gh-pages
+          git show origin/gh-pages:status.json > current-status.json
+
+          mkdir -p _status
+          jq --arg v "$VERSION" --arg d "$DEPLOYED_AT" \
+            '.environments.staging = {version: $v, deployedAt: $d}' \
+            current-status.json > _status/status.json
+
+      - name: Publish status to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_status
+          keep_files: true
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    environment: production
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_ENV: production
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm release
+
+      - name: Update status
+        run: |
+          VERSION="${{ inputs.tag }}"
+          VERSION="${VERSION#v}"
+          DEPLOYED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          git fetch origin gh-pages
+          git show origin/gh-pages:status.json > current-status.json
+
+          mkdir -p _status
+          jq --arg v "$VERSION" --arg d "$DEPLOYED_AT" \
+            '.environments.production = {version: $v, deployedAt: $d}' \
+            current-status.json > _status/status.json
+
+      - name: Publish status to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_status
+          keep_files: true
