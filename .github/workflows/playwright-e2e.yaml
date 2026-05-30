@@ -1,0 +1,38 @@
+name: Playwright E2E Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Run Playwright E2E tests
+        run: pnpm playwright-e2e:run
+        env:
+          VITE_BASE_URL: http://localhost:5173
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-e2e-report
+          path: playwright-report/
+          retention-days: 30
