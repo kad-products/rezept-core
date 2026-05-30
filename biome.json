@@ -51,7 +51,15 @@
 	},
 	"overrides": [
 		{
-			"includes": ["**/__tests__/**", "tests/**", "scripts/**", "src/models/**", "src/schemas/**"],
+			"includes": [
+				"**/__tests__/**",
+				"tests/**",
+				"scripts/**",
+				"src/models/**",
+				"src/schemas/**",
+				".storybook/**",
+				"**/*.stories.tsx"
+			],
 			"linter": {
 				"rules": {
 					"nursery": {
