@@ -6,4 +6,12 @@ resource "github_repository" "repo" {
   has_discussions        = true
   has_issues             = true
   has_projects           = true
+
+  pages {
+    source {
+      branch = "gh-pages"
+      path   = "/"
+    }
+    build_type = "legacy"
+  }
 }

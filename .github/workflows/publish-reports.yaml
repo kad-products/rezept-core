@@ -1,0 +1,50 @@
+name: Publish Reports
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run unit tests with coverage
+        run: pnpm test:run
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Run E2E tests
+        run: pnpm playwright-e2e:run
+        env:
+          VITE_BASE_URL: http://localhost:5173
+          SESSION_SECRET_KEY: rezept-e2e-session-key
+
+      - name: Stage reports
+        run: |
+          mkdir -p _reports/unit _reports/e2e
+          cp -r coverage/. _reports/unit/
+          cp -r playwright-report/. _reports/e2e/
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_reports
+          destination_dir: reports
+          keep_files: true
