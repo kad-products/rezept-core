@@ -91,10 +91,34 @@
 			"workers_dev": true
 		},
 		"staging": {
+			"d1_databases": [
+				{
+					"binding": "rezept_core",
+					"database_id": "8ef40bea-0c58-43b3-a1f0-7ebecd3ee11d",
+					"database_name": "rezept-core-staging",
+					"migrations_dir": "drizzle"
+				}
+			],
+			"durable_objects": {
+				"bindings": [
+					{
+						"class_name": "SessionDurableObject",
+						"name": "SESSION_DURABLE_OBJECT"
+					}
+				]
+			},
 			"r2_buckets": [
+				{
+					"binding": "rezept_recipe_uploads",
+					"bucket_name": "rezept-recipe-uploads-staging"
+				},
 				{
 					"binding": "rezept_recipe_scrapes",
 					"bucket_name": "rezept-recipe-scrapes-staging"
+				},
+				{
+					"binding": "rezept_images",
+					"bucket_name": "rezept-images-staging"
 				}
 			],
 			"vars": {
@@ -105,10 +129,34 @@
 			"workers_dev": true
 		},
 		"production": {
+			"d1_databases": [
+				{
+					"binding": "rezept_core",
+					"database_id": "ff54cd4d-0099-4cb5-90e9-b9a2d8d6121e",
+					"database_name": "rezept-core-production",
+					"migrations_dir": "drizzle"
+				}
+			],
+			"durable_objects": {
+				"bindings": [
+					{
+						"class_name": "SessionDurableObject",
+						"name": "SESSION_DURABLE_OBJECT"
+					}
+				]
+			},
 			"r2_buckets": [
+				{
+					"binding": "rezept_recipe_uploads",
+					"bucket_name": "rezept-recipe-uploads-production"
+				},
 				{
 					"binding": "rezept_recipe_scrapes",
 					"bucket_name": "rezept-recipe-scrapes-production"
+				},
+				{
+					"binding": "rezept_images",
+					"bucket_name": "rezept-images-production"
 				}
 			],
 			"vars": {

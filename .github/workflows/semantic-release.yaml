@@ -1,12 +1,17 @@
-name: Semantic Release (Local Test)
+name: Release
 
 on:
   push:
     branches:
       - main
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
-  semantic-release:
+  release:
+    name: Semantic Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -27,12 +32,9 @@ jobs:
 
       - run: pnpm install
 
-      - name: Debug Token
-        env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
-        run: |
-          echo "Token starts with: ${GITHUB_TOKEN:0:10}..."
-          curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user
+      - name: Get pre-release tag
+        id: pre-release
+        run: echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_OUTPUT
 
       - name: Disable branch protection
         env:
@@ -54,7 +56,7 @@ jobs:
           HUSKY: 0
         run: pnpm dlx semantic-release
 
-        # NOTE: this would ideally be the same settings that are in Terraform but they could drift
+      # NOTE: this would ideally be the same settings that are in Terraform but they could drift
       - name: Re-enable branch protection
         if: always()
         env:
@@ -66,32 +68,15 @@ jobs:
             https://api.github.com/repos/kad-products/rezept-core/branches/main/protection \
             -d '{"restrictions":{"users":["arsdehnel"],"teams":[]},"required_status_checks":{"strict":true,"contexts":["commitlint / commitlint"]},"enforce_admins":false,"required_pull_request_reviews":{"dismiss_stale_reviews":false,"require_code_owner_reviews":false,"required_approving_review_count":0},"allow_deletions":false,"allow_force_pushes":false,"block_creations":false}'
 
-      - name: Integration Deploy
+      - name: Trigger Deploy
         if: success()
         env:
-          CLOUDFLARE_ENV: integration
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: pnpm release
-
-      - name: Update status.json
-        if: success()
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          DEPLOYED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-
-          git fetch origin gh-pages
-          git show origin/gh-pages:status.json > current-status.json
-
-          mkdir -p _status
-          jq --arg v "$VERSION" --arg d "$DEPLOYED_AT" \
-            '.environments.integration = {version: $v, deployedAt: $d}' \
-            current-status.json > _status/status.json
-
-      - name: Publish status to gh-pages
-        if: success()
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_status
-          keep_files: true
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$TAG" ] && [ "$TAG" != "${{ steps.pre-release.outputs.tag }}" ]; then
+            echo "New release $TAG — triggering deploy"
+            gh workflow run deploy.yaml --ref main --field tag="$TAG"
+          else
+            echo "No new release — skipping deploy"
+          fi
