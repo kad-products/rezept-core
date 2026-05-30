@@ -1,3 +1,10 @@
+## [1.32.0](https://github.com/kad-products/rezept-core/compare/v1.31.0...v1.32.0) (2026-05-30)
+
+### Features
+
+* add initial storybook setup ([082c651](https://github.com/kad-products/rezept-core/commit/082c651e9bed73430140789b6700ad8ddd45bc94))
+* initial components in storybook ([9943cec](https://github.com/kad-products/rezept-core/commit/9943cec1218fbd76f6765c40d3839a327eb0886d))
+
 ## [1.31.0](https://github.com/kad-products/rezept-core/compare/v1.30.2...v1.31.0) (2026-05-30)
 
 ### Features
