@@ -3,5 +3,5 @@
 	"compilerOptions": {
 		"types": []
 	},
-	"include": ["."]
+	"files": ["globals.d.ts", "main.ts", "preview.ts"]
 }
