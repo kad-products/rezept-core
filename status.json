@@ -1,7 +1,16 @@
 {
   "environments": {
-    "integration": { "version": null, "deployedAt": null },
-    "staging": { "version": null, "deployedAt": null },
-    "production": { "version": null, "deployedAt": null }
+    "integration": {
+      "version": "1.31.0",
+      "deployedAt": "2026-05-30T03:51:52Z"
+    },
+    "staging": {
+      "version": null,
+      "deployedAt": null
+    },
+    "production": {
+      "version": null,
+      "deployedAt": null
+    }
   }
 }
