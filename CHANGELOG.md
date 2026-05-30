@@ -1,3 +1,9 @@
+## [1.31.0](https://github.com/kad-products/rezept-core/compare/v1.30.2...v1.31.0) (2026-05-30)
+
+### Features
+
+* add gh pages settings ([ebe4c2c](https://github.com/kad-products/rezept-core/commit/ebe4c2c2baca0316a6f7ec7d8f3ca07d64d9efb5))
+
 ## [1.30.2](https://github.com/kad-products/rezept-core/compare/v1.30.1...v1.30.2) (2026-05-29)
 
 ### Bug Fixes
