@@ -6,6 +6,7 @@
 @import "./nav.less";
 @import "./recipes.less";
 @import "./rz-card.less";
+@import "./rz-dialog.less";
 @import "./rz-select.less";
 @import "./rz-table.less";
 @import "./rz-tabs.less";

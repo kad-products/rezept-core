@@ -82,6 +82,9 @@ playwright-report/
 test-results/
 playwright/.cache/
 
+# Storybook
+storybook-static/
+
 # Terraform files
 .terraform/
 .terraform.lock.hcl
