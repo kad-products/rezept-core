@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rezept — Project Dashboard</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 860px; margin: 2rem auto; padding: 0 1rem; color: #222; }
+      h1 { margin-bottom: 0.25rem; }
+      h2 { margin-top: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.25rem; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { text-align: left; padding: 0.4rem 0.75rem; border: 1px solid #ddd; }
+      th { background: #f5f5f5; }
+      .none { color: #999; font-style: italic; }
+      ul { padding-left: 1.25rem; }
+      li { margin: 0.25rem 0; }
+      a { color: #0969da; }
+    </style>
+  </head>
+  <body>
+    <h1>Rezept</h1>
+    <p>Recipe management app — <a href="https://github.com/kad-products/rezept-core">kad-products/rezept-core</a></p>
+
+    <h2>Environments</h2>
+    <table id="env-table">
+      <thead>
+        <tr><th>Environment</th><th>URL</th><th>Version</th><th>Deployed</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Integration</td>
+          <td><a href="https://rezept-integration.arsdehnel.workers.dev">rezept-integration</a></td>
+          <td id="env-integration-version"><span class="none">—</span></td>
+          <td id="env-integration-deployed"><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td>Staging</td>
+          <td><a href="https://rezept-staging.arsdehnel.workers.dev">rezept-staging</a></td>
+          <td id="env-staging-version"><span class="none">—</span></td>
+          <td id="env-staging-deployed"><span class="none">—</span></td>
+        </tr>
+        <tr>
+          <td>Production</td>
+          <td><a href="https://rezept.arsdehnel.workers.dev">rezept</a></td>
+          <td id="env-production-version"><span class="none">—</span></td>
+          <td id="env-production-deployed"><span class="none">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Test Reports</h2>
+    <ul>
+      <li><a href="reports/unit/">Unit tests (Vitest)</a></li>
+      <li><a href="reports/e2e/">E2E tests (Playwright)</a></li>
+    </ul>
+
+    <h2>Links</h2>
+    <ul>
+      <li><a href="https://github.com/kad-products/rezept-core/issues">Issues</a></li>
+      <li><a href="https://github.com/kad-products/rezept-core/pulls">Pull requests</a></li>
+      <li><a href="https://github.com/kad-products/rezept-core/releases">Releases</a></li>
+      <li><a href="https://github.com/kad-products/rezept-core/blob/main/CHANGELOG.md">Changelog</a></li>
+    </ul>
+
+    <script>
+      fetch('status.json')
+        .then(r => r.json())
+        .then(({ environments }) => {
+          for (const [env, data] of Object.entries(environments)) {
+            const vEl = document.getElementById(`env-${env}-version`);
+            const dEl = document.getElementById(`env-${env}-deployed`);
+            if (vEl) vEl.textContent = data.version ?? '—';
+            if (dEl) dEl.textContent = data.deployedAt ? new Date(data.deployedAt).toLocaleString() : '—';
+          }
+        })
+        .catch(() => {});
+    </script>
+  </body>
+</html>
