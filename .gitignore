@@ -1,0 +1,91 @@
+# Node modules
+node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Vite Environment variables
+# https://vite.dev/guide/env-and-mode#env-files
+.env*.local
+
+# Wrangler / Cloudflare local env file
+.dev.vars
+
+# Vite build output
+dist
+
+# Rollup bundle visualizer output
+bundle-stats*.html
+
+# TypeScript
+*.tsbuildinfo
+
+# IDEs and editors
+# .vscode/  # commented this as I like to commit this
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# MacOS
+.DS_Store
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# pnpm store directory
+.pnpm-store
+
+# Claude Code local settings (personal permissions/preferences — not team config)
+.claude/settings.local.json
+# Claude Code agent worktrees (temporary, created per-agent run)
+.claude/worktrees/
+
+# dotenv environment variables file
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vite cache
+.vite
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Temporary files
+*.tmp
+*.temp
+
+# Wrangler
+.wrangler
+
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
+
+# Terraform files
+.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+terraform.tfstate*
+*.tfvars.backup
+*.tfvars*
