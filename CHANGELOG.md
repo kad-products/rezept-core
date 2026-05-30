@@ -1,3 +1,9 @@
+## [1.32.1](https://github.com/kad-products/rezept-core/compare/v1.32.0...v1.32.1) (2026-05-30)
+
+### Bug Fixes
+
+* **deps:** update dependency (non-major) ([#333](https://github.com/kad-products/rezept-core/issues/333)) ([684e818](https://github.com/kad-products/rezept-core/commit/684e8185a91b9898486cb3c0412111f871e9140c))
+
 ## [1.32.0](https://github.com/kad-products/rezept-core/compare/v1.31.0...v1.32.0) (2026-05-30)
 
 ### Features
