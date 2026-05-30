@@ -34,6 +34,8 @@
 		"playwright-ct:run": "playwright test -c playwright-ct.config.ts",
 		"playwright-ct:update": "playwright test -c playwright-ct.config.ts --update-snapshots",
 		"playwright-ct:ui": "playwright test -c playwright-ct.config.ts --ui",
+		"playwright-e2e:run": "playwright test -c playwright.config.ts",
+		"playwright-e2e:ui": "playwright test -c playwright.config.ts --ui",
 		"test:workers": "vitest --config vitest.workers.config.ts",
 		"test:workers:run": "vitest run --config vitest.workers.config.ts",
 		"erd:generate": "drizzle-mermaid-generator --dialect sqlite --schema ./src/models/index.ts --relational > docs/data/current-erd.mmd",
