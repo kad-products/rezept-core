@@ -1,3 +1,9 @@
+## [1.30.2](https://github.com/kad-products/rezept-core/compare/v1.30.1...v1.30.2) (2026-05-29)
+
+### Bug Fixes
+
+* update lockfile ([e73e8fe](https://github.com/kad-products/rezept-core/commit/e73e8fe10ee864b2e76d72fb95f8c47f43224ff0))
+
 ## [1.30.1](https://github.com/kad-products/rezept-core/compare/v1.30.0...v1.30.1) (2026-05-29)
 
 ### Code Refactoring
