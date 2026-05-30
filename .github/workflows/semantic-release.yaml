@@ -68,8 +68,30 @@ jobs:
 
       - name: Integration Deploy
         if: success()
-        env: 
+        env:
           CLOUDFLARE_ENV: integration
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: pnpm release
+
+      - name: Update status.json
+        if: success()
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          DEPLOYED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          git fetch origin gh-pages
+          git show origin/gh-pages:status.json > current-status.json
+
+          mkdir -p _status
+          jq --arg v "$VERSION" --arg d "$DEPLOYED_AT" \
+            '.environments.integration = {version: $v, deployedAt: $d}' \
+            current-status.json > _status/status.json
+
+      - name: Publish status to gh-pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_status
+          keep_files: true
