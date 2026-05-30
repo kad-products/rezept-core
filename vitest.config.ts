@@ -8,7 +8,7 @@ export default defineConfig({
 		exclude: ['**/*.workers.test.ts', '**/*.ct.test.tsx', '**/*.e2e.test.ts', 'node_modules/**'],
 		coverage: {
 			provider: 'v8',
-			reporter: ['text', 'json-summary'],
+			reporter: ['text', 'json-summary', 'html'],
 			exclude: [
 				'**/*.md',
 				'**/__tests__/**',

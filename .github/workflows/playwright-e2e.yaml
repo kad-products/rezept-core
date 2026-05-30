@@ -29,6 +29,7 @@ jobs:
         run: pnpm playwright-e2e:run
         env:
           VITE_BASE_URL: http://localhost:5173
+          SESSION_SECRET_KEY: rezept-e2e-session-key
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
