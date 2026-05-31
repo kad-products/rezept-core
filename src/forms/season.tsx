@@ -1,12 +1,11 @@
 'use client';
-import { TanStackDevtools } from '@tanstack/react-devtools';
-import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveSeason } from '@/actions/seasons';
 import { seasonsSchemas } from '@/schemas';
 import type { ActionState, SeasonalIngredientWithRelations, SeasonDBRead, SeasonFormInput } from '@/types';
 import { useAppForm } from './context';
+import { FormDevtools } from './FormDevtools';
 
 export default function Season({
 	season,
@@ -101,7 +100,7 @@ export default function Season({
 					)}
 				</form.Subscribe>
 			</Form.Root>
-			{import.meta.env.DEV && <TanStackDevtools plugins={[formDevtoolsPlugin()]} />}
+			<FormDevtools />
 		</>
 	);
 }

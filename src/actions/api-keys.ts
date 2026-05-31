@@ -7,7 +7,6 @@ import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKeyDBRead, ApiKeyFormInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
-// biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
 export const saveApiKey = serverAction([
 	requireAuthentication,
 	requirePermissions('api-keys:create', 'api-keys:update'),

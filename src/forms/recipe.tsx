@@ -1,12 +1,11 @@
 'use client';
-import { TanStackDevtools } from '@tanstack/react-devtools';
-import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveRecipe } from '@/actions/recipes';
 import { recipesSchemas } from '@/schemas';
 import type { ActionState, IngredientDBRead, RecipeFormInput, RecipeWithSections } from '@/types';
 import { useAppForm } from './context';
+import { FormDevtools } from './FormDevtools';
 
 export default function Recipe({
 	recipe,
@@ -231,7 +230,7 @@ export default function Recipe({
 					)}
 				</form.Subscribe>
 			</Form.Root>
-			{import.meta.env.DEV && <TanStackDevtools plugins={[formDevtoolsPlugin()]} />}{' '}
+			<FormDevtools />{' '}
 		</>
 	);
 }

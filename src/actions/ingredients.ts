@@ -6,7 +6,6 @@ import { ingredientsSchemas } from '@/schemas';
 import type { ActionState, IngredientFormInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
-// biome-ignore lint/nursery/useExplicitType: WrappedServerFunction return type is not exported from rwsdk
 export const saveIngredient = serverAction([
 	requireAuthentication,
 	requirePermissions('ingredients:create', 'ingredients:update'),

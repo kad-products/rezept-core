@@ -2,7 +2,6 @@ import { DurableObject, env } from 'cloudflare:workers';
 import { defineDurableSession, MAX_SESSION_DURATION } from 'rwsdk/auth';
 import type { Session, SessionError } from '@/types';
 
-// biome-ignore lint/nursery/useExplicitType: SessionStoreFromDurableObject return type is not exported from rwsdk
 export const sessions = defineDurableSession({
 	secretKey: env.SESSION_SECRET_KEY,
 	sessionDurableObject: env.SESSION_DURABLE_OBJECT,
