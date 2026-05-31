@@ -1,6 +1,4 @@
 'use client';
-import { TanStackDevtools } from '@tanstack/react-devtools';
-import { formDevtoolsPlugin } from '@tanstack/react-form-devtools';
 import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveApiKey } from '@/actions/api-keys';
@@ -8,6 +6,7 @@ import permissions from '@/data/permissions';
 import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKeyDBRead, ApiKeyFormInput } from '@/types';
 import { useAppForm } from './context';
+import { FormDevtools } from './FormDevtools';
 
 export default function FormApiKey({
 	apiKey,
@@ -90,7 +89,7 @@ export default function FormApiKey({
 					)}
 				</form.Subscribe>
 			</Form.Root>
-			{import.meta.env.DEV && <TanStackDevtools plugins={[formDevtoolsPlugin()]} />}
+			<FormDevtools />
 		</>
 	);
 }
