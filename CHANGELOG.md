@@ -1,3 +1,11 @@
+## [1.32.2](https://github.com/kad-products/rezept-core/compare/v1.32.1...v1.32.2) (2026-05-31)
+
+### Bug Fixes
+
+* biome relaxed rules in 2.4.11 for the useExplicitType rule ([3c68add](https://github.com/kad-products/rezept-core/commit/3c68add8a0c3a02f1b2020839d5962900c29f0dc))
+* clean up tanstack dev tools import for build cleanup ([3d3b22a](https://github.com/kad-products/rezept-core/commit/3d3b22adec87945e5cd19698046cda676c0c14fa))
+* handle package changes from pnpm 11 upgrade ([9a8d57d](https://github.com/kad-products/rezept-core/commit/9a8d57dea63b6c8fc2f66568bbbe5d55cd9f20cf))
+
 ## [1.32.1](https://github.com/kad-products/rezept-core/compare/v1.32.0...v1.32.1) (2026-05-30)
 
 ### Bug Fixes
