@@ -391,11 +391,11 @@ beforeEach(async () => {
 ✅ **Action integration** - Full stack from action through repository to database
 ✅ **Middleware** - Request/response handling, session management
 ✅ **Session management** - Create, read, expire, revoke flows
+✅ **React components** - Behavioral and visual tests via Playwright CT (`.ct.test.tsx`)
 
 ## What We Don't Test (Yet)
 
-🔲 **React components** - Would need React Testing Library
-🔲 **E2E flows** - Would need Playwright/Cypress  
+🔲 **E2E flows** - Playwright E2E is configured; coverage to grow over time
 🔲 **API endpoints** - Not applicable (using server actions)
 🔲 **File uploads** - Not implemented yet
 🔲 **Complex transactions** - Single operations so far
@@ -404,16 +404,32 @@ beforeEach(async () => {
 
 ### Component Testing
 
-When we're ready to test React components:
+Component tests use `@playwright/experimental-ct-react` and live in `src/components/__tests__/` with a `.ct.test.tsx` extension. Run them with:
+
 ```bash
-pnpm add -D @testing-library/react @testing-library/user-event jsdom
+pnpm playwright-ct:run
 ```
+
+For components with interactive behavior, write behavioral assertions using the `page` fixture alongside `mount`. The `page` fixture is necessary when content renders via a portal (e.g. `RzDialog`) since portal content lives outside the mounted component's DOM subtree:
+
+```tsx
+test('opens when trigger is clicked', async ({ mount, page }) => {
+  await mount(<RzDialog trigger={<button type="button">Open</button>} title="Confirm">...</RzDialog>);
+
+  await page.getByRole('button', { name: 'Open' }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByRole('dialog')).toContainText('Confirm');
+});
+```
+
+See [ADR-0008](../decisions/0008-react-component-testing.md) for the decision to use Playwright CT over React Testing Library.
 
 ### E2E Testing
 
-For full browser flows:
+Playwright E2E is configured for full browser flows (`.e2e.test.ts`). Run with:
+
 ```bash
-pnpm add -D @playwright/test
+pnpm playwright-e2e:run
 ```
 
 ### Performance Testing
