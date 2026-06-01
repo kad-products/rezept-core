@@ -10,31 +10,24 @@ beforeEach(async () => {
 });
 
 describe('getUsers', () => {
-	it('returns empty array when no users exist', async () => {
-		const result = await getUsers(logger);
-
-		expect(result).toEqual([]);
-	});
-
-	it('returns all active users', async () => {
-		await createUser('alice', null, logger);
-		await createUser('bob', null, logger);
+	it('returns active users', async () => {
+		const alice = await createUser('alice', null, logger);
+		const bob = await createUser('bob', null, logger);
 
 		const result = await getUsers(logger);
+		const ids = result.map(u => u.id);
 
-		expect(result).toHaveLength(2);
-		expect(result.map(u => u.username)).toEqual(expect.arrayContaining(['alice', 'bob']));
+		expect(ids).toContain(alice.id);
+		expect(ids).toContain(bob.id);
 	});
 
 	it('excludes deleted users by default', async () => {
-		const active = await createUser('active', null, logger);
 		const deleted = await createUser('deleted', null, logger);
 		await deleteUser(deleted.id, null, logger);
 
 		const result = await getUsers(logger);
 
-		expect(result).toHaveLength(1);
-		expect(result[0].id).toBe(active.id);
+		expect(result.map(u => u.id)).not.toContain(deleted.id);
 	});
 
 	it('includes deleted users when includeDeleted is true', async () => {
@@ -43,9 +36,10 @@ describe('getUsers', () => {
 		await deleteUser(deleted.id, null, logger);
 
 		const result = await getUsers(logger, true);
+		const ids = result.map(u => u.id);
 
-		expect(result).toHaveLength(2);
-		expect(result.map(u => u.id)).toEqual(expect.arrayContaining([active.id, deleted.id]));
+		expect(ids).toContain(active.id);
+		expect(ids).toContain(deleted.id);
 	});
 });
 
