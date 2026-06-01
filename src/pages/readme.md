@@ -30,9 +30,9 @@ Each page file exports a single default async component:
 export default async function Pages__recipes__listing({ ctx, params }: RequestInfo) {
     const recipes = await getRecipes(ctx.user.id);
     return (
-        <StandardLayout>
+        <AppLayout>
             {/* ... */}
-        </StandardLayout>
+        </AppLayout>
     );
 }
 ```
@@ -84,7 +84,7 @@ The parameter type is `RequestInfo` (imported from `rwsdk/worker`), not `Default
 
 ## Layouts
 
-Every page must wrap its content in a layout component. The current layout is `StandardLayout`. An admin layout is planned — use whatever layout is appropriate for the page's context, but never render content without a layout.
+Every page must wrap its content in a layout component. The current layout is `AppLayout`. An admin layout is planned — use whatever layout is appropriate for the page's context, but never render content without a layout.
 
 ## Route protection
 

@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import ApiKeysTable from '@/components/ApiKeysTable';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 import { getApiKeysByUserId, getCredentialsByUserId } from '@/repositories';
 
 export default async function Pages__profile__root({ ctx }: RequestInfo): Promise<React.JSX.Element> {
@@ -19,7 +19,7 @@ export default async function Pages__profile__root({ ctx }: RequestInfo): Promis
 	}));
 
 	return (
-		<StandardLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx}>
+		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx}>
 			<div>
 				<pre>{JSON.stringify(ctx, null, 2)}</pre>
 			</div>
@@ -30,6 +30,6 @@ export default async function Pages__profile__root({ ctx }: RequestInfo): Promis
 					<pre>{JSON.stringify({ clientComponentCredentials }, null, 2)}</pre>
 				</div>
 			</Suspense>
-		</StandardLayout>
+		</AppLayout>
 	);
 }

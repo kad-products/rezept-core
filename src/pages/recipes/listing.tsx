@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import RecipesTabs from '@/components/RecipesTabs';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 import { getApiKeysByUserId, getRecipes, getRecipeUploads } from '@/repositories';
 
 export default async function Pages__recipes__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
@@ -10,7 +10,7 @@ export default async function Pages__recipes__listing({ ctx }: RequestInfo): Pro
 	const recipeUploads = userId ? await getRecipeUploads(userId, ctx.logger) : [];
 	const apiKeys = userId ? await getApiKeysByUserId(userId, ctx.logger) : [];
 	return (
-		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
+		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
 			<Suspense fallback={<div>Loading recipes...</div>}>
 				<RecipesTabs
 					recipes={recipes}
@@ -20,6 +20,6 @@ export default async function Pages__recipes__listing({ ctx }: RequestInfo): Pro
 					userId={userId}
 				/>
 			</Suspense>
-		</StandardLayout>
+		</AppLayout>
 	);
 }
