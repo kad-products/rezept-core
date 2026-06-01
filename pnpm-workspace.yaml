@@ -4,6 +4,8 @@ allowBuilds:
   less: false
   sharp: false
   workerd: true
+minimumReleaseAgeExclude:
+  - rwsdk@1.2.10
 overrides:
   '@types/react': 19.2.15
   '@types/react-dom': 19.2.3
