@@ -1,3 +1,9 @@
+## [1.38.0](https://github.com/kad-products/rezept-core/compare/v1.37.0...v1.38.0) (2026-06-01)
+
+### Features
+
+* **admin:** initial user listing page ([95d16b8](https://github.com/kad-products/rezept-core/commit/95d16b856b99f4367c89c3e5b4f7ef4890567ede))
+
 ## [1.37.0](https://github.com/kad-products/rezept-core/compare/v1.36.0...v1.37.0) (2026-06-01)
 
 ### Features
