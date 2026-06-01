@@ -6,6 +6,14 @@ import { users } from '@/models';
 import type { UserDBRead, UserWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
+export async function getUsers(logger: RzLogger, includeDeleted = false): Promise<UserDBRead[]> {
+	logger.debug('Fetching all users');
+	return db
+		.select()
+		.from(users)
+		.where(includeDeleted ? undefined : isNull(users.deletedAt));
+}
+
 export async function createUser(username: string, actingUserId: string | null, logger: RzLogger): Promise<UserDBRead> {
 	logger.debug(`Creating user ${username}`);
 	const user: UserWriteInput = {

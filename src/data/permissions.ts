@@ -2,6 +2,9 @@ const permissions = {
 	admin: {
 		read: ['ADMIN'],
 	},
+	users: {
+		read: ['ADMIN'],
+	},
 	'api-keys': {
 		create: ['BASIC', 'ADMIN'],
 		read: ['BASIC', 'ADMIN'],

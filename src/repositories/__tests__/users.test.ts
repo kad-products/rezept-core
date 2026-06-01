@@ -1,12 +1,46 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { resetDb } from '../../../tests/mocks/db';
-import { createUser, deleteUser, getUserById } from '../users';
+import { createUser, deleteUser, getUserById, getUsers } from '../users';
 
 const logger = new Logger();
 
 beforeEach(async () => {
 	await resetDb();
+});
+
+describe('getUsers', () => {
+	it('returns active users', async () => {
+		const alice = await createUser('alice', null, logger);
+		const bob = await createUser('bob', null, logger);
+
+		const result = await getUsers(logger);
+		const ids = result.map(u => u.id);
+
+		expect(ids).toContain(alice.id);
+		expect(ids).toContain(bob.id);
+	});
+
+	it('excludes deleted users by default', async () => {
+		const deleted = await createUser('deleted', null, logger);
+		await deleteUser(deleted.id, null, logger);
+
+		const result = await getUsers(logger);
+
+		expect(result.map(u => u.id)).not.toContain(deleted.id);
+	});
+
+	it('includes deleted users when includeDeleted is true', async () => {
+		const active = await createUser('active', null, logger);
+		const deleted = await createUser('deleted', null, logger);
+		await deleteUser(deleted.id, null, logger);
+
+		const result = await getUsers(logger, true);
+		const ids = result.map(u => u.id);
+
+		expect(ids).toContain(active.id);
+		expect(ids).toContain(deleted.id);
+	});
 });
 
 describe('createUser', () => {
