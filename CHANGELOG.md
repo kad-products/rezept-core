@@ -1,3 +1,13 @@
+## [1.33.0](https://github.com/kad-products/rezept-core/compare/v1.32.2...v1.33.0) (2026-06-01)
+
+### Features
+
+* move save recipe action to steps system ([80fbfa4](https://github.com/kad-products/rezept-core/commit/80fbfa4d5a2a2e0113eddfbc2311702327403376))
+
+### Bug Fixes
+
+* better name and type for recipe saving/import ([49d6523](https://github.com/kad-products/rezept-core/commit/49d652327e2bdcaf165870504c4884fe981fd6b6))
+
 ## [1.32.2](https://github.com/kad-products/rezept-core/compare/v1.32.1...v1.32.2) (2026-05-31)
 
 ### Bug Fixes
