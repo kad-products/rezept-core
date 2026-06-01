@@ -1,3 +1,9 @@
+## [1.37.0](https://github.com/kad-products/rezept-core/compare/v1.36.0...v1.37.0) (2026-06-01)
+
+### Features
+
+* **admin:** creates initial admin document and layout ([d2584b3](https://github.com/kad-products/rezept-core/commit/d2584b30d3b411c1beecb90b7718e44ce12d8958))
+
 ## [1.36.0](https://github.com/kad-products/rezept-core/compare/v1.35.1...v1.36.0) (2026-06-01)
 
 ### Features
