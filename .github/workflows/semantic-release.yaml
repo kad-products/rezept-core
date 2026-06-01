@@ -36,6 +36,34 @@ jobs:
         id: pre-release
         run: echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_OUTPUT
 
+      - name: Save branch protection
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+        run: |
+          curl --fail-with-body -s \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/kad-products/rezept-core/branches/main/protection \
+          | jq '{
+              restrictions: (if .restrictions then {
+                users: [.restrictions.users[].login],
+                teams: [.restrictions.teams[].slug]
+              } else null end),
+              required_status_checks: (if .required_status_checks then {
+                strict: .required_status_checks.strict,
+                contexts: .required_status_checks.contexts
+              } else null end),
+              enforce_admins: .enforce_admins.enabled,
+              required_pull_request_reviews: (if .required_pull_request_reviews then {
+                dismiss_stale_reviews: .required_pull_request_reviews.dismiss_stale_reviews,
+                require_code_owner_reviews: .required_pull_request_reviews.require_code_owner_reviews,
+                required_approving_review_count: .required_pull_request_reviews.required_approving_review_count
+              } else null end),
+              allow_deletions: .allow_deletions.enabled,
+              allow_force_pushes: .allow_force_pushes.enabled,
+              block_creations: .block_creations.enabled
+            }' > /tmp/branch-protection.json
+
       - name: Disable branch protection
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
@@ -56,17 +84,16 @@ jobs:
           HUSKY: 0
         run: pnpm dlx semantic-release
 
-      # NOTE: this would ideally be the same settings that are in Terraform but they could drift
       - name: Re-enable branch protection
         if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
         run: |
-          curl -X PUT \
+          curl --fail-with-body -X PUT \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/kad-products/rezept-core/branches/main/protection \
-            -d '{"restrictions":{"users":["arsdehnel"],"teams":[]},"required_status_checks":{"strict":true,"contexts":["commitlint / commitlint"]},"enforce_admins":false,"required_pull_request_reviews":{"dismiss_stale_reviews":false,"require_code_owner_reviews":false,"required_approving_review_count":0},"allow_deletions":false,"allow_force_pushes":false,"block_creations":false}'
+            -d @/tmp/branch-protection.json
 
       - name: Trigger Deploy
         if: success()
