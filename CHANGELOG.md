@@ -1,3 +1,9 @@
+## [1.35.0](https://github.com/kad-products/rezept-core/compare/v1.34.1...v1.35.0) (2026-06-01)
+
+### Features
+
+* initial 404 handlers ([ceb0ec0](https://github.com/kad-products/rezept-core/commit/ceb0ec064019fc4bcb786bbc0e9ec26c46aaef74))
+
 ## [1.34.1](https://github.com/kad-products/rezept-core/compare/v1.34.0...v1.34.1) (2026-06-01)
 
 ### Bug Fixes
