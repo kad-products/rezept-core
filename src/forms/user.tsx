@@ -10,7 +10,7 @@ import { useAppForm } from './context';
 const roleOptions = userRoles.map(r => ({ value: r, label: r[0] + r.slice(1).toLowerCase() }));
 
 export default function UserEditForm({ user }: { user: UserDBRead }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<UserAdminEditInput>>();
+	const [formState, setFormState] = useState<ActionState<UserDBRead>>();
 
 	const form = useAppForm({
 		defaultValues: {

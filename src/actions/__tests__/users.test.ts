@@ -38,7 +38,7 @@ import { updateUser } from '@/repositories';
 import type { UserAdminEditInput, UserDBRead } from '@/types';
 import { _saveUser } from '../users';
 
-const mockUser = { id: randomUUID(), username: 'testuser', role: 'BASIC' } as UserDBRead;
+const mockUser = { id: randomUUID(), username: 'testuser', role: 'BASIC' as const } as unknown as UserDBRead;
 const validInput: UserAdminEditInput = { id: mockUser.id, username: 'testuser', role: 'ADMIN' };
 
 describe('_saveUser', () => {
