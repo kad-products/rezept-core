@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/schemas/utils.ts</title>
+    <title>Code coverage report for src/actions/users.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/schemas</a> utils.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/actions</a> users.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/22</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
                 <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>6/6</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -99,78 +99,84 @@
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
 <a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">63x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">134x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">179x</span>
-<span class="cline-any cline-yes">179x</span>
-<span class="cline-any cline-yes">179x</span>
-<span class="cline-any cline-yes">179x</span>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">57x</span>
-<span class="cline-any cline-yes">57x</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { z } from 'zod';
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use server';
+import { requestInfo, serverAction } from 'rwsdk/worker';
+import { requireAuthentication, requirePermissions } from '@/interrupters';
+import { updateUser } from '@/repositories';
+import { usersSchemas } from '@/schemas';
+import type { ActionState, UserAdminEditInput, UserDBRead } from '@/types';
+import { errorResponse, successResponse } from './utils';
 &nbsp;
-export const optionalString = z
-	.union([z.string(), z.null()])
-	.transform(val =&gt; val?.trim() || undefined)
-	.optional() satisfies z.ZodType&lt;string | undefined&gt;;
+export const saveUser = serverAction([requireAuthentication, requirePermissions('users:update'), _saveUser]);
 &nbsp;
-export const optionalStringMax = (max: number, field: string) =&gt;
-	optionalString.pipe(z.string().max(max, `${field} must be ${max} characters or less`).optional());
+/**
+ * @private - exported for testing only, do not use directly
+ */
+export async function _saveUser(formData: UserAdminEditInput): Promise&lt;ActionState&lt;UserDBRead&gt;&gt; {
+	const { ctx } = requestInfo;
+	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
+	const userId = ctx.user!.id;
 &nbsp;
-export const optionalUuid = z
-	.union([z.string().uuid('Must be a valid UUID'), z.null(), z.literal('')])
-	.transform(val =&gt; (val === '' || val === null ? undefined : val))
-	.optional() satisfies z.ZodType&lt;string | undefined&gt;;
+	const parsed = usersSchemas.adminEdit.safeParse(formData);
+	if (!parsed.success) {
+		return errorResponse&lt;UserDBRead&gt;(parsed.error.flatten().fieldErrors, 400);
+	}
 &nbsp;
-export const requiredUuid = z.string().uuid('Must be a valid UUID');
-&nbsp;
-export const coercedInt = (min?: number, max?: number): z.ZodNumber =&gt; {
-	let schema = z.coerce.number().int();
-	if (min !== undefined) schema = schema.min(min);
-	if (max !== undefined) schema = schema.max(max);
-	return schema as z.ZodNumber;
-};
-&nbsp;
-// Handles null and empty string from form inputs before coercing — z.coerce.number() turns both into 0 without this
-export const optionalCoercedInt = (min?: number, max?: number) =&gt; {
-	const inner = coercedInt(min, max);
-	return z
-		.union([z.null().transform((): undefined =&gt; undefined), z.literal('').transform((): undefined =&gt; undefined), inner])
-		.optional();
-};
-&nbsp;
-export const requiredString = (field: string, max?: number): z.ZodString =&gt; {
-	const base = z.string().trim().min(1, `${field} is required`);
-	return max !== undefined ? base.max(max, `${field} must be ${max} characters or less`) : base;
-};
+	try {
+		const updated = await updateUser(
+			parsed.data.id,
+			{ username: parsed.data.username, role: parsed.data.role },
+			userId,
+			ctx.logger,
+		);
+		return successResponse&lt;UserDBRead&gt;(updated);
+	} catch (error) {
+		if (error instanceof Error &amp;&amp; error.message.includes('UNIQUE constraint failed: users.username')) {
+			return errorResponse&lt;UserDBRead&gt;({ username: ['Username is already taken'] }, 400);
+		}
+		return errorResponse&lt;UserDBRead&gt;(error, 500, 'Failed to save user');
+	}
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
