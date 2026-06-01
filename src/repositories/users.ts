@@ -14,6 +14,31 @@ export async function getUsers(logger: RzLogger, includeDeleted = false): Promis
 		.where(includeDeleted ? undefined : isNull(users.deletedAt));
 }
 
+export async function updateUser(
+	id: string,
+	data: Partial<UserWriteInput>,
+	actingUserId: string,
+	logger: RzLogger,
+): Promise<UserDBRead> {
+	if (!validateUuid(id)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [id, 'User']);
+	}
+
+	logger.debug(`Updating user ${id}`);
+	const updated = await db
+		.update(users)
+		.set({ ...data, updatedAt: sql`(datetime('now', 'localtime'))`, updatedBy: actingUserId })
+		.where(and(eq(users.id, id), isNull(users.deletedAt)))
+		.returning();
+
+	if (updated.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [updated.length, 1, 'User']);
+	}
+
+	logger.info(`Updated user ${id}`);
+	return updated[0];
+}
+
 export async function createUser(username: string, actingUserId: string | null, logger: RzLogger): Promise<UserDBRead> {
 	logger.debug(`Creating user ${username}`);
 	const user: UserWriteInput = {

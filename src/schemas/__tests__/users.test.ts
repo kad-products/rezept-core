@@ -104,3 +104,60 @@ describe('usersSchemas.form', () => {
 		});
 	});
 });
+
+describe('usersSchemas.adminEdit', () => {
+	const validInput = { id: randomUUID(), username: 'johndoe', role: 'ADMIN' as const };
+
+	it('accepts valid id, username, and role', () => {
+		expect(usersSchemas.adminEdit.safeParse(validInput).success).toBe(true);
+	});
+
+	it('accepts BASIC role', () => {
+		expect(usersSchemas.adminEdit.safeParse({ ...validInput, role: 'BASIC' }).success).toBe(true);
+	});
+
+	it('trims whitespace from username', () => {
+		const result = usersSchemas.adminEdit.safeParse({ ...validInput, username: '  johndoe  ' });
+		expect(result.success).toBe(true);
+		if (result.success) expect(result.data.username).toBe('johndoe');
+	});
+
+	it('rejects empty username', () => {
+		const result = usersSchemas.adminEdit.safeParse({ ...validInput, username: '' });
+		expect(result.success).toBe(false);
+		if (!result.success) expect(result.error.issues.map(i => i.path[0])).toContain('username');
+	});
+
+	it('rejects username longer than 50 characters', () => {
+		const result = usersSchemas.adminEdit.safeParse({ ...validInput, username: 'a'.repeat(51) });
+		expect(result.success).toBe(false);
+		if (!result.success) expect(result.error.issues.map(i => i.path[0])).toContain('username');
+	});
+
+	it('rejects missing username', () => {
+		const { username: _, ...withoutUsername } = validInput;
+		expect(usersSchemas.adminEdit.safeParse(withoutUsername).success).toBe(false);
+	});
+
+	it('rejects invalid role', () => {
+		const result = usersSchemas.adminEdit.safeParse({ ...validInput, role: 'SUPERUSER' });
+		expect(result.success).toBe(false);
+		if (!result.success) expect(result.error.issues.map(i => i.path[0])).toContain('role');
+	});
+
+	it('rejects missing role', () => {
+		const { role: _, ...withoutRole } = validInput;
+		expect(usersSchemas.adminEdit.safeParse(withoutRole).success).toBe(false);
+	});
+
+	it('rejects invalid UUID for id', () => {
+		const result = usersSchemas.adminEdit.safeParse({ ...validInput, id: 'not-a-uuid' });
+		expect(result.success).toBe(false);
+		if (!result.success) expect(result.error.issues.map(i => i.path[0])).toContain('id');
+	});
+
+	it('rejects missing id', () => {
+		const { id: _, ...withoutId } = validInput;
+		expect(usersSchemas.adminEdit.safeParse(withoutId).success).toBe(false);
+	});
+});
