@@ -34,7 +34,7 @@ export default function FileUploadForm(): React.ReactNode {
 			const formData = new FormData();
 			formData.append('file', file);
 
-			const res = await fetch('/api/recipes/upload', {
+			const res = await fetch('/api/recipes/imports/uploads', {
 				method: 'POST',
 				body: formData,
 			});
