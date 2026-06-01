@@ -1,4 +1,7 @@
 const permissions = {
+	admin: {
+		read: ['ADMIN'],
+	},
 	'api-keys': {
 		create: ['BASIC', 'ADMIN'],
 		read: ['BASIC', 'ADMIN'],
