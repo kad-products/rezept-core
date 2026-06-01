@@ -1,3 +1,9 @@
+## [1.34.0](https://github.com/kad-products/rezept-core/compare/v1.33.0...v1.34.0) (2026-06-01)
+
+### Features
+
+* include the app version variable for usage in logs and stuff ([5df308c](https://github.com/kad-products/rezept-core/commit/5df308c065d5f801699892017038928834c9f3dd))
+
 ## [1.33.0](https://github.com/kad-products/rezept-core/compare/v1.32.2...v1.33.0) (2026-06-01)
 
 ### Features
