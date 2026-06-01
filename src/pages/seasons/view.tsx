@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 import { getIngredientsBySeasonId, getSeasonById } from '@/repositories';
 
 export default async function Pages__seasons__view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
@@ -10,7 +10,7 @@ export default async function Pages__seasons__view({ ctx, params }: RequestInfo)
 		getIngredientsBySeasonId(seasonId, ctx.logger),
 	]);
 	return (
-		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
+		<AppLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading season...</div>}>
 				<h3>{season.name}</h3>
 				{ctx.permissions?.includes('seasons:update') && (
@@ -34,6 +34,6 @@ export default async function Pages__seasons__view({ ctx, params }: RequestInfo)
 					))}
 				</ul>
 			</Suspense>
-		</StandardLayout>
+		</AppLayout>
 	);
 }

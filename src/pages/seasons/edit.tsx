@@ -3,7 +3,7 @@ import type { RequestInfo } from 'rwsdk/worker';
 import { countryOptions } from '@/data/countries';
 import { monthOptions } from '@/data/months';
 import Season from '@/forms/season';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 import { getIngredients, getIngredientsBySeasonId, getSeasonById } from '@/repositories';
 import type { SeasonDBRead } from '@/types';
 
@@ -27,7 +27,7 @@ export default async function Pages__seasons__edit({ ctx, params }: RequestInfo)
 	}));
 
 	return (
-		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
+		<AppLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading season...</div>}>
 				<h3>{seasonId ? `Edit ${season.name}` : 'New Season'}</h3>
 				{seasonId && (
@@ -43,6 +43,6 @@ export default async function Pages__seasons__edit({ ctx, params }: RequestInfo)
 					seasonalIngredients={seasonalIngredients}
 				/>
 			</Suspense>
-		</StandardLayout>
+		</AppLayout>
 	);
 }

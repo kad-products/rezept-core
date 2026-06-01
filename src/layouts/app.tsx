@@ -11,7 +11,7 @@ type NavItem = {
 	basePage?: string; // Optional base page for active state
 };
 
-export default function StandardLayout({
+export default function AppLayout({
 	children,
 	currentBasePage,
 	pageTitle,

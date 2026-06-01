@@ -8,7 +8,7 @@ Layouts receive page content as `children` and render it inside a consistent she
 
 ## Current layouts
 
-- **`StandardLayout`** — the main application shell with navigation. Used by all current pages.
+- **`AppLayout`** — the main application shell with navigation. Used by all current pages.
 
 An admin layout is planned for administrative pages.
 

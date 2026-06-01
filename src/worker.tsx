@@ -1,7 +1,8 @@
 import { except, prefix, render, route } from 'rwsdk/router';
 import { defineApp, type RequestInfo } from 'rwsdk/worker';
 import apiRoutes from '@/api/routes';
-import { Document } from '@/Document';
+import AppDocument from '@/documents/app';
+import NoJSDocument from '@/documents/no-js';
 import headersMiddleware from '@/middleware/headers';
 import sessionMiddleware from '@/middleware/session';
 import userMiddleware from '@/middleware/user';
@@ -32,13 +33,14 @@ export default defineApp([
 	permissionsMiddleware,
 	...testBridgeRoutes,
 	prefix('/api', apiRoutes),
-	render(Document, [
+	render(NoJSDocument, [prefix('/recipes', recipeRoutes.noJS)]),
+	render(AppDocument, [
 		except<RequestInfo>(handlePageError),
 		route('/', Pages__root),
-		prefix('/auth', authRoutes),
-		prefix('/profile', profileRoutes),
-		prefix('/recipes', recipeRoutes),
-		prefix('/seasons', seasonRoutes),
+		prefix('/auth', authRoutes.app),
+		prefix('/profile', profileRoutes.app),
+		prefix('/recipes', recipeRoutes.app),
+		prefix('/seasons', seasonRoutes.app),
 		route('*', NotFound),
 	]),
 ]);
