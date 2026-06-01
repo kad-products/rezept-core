@@ -1,12 +1,52 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { resetDb } from '../../../tests/mocks/db';
-import { createUser, deleteUser, getUserById } from '../users';
+import { createUser, deleteUser, getUserById, getUsers } from '../users';
 
 const logger = new Logger();
 
 beforeEach(async () => {
 	await resetDb();
+});
+
+describe('getUsers', () => {
+	it('returns empty array when no users exist', async () => {
+		const result = await getUsers(logger);
+
+		expect(result).toEqual([]);
+	});
+
+	it('returns all active users', async () => {
+		await createUser('alice', null, logger);
+		await createUser('bob', null, logger);
+
+		const result = await getUsers(logger);
+
+		expect(result).toHaveLength(2);
+		expect(result.map(u => u.username)).toEqual(expect.arrayContaining(['alice', 'bob']));
+	});
+
+	it('excludes deleted users by default', async () => {
+		const active = await createUser('active', null, logger);
+		const deleted = await createUser('deleted', null, logger);
+		await deleteUser(deleted.id, null, logger);
+
+		const result = await getUsers(logger);
+
+		expect(result).toHaveLength(1);
+		expect(result[0].id).toBe(active.id);
+	});
+
+	it('includes deleted users when includeDeleted is true', async () => {
+		const active = await createUser('active', null, logger);
+		const deleted = await createUser('deleted', null, logger);
+		await deleteUser(deleted.id, null, logger);
+
+		const result = await getUsers(logger, true);
+
+		expect(result).toHaveLength(2);
+		expect(result.map(u => u.id)).toEqual(expect.arrayContaining([active.id, deleted.id]));
+	});
 });
 
 describe('createUser', () => {
