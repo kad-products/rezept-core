@@ -1,3 +1,9 @@
+## [1.35.1](https://github.com/kad-products/rezept-core/compare/v1.35.0...v1.35.1) (2026-06-01)
+
+### Bug Fixes
+
+* align upload form's URL to the API endpoint ([53fa613](https://github.com/kad-products/rezept-core/commit/53fa613262519b740bb19cd5290554de1dc01d1d))
+
 ## [1.35.0](https://github.com/kad-products/rezept-core/compare/v1.34.1...v1.35.0) (2026-06-01)
 
 ### Features
