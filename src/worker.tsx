@@ -14,6 +14,7 @@ import botMiddleware from './middleware/bot';
 import corsMiddleware from './middleware/cors';
 import loggerMiddleware from './middleware/logger';
 import permissionsMiddleware from './middleware/permissions';
+import NotFound from './pages/not-found';
 import Pages__root from './pages/root';
 import testBridgeRoutes from './test-bridge';
 import { handlePageError } from './worker-error';
@@ -38,5 +39,6 @@ export default defineApp([
 		prefix('/profile', profileRoutes),
 		prefix('/recipes', recipeRoutes),
 		prefix('/seasons', seasonRoutes),
+		route('*', NotFound),
 	]),
 ]);
