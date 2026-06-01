@@ -1,8 +1,8 @@
 {
   "environments": {
     "integration": {
-      "version": "1.34.0",
-      "deployedAt": "2026-06-01T01:33:17Z"
+      "version": "1.34.1",
+      "deployedAt": "2026-06-01T02:39:49Z"
     },
     "staging": {
       "version": null,
