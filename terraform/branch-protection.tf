@@ -6,7 +6,10 @@ resource "github_branch_protection" "main" {
     strict = true
     contexts = [
       "commitlint / commitlint",
-      "Unit Tests / unit-tests",
+      "unit-tests",
+      "build",
+      "component-tests",
+      "e2e-tests",
     ]
   }
 

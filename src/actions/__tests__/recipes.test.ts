@@ -5,13 +5,12 @@ import Logger from '@/logger';
 const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
 const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 
-// Mock repositories
-vi.mock('@/repositories', () => ({
-	createRecipe: vi.fn(),
-	updateRecipe: vi.fn(),
-	updateRecipeSections: vi.fn(),
-	updateRecipeIngredients: vi.fn(),
-	updateRecipeInstructions: vi.fn(),
+// Mock steps
+vi.mock('@/steps', () => ({
+	saveRecipe: vi.fn(),
+	saveRecipeSections: vi.fn(),
+	saveRecipeIngredients: vi.fn(),
+	saveRecipeInstructions: vi.fn(),
 }));
 
 // Mock env
@@ -47,14 +46,9 @@ vi.mock('rwsdk/worker', () => ({
 }));
 
 import { randomUUID } from 'node:crypto';
+import { RzStepError } from '@/classes';
 import { requireAuthentication } from '@/interrupters';
-import {
-	createRecipe,
-	updateRecipe,
-	updateRecipeIngredients,
-	updateRecipeInstructions,
-	updateRecipeSections,
-} from '@/repositories';
+import { saveRecipe, saveRecipeIngredients, saveRecipeInstructions, saveRecipeSections } from '@/steps';
 import { _saveRecipe } from '../recipes';
 
 describe('_saveRecipe', () => {
@@ -63,43 +57,42 @@ describe('_saveRecipe', () => {
 		mockRequestInfo.ctx.user = { id: 'test-user-id' };
 		mockEnv.REZEPT_ENV = 'development';
 
-		// Set default mock returns
-		vi.mocked(createRecipe).mockResolvedValue({
+		vi.mocked(saveRecipe).mockResolvedValue({
 			id: 'mock-recipe-id',
 			authorId: 'test-user-id',
 			title: 'Test Recipe',
 		} as any);
 
-		vi.mocked(updateRecipe).mockResolvedValue({
-			id: 'mock-recipe-id',
-			authorId: 'test-user-id',
-			title: 'Test Recipe',
-		} as any);
-
-		// Mock sections to return with IDs
-		vi.mocked(updateRecipeSections).mockImplementation(async (recipeId, sections) => {
-			return sections.map((s, i) => ({
+		vi.mocked(saveRecipeSections).mockImplementation(async (recipeId, sections) => {
+			return (sections as any[]).map((s, i) => ({
 				...s,
 				id: s.id || `mock-section-${i}`,
 				recipeId,
 			})) as any;
 		});
 
-		// Mock ingredients/instructions to return with IDs
-		vi.mocked(updateRecipeIngredients).mockImplementation(async (sectionId, ingredients) => {
-			return ingredients.map((ing, i) => ({
-				...ing,
-				id: ing.id || `mock-ingredient-${i}`,
-				recipeSectionId: sectionId,
-			})) as any;
+		vi.mocked(saveRecipeInstructions).mockImplementation(async (_recipeId, instructionsData) => {
+			const result: Record<string, any[]> = {};
+			for (const { sectionId, instructions } of instructionsData) {
+				result[sectionId] = (instructions as any[]).map((inst, i) => ({
+					...inst,
+					id: inst.id || `mock-instruction-${i}`,
+					recipeSectionId: sectionId,
+				}));
+			}
+			return result;
 		});
 
-		vi.mocked(updateRecipeInstructions).mockImplementation(async (sectionId, instructions) => {
-			return instructions.map((inst, i) => ({
-				...inst,
-				id: inst.id || `mock-instruction-${i}`,
-				recipeSectionId: sectionId,
-			})) as any;
+		vi.mocked(saveRecipeIngredients).mockImplementation(async (_recipeId, ingredientsData) => {
+			const result: Record<string, any[]> = {};
+			for (const { sectionId, ingredients } of ingredientsData) {
+				result[sectionId] = (ingredients as any[]).map((ing, i) => ({
+					...ing,
+					id: ing.id || `mock-ingredient-${i}`,
+					recipeSectionId: sectionId,
+				}));
+			}
+			return result;
 		});
 	});
 
@@ -121,11 +114,9 @@ describe('_saveRecipe', () => {
 
 			expect(result.success).toBe(true);
 			expect(result.data?.id).toBe('mock-recipe-id');
-			expect(createRecipe).toHaveBeenCalledTimes(1);
-			expect(createRecipe).toHaveBeenCalledWith(
-				expect.objectContaining({
-					title: 'Simple Recipe',
-				}),
+			expect(saveRecipe).toHaveBeenCalledTimes(1);
+			expect(saveRecipe).toHaveBeenCalledWith(
+				expect.objectContaining({ title: 'Simple Recipe' }),
 				'test-user-id',
 				expect.anything(),
 			);
@@ -146,7 +137,7 @@ describe('_saveRecipe', () => {
 			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
-			expect(createRecipe).toHaveBeenCalledWith(
+			expect(saveRecipe).toHaveBeenCalledWith(
 				expect.objectContaining({
 					title: 'Complete Recipe',
 					description: 'A delicious dish',
@@ -167,7 +158,7 @@ describe('_saveRecipe', () => {
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toBeDefined();
-			expect(createRecipe).not.toHaveBeenCalled();
+			expect(saveRecipe).not.toHaveBeenCalled();
 		});
 
 		it('rejects empty title', async () => {
@@ -210,8 +201,8 @@ describe('_saveRecipe', () => {
 			expect(result.success).toBe(false);
 		});
 
-		it('handles repository errors gracefully', async () => {
-			vi.mocked(createRecipe).mockRejectedValueOnce(new Error('Database error'));
+		it('handles save errors gracefully', async () => {
+			vi.mocked(saveRecipe).mockRejectedValueOnce(new RzStepError(400, 'Failed to save recipe', 'Database error'));
 
 			const data = {
 				authorId: randomUUID(),
@@ -242,32 +233,22 @@ describe('_saveRecipe', () => {
 	});
 
 	describe('create recipe with sections', () => {
-		it('creates recipe and updates sections', async () => {
+		it('creates recipe and saves sections', async () => {
 			const data = {
 				authorId: randomUUID(),
 				title: 'Recipe with Sections',
 				sections: [
-					{
-						title: 'Main',
-						order: 0,
-						ingredients: [],
-						instructions: [],
-					},
-					{
-						title: 'Sauce',
-						order: 1,
-						ingredients: [],
-						instructions: [],
-					},
+					{ title: 'Main', order: 0, ingredients: [], instructions: [] },
+					{ title: 'Sauce', order: 1, ingredients: [], instructions: [] },
 				],
 			};
 
 			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
-			expect(createRecipe).toHaveBeenCalledTimes(1);
-			expect(updateRecipeSections).toHaveBeenCalledTimes(1);
-			expect(updateRecipeSections).toHaveBeenCalledWith(
+			expect(saveRecipe).toHaveBeenCalledTimes(1);
+			expect(saveRecipeSections).toHaveBeenCalledTimes(1);
+			expect(saveRecipeSections).toHaveBeenCalledWith(
 				'mock-recipe-id',
 				expect.arrayContaining([
 					expect.objectContaining({ title: 'Main', order: 0 }),
@@ -282,14 +263,7 @@ describe('_saveRecipe', () => {
 			const data = {
 				authorId: randomUUID(),
 				title: 'Recipe with Sections',
-				sections: [
-					{
-						title: 'Main',
-						order: 0,
-						ingredients: [],
-						instructions: [],
-					},
-				],
+				sections: [{ title: 'Main', order: 0, ingredients: [], instructions: [] }],
 			};
 
 			const result = await _saveRecipe(data);
@@ -309,20 +283,8 @@ describe('_saveRecipe', () => {
 					{
 						title: 'Main',
 						order: 0,
-						ingredients: [
-							{
-								ingredientId,
-								quantity: 2,
-								unitId: randomUUID(),
-								order: 0,
-							},
-						],
-						instructions: [
-							{
-								stepNumber: 1,
-								instruction: 'Mix ingredients',
-							},
-						],
+						ingredients: [{ ingredientId, quantity: 2, unitId: randomUUID(), order: 0 }],
+						instructions: [{ stepNumber: 1, instruction: 'Mix ingredients' }],
 					},
 				],
 			};
@@ -330,12 +292,10 @@ describe('_saveRecipe', () => {
 			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
-			expect(createRecipe).toHaveBeenCalledTimes(1);
-			expect(updateRecipeSections).toHaveBeenCalledTimes(1);
-			expect(updateRecipeIngredients).toHaveBeenCalledTimes(1);
-			expect(updateRecipeInstructions).toHaveBeenCalledTimes(1);
-
-			// Verify returned data includes nested items
+			expect(saveRecipe).toHaveBeenCalledTimes(1);
+			expect(saveRecipeSections).toHaveBeenCalledTimes(1);
+			expect(saveRecipeInstructions).toHaveBeenCalledTimes(1);
+			expect(saveRecipeIngredients).toHaveBeenCalledTimes(1);
 			expect(result.data?.sections?.[0].ingredients).toHaveLength(1);
 			expect(result.data?.sections?.[0].instructions).toHaveLength(1);
 		});
@@ -344,13 +304,7 @@ describe('_saveRecipe', () => {
 			const data = {
 				authorId: randomUUID(),
 				title: 'Test',
-				sections: [
-					{
-						order: -1, // Invalid
-						ingredients: [],
-						instructions: [],
-					},
-				],
+				sections: [{ order: -1, ingredients: [], instructions: [] }],
 			};
 
 			const result = await _saveRecipe(data);
@@ -366,13 +320,7 @@ describe('_saveRecipe', () => {
 					{
 						title: 'Main',
 						order: 0,
-						ingredients: [
-							{
-								ingredientId: randomUUID(),
-								quantity: -1, // Invalid
-								order: 0,
-							},
-						],
+						ingredients: [{ ingredientId: randomUUID(), quantity: -1, order: 0 }],
 						instructions: [],
 					},
 				],
@@ -391,12 +339,7 @@ describe('_saveRecipe', () => {
 					{
 						order: 0,
 						ingredients: [],
-						instructions: [
-							{
-								stepNumber: 0, // Must be >= 1
-								instruction: 'Test',
-							},
-						],
+						instructions: [{ stepNumber: 0, instruction: 'Test' }],
 					},
 				],
 			};
@@ -414,12 +357,7 @@ describe('_saveRecipe', () => {
 					{
 						order: 0,
 						ingredients: [],
-						instructions: [
-							{
-								stepNumber: 1,
-								instruction: '   ',
-							},
-						],
+						instructions: [{ stepNumber: 1, instruction: '   ' }],
 					},
 				],
 			};
@@ -443,19 +381,16 @@ describe('_saveRecipe', () => {
 			const result = await _saveRecipe(data);
 
 			expect(result.success).toBe(true);
-			expect(updateRecipe).toHaveBeenCalledTimes(1);
-			expect(updateRecipe).toHaveBeenCalledWith(
-				recipeId,
-				expect.objectContaining({
-					title: 'Updated Recipe',
-				}),
+			expect(saveRecipe).toHaveBeenCalledTimes(1);
+			expect(saveRecipe).toHaveBeenCalledWith(
+				expect.objectContaining({ id: recipeId, title: 'Updated Recipe' }),
 				'test-user-id',
 				expect.anything(),
 			);
 		});
 
-		it('handles update repository errors', async () => {
-			vi.mocked(updateRecipe).mockRejectedValueOnce(new Error('Update failed'));
+		it('handles update errors', async () => {
+			vi.mocked(saveRecipe).mockRejectedValueOnce(new RzStepError(400, 'Failed to save recipe', 'Update failed'));
 
 			const data = {
 				id: randomUUID(),
@@ -473,13 +408,16 @@ describe('_saveRecipe', () => {
 
 	describe('error handling', () => {
 		it('hides sensitive error details in production', async () => {
-			vi.mocked(createRecipe).mockRejectedValueOnce(new Error('Connection failed: postgres://user:password@db.internal'));
+			vi.mocked(saveRecipe).mockRejectedValueOnce(
+				new RzStepError(
+					400,
+					'Failed to save recipe',
+					'Error saving recipe: Connection failed: postgres://user:password@db.internal',
+				),
+			);
 			mockEnv.REZEPT_ENV = 'production';
-			const data = {
-				authorId: randomUUID(),
-				title: 'Test',
-				sections: [],
-			};
+
+			const data = { authorId: randomUUID(), title: 'Test', sections: [] };
 
 			const result = await _saveRecipe(data);
 
@@ -488,17 +426,35 @@ describe('_saveRecipe', () => {
 			expect(result.errors?._form?.[0]).not.toContain('password');
 		});
 
-		it('handles section update errors', async () => {
-			vi.mocked(updateRecipeSections).mockRejectedValueOnce(new Error('Section update failed'));
+		it('handles section save errors', async () => {
+			vi.mocked(saveRecipeSections).mockRejectedValueOnce(
+				new RzStepError(400, 'Failed to save recipe sections', 'Section save failed'),
+			);
+
+			const data = {
+				authorId: randomUUID(),
+				title: 'Test',
+				sections: [{ title: 'Main', order: 0, ingredients: [], instructions: [] }],
+			};
+
+			const result = await _saveRecipe(data);
+
+			expect(result.success).toBe(false);
+			expect(result.errors?._form).toBeDefined();
+		});
+
+		it('handles ingredient save errors', async () => {
+			vi.mocked(saveRecipeIngredients).mockRejectedValueOnce(
+				new RzStepError(400, 'Failed to save recipe ingredients', 'Ingredient save failed'),
+			);
 
 			const data = {
 				authorId: randomUUID(),
 				title: 'Test',
 				sections: [
 					{
-						title: 'Main',
 						order: 0,
-						ingredients: [],
+						ingredients: [{ ingredientId: randomUUID(), order: 0, quantity: 1 }],
 						instructions: [],
 					},
 				],
@@ -510,35 +466,10 @@ describe('_saveRecipe', () => {
 			expect(result.errors?._form).toBeDefined();
 		});
 
-		it('handles ingredient update errors', async () => {
-			vi.mocked(updateRecipeIngredients).mockRejectedValueOnce(new Error('Ingredient update failed'));
-
-			const data = {
-				authorId: randomUUID(),
-				title: 'Test',
-				sections: [
-					{
-						order: 0,
-						ingredients: [
-							{
-								ingredientId: randomUUID(),
-								order: 0,
-								quantity: 1,
-							},
-						],
-						instructions: [],
-					},
-				],
-			};
-
-			const result = await _saveRecipe(data);
-
-			expect(result.success).toBe(false);
-			expect(result.errors?._form).toBeDefined();
-		});
-
-		it('handles instruction update errors', async () => {
-			vi.mocked(updateRecipeInstructions).mockRejectedValueOnce(new Error('Instruction update failed'));
+		it('handles instruction save errors', async () => {
+			vi.mocked(saveRecipeInstructions).mockRejectedValueOnce(
+				new RzStepError(400, 'Failed to save recipe instructions', 'Instruction save failed'),
+			);
 
 			const data = {
 				authorId: randomUUID(),
@@ -547,12 +478,7 @@ describe('_saveRecipe', () => {
 					{
 						order: 0,
 						ingredients: [],
-						instructions: [
-							{
-								stepNumber: 1,
-								instruction: 'Test step',
-							},
-						],
+						instructions: [{ stepNumber: 1, instruction: 'Test step' }],
 					},
 				],
 			};

@@ -6,7 +6,7 @@ export type RecipeInstructionWriteInput = Omit<
 	'recipeSectionId' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;
 
-export type IncomingInstructionsData = {
+export type RecipeSectionInstructionsInput = {
 	sectionId: string;
-	instructions: RecipeInstructionWriteInput[] | undefined;
+	instructions: RecipeInstructionWriteInput[];
 };

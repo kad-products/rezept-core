@@ -13,7 +13,7 @@ import {
 	transformScrapeToRecipe,
 	validateAsRecipe,
 } from '@/steps';
-import type { RecipeScrapeDBRead } from '@/types';
+import type { RecipeIngredientWriteInput, RecipeInstructionWriteInput, RecipeScrapeDBRead } from '@/types';
 
 export default {
 	post: [requireAuthentication, requirePermissions('recipes:scrape'), _postHandler] as const,
@@ -53,7 +53,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 				const savedSection = savedSections[index];
 				return {
 					sectionId: savedSection.id,
-					instructions: section.instructions,
+					instructions: section.instructions as RecipeInstructionWriteInput[],
 				};
 			}),
 		);
@@ -65,7 +65,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 				const savedSection = savedSections[index];
 				return {
 					sectionId: savedSection.id,
-					ingredients: section.ingredients,
+					ingredients: section.ingredients as RecipeIngredientWriteInput[],
 				};
 			}),
 		);

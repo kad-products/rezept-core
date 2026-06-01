@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { RzStepError } from '@/classes';
 import Logger from '@/logger';
 import { saveRecipeIngredients } from '@/steps';
-import type { IncomingIngredientsData, RecipeIngredientDBRead } from '@/types';
+import type { RecipeIngredientDBRead, RecipeSectionIngredientsInput } from '@/types';
 
 vi.mock('@/repositories', () => ({
 	updateRecipeIngredients: vi.fn(),
@@ -23,16 +23,9 @@ describe('saveRecipeIngredients', () => {
 		vi.clearAllMocks();
 	});
 
-	it('returns an empty object when ingredientsData is undefined', async () => {
-		const result = await saveRecipeIngredients(recipeId, undefined, userId, logger);
-
-		expect(result).toEqual({});
-		expect(updateRecipeIngredients).not.toHaveBeenCalled();
-	});
-
 	it('saves ingredients for a single section and keys the result by sectionId', async () => {
 		vi.mocked(updateRecipeIngredients).mockResolvedValue(mockIngredients);
-		const ingredientsData: IncomingIngredientsData[] = [{ sectionId, ingredients: [] }];
+		const ingredientsData: RecipeSectionIngredientsInput[] = [{ sectionId, ingredients: [] }];
 
 		const result = await saveRecipeIngredients(recipeId, ingredientsData, userId, logger);
 
@@ -43,7 +36,7 @@ describe('saveRecipeIngredients', () => {
 	it('saves ingredients for multiple sections', async () => {
 		const sectionId2 = 'section-789';
 		vi.mocked(updateRecipeIngredients).mockResolvedValue(mockIngredients);
-		const ingredientsData: IncomingIngredientsData[] = [
+		const ingredientsData: RecipeSectionIngredientsInput[] = [
 			{ sectionId, ingredients: [] },
 			{ sectionId: sectionId2, ingredients: [] },
 		];
@@ -57,7 +50,7 @@ describe('saveRecipeIngredients', () => {
 
 	it('throws RzStepError 400 when updateRecipeIngredients fails', async () => {
 		vi.mocked(updateRecipeIngredients).mockRejectedValue(new Error('DB connection error'));
-		const ingredientsData: IncomingIngredientsData[] = [{ sectionId, ingredients: [] }];
+		const ingredientsData: RecipeSectionIngredientsInput[] = [{ sectionId, ingredients: [] }];
 
 		await expect(saveRecipeIngredients(recipeId, ingredientsData, userId, logger)).rejects.toThrow(RzStepError);
 		await expect(saveRecipeIngredients(recipeId, ingredientsData, userId, logger)).rejects.toMatchObject({ code: 400 });
