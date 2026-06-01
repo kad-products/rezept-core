@@ -20,22 +20,22 @@ export default defineConfig({
 				'src/styles/**',
 			],
 			thresholds: {
-				branches: 20,
+				branches: 66,
 				lines: 30, // using this to make sure we don't miss something big or have dead code
 				'src/actions/**': {
 					branches: 85,
 				},
 				'src/api/**': {
-					branches: 80,
+					branches: 100,
 				},
 				'src/classes/**': {
-					branches: 60,
+					branches: 66,
 				},
 				'src/durable-objects/**': {
 					branches: 100,
 				},
 				'src/interrupters/**': {
-					branches: 50,
+					branches: 100,
 				},
 				'src/middleware/**': {
 					branches: 100,
