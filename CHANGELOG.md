@@ -1,3 +1,9 @@
+## [1.34.1](https://github.com/kad-products/rezept-core/compare/v1.34.0...v1.34.1) (2026-06-01)
+
+### Bug Fixes
+
+* cleanup workaround for unscoped error handlers ([782e027](https://github.com/kad-products/rezept-core/commit/782e027cb4f2d84b2b1bc4f6697af39fae8a2a0c))
+
 ## [1.34.0](https://github.com/kad-products/rezept-core/compare/v1.33.0...v1.34.0) (2026-06-01)
 
 ### Features
