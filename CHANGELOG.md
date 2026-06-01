@@ -1,3 +1,10 @@
+## [1.39.0](https://github.com/kad-products/rezept-core/compare/v1.38.0...v1.39.0) (2026-06-01)
+
+### Features
+
+* add action link option to RzTable ([edccd20](https://github.com/kad-products/rezept-core/commit/edccd2075e71afead7dbf853e7eeff8dc7a89750))
+* add user editing page on admin side ([a489df6](https://github.com/kad-products/rezept-core/commit/a489df615d733637d85676a857d9e2ddde2065fa))
+
 ## [1.38.0](https://github.com/kad-products/rezept-core/compare/v1.37.0...v1.38.0) (2026-06-01)
 
 ### Features
