@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { RzStepError } from '@/classes';
 import Logger from '@/logger';
 import { saveRecipeInstructions } from '@/steps';
-import type { IncomingInstructionsData, RecipeInstructionDBRead } from '@/types';
+import type { RecipeInstructionDBRead, RecipeSectionInstructionsInput } from '@/types';
 
 vi.mock('@/repositories', () => ({
 	updateRecipeInstructions: vi.fn(),
@@ -23,16 +23,9 @@ describe('saveRecipeInstructions', () => {
 		vi.clearAllMocks();
 	});
 
-	it('returns an empty object when instructionsData is undefined', async () => {
-		const result = await saveRecipeInstructions(recipeId, undefined, userId, logger);
-
-		expect(result).toEqual({});
-		expect(updateRecipeInstructions).not.toHaveBeenCalled();
-	});
-
 	it('saves instructions for a single section and keys the result by sectionId', async () => {
 		vi.mocked(updateRecipeInstructions).mockResolvedValue(mockInstructions);
-		const instructionsData: IncomingInstructionsData[] = [{ sectionId, instructions: [] }];
+		const instructionsData: RecipeSectionInstructionsInput[] = [{ sectionId, instructions: [] }];
 
 		const result = await saveRecipeInstructions(recipeId, instructionsData, userId, logger);
 
@@ -43,7 +36,7 @@ describe('saveRecipeInstructions', () => {
 	it('saves instructions for multiple sections', async () => {
 		const sectionId2 = 'section-789';
 		vi.mocked(updateRecipeInstructions).mockResolvedValue(mockInstructions);
-		const instructionsData: IncomingInstructionsData[] = [
+		const instructionsData: RecipeSectionInstructionsInput[] = [
 			{ sectionId, instructions: [] },
 			{ sectionId: sectionId2, instructions: [] },
 		];
@@ -57,7 +50,7 @@ describe('saveRecipeInstructions', () => {
 
 	it('throws RzStepError 400 when updateRecipeInstructions fails', async () => {
 		vi.mocked(updateRecipeInstructions).mockRejectedValue(new Error('DB connection error'));
-		const instructionsData: IncomingInstructionsData[] = [{ sectionId, instructions: [] }];
+		const instructionsData: RecipeSectionInstructionsInput[] = [{ sectionId, instructions: [] }];
 
 		await expect(saveRecipeInstructions(recipeId, instructionsData, userId, logger)).rejects.toThrow(RzStepError);
 		await expect(saveRecipeInstructions(recipeId, instructionsData, userId, logger)).rejects.toMatchObject({ code: 400 });

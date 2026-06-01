@@ -53,7 +53,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 				const savedSection = savedSections[index];
 				return {
 					sectionId: savedSection.id,
-					instructions: section.instructions,
+					instructions: section.instructions ?? [],
 				};
 			}),
 		);
@@ -65,7 +65,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 				const savedSection = savedSections[index];
 				return {
 					sectionId: savedSection.id,
-					ingredients: section.ingredients,
+					ingredients: section.ingredients ?? [],
 				};
 			}),
 		);
