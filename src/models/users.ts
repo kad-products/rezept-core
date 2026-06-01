@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { relations, sql } from 'drizzle-orm';
 import { type AnySQLiteColumn, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { userRoles } from '@/data/roles';
 import { credentials } from './credentials';
 
 export const users = sqliteTable('users', {
@@ -8,7 +9,7 @@ export const users = sqliteTable('users', {
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	username: text().notNull().unique(),
-	role: text({ enum: ['ADMIN', 'BASIC'] }).default('BASIC'),
+	role: text({ enum: userRoles }).default('BASIC'),
 	createdAt: text().notNull().default(sql`(datetime('now', 'localtime'))`),
 	createdBy: text().references((): AnySQLiteColumn => users.id),
 	updatedAt: text(),

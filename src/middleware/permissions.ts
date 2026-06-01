@@ -1,5 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { flattenedPermissions } from '@/data/permissions';
+import type { PermissionRole } from '@/data/roles';
 
 export default async function permissionsMiddleware({ ctx }: RequestInfo<DefaultAppContext>): Promise<void> {
 	if (ctx.apiKey) {
@@ -7,7 +8,7 @@ export default async function permissionsMiddleware({ ctx }: RequestInfo<Default
 		return;
 	}
 
-	let role = 'PUBLIC';
+	let role: PermissionRole = 'PUBLIC';
 	if (ctx.user?.role) {
 		role = ctx.user.role;
 	}
