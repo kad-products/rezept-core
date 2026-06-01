@@ -1,3 +1,9 @@
+## [1.36.0](https://github.com/kad-products/rezept-core/compare/v1.35.1...v1.36.0) (2026-06-01)
+
+### Features
+
+* create no-js document and related print recipe route ([aca9b28](https://github.com/kad-products/rezept-core/commit/aca9b28875318d083ea18284ddaf801d76be3ed2))
+
 ## [1.35.1](https://github.com/kad-products/rezept-core/compare/v1.35.0...v1.35.1) (2026-06-01)
 
 ### Bug Fixes
