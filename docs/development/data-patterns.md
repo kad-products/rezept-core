@@ -23,13 +23,21 @@ Every content table carries four audit fields that track who created and last mo
 
 All content tables have `deletedAt` (nullable timestamp) and `deletedBy` (nullable user ID). The intent is to never hard-delete records — instead mark them deleted and filter them out of queries.
 
-**Intended behavior:**
 - Delete operations set `deletedAt` to the current timestamp and `deletedBy` to the acting user's ID
-- All SELECT queries filter `WHERE deletedAt IS NULL`
+- All SELECT queries filter `WHERE deletedAt IS NULL` using `isNull(table.deletedAt)` in Drizzle
 - Hard `DELETE` statements are not used
 
-**Current gap:**
-- No queries currently filter by `deletedAt` — soft-deleted records would appear in results ([#240](https://github.com/kad-products/rezept-core/issues/240))
+**Standard query patterns:**
+
+```ts
+// Always exclude soft-deleted records
+.where(isNull(table.deletedAt))
+
+// Optional include — used when an admin surface needs to show deleted records
+.where(includeDeleted ? undefined : isNull(table.deletedAt))
+```
+
+`getUsers(logger, includeDeleted = false)` is the canonical example of the optional include pattern.
 
 ## Optimistic updates
 
