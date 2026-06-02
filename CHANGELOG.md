@@ -1,3 +1,9 @@
+## [1.40.3](https://github.com/kad-products/rezept-core/compare/v1.40.2...v1.40.3) (2026-06-02)
+
+### Bug Fixes
+
+* remove unnecessary async on middleware ([04ff897](https://github.com/kad-products/rezept-core/commit/04ff89707b4feb3f0ae4f40522b479e9a69db8c4))
+
 ## [1.40.2](https://github.com/kad-products/rezept-core/compare/v1.40.1...v1.40.2) (2026-06-02)
 
 ### Bug Fixes
