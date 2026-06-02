@@ -23,5 +23,6 @@ jobs:
       - run: |
             pnpm install
             pnpm test:run
+            pnpm test:workers:run
             pnpm biome:check
             pnpm type-check
