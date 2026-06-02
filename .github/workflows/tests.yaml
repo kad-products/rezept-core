@@ -13,7 +13,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v6
         with:
@@ -23,5 +23,6 @@ jobs:
       - run: |
             pnpm install
             pnpm test:run
+            pnpm test:workers:run
             pnpm biome:check
             pnpm type-check
