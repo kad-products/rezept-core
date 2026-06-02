@@ -14,7 +14,7 @@ One file per entity, multiple operations per file. Each operation is a private i
 export const saveWidget = serverAction([requireAuthentication, requirePermissions('widgets:create', 'widgets:update'), _saveWidget]);
 
 /** @private — exported for testing only, do not call directly */
-export async function _saveWidget(formData: WidgetFormData): Promise<ActionState<WidgetFormData>> {
+export async function _saveWidget(formData: WidgetFormInput): Promise<ActionState<WidgetDBRead>> {
     // ...
 }
 ```
@@ -26,7 +26,7 @@ export async function _saveWidget(formData: WidgetFormData): Promise<ActionState
 
 - **Validate input** via schemas — use `safeParse`, return field errors on failure
 - **Orchestrate** — call repositories directly for simple operations; call steps for shared or complex pipelines
-- **Return `ActionState<T>`** always — never return raw data or throw to the caller
+- **Return `ActionState<T>`** always — never return raw data or throw to the caller. The type parameter `T` is always the DB read type (e.g. `ActionState<WidgetDBRead>`), not the input type — see [ADR-0009](../../docs/decisions/0009-action-state-return-type.md)
 
 ## Error handling
 
