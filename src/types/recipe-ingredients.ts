@@ -6,7 +6,7 @@ export type RecipeIngredientWriteInput = Omit<
 	'recipeSectionId' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;
 
-export type IncomingIngredientsData = {
+export type RecipeSectionIngredientsInput = {
 	sectionId: string;
-	ingredients: RecipeIngredientWriteInput[] | undefined;
+	ingredients: RecipeIngredientWriteInput[];
 };

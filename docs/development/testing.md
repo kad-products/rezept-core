@@ -16,17 +16,28 @@ We write tests in this order because they build on each other - schemas validate
 - **Unit tests where appropriate** - Mock only when testing pure logic without I/O
 - **Clean production code** - Don't add test-specific parameters to production functions
 
+## Two Test Environments
+
+This project uses two separate Vitest configurations:
+
+| Config | Command | Runs |
+|---|---|---|
+| `vitest.config.ts` | `pnpm test` | All `*.test.ts` files (unit, schema, middleware, repo) |
+| `vitest.workers.config.ts` | `pnpm test:workers` | All `*.integration.test.ts` files |
+
+Integration tests run inside the actual Cloudflare Workers runtime via `@cloudflare/vitest-pool-workers`. This gives them a real Miniflare D1 binding backed by the Drizzle D1 adapter — the same code path as production. Incompatibilities that only surface in the Workers runtime (D1-specific query behaviour, batch semantics, etc.) will fail here rather than silently pass in a Node.js libsql environment.
+
 ## Project Structure
 ```
 src/
   schemas/
     __tests__/           # Zod schema validation tests
   repositories/
-    __tests__/           # Database operation tests (integration)
+    __tests__/           # Database operation tests
   actions/
     __tests__/           # Server action tests
       *.test.ts          # Unit tests (mocked repositories)
-      *.integration.test.ts  # Integration tests (real database)
+      *.integration.test.ts  # Integration tests (real D1 binding)
   middleware/
     __tests__/           # Middleware tests (unit with mocks)
   session/
@@ -37,13 +48,22 @@ tests/
     cloudflare-workers.ts
     rwsdk-auth.ts
     db.ts                # Database proxy for per-test isolation
-  setup.ts               # Test database creation
+  setup.ts               # Test database factory (libsql, for pnpm test)
+  setup.workers.ts       # Workers pool beforeEach hook (for pnpm test:workers)
+  workers-env.d.ts       # Extends Cloudflare.Env with TEST_MIGRATIONS
+  wrangler.test.jsonc    # Minimal wrangler config (D1 only) for integration tests
+  worker.ts              # Stub worker entrypoint for cloudflareTest
 ```
+
+See `tests/readme.md` for details on each support file.
 
 ## Running Tests
 ```bash
-# Run all tests
+# Run all unit/schema/repo/middleware tests
 pnpm test
+
+# Run integration tests (Workers runtime)
+pnpm test:workers
 
 # Run specific file
 pnpm test seasons.test.ts
@@ -57,7 +77,9 @@ pnpm test -- --watch
 
 ## Test Database Setup
 
-Tests use an **in-memory SQLite database** created fresh for each test:
+### Unit and repository tests (`pnpm test`)
+
+These use an in-memory libsql database created fresh for each test:
 
 ```typescript
 // tests/setup.ts
@@ -70,10 +92,26 @@ export async function createTestDb() {
 ```
 
 **Key points:**
-- `:memory:` means no files, everything in RAM
+- `:memory:` — no files, everything in RAM, fastest possible reset
 - Fresh database per test via `resetDb()` in `beforeEach`
-- Real SQL operations, just not against production
-- Fast enough for CI/CD
+- D1 fidelity is not the goal here; that's what the integration tests are for
+
+### Integration tests (`pnpm test:workers`)
+
+These run inside Miniflare (the local Workers runtime) with a real D1 binding:
+
+```typescript
+// tests/setup.workers.ts
+beforeEach(async () => {
+  await reset();                                          // wipe all D1 data
+  await applyD1Migrations(env.rezept_core, env.TEST_MIGRATIONS);  // re-apply schema
+});
+```
+
+**Key points:**
+- `reset()` + `applyD1Migrations()` in `beforeEach` gives per-test isolation — the workers pool does not isolate D1 storage between tests automatically
+- `env.rezept_core` is a real D1 binding; `src/db.ts` resolves normally against it
+- Uses `tests/wrangler.test.jsonc` — a minimal config with only the D1 binding (no Durable Objects, R2, or assets) to avoid Miniflare holding open background connections
 
 ## Database Mock Pattern
 
@@ -388,14 +426,14 @@ beforeEach(async () => {
 ✅ **Schema validation** - All Zod schemas have comprehensive tests
 ✅ **Repository CRUD** - Create, read, update operations tested with real DB
 ✅ **Action business logic (unit)** - Auth, validation, error handling with mocked repos
-✅ **Action integration** - Full stack from action through repository to database
+✅ **Action integration** - Full stack from action → repository → D1 in Workers runtime
 ✅ **Middleware** - Request/response handling, session management
 ✅ **Session management** - Create, read, expire, revoke flows
+✅ **React components** - Behavioral and visual tests via Playwright CT (`.ct.test.tsx`)
 
 ## What We Don't Test (Yet)
 
-🔲 **React components** - Would need React Testing Library
-🔲 **E2E flows** - Would need Playwright/Cypress  
+🔲 **E2E flows** - Playwright E2E is configured; coverage to grow over time
 🔲 **API endpoints** - Not applicable (using server actions)
 🔲 **File uploads** - Not implemented yet
 🔲 **Complex transactions** - Single operations so far
@@ -404,16 +442,32 @@ beforeEach(async () => {
 
 ### Component Testing
 
-When we're ready to test React components:
+Component tests use `@playwright/experimental-ct-react` and live in `src/components/__tests__/` with a `.ct.test.tsx` extension. Run them with:
+
 ```bash
-pnpm add -D @testing-library/react @testing-library/user-event jsdom
+pnpm playwright-ct:run
 ```
+
+For components with interactive behavior, write behavioral assertions using the `page` fixture alongside `mount`. The `page` fixture is necessary when content renders via a portal (e.g. `RzDialog`) since portal content lives outside the mounted component's DOM subtree:
+
+```tsx
+test('opens when trigger is clicked', async ({ mount, page }) => {
+  await mount(<RzDialog trigger={<button type="button">Open</button>} title="Confirm">...</RzDialog>);
+
+  await page.getByRole('button', { name: 'Open' }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByRole('dialog')).toContainText('Confirm');
+});
+```
+
+See [ADR-0008](../decisions/0008-react-component-testing.md) for the decision to use Playwright CT over React Testing Library.
 
 ### E2E Testing
 
-For full browser flows:
+Playwright E2E is configured for full browser flows (`.e2e.test.ts`). Run with:
+
 ```bash
-pnpm add -D @playwright/test
+pnpm playwright-e2e:run
 ```
 
 ### Performance Testing

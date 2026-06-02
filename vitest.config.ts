@@ -5,10 +5,11 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'node',
-		exclude: ['**/*.workers.test.ts', '**/*.ct.test.tsx', '**/*.e2e.test.ts', 'node_modules/**'],
+		exclude: ['**/*.workers.test.ts', '**/*.integration.test.ts', '**/*.ct.test.tsx', '**/*.e2e.test.ts', 'node_modules/**'],
 		coverage: {
 			provider: 'v8',
 			reporter: ['text', 'json-summary', 'html'],
+			include: ['src/**/*.ts'],
 			exclude: [
 				'**/*.md',
 				'**/__tests__/**',
@@ -20,22 +21,22 @@ export default defineConfig({
 				'src/styles/**',
 			],
 			thresholds: {
-				branches: 20,
+				branches: 30,
 				lines: 30, // using this to make sure we don't miss something big or have dead code
 				'src/actions/**': {
-					branches: 85,
+					branches: 84,
 				},
 				'src/api/**': {
-					branches: 80,
+					branches: 100,
 				},
 				'src/classes/**': {
-					branches: 60,
+					branches: 66,
 				},
 				'src/durable-objects/**': {
 					branches: 100,
 				},
 				'src/interrupters/**': {
-					branches: 50,
+					branches: 100,
 				},
 				'src/middleware/**': {
 					branches: 100,

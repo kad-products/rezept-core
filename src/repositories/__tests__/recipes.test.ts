@@ -236,6 +236,12 @@ describe('recipes repository', () => {
 			expect(result.coverImageId).toBe(image.id);
 		});
 
+		it('throws when recipe does not exist', async () => {
+			await expect(updateRecipe(crypto.randomUUID(), baseRecipeData, testUserId, logger)).rejects.toThrow(
+				'Expected 1 Recipe record(s), but found 0',
+			);
+		});
+
 		it('creates recipe without coverImageId when not provided', async () => {
 			const result = await createRecipe(baseRecipeData, testUserId, logger);
 			expect(result.coverImageId).toBeNull();

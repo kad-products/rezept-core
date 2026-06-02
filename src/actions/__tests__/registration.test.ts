@@ -31,6 +31,24 @@ vi.mock('../webauthn', () => ({
 	})),
 }));
 
+const mockUAGetDevice = vi.hoisted(() => vi.fn(() => ({}) as { vendor?: string; model?: string; type?: string }));
+const mockUAGetOS = vi.hoisted(() => vi.fn(() => ({}) as { name?: string; version?: string }));
+const mockUAGetBrowser = vi.hoisted(() => vi.fn(() => ({}) as { name?: string; version?: string }));
+
+vi.mock('ua-parser-js', () => ({
+	UAParser: class {
+		getDevice() {
+			return mockUAGetDevice();
+		}
+		getOS() {
+			return mockUAGetOS();
+		}
+		getBrowser() {
+			return mockUAGetBrowser();
+		}
+	},
+}));
+
 interface MockRequestInfo {
 	request: Request;
 	response: { headers: Headers };
@@ -161,6 +179,9 @@ describe('finishPasskeyRegistration', () => {
 					'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
 			},
 		});
+		mockUAGetDevice.mockReturnValue({ vendor: 'Apple', model: 'MacBook', type: undefined });
+		mockUAGetOS.mockReturnValue({ name: 'macOS', version: '14.0' });
+		mockUAGetBrowser.mockReturnValue({ name: 'Chrome', version: '120.0' });
 		vi.mocked(sessions.load).mockResolvedValue({ challenge: 'stored-challenge' } as any);
 		vi.mocked(sessions.save).mockResolvedValue(undefined as any);
 		vi.mocked(verifyRegistrationResponse).mockResolvedValue(mockVerification as any);
@@ -234,14 +255,40 @@ describe('finishPasskeyRegistration', () => {
 		expect(credentialData.name?.length).toBeGreaterThan(0);
 	});
 
-	it('falls back to "Unknown Device" when the User-Agent header is absent', async () => {
-		mockRequestInfo.request = new Request('https://example.com/', { headers: { 'User-Agent': '' } });
+	it('falls back to "Unknown Device" when ua-parser-js returns no recognisable fields', async () => {
+		mockUAGetDevice.mockReturnValueOnce({});
+		mockUAGetOS.mockReturnValueOnce({});
+		mockUAGetBrowser.mockReturnValueOnce({});
 		await finishPasskeyRegistration('testuser', mockRegistration as any);
 		expect(createCredential).toHaveBeenCalledWith(
 			expect.objectContaining({ name: 'Unknown Device' }),
 			'user-id',
 			expect.anything(),
 		);
+	});
+
+	it('includes device model without vendor in device name', async () => {
+		mockUAGetDevice.mockReturnValueOnce({ model: 'Smart TV' });
+		await finishPasskeyRegistration('testuser', mockRegistration as any);
+		const [credentialData] = vi.mocked(createCredential).mock.calls[0];
+		expect(credentialData.name).toContain('Smart TV');
+	});
+
+	it('includes OS name without version in device name', async () => {
+		mockUAGetDevice.mockReturnValueOnce({});
+		mockUAGetOS.mockReturnValueOnce({ name: 'Linux' });
+		await finishPasskeyRegistration('testuser', mockRegistration as any);
+		const [credentialData] = vi.mocked(createCredential).mock.calls[0];
+		expect(credentialData.name).toContain('Linux');
+	});
+
+	it('includes browser name without version in device name', async () => {
+		mockUAGetDevice.mockReturnValueOnce({});
+		mockUAGetOS.mockReturnValueOnce({});
+		mockUAGetBrowser.mockReturnValueOnce({ name: 'HeadlessChrome' });
+		await finishPasskeyRegistration('testuser', mockRegistration as any);
+		const [credentialData] = vi.mocked(createCredential).mock.calls[0];
+		expect(credentialData.name).toContain('HeadlessChrome');
 	});
 
 	it('returns a validation error for an invalid username', async () => {

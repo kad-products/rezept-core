@@ -16,9 +16,12 @@ export async function _getHandler({ params, ctx }: RequestInfo): Promise<Respons
 
 	if (!obj) {
 		ctx.logger.debug(`Image ${imageId} not found`);
+		// Binary response — constructing Response directly is intentional; see src/api/readme.md
 		return new Response('Not Found', { status: 404 });
 	}
 
+	// Binary response — streaming R2 body requires constructing Response directly rather than
+	// using successResponse(). See src/api/readme.md for the binary/streaming exception.
 	return new Response(obj.body, {
 		headers: {
 			'Content-Type': obj.httpMetadata?.contentType ?? 'application/octet-stream',

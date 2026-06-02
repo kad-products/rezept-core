@@ -8,13 +8,13 @@ Actions accept form data, validate it, check authorization, and orchestrate the 
 
 ## Structure
 
-One file per entity, multiple operations per file. Each operation is a private implementation function wrapped in `serverAction()`:
+One file per entity, multiple operations per file. Each operation is a private implementation function. When the operation needs interruptors, it is wrapped in `serverAction()`:
 
 ```ts
 export const saveWidget = serverAction([requireAuthentication, requirePermissions('widgets:create', 'widgets:update'), _saveWidget]);
 
 /** @private — exported for testing only, do not call directly */
-export async function _saveWidget(formData: WidgetFormData): Promise<ActionState<WidgetFormData>> {
+export async function _saveWidget(formData: WidgetFormInput): Promise<ActionState<WidgetDBRead>> {
     // ...
 }
 ```
@@ -22,11 +22,15 @@ export async function _saveWidget(formData: WidgetFormData): Promise<ActionState
 - The `serverAction()` export is what forms call. Authentication and permission checks go in the wrapper array — not inside the implementation.
 - The `_fn` export is the implementation, exposed only for testing.
 
+### When not to use `serverAction()`
+
+If an action has no meaningful interruptors, export the implementation function directly — do not wrap it in `serverAction([_fn])`. A single-item array adds nothing: no interruptors run, and the wrapper is pure indirection. Actions without interruptors are the exception (auth/registration flows are the common case) but the rule is the same regardless of the reason: `serverAction()` is the interruptor mechanism, not a required wrapper for all actions.
+
 ## Responsibilities
 
 - **Validate input** via schemas — use `safeParse`, return field errors on failure
 - **Orchestrate** — call repositories directly for simple operations; call steps for shared or complex pipelines
-- **Return `ActionState<T>`** always — never return raw data or throw to the caller
+- **Return `ActionState<T>`** always — never return raw data or throw to the caller. The type parameter `T` is always the DB read type (e.g. `ActionState<WidgetDBRead>`), not the input type — see [ADR-0009](../../docs/decisions/0009-action-state-return-type.md)
 
 ## Error handling
 

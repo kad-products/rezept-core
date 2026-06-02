@@ -38,4 +38,4 @@ A domain subdirectory is the right call when a domain has three or more componen
 - **`'use client'` first line for client components** — no blank lines or comments before the directive
 - **Props for data** — no repository imports, no direct `db` access
 - **Client components call server actions for mutations** — never direct repository calls
-- **No type definitions** — types live in `@/types`
+- **Types used across files live in `@/types`** — types local to a single file may stay co-located.

@@ -1,3 +1,99 @@
+## [1.41.0](https://github.com/kad-products/rezept-core/compare/v1.40.4...v1.41.0) (2026-06-02)
+
+### Features
+
+* enable tunnel to work while also using same build for all envs ([d2480eb](https://github.com/kad-products/rezept-core/commit/d2480eb8987a2d24e33cefbbb038ad06f56f5bc3))
+
+## [1.40.4](https://github.com/kad-products/rezept-core/compare/v1.40.3...v1.40.4) (2026-06-02)
+
+### Bug Fixes
+
+* check update record count in repos ([db8ec66](https://github.com/kad-products/rezept-core/commit/db8ec668e79999f958bb1829c4855d71962ff3c4))
+* typo in recipe success message ([6d8b58f](https://github.com/kad-products/rezept-core/commit/6d8b58fe2a83977427d49f83137ea913386ae27c))
+
+## [1.40.3](https://github.com/kad-products/rezept-core/compare/v1.40.2...v1.40.3) (2026-06-02)
+
+### Bug Fixes
+
+* remove unnecessary async on middleware ([04ff897](https://github.com/kad-products/rezept-core/commit/04ff89707b4feb3f0ae4f40522b479e9a69db8c4))
+
+## [1.40.2](https://github.com/kad-products/rezept-core/compare/v1.40.1...v1.40.2) (2026-06-02)
+
+### Bug Fixes
+
+* removing dead code ([470ba94](https://github.com/kad-products/rezept-core/commit/470ba9456e82a6c34091a85f518c85dbbed024cd))
+
+## [1.40.1](https://github.com/kad-products/rezept-core/compare/v1.40.0...v1.40.1) (2026-06-02)
+
+### Bug Fixes
+
+* add some error handling and validation to upload ([2c0e579](https://github.com/kad-products/rezept-core/commit/2c0e5792adfb6c074d28e77069081b3d671844f2))
+
+## [1.40.0](https://github.com/kad-products/rezept-core/compare/v1.39.0...v1.40.0) (2026-06-02)
+
+### Features
+
+* provide app version to recipe scrape attempt ([7830c0c](https://github.com/kad-products/rezept-core/commit/7830c0cae65e41bedf34a8fd7ddd97f3ac2fefcb))
+
+## [1.39.0](https://github.com/kad-products/rezept-core/compare/v1.38.0...v1.39.0) (2026-06-01)
+
+### Features
+
+* add action link option to RzTable ([edccd20](https://github.com/kad-products/rezept-core/commit/edccd2075e71afead7dbf853e7eeff8dc7a89750))
+* add user editing page on admin side ([a489df6](https://github.com/kad-products/rezept-core/commit/a489df615d733637d85676a857d9e2ddde2065fa))
+
+## [1.38.0](https://github.com/kad-products/rezept-core/compare/v1.37.0...v1.38.0) (2026-06-01)
+
+### Features
+
+* **admin:** initial user listing page ([95d16b8](https://github.com/kad-products/rezept-core/commit/95d16b856b99f4367c89c3e5b4f7ef4890567ede))
+
+## [1.37.0](https://github.com/kad-products/rezept-core/compare/v1.36.0...v1.37.0) (2026-06-01)
+
+### Features
+
+* **admin:** creates initial admin document and layout ([d2584b3](https://github.com/kad-products/rezept-core/commit/d2584b30d3b411c1beecb90b7718e44ce12d8958))
+
+## [1.36.0](https://github.com/kad-products/rezept-core/compare/v1.35.1...v1.36.0) (2026-06-01)
+
+### Features
+
+* create no-js document and related print recipe route ([aca9b28](https://github.com/kad-products/rezept-core/commit/aca9b28875318d083ea18284ddaf801d76be3ed2))
+
+## [1.35.1](https://github.com/kad-products/rezept-core/compare/v1.35.0...v1.35.1) (2026-06-01)
+
+### Bug Fixes
+
+* align upload form's URL to the API endpoint ([53fa613](https://github.com/kad-products/rezept-core/commit/53fa613262519b740bb19cd5290554de1dc01d1d))
+
+## [1.35.0](https://github.com/kad-products/rezept-core/compare/v1.34.1...v1.35.0) (2026-06-01)
+
+### Features
+
+* initial 404 handlers ([ceb0ec0](https://github.com/kad-products/rezept-core/commit/ceb0ec064019fc4bcb786bbc0e9ec26c46aaef74))
+
+## [1.34.1](https://github.com/kad-products/rezept-core/compare/v1.34.0...v1.34.1) (2026-06-01)
+
+### Bug Fixes
+
+* cleanup workaround for unscoped error handlers ([782e027](https://github.com/kad-products/rezept-core/commit/782e027cb4f2d84b2b1bc4f6697af39fae8a2a0c))
+
+## [1.34.0](https://github.com/kad-products/rezept-core/compare/v1.33.0...v1.34.0) (2026-06-01)
+
+### Features
+
+* include the app version variable for usage in logs and stuff ([5df308c](https://github.com/kad-products/rezept-core/commit/5df308c065d5f801699892017038928834c9f3dd))
+
+## [1.33.0](https://github.com/kad-products/rezept-core/compare/v1.32.2...v1.33.0) (2026-06-01)
+
+### Features
+
+* move save recipe action to steps system ([80fbfa4](https://github.com/kad-products/rezept-core/commit/80fbfa4d5a2a2e0113eddfbc2311702327403376))
+
+### Bug Fixes
+
+* better name and type for recipe saving/import ([49d6523](https://github.com/kad-products/rezept-core/commit/49d652327e2bdcaf165870504c4884fe981fd6b6))
+
 ## [1.32.2](https://github.com/kad-products/rezept-core/compare/v1.32.1...v1.32.2) (2026-05-31)
 
 ### Bug Fixes

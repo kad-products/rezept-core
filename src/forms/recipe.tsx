@@ -211,7 +211,7 @@ export default function Recipe({
 				</form.Field>
 				{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
-				{formState?.success && <p className="success">Season saved!</p>}
+				{formState?.success && <p className="success">Recipe saved!</p>}
 				<form.AppForm>
 					<form.Submit label={buttonText} />
 				</form.AppForm>

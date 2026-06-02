@@ -62,6 +62,10 @@ return errorResponse('API key has been revoked', 403);
 
 The `error` field is always a single string. Field-level error arrays belong to `ActionState` (the form/action layer) — they have no place in HTTP API responses where clients need a simple, unambiguous message.
 
+### Binary and streaming responses
+
+The JSON response utilities (`successResponse`, `errorResponse`) are JSON-only. Handlers that stream binary content (e.g. `src/api/images.ts` returning an R2 object body) must construct `Response` directly — this is the one documented exception to the "never construct Response manually" rule. Add a comment on the Response construction pointing back to this readme.
+
 ## Guidelines
 
 - **No `'use server'`** — API handlers are HTTP route handlers, not server functions

@@ -1,6 +1,6 @@
 import { Fragment, Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 import {
 	getIngredientsByRecipeSectionId,
 	getInstructionsByRecipeSectionId,
@@ -18,7 +18,7 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 	const ingredients = await Promise.all(sections.map(async s => await getIngredientsByRecipeSectionId(s.id, ctx.logger)));
 
 	return (
-		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
+		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
 			<Suspense fallback={<div>Loading recipe...</div>}>
 				<h3>{recipe.title}</h3>
 				{ctx.permissions?.includes('recipes:update') && (
@@ -69,6 +69,6 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 					);
 				})}
 			</Suspense>
-		</StandardLayout>
+		</AppLayout>
 	);
 }

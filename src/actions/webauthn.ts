@@ -4,9 +4,11 @@ export function getWebAuthnConfig(request: Request): { rpName: string; rpID: str
 	const rpID = new URL(request.url).hostname;
 	const rpName = import.meta.env.VITE_IS_DEV_SERVER ? 'Development App' : env.WEBAUTHN_APP_NAME;
 
-	// origin handling that works with cloudflare tunnels for local development
-	const url = new URL(import.meta.env.VITE_BASE_URL);
-	const origin = url.origin;
+	const url = new URL(request.url);
+	// Cloudflare (production) and tunnel (dev) both terminate TLS before the Worker.
+	// wrangler dev reports http:// in req.url even when the tunnel provides HTTPS,
+	// so force https for any non-localhost host to match what the browser actually sees.
+	const origin = url.hostname === 'localhost' || url.hostname === '127.0.0.1' ? url.origin : `https://${url.host}`;
 
 	return {
 		rpName,

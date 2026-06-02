@@ -1,0 +1,21 @@
+{
+	// Minimal wrangler config for integration tests.
+	// Only declares the D1 binding — no Durable Objects, R2, or assets.
+	// Those bindings cause Miniflare to create persistent WebSocket servers
+	// that prevent the Node.js process from exiting after tests complete.
+	"name": "rezept-test",
+	"main": "worker.ts",
+	"compatibility_date": "2025-08-21",
+	"compatibility_flags": ["nodejs_compat"],
+	"vars": {
+		"REZEPT_ENV": "development",
+		"WEBAUTHN_APP_NAME": "rezept"
+	},
+	"d1_databases": [
+		{
+			"binding": "rezept_core",
+			"database_name": "rezept-core-test",
+			"database_id": "local"
+		}
+	]
+}

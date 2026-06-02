@@ -8,7 +8,7 @@ Layouts receive page content as `children` and render it inside a consistent she
 
 ## Current layouts
 
-- **`StandardLayout`** — the main application shell with navigation. Used by all current pages.
+- **`AppLayout`** — the main application shell with navigation. Used by all current pages.
 
 An admin layout is planned for administrative pages.
 
@@ -18,3 +18,4 @@ An admin layout is planned for administrative pages.
 - **`children` + `ctx`** — layouts accept `children: React.ReactNode` and `ctx` for permission checks
 - **No data fetching** — layouts receive everything they need as props; they do not call repositories
 - **No `'use client'`** — layouts are server components
+- **Types used across files live in `@/types`** — types local to a single file may stay co-located.

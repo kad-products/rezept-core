@@ -4,8 +4,10 @@ allowBuilds:
   less: false
   sharp: false
   workerd: true
+minimumReleaseAgeExclude:
+  - rwsdk@1.2.10
 overrides:
-  '@types/react': 19.2.14
+  '@types/react': 19.2.15
   '@types/react-dom': 19.2.3
 patchedDependencies:
   solid-js@1.9.11: patches/solid-js@1.9.11.patch
