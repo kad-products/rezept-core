@@ -1,3 +1,9 @@
+## [1.40.0](https://github.com/kad-products/rezept-core/compare/v1.39.0...v1.40.0) (2026-06-02)
+
+### Features
+
+* provide app version to recipe scrape attempt ([7830c0c](https://github.com/kad-products/rezept-core/commit/7830c0cae65e41bedf34a8fd7ddd97f3ac2fefcb))
+
 ## [1.39.0](https://github.com/kad-products/rezept-core/compare/v1.38.0...v1.39.0) (2026-06-01)
 
 ### Features
