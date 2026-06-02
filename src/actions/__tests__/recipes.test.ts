@@ -466,6 +466,14 @@ describe('_saveRecipe', () => {
 			expect(result.errors?._form).toBeDefined();
 		});
 
+		it('returns 500 for non-step errors', async () => {
+			vi.mocked(saveRecipe).mockRejectedValueOnce(new Error('Unexpected failure'));
+			const result = await _saveRecipe({ authorId: randomUUID(), title: 'Test', sections: [] });
+			expect(result.success).toBe(false);
+			expect(result.code).toBe(500);
+			expect(result.errors?._form?.[0]).toContain('Unexpected failure');
+		});
+
 		it('handles instruction save errors', async () => {
 			vi.mocked(saveRecipeInstructions).mockRejectedValueOnce(
 				new RzStepError(400, 'Failed to save recipe instructions', 'Instruction save failed'),

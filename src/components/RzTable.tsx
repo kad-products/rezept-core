@@ -22,6 +22,17 @@ export default function RzTable<T extends Record<string, unknown>>({
 					return (
 						<tr key={d[rowIndex] as string}>
 							{columns.map(c => {
+								if (c.action) {
+									const hrefProp = c.action.hrefProp || 'link';
+									const href = String(d[hrefProp]);
+									if (c.action.type === 'link') {
+										return (
+											<td key={c.key}>
+												<a href={href}>{c.action.label}</a>
+											</td>
+										);
+									}
+								}
 								return <td key={c.key}>{c.render ? c.render(String(d[c.key]), d) : String(d[c.key])}</td>;
 							})}
 						</tr>

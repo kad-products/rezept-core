@@ -1,0 +1,19 @@
+name: Refresh interaction limits
+
+on:
+  schedule:
+    - cron: '0 0 1 */3 *' # First of every third month — well within the 6-month API maximum
+  workflow_dispatch:
+
+jobs:
+  set-limits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restrict interactions to collaborators only
+        run: |
+          gh api repos/${{ github.repository }}/interaction-limits \
+            --method PUT \
+            -f limit=collaborators_only \
+            -f expiry=six_months
+        env:
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}

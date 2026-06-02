@@ -85,8 +85,7 @@
 			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
-				"REZEPT_ENV": "integration",
-				"VITE_BASE_URL": "https://rezept-integration.arsdehnel.workers.dev"
+				"REZEPT_ENV": "integration"
 			},
 			"workers_dev": true
 		},
@@ -123,8 +122,7 @@
 			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
-				"REZEPT_ENV": "staging",
-				"VITE_BASE_URL": "https://rezept-staging.arsdehnel.workers.dev"
+				"REZEPT_ENV": "staging"
 			},
 			"workers_dev": true
 		},
@@ -161,8 +159,7 @@
 			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
-				"REZEPT_ENV": "production",
-				"VITE_BASE_URL": "https://rezept.arsdehnel.workers.dev"
+				"REZEPT_ENV": "production"
 			},
 			"workers_dev": false
 		}

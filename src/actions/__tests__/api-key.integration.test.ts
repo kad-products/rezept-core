@@ -1,13 +1,9 @@
+/// <reference types="@cloudflare/vitest-pool-workers/types" />
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 import { createUser, getApiKeyById, getApiKeysByUserId } from '@/repositories';
 import type { ApiKeyFormInput } from '@/types';
-import { resetDb } from '../../../tests/mocks/db';
-
-vi.mock('cloudflare:workers', () => ({
-	env: { REZEPT_ENV: 'development' },
-}));
 
 interface MockRequestInfo {
 	ctx: {
@@ -42,7 +38,6 @@ describe('saveApiKey integration', () => {
 	let testUserId: string;
 
 	beforeEach(async () => {
-		await resetDb();
 		const user = await createUser('testuser', null, mockRequestInfo.ctx.logger);
 		testUserId = user.id;
 		mockRequestInfo.ctx.user = { id: testUserId };

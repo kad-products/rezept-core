@@ -29,6 +29,26 @@ export const Empty: Story = {
 	args: { columns, data: [] },
 };
 
+export const WithEditAction: Story = {
+	args: {
+		columns: [
+			{ key: 'name', label: 'Name' },
+			{ key: 'season', label: 'Season' },
+			{ key: 'time', label: 'Time' },
+			{
+				key: 'actions',
+				label: 'Actions',
+				action: {
+					type: 'link',
+					hrefProp: 'editUrl',
+					label: 'Edit',
+				},
+			},
+		],
+		data: data.map(item => ({ ...item, editUrl: `/edit/${item.id}` })),
+	},
+};
+
 export const WithCustomRender: Story = {
 	args: {
 		columns: [

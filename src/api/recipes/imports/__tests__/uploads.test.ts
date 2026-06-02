@@ -110,6 +110,52 @@ describe('_postHandler', () => {
 		});
 	});
 
+	describe('validation', () => {
+		it('returns 400 when no file field is present', async () => {
+			const formData = new FormData();
+			const request = new Request('https://example.com/api/recipes/imports/uploads', {
+				method: 'POST',
+				body: formData,
+			});
+			const response = await _postHandler({ request, ctx } as any);
+			expect(response.status).toBe(400);
+			const body = (await response.json()) as any;
+			expect(body.error).toBe('A file is required');
+			expect(mockEnv.rezept_recipe_uploads.put).not.toHaveBeenCalled();
+		});
+
+		it('returns 400 when the file field is a string rather than a file', async () => {
+			const formData = new FormData();
+			formData.append('file', 'not-a-file');
+			const request = new Request('https://example.com/api/recipes/imports/uploads', {
+				method: 'POST',
+				body: formData,
+			});
+			const response = await _postHandler({ request, ctx } as any);
+			expect(response.status).toBe(400);
+			const body = (await response.json()) as any;
+			expect(body.error).toBe('A file is required');
+			expect(mockEnv.rezept_recipe_uploads.put).not.toHaveBeenCalled();
+		});
+
+		it('returns 413 when the file exceeds 100MB', async () => {
+			class OversizedFile extends File {
+				get size() {
+					return 100 * 1024 * 1024 + 1;
+				}
+			}
+			const oversizedFile = new OversizedFile(['x'], 'big.csv', { type: 'text/csv' });
+			const mockFormData = new FormData();
+			mockFormData.append('file', oversizedFile);
+			const request = { formData: vi.fn().mockResolvedValue(mockFormData) };
+			const response = await _postHandler({ request, ctx } as any);
+			expect(response.status).toBe(413);
+			const body = (await response.json()) as any;
+			expect(body.error).toBe('File exceeds the 100MB size limit');
+			expect(mockEnv.rezept_recipe_uploads.put).not.toHaveBeenCalled();
+		});
+	});
+
 	describe('error handling', () => {
 		it('returns 500 with the error message in development when createRecipeUpload fails', async () => {
 			vi.mocked(createRecipeUpload).mockRejectedValue(new Error('DB connection failed'));

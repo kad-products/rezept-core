@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import Recipe from '@/forms/recipe';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 import {
 	getIngredients,
 	getIngredientsByRecipeSectionId,
@@ -41,7 +41,7 @@ export default async function Pages__recipes__edit({ ctx, params }: RequestInfo)
 	const allIngredients = await getIngredients(ctx.logger);
 
 	return (
-		<StandardLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
+		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
 			<Suspense fallback={<div>Loading recipe...</div>}>
 				<h3>{recipe?.title || 'New Recipe'}</h3>
 				{recipe && (
@@ -51,6 +51,6 @@ export default async function Pages__recipes__edit({ ctx, params }: RequestInfo)
 				)}
 				<Recipe recipe={recipe} allIngredients={allIngredients} currentUserId={userId} />
 			</Suspense>
-		</StandardLayout>
+		</AppLayout>
 	);
 }

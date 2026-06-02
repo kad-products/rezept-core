@@ -11,6 +11,8 @@ import type { ActionState, CredentialDBRead } from '@/types';
 import { errorResponse, successResponse } from './utils';
 import { getWebAuthnConfig } from './webauthn';
 
+// No serverAction() wrapper — these functions have no meaningful interruptors. See src/actions/readme.md.
+
 export async function startPasskeyLogin(): Promise<ActionState<PublicKeyCredentialRequestOptionsJSON>> {
 	try {
 		const { rpID } = getWebAuthnConfig(requestInfo.request);
@@ -84,10 +86,6 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 		const user = await getUserById(credential.userId, requestInfo.ctx.logger);
 
 		requestInfo.ctx.logger.info(`User: ${JSON.stringify(user, null, 4)}`);
-
-		if (!user) {
-			return errorResponse('No user found', 400);
-		}
 
 		await sessions.save(response.headers, {
 			userId: user.id,

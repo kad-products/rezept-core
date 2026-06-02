@@ -1,6 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import Logger from '@/logger';
 
-export default async function loggerMiddleware({ ctx }: RequestInfo<DefaultAppContext>): Promise<void> {
+export default function loggerMiddleware({ ctx }: RequestInfo<DefaultAppContext>): void {
 	ctx.logger = new Logger();
 }

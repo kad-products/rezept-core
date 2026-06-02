@@ -73,11 +73,29 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		await updateRecipeScrapeStatus(recipeScrape.id, 'INGREDIENTS_SAVED', null, userId, ctx.logger);
 
 		recipeScrape = await updateRecipeScrapeStatus(recipeScrape.id, 'COMPLETED', null, userId, ctx.logger);
-		await createRecipeScrapeAttempt(recipeScrape.id, 'api', null, 'COMPLETED', null, null, userId, ctx.logger);
+		await createRecipeScrapeAttempt(
+			recipeScrape.id,
+			'api',
+			null,
+			'COMPLETED',
+			null,
+			import.meta.env.VITE_APP_VERSION,
+			userId,
+			ctx.logger,
+		);
 	} catch (err) {
 		if (recipeScrape) {
 			await updateRecipeScrapeStatus(recipeScrape.id, 'FAILED', (err as Error).message, userId, ctx.logger);
-			await createRecipeScrapeAttempt(recipeScrape.id, 'api', null, 'FAILED', (err as Error).message, null, userId, ctx.logger);
+			await createRecipeScrapeAttempt(
+				recipeScrape.id,
+				'api',
+				null,
+				'FAILED',
+				(err as Error).message,
+				import.meta.env.VITE_APP_VERSION,
+				userId,
+				ctx.logger,
+			);
 		}
 		return apiErrorResponse(err, 'Error processing recipe scrape');
 	}

@@ -4,7 +4,7 @@ All shared TypeScript types live here. See [project architecture](../../docs/dev
 
 ## What belongs here
 
-Every type used by more than one file in the project — entity types, form data shapes, action states, utility types. Types are never defined inline in step, action, repository, schema, or form files.
+Every type used by more than one file in the project — entity types, form data shapes, action states, utility types. Types that are purely local to a single file may stay co-located; once a type is referenced elsewhere it moves here.
 
 ## Structure
 
