@@ -9,6 +9,8 @@ import type { ActionState } from '@/types';
 import { errorResponse, successResponse } from './utils';
 import { getWebAuthnConfig } from './webauthn';
 
+// No serverAction() wrapper — these functions have no meaningful interruptors. See src/actions/readme.md.
+
 export async function startPasskeyRegistration(username: string): Promise<ActionState<PublicKeyCredentialCreationOptionsJSON>> {
 	const parsed = usersSchemas.form.safeParse({ username });
 	if (!parsed.success) {

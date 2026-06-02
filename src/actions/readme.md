@@ -8,7 +8,7 @@ Actions accept form data, validate it, check authorization, and orchestrate the 
 
 ## Structure
 
-One file per entity, multiple operations per file. Each operation is a private implementation function wrapped in `serverAction()`:
+One file per entity, multiple operations per file. Each operation is a private implementation function. When the operation needs interruptors, it is wrapped in `serverAction()`:
 
 ```ts
 export const saveWidget = serverAction([requireAuthentication, requirePermissions('widgets:create', 'widgets:update'), _saveWidget]);
@@ -21,6 +21,10 @@ export async function _saveWidget(formData: WidgetFormInput): Promise<ActionStat
 
 - The `serverAction()` export is what forms call. Authentication and permission checks go in the wrapper array — not inside the implementation.
 - The `_fn` export is the implementation, exposed only for testing.
+
+### When not to use `serverAction()`
+
+If an action has no meaningful interruptors, export the implementation function directly — do not wrap it in `serverAction([_fn])`. A single-item array adds nothing: no interruptors run, and the wrapper is pure indirection. Actions without interruptors are the exception (auth/registration flows are the common case) but the rule is the same regardless of the reason: `serverAction()` is the interruptor mechanism, not a required wrapper for all actions.
 
 ## Responsibilities
 

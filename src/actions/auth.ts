@@ -11,6 +11,8 @@ import type { ActionState, CredentialDBRead } from '@/types';
 import { errorResponse, successResponse } from './utils';
 import { getWebAuthnConfig } from './webauthn';
 
+// No serverAction() wrapper — these functions have no meaningful interruptors. See src/actions/readme.md.
+
 export async function startPasskeyLogin(): Promise<ActionState<PublicKeyCredentialRequestOptionsJSON>> {
 	try {
 		const { rpID } = getWebAuthnConfig(requestInfo.request);
