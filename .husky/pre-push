@@ -1,4 +1,5 @@
 git lfs push origin HEAD
-pnpm test
+pnpm test:run
+pnpm test:workers
 pnpm biome:check
 pnpm type-check

@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import FormApiKey from '@/forms/api-key';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 import { getApiKeyById } from '@/repositories';
 import type { ApiKeyDBRead } from '@/types';
 
@@ -19,7 +19,7 @@ export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo
 	}
 
 	return (
-		<StandardLayout currentBasePage="profile" pageTitle="API Key" ctx={ctx}>
+		<AppLayout currentBasePage="profile" pageTitle="API Key" ctx={ctx}>
 			<Suspense fallback={<div>Loading API Key...</div>}>
 				<h3>{apiKey?.id ? `Edit ${apiKey.name}` : 'New API Key'}</h3>
 				{apiKey && (
@@ -29,6 +29,6 @@ export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo
 				)}
 				<FormApiKey apiKey={apiKey} currentUserId={userId} />
 			</Suspense>
-		</StandardLayout>
+		</AppLayout>
 	);
 }

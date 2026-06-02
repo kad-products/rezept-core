@@ -1,11 +1,11 @@
 import type { RequestInfo } from 'rwsdk/worker';
 import PasskeyLogin from '@/components/PasskeyLogin';
 import PasskeyRegistration from '@/components/PasskeyRegistration';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 
 export default function Pages__auth__login({ ctx }: RequestInfo): React.JSX.Element {
 	return (
-		<StandardLayout currentBasePage="auth" pageTitle="Login" ctx={ctx}>
+		<AppLayout currentBasePage="auth" pageTitle="Login" ctx={ctx}>
 			{ctx.user ? (
 				<div>
 					<div>
@@ -35,6 +35,6 @@ export default function Pages__auth__login({ ctx }: RequestInfo): React.JSX.Elem
 					</div>
 				</>
 			)}
-		</StandardLayout>
+		</AppLayout>
 	);
 }

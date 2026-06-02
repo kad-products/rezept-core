@@ -9,4 +9,5 @@ export default [
 	route('/images/:imageId', images),
 	route('/recipes/imports/scrapes', recipesImportsScrapes),
 	route('/recipes/imports/uploads', recipesImportsUploads),
+	route('*', () => Response.json({ success: false, error: 'Not found' }, { status: 404 })),
 ];

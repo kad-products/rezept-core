@@ -1,10 +1,10 @@
 import type { DocumentProps } from 'rwsdk/router';
 import type { RequestInfo } from 'rwsdk/worker';
-import styles from './styles/global.css?url';
+import styles from '../styles/global.css?url';
 
 const cfBeaconToken: string | undefined = import.meta.env.VITE_CF_BEACON_TOKEN;
 
-export const Document: React.FC<DocumentProps<RequestInfo>> = ({ children }: DocumentProps<RequestInfo>) => (
+const AppDocument: React.FC<DocumentProps<RequestInfo>> = ({ children }: DocumentProps<RequestInfo>) => (
 	<html lang="en">
 		<head>
 			<meta charSet="utf-8" />
@@ -26,3 +26,5 @@ export const Document: React.FC<DocumentProps<RequestInfo>> = ({ children }: Doc
 		</body>
 	</html>
 );
+
+export default AppDocument;

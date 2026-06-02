@@ -1,7 +1,7 @@
 import { env } from 'cloudflare:workers';
 import crypto from 'node:crypto';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
-import { apiErrorResponse, successResponse } from '@/api/utils';
+import { apiErrorResponse, errorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createRecipeUpload } from '@/repositories';
 import type { RecipeUploadDBRead } from '@/types';
@@ -18,10 +18,16 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 	const userId = ctx.user!.id;
 
 	const formData = await request.formData();
-	const file = formData.get('file') as File;
+	const file = formData.get('file');
 
-	ctx.logger.info(formData);
-	ctx.logger.info(file);
+	if (!(file instanceof File)) {
+		return errorResponse('A file is required', 400);
+	}
+
+	const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+	if (file.size > MAX_FILE_SIZE) {
+		return errorResponse('File exceeds the 100MB size limit', 413);
+	}
 
 	// Generate the ID upfront so it can be used as the R2 key (id == R2 key by convention)
 	const uploadId = crypto.randomUUID();

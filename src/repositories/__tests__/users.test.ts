@@ -1,12 +1,46 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import Logger from '@/logger';
 import { resetDb } from '../../../tests/mocks/db';
-import { createUser, deleteUser, getUserById } from '../users';
+import { createUser, deleteUser, getUserById, getUsers, updateUser } from '../users';
 
 const logger = new Logger();
 
 beforeEach(async () => {
 	await resetDb();
+});
+
+describe('getUsers', () => {
+	it('returns active users', async () => {
+		const alice = await createUser('alice', null, logger);
+		const bob = await createUser('bob', null, logger);
+
+		const result = await getUsers(logger);
+		const ids = result.map(u => u.id);
+
+		expect(ids).toContain(alice.id);
+		expect(ids).toContain(bob.id);
+	});
+
+	it('excludes deleted users by default', async () => {
+		const deleted = await createUser('deleted', null, logger);
+		await deleteUser(deleted.id, null, logger);
+
+		const result = await getUsers(logger);
+
+		expect(result.map(u => u.id)).not.toContain(deleted.id);
+	});
+
+	it('includes deleted users when includeDeleted is true', async () => {
+		const active = await createUser('active', null, logger);
+		const deleted = await createUser('deleted', null, logger);
+		await deleteUser(deleted.id, null, logger);
+
+		const result = await getUsers(logger, true);
+		const ids = result.map(u => u.id);
+
+		expect(ids).toContain(active.id);
+		expect(ids).toContain(deleted.id);
+	});
 });
 
 describe('createUser', () => {
@@ -178,6 +212,52 @@ describe('deleteUser', () => {
 
 	it('throws when id is not a valid uuid', async () => {
 		await expect(deleteUser('not-a-uuid', null, logger)).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a User');
+	});
+});
+
+describe('updateUser', () => {
+	it('updates the role and sets updatedAt', async () => {
+		const actor = await createUser('actor', null, logger);
+		const target = await createUser('target', null, logger);
+
+		const updated = await updateUser(target.id, { role: 'ADMIN' }, actor.id, logger);
+
+		expect(updated.role).toBe('ADMIN');
+		expect(updated.updatedAt).not.toBeNull();
+		expect(updated.updatedBy).toBe(actor.id);
+	});
+
+	it('does not affect other users', async () => {
+		const actor = await createUser('actor', null, logger);
+		const target = await createUser('target', null, logger);
+		const bystander = await createUser('bystander', null, logger);
+
+		await updateUser(target.id, { role: 'ADMIN' }, actor.id, logger);
+
+		const found = await getUserById(bystander.id, logger);
+		expect(found.role).not.toBe('ADMIN');
+	});
+
+	it('throws when user does not exist', async () => {
+		await expect(updateUser(crypto.randomUUID(), { role: 'ADMIN' }, 'actor-id', logger)).rejects.toThrow(
+			'Expected 1 User record(s), but found 0',
+		);
+	});
+
+	it('throws when id is not a valid uuid', async () => {
+		await expect(updateUser('not-a-uuid', { role: 'ADMIN' }, 'actor-id', logger)).rejects.toThrow(
+			'The value "not-a-uuid" is not a valid ID for a User',
+		);
+	});
+
+	it('throws when updating a deleted user', async () => {
+		const actor = await createUser('actor', null, logger);
+		const target = await createUser('target', null, logger);
+		await deleteUser(target.id, actor.id, logger);
+
+		await expect(updateUser(target.id, { role: 'ADMIN' }, actor.id, logger)).rejects.toThrow(
+			'Expected 1 User record(s), but found 0',
+		);
 	});
 });
 

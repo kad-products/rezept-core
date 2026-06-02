@@ -1,4 +1,15 @@
-const permissions = {
+import type { PermissionRole } from './roles';
+
+type RoleEntry = PermissionRole | '*';
+
+const permissions: Record<string, Record<string, RoleEntry[]>> = {
+	admin: {
+		read: ['ADMIN'],
+	},
+	users: {
+		read: ['ADMIN'],
+		update: ['ADMIN'],
+	},
 	'api-keys': {
 		create: ['BASIC', 'ADMIN'],
 		read: ['BASIC', 'ADMIN'],
@@ -32,7 +43,7 @@ const permissions = {
 		scrape: ['ADMIN', 'BASIC'],
 		upload: ['ADMIN', 'BASIC'],
 	},
-} as const;
+} as const satisfies Record<string, Record<string, RoleEntry[]>>;
 
 export default permissions;
 

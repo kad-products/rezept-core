@@ -5,7 +5,7 @@ import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), '');
-	const tunnelHost = new URL(env.VITE_BASE_URL).host;
+	const tunnelHost = env.VITE_BASE_URL ? new URL(env.VITE_BASE_URL).host : null;
 
 	return {
 		server: {

@@ -1,13 +1,13 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import RzCard from '@/components/RzCard';
-import StandardLayout from '@/layouts/standard';
+import AppLayout from '@/layouts/app';
 import { getSeasons } from '@/repositories';
 
 export default async function Pages__seasons__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const seasons = await getSeasons(ctx.logger);
 	return (
-		<StandardLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
+		<AppLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading seasons...</div>}>
 				{ctx.permissions?.includes('seasons:create') && <a href="/seasons/new">New Season</a>}
 				<div className="seasons-listing">
@@ -27,6 +27,6 @@ export default async function Pages__seasons__listing({ ctx }: RequestInfo): Pro
 					})}
 				</div>
 			</Suspense>
-		</StandardLayout>
+		</AppLayout>
 	);
 }
