@@ -84,6 +84,12 @@ describe('_addIngredient', () => {
 			expect(result.data).toMatchObject({ id: 'mock-ingredient-id', name: 'Tomato' });
 		});
 
+		it('returns a validation error when name is empty', async () => {
+			const result = await _addIngredient({ name: '' });
+			expect(result.success).toBe(false);
+			expect(result.errors?.name).toBeDefined();
+		});
+
 		it('handles repository errors gracefully', async () => {
 			vi.mocked(createIngredient).mockRejectedValueOnce(new Error('Database error'));
 
