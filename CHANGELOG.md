@@ -1,3 +1,9 @@
+## [1.41.0](https://github.com/kad-products/rezept-core/compare/v1.40.4...v1.41.0) (2026-06-02)
+
+### Features
+
+* enable tunnel to work while also using same build for all envs ([d2480eb](https://github.com/kad-products/rezept-core/commit/d2480eb8987a2d24e33cefbbb038ad06f56f5bc3))
+
 ## [1.40.4](https://github.com/kad-products/rezept-core/compare/v1.40.3...v1.40.4) (2026-06-02)
 
 ### Bug Fixes
