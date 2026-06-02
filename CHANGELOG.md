@@ -1,3 +1,10 @@
+## [1.40.4](https://github.com/kad-products/rezept-core/compare/v1.40.3...v1.40.4) (2026-06-02)
+
+### Bug Fixes
+
+* check update record count in repos ([db8ec66](https://github.com/kad-products/rezept-core/commit/db8ec668e79999f958bb1829c4855d71962ff3c4))
+* typo in recipe success message ([6d8b58f](https://github.com/kad-products/rezept-core/commit/6d8b58fe2a83977427d49f83137ea913386ae27c))
+
 ## [1.40.3](https://github.com/kad-products/rezept-core/compare/v1.40.2...v1.40.3) (2026-06-02)
 
 ### Bug Fixes
