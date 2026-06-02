@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
@@ -91,6 +91,7 @@ describe('_postHandler', () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
+		vi.stubEnv('VITE_APP_VERSION', 'test-version');
 		ctx = { user: { id: 'user-id' }, logger: new Logger() };
 
 		vi.mocked(parseBodyJson).mockResolvedValue({ url: 'https://example.com/recipe' } as any);
@@ -105,6 +106,10 @@ describe('_postHandler', () => {
 		vi.mocked(createRecipeScrapeAttempt).mockResolvedValue(undefined as any);
 		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(mockScrape as any);
 		vi.mocked(linkRecipeScrapeToRecipe).mockResolvedValue(undefined as any);
+	});
+
+	afterEach(() => {
+		vi.unstubAllEnvs();
 	});
 
 	describe('happy path', () => {
@@ -153,7 +158,7 @@ describe('_postHandler', () => {
 				null,
 				'COMPLETED',
 				null,
-				null,
+				'test-version',
 				'user-id',
 				expect.anything(),
 			);
@@ -221,7 +226,7 @@ describe('_postHandler', () => {
 				null,
 				'FAILED',
 				'Transform failed',
-				null,
+				'test-version',
 				'user-id',
 				expect.anything(),
 			);
@@ -244,7 +249,7 @@ describe('_postHandler', () => {
 				null,
 				'FAILED',
 				'Validation failed',
-				null,
+				'test-version',
 				'user-id',
 				expect.anything(),
 			);
@@ -261,7 +266,7 @@ describe('_postHandler', () => {
 				null,
 				'FAILED',
 				'Save failed',
-				null,
+				'test-version',
 				'user-id',
 				expect.anything(),
 			);
@@ -284,7 +289,7 @@ describe('_postHandler', () => {
 				null,
 				'FAILED',
 				'Sections failed',
-				null,
+				'test-version',
 				'user-id',
 				expect.anything(),
 			);
@@ -307,7 +312,7 @@ describe('_postHandler', () => {
 				null,
 				'FAILED',
 				'Instructions failed',
-				null,
+				'test-version',
 				'user-id',
 				expect.anything(),
 			);
@@ -330,7 +335,7 @@ describe('_postHandler', () => {
 				null,
 				'FAILED',
 				'Ingredients failed',
-				null,
+				'test-version',
 				'user-id',
 				expect.anything(),
 			);
