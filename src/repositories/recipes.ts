@@ -85,6 +85,10 @@ export async function updateRecipe(
 		.where(eq(recipes.id, recipeId))
 		.returning();
 
+	if (updatedRecipes.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [updatedRecipes.length, 1, 'Recipe']);
+	}
+
 	const result = updatedRecipes[0];
 	logger.info(`Updated recipe ${result.id}`);
 	return result;

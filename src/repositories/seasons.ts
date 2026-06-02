@@ -85,6 +85,9 @@ export async function updateSeason(
 		.where(eq(seasons.id, seasonId))
 		.returning();
 
+	if (updatedSeasons.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [updatedSeasons.length, 1, 'Season']);
+	}
 	logger.info(`Updated season ${seasonId}`);
 	return updatedSeasons[0];
 }

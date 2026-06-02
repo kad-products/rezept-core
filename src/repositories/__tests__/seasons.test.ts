@@ -219,9 +219,10 @@ describe('seasons repository', () => {
 			expect(result.description).toBe('Original description');
 		});
 
-		it('returns undefined for non-existent season', async () => {
-			const result = await updateSeason(crypto.randomUUID(), baseSeasonData, testUserId, logger);
-			expect(result).toBeUndefined();
+		it('throws when season does not exist', async () => {
+			await expect(updateSeason(crypto.randomUUID(), baseSeasonData, testUserId, logger)).rejects.toThrow(
+				'Expected 1 Season record(s), but found 0',
+			);
 		});
 
 		it('does not affect other seasons', async () => {
