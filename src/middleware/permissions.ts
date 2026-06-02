@@ -2,7 +2,7 @@ import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { flattenedPermissions } from '@/data/permissions';
 import type { PermissionRole } from '@/data/roles';
 
-export default async function permissionsMiddleware({ ctx }: RequestInfo<DefaultAppContext>): Promise<void> {
+export default function permissionsMiddleware({ ctx }: RequestInfo<DefaultAppContext>): void {
 	if (ctx.apiKey) {
 		ctx.permissions = ctx.apiKey.permissions;
 		return;
