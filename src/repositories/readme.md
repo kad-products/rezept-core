@@ -36,6 +36,29 @@ throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [actua
 - Business logic — decisions about what to do with data belong in actions or API handlers
 - Authentication or authorization
 
+## Returning composite shapes
+
+When every caller of a lookup function needs the same related data, the repository function should return the composite shape — not a flat record that callers immediately augment with follow-up queries. Leaving assembly to callers produces N+1 patterns and forces every call site to understand the entity's structure.
+
+**Prefer:**
+```ts
+// getRecipeById returns the full tree because every caller needs it
+const recipe = await getRecipeById(id, logger);
+// recipe.sections[0].ingredients, recipe.sections[0].instructions are already there
+```
+
+**Over:**
+```ts
+const recipe = await getRecipeById(id, logger);
+const sections = await getSectionsByRecipeId(id, logger);
+const ingredients = await Promise.all(sections.map(s => getIngredientsByRecipeSectionId(s.id, logger)));
+// ...repeated at every call site
+```
+
+If a function returns a shape no caller actually uses on its own — because every caller immediately makes follow-up queries to fill it out — that's a sign the function's contract doesn't match its real use case. Update the function rather than keeping a flat version alongside a composite one.
+
+**Avoid argument-controlled `with:` flags** — dynamic return types keyed on options make TypeScript types unmanageable quickly. Use separate named functions with explicit return types instead.
+
 ## Guidelines
 
 - **Named exports** — one file per entity, functions exported by name.
