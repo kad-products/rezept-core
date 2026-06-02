@@ -1,13 +1,9 @@
+/// <reference types="@cloudflare/vitest-pool-workers/types" />
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 import { createUser, getSeasonById, getSeasons } from '@/repositories';
-import { resetDb } from '../../../tests/mocks/db';
 import { _saveSeason } from '../seasons';
-
-vi.mock('cloudflare:workers', () => ({
-	env: { REZEPT_ENV: 'development' },
-}));
 
 interface MockRequestInfo {
 	ctx: {
@@ -34,7 +30,6 @@ describe('_saveSeason integration', () => {
 	let testUserId: string;
 
 	beforeEach(async () => {
-		await resetDb();
 		const user = await createUser('testuser', null, mockRequestInfo.ctx.logger);
 		testUserId = user.id;
 		mockRequestInfo.ctx.user = { id: testUserId };
