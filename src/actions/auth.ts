@@ -87,10 +87,6 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 
 		requestInfo.ctx.logger.info(`User: ${JSON.stringify(user, null, 4)}`);
 
-		if (!user) {
-			return errorResponse('No user found', 400);
-		}
-
 		await sessions.save(response.headers, {
 			userId: user.id,
 			challenge: null,
