@@ -1,3 +1,9 @@
+## [1.40.1](https://github.com/kad-products/rezept-core/compare/v1.40.0...v1.40.1) (2026-06-02)
+
+### Bug Fixes
+
+* add some error handling and validation to upload ([2c0e579](https://github.com/kad-products/rezept-core/commit/2c0e5792adfb6c074d28e77069081b3d671844f2))
+
 ## [1.40.0](https://github.com/kad-products/rezept-core/compare/v1.39.0...v1.40.0) (2026-06-02)
 
 ### Features
