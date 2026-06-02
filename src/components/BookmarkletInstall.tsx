@@ -7,7 +7,7 @@ import type { ApiKeyDBRead } from '@/types';
 const SCRAPE_PERMISSION = 'recipes:scrape';
 
 function buildBookmarklet(apiKey: string): string {
-	const baseUrl = import.meta.env.VITE_BASE_URL;
+	const baseUrl = window.location.origin;
 	const code = `(function(){
   const scripts=[...document.querySelectorAll('script[type="application/ld+json"]')];
   const data=scripts.map(s=>{try{return JSON.parse(s.innerHTML)}catch(e){return null}}).filter(Boolean);
@@ -105,8 +105,6 @@ export default function BookmarkletInstall({
 					)}
 
 					<div className="bookmarklet-install__instructions">
-						<p>{import.meta.env.VITE_BASE_URL}</p>
-
 						<h3>Desktop Installation</h3>
 						<ol>
 							<li>Make sure your bookmarks bar is visible (View → Show Bookmarks Bar)</li>

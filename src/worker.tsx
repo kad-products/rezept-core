@@ -24,26 +24,33 @@ import { handlePageError } from './worker-error';
 
 export { SessionDurableObject } from '@/durable-objects';
 
-export default defineApp([
-	botMiddleware,
-	loggerMiddleware,
-	headersMiddleware,
-	corsMiddleware,
-	sessionMiddleware,
-	apiKeyMiddleware,
-	userMiddleware,
-	permissionsMiddleware,
-	...testBridgeRoutes,
-	prefix('/api', apiRoutes),
-	render(AdminDocument, [prefix('/admin', adminRoutes.admin)]),
-	render(NoJSDocument, [prefix('/recipes', recipeRoutes.noJS)]),
-	render(AppDocument, [
-		except<RequestInfo>(handlePageError),
-		route('/', Pages__root),
-		prefix('/auth', authRoutes.app),
-		prefix('/profile', profileRoutes.app),
-		prefix('/recipes', recipeRoutes.app),
-		prefix('/seasons', seasonRoutes.app),
-		route('*', NotFound),
-	]),
-]);
+export default defineApp(
+	[
+		botMiddleware,
+		loggerMiddleware,
+		headersMiddleware,
+		corsMiddleware,
+		sessionMiddleware,
+		apiKeyMiddleware,
+		userMiddleware,
+		permissionsMiddleware,
+		...testBridgeRoutes,
+		prefix('/api', apiRoutes),
+		render(AdminDocument, [prefix('/admin', adminRoutes.admin)]),
+		render(NoJSDocument, [prefix('/recipes', recipeRoutes.noJS)]),
+		render(AppDocument, [
+			except<RequestInfo>(handlePageError),
+			route('/', Pages__root),
+			prefix('/auth', authRoutes.app),
+			prefix('/profile', profileRoutes.app),
+			prefix('/recipes', recipeRoutes.app),
+			prefix('/seasons', seasonRoutes.app),
+			route('*', NotFound),
+		]),
+	],
+	{
+		// Allow the tunnel origin in dev so rwsdk's same-origin check passes when
+		// req.url is localhost but the browser Origin header is the tunnel hostname.
+		allowedOrigins: import.meta.env.VITE_BASE_URL ? [import.meta.env.VITE_BASE_URL] : undefined,
+	},
+);
