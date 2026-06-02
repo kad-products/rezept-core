@@ -1,3 +1,9 @@
+## [1.40.2](https://github.com/kad-products/rezept-core/compare/v1.40.1...v1.40.2) (2026-06-02)
+
+### Bug Fixes
+
+* removing dead code ([470ba94](https://github.com/kad-products/rezept-core/commit/470ba9456e82a6c34091a85f518c85dbbed024cd))
+
 ## [1.40.1](https://github.com/kad-products/rezept-core/compare/v1.40.0...v1.40.1) (2026-06-02)
 
 ### Bug Fixes
