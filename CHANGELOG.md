@@ -1,3 +1,9 @@
+## [1.41.1](https://github.com/kad-products/rezept-core/compare/v1.41.0...v1.41.1) (2026-06-02)
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v14 ([adf486d](https://github.com/kad-products/rezept-core/commit/adf486d17e742898c4b3dbae650225cbdc1a57f5))
+
 ## [1.41.0](https://github.com/kad-products/rezept-core/compare/v1.40.4...v1.41.0) (2026-06-02)
 
 ### Features
