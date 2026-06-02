@@ -116,4 +116,4 @@ Form components use a `Form` prefix: `FormRecipe`, `FormSeason`, `FormApiKey`. T
 - **Server actions in `onSubmit`** — import directly from the specific action file (e.g. `@/actions/recipes`), not a barrel
 - **`ActionState` in `useState`** — hold the server action response locally to display errors and success messages
 - **Default export** — one form component per file
-- **No type definitions** — types live in `@/types`
+- **Types used across files live in `@/types`** — types local to a single file may stay co-located.
