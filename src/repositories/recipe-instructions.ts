@@ -5,19 +5,6 @@ import type RzLogger from '@/logger';
 import { recipeInstructions } from '@/models';
 import type { RecipeInstructionDBRead, RecipeInstructionWriteInput } from '@/types';
 
-export async function getInstructionsByRecipeSectionId(
-	recipeSectionId: string,
-	logger: RzLogger,
-): Promise<RecipeInstructionDBRead[]> {
-	logger.debug(`Fetching instructions for section ${recipeSectionId}`);
-	const instructions = await db
-		.select()
-		.from(recipeInstructions)
-		.where(and(eq(recipeInstructions.recipeSectionId, recipeSectionId), isNull(recipeInstructions.deletedAt)));
-	logger.debug(`Fetched ${instructions.length} instructions for section ${recipeSectionId}`);
-	return instructions.sort((a, b) => a.stepNumber - b.stepNumber);
-}
-
 export async function updateRecipeInstructions(
 	recipeSectionId: string,
 	instructionsData: RecipeInstructionWriteInput[],

@@ -1,9 +1,9 @@
-import { and, eq, isNull, sql } from 'drizzle-orm';
+import { and, asc, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
-import { recipes } from '@/models';
-import type { RecipeDBRead, RecipeWriteInput } from '@/types';
+import { recipeIngredients, recipeInstructions, recipeSections, recipes } from '@/models';
+import type { RecipeDBRead, RecipeWithSections, RecipeWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getRecipes(logger: RzLogger): Promise<RecipeDBRead[]> {
@@ -13,22 +13,42 @@ export async function getRecipes(logger: RzLogger): Promise<RecipeDBRead[]> {
 	return allRecipes;
 }
 
-export async function getRecipeById(recipeId: string, logger: RzLogger): Promise<RecipeDBRead> {
+export async function getRecipeById(recipeId: string, logger: RzLogger): Promise<RecipeWithSections> {
 	if (!validateUuid(recipeId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeId, 'Recipe']);
 	}
 
 	logger.debug(`Fetching recipe ${recipeId}`);
-	const matchedRecipes = await db
-		.select()
-		.from(recipes)
-		.where(and(eq(recipes.id, recipeId), isNull(recipes.deletedAt)));
+	const recipe = await db.query.recipes.findFirst({
+		where: and(eq(recipes.id, recipeId), isNull(recipes.deletedAt)),
+		with: {
+			author: true,
+			sections: {
+				where: isNull(recipeSections.deletedAt),
+				orderBy: [asc(recipeSections.order)],
+				with: {
+					ingredients: {
+						where: isNull(recipeIngredients.deletedAt),
+						orderBy: [asc(recipeIngredients.order)],
+						with: {
+							unit: true,
+						},
+					},
+					instructions: {
+						where: isNull(recipeInstructions.deletedAt),
+						orderBy: [asc(recipeInstructions.stepNumber)],
+					},
+				},
+			},
+		},
+	});
 
-	if (matchedRecipes.length !== 1) {
-		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedRecipes.length, 1, 'Recipe']);
+	if (!recipe) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [0, 1, 'Recipe']);
 	}
 
-	return matchedRecipes[0];
+	logger.debug(`Fetched recipe ${recipeId}`);
+	return recipe;
 }
 
 export async function createRecipe(recipe: RecipeWriteInput, actingUserId: string, logger: RzLogger): Promise<RecipeDBRead> {

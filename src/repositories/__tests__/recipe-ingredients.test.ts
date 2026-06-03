@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import db from '@/db';
 import Logger from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { getIngredientsByRecipeSectionId, updateRecipeIngredients } from '../recipe-ingredients';
+import { updateRecipeIngredients } from '../recipe-ingredients';
 import { updateRecipeSections } from '../recipe-sections';
 import { createRecipe } from '../recipes';
 
@@ -19,48 +20,6 @@ describe('recipe-ingredients repository', () => {
 		const recipe = await createRecipe({ authorId: testUserId, title: 'Test Recipe' }, testUserId, logger);
 		const [section] = await updateRecipeSections(recipe.id, [{ title: 'Main', order: 1 }], testUserId, logger);
 		testSectionId = section.id;
-	});
-
-	describe('getIngredientsByRecipeSectionId', () => {
-		it('returns empty array when section has no ingredients', async () => {
-			const result = await getIngredientsByRecipeSectionId(testSectionId, logger);
-			expect(result).toEqual([]);
-		});
-
-		it('returns all ingredients for section', async () => {
-			await updateRecipeIngredients(
-				testSectionId,
-				[
-					{ order: 1, raw: '2 cups flour' },
-					{ order: 2, raw: '1 tsp salt' },
-				],
-				testUserId,
-				logger,
-			);
-
-			const result = await getIngredientsByRecipeSectionId(testSectionId, logger);
-			expect(result).toHaveLength(2);
-		});
-
-		it('returns ingredients with unit relation (null when no unit)', async () => {
-			await updateRecipeIngredients(testSectionId, [{ order: 1, raw: '2 cups flour' }], testUserId, logger);
-
-			const result = await getIngredientsByRecipeSectionId(testSectionId, logger);
-			expect(result[0]).toHaveProperty('unitId');
-			expect(result[0].unitId).toBeNull();
-		});
-
-		it('returns only ingredients for the specified section', async () => {
-			const recipe = await createRecipe({ authorId: testUserId, title: 'Other Recipe' }, testUserId, logger);
-			const [otherSection] = await updateRecipeSections(recipe.id, [{ title: 'Other', order: 1 }], testUserId, logger);
-
-			await updateRecipeIngredients(testSectionId, [{ order: 1, raw: 'Mine' }], testUserId, logger);
-			await updateRecipeIngredients(otherSection.id, [{ order: 1, raw: 'Theirs' }], testUserId, logger);
-
-			const result = await getIngredientsByRecipeSectionId(testSectionId, logger);
-			expect(result).toHaveLength(1);
-			expect(result[0].raw).toBe('Mine');
-		});
 	});
 
 	describe('updateRecipeIngredients', () => {
@@ -142,7 +101,9 @@ describe('recipe-ingredients repository', () => {
 
 			await updateRecipeIngredients(testSectionId, [{ id: keepId, order: 1, raw: 'Keep' }], testUserId, logger);
 
-			const remaining = await getIngredientsByRecipeSectionId(testSectionId, logger);
+			const remaining = await db.query.recipeIngredients.findMany({
+				where: (i, { and, eq, isNull }) => and(eq(i.recipeSectionId, testSectionId), isNull(i.deletedAt)),
+			});
 			expect(remaining).toHaveLength(1);
 			expect(remaining[0].id).toBe(keepId);
 		});
@@ -170,7 +131,9 @@ describe('recipe-ingredients repository', () => {
 				logger,
 			);
 
-			const all = await getIngredientsByRecipeSectionId(testSectionId, logger);
+			const all = await db.query.recipeIngredients.findMany({
+				where: (i, { and, eq, isNull }) => and(eq(i.recipeSectionId, testSectionId), isNull(i.deletedAt)),
+			});
 			expect(all).toHaveLength(2);
 
 			const raws = all.map(i => i.raw);
@@ -185,7 +148,9 @@ describe('recipe-ingredients repository', () => {
 
 			await updateRecipeIngredients(testSectionId, [{ order: 1, raw: 'My ingredient' }], testUserId, logger);
 
-			const otherIngredients = await getIngredientsByRecipeSectionId(otherSection.id, logger);
+			const otherIngredients = await db.query.recipeIngredients.findMany({
+				where: (i, { and, eq, isNull }) => and(eq(i.recipeSectionId, otherSection.id), isNull(i.deletedAt)),
+			});
 			expect(otherIngredients).toHaveLength(1);
 			expect(otherIngredients[0].raw).toBe('Other ingredient');
 		});
