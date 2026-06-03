@@ -1,3 +1,9 @@
+## [1.41.3](https://github.com/kad-products/rezept-core/compare/v1.41.2...v1.41.3) (2026-06-03)
+
+### Code Refactoring
+
+* move season lookup to relational query ([c0ec15f](https://github.com/kad-products/rezept-core/commit/c0ec15f5e158e6a087c14175467dc5ee6c8550e2))
+
 ## [1.41.2](https://github.com/kad-products/rezept-core/compare/v1.41.1...v1.41.2) (2026-06-03)
 
 ### Code Refactoring
