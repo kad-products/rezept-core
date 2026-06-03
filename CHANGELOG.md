@@ -1,3 +1,9 @@
+## [1.41.2](https://github.com/kad-products/rezept-core/compare/v1.41.1...v1.41.2) (2026-06-03)
+
+### Code Refactoring
+
+* use drizzle relation queries instead of N+1 setup ([f66e83f](https://github.com/kad-products/rezept-core/commit/f66e83f28056dfef62639011feedc58ce2358854))
+
 ## [1.41.1](https://github.com/kad-products/rezept-core/compare/v1.41.0...v1.41.1) (2026-06-02)
 
 ### Bug Fixes
