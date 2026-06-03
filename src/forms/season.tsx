@@ -20,7 +20,7 @@ export default function Season({
 	countryOptions: { value: string; label: string }[];
 	monthOptions: { value: number; label: string }[];
 }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<SeasonFormInput>>();
+	const [formState, setFormState] = useState<ActionState<SeasonDBRead>>();
 
 	const schema = seasonsSchemas.form;
 
