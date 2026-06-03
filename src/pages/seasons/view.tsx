@@ -1,14 +1,11 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import AppLayout from '@/layouts/app';
-import { getIngredientsBySeasonId, getSeasonById } from '@/repositories';
+import { getSeasonById } from '@/repositories';
 
 export default async function Pages__seasons__view({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;
-	const [season, seasonalIngredients] = await Promise.all([
-		getSeasonById(seasonId, ctx.logger),
-		getIngredientsBySeasonId(seasonId, ctx.logger),
-	]);
+	const season = await getSeasonById(seasonId, ctx.logger);
 	return (
 		<AppLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading season...</div>}>
@@ -29,7 +26,7 @@ export default async function Pages__seasons__view({ ctx, params }: RequestInfo)
 				<p>{season.notes}</p>
 				<h4>Seasonal Ingredients</h4>
 				<ul>
-					{seasonalIngredients?.map(si => (
+					{season.seasonalIngredients.map(si => (
 						<li key={si.id}>{si.ingredient.name}</li>
 					))}
 				</ul>

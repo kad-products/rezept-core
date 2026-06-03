@@ -2,8 +2,8 @@ import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import type RzLogger from '@/logger';
-import { seasons } from '@/models';
-import type { SeasonDBRead, SeasonWriteInput } from '@/types';
+import { seasonalIngredients, seasons } from '@/models';
+import type { SeasonDBRead, SeasonWithIngredients, SeasonWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getSeasons(logger: RzLogger): Promise<SeasonDBRead[]> {
@@ -13,22 +13,30 @@ export async function getSeasons(logger: RzLogger): Promise<SeasonDBRead[]> {
 	return allSeasons;
 }
 
-export async function getSeasonById(seasonId: string, logger: RzLogger): Promise<SeasonDBRead> {
+export async function getSeasonById(seasonId: string, logger: RzLogger): Promise<SeasonWithIngredients> {
 	if (!validateUuid(seasonId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [seasonId, 'Season']);
 	}
 
 	logger.debug(`Fetching season ${seasonId}`);
-	const matchedSeasons = await db
-		.select()
-		.from(seasons)
-		.where(and(eq(seasons.id, seasonId), isNull(seasons.deletedAt)));
+	const season = await db.query.seasons.findFirst({
+		where: and(eq(seasons.id, seasonId), isNull(seasons.deletedAt)),
+		with: {
+			seasonalIngredients: {
+				where: isNull(seasonalIngredients.deletedAt),
+				with: {
+					ingredient: true,
+				},
+			},
+		},
+	});
 
-	if (matchedSeasons.length !== 1) {
-		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [matchedSeasons.length, 1, 'Season']);
+	if (!season) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [0, 1, 'Season']);
 	}
 
-	return matchedSeasons[0];
+	logger.debug(`Fetched season ${seasonId}`);
+	return season;
 }
 
 export async function createSeason(season: SeasonWriteInput, userId: string, logger: RzLogger): Promise<SeasonDBRead> {

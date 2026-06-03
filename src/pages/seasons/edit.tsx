@@ -4,19 +4,18 @@ import { countryOptions } from '@/data/countries';
 import { monthOptions } from '@/data/months';
 import Season from '@/forms/season';
 import AppLayout from '@/layouts/app';
-import { getIngredients, getIngredientsBySeasonId, getSeasonById } from '@/repositories';
-import type { SeasonDBRead } from '@/types';
+import { getIngredients, getSeasonById } from '@/repositories';
+import type { SeasonWithIngredients } from '@/types';
 
 export default async function Pages__seasons__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;
-	let [allIngredients, season, seasonalIngredients] = await Promise.all([
+	let [allIngredients, season] = await Promise.all([
 		getIngredients(ctx.logger),
 		seasonId ? getSeasonById(seasonId, ctx.logger) : Promise.resolve(undefined),
-		seasonId ? getIngredientsBySeasonId(seasonId, ctx.logger) : Promise.resolve(undefined),
 	]);
 
 	if (!seasonId) {
-		season = {} as SeasonDBRead;
+		season = {} as SeasonWithIngredients;
 	} else if (!season) {
 		return <p>Season not found</p>;
 	}
@@ -40,7 +39,7 @@ export default async function Pages__seasons__edit({ ctx, params }: RequestInfo)
 					ingredientOptions={ingredientOptions}
 					countryOptions={countryOptions}
 					monthOptions={monthOptions}
-					seasonalIngredients={seasonalIngredients}
+					seasonalIngredients={season.seasonalIngredients}
 				/>
 			</Suspense>
 		</AppLayout>

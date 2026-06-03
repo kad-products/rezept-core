@@ -1,9 +1,12 @@
+import { and, eq, isNull } from 'drizzle-orm';
 import { beforeEach, describe, expect, it } from 'vitest';
+import db from '@/db';
 import Logger from '@/logger';
+import { seasonalIngredients } from '@/models';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import { createIngredient } from '../ingredients';
-import { getIngredientsBySeasonId, updateSeasonalIngredientsForSeason } from '../seasonal-ingredients';
+import { updateSeasonalIngredientsForSeason } from '../seasonal-ingredients';
 import { createSeason } from '../seasons';
 
 const logger = new Logger();
@@ -27,49 +30,6 @@ describe('seasonal-ingredients repository', () => {
 		testSeasonId = season.id;
 	});
 
-	describe('getIngredientsBySeasonId', () => {
-		it('returns empty array when season has no ingredients', async () => {
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
-			expect(result).toEqual([]);
-		});
-
-		it('returns seasonal ingredients with ingredient relation', async () => {
-			const tomato = await createIngredient({ name: 'Tomato' }, testUserId, logger);
-			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id], testUserId, logger);
-
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
-			expect(result).toHaveLength(1);
-			expect(result[0].ingredient).toBeDefined();
-			expect(result[0].ingredient.id).toBe(tomato.id);
-			expect(result[0].ingredient.name).toBe('Tomato');
-		});
-
-		it('returns all seasonal ingredients for season', async () => {
-			const tomato = await createIngredient({ name: 'Tomato' }, testUserId, logger);
-			const onion = await createIngredient({ name: 'Onion' }, testUserId, logger);
-			const garlic = await createIngredient({ name: 'Garlic' }, testUserId, logger);
-
-			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id, onion.id, garlic.id], testUserId, logger);
-
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
-			expect(result).toHaveLength(3);
-		});
-
-		it('returns only ingredients for the specified season', async () => {
-			const otherSeason = await createSeason({ ...baseSeasonData, name: 'Winter' }, testUserId, logger);
-
-			const tomato = await createIngredient({ name: 'Tomato' }, testUserId, logger);
-			const onion = await createIngredient({ name: 'Onion' }, testUserId, logger);
-
-			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id], testUserId, logger);
-			await updateSeasonalIngredientsForSeason(otherSeason.id, [onion.id], testUserId, logger);
-
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
-			expect(result).toHaveLength(1);
-			expect(result[0].ingredient.id).toBe(tomato.id);
-		});
-	});
-
 	describe('updateSeasonalIngredientsForSeason', () => {
 		it('adds ingredients to a season', async () => {
 			const tomato = await createIngredient({ name: 'Tomato' }, testUserId, logger);
@@ -77,7 +37,9 @@ describe('seasonal-ingredients repository', () => {
 
 			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id, onion.id], testUserId, logger);
 
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
+			const result = await db.query.seasonalIngredients.findMany({
+				where: and(eq(seasonalIngredients.seasonId, testSeasonId), isNull(seasonalIngredients.deletedAt)),
+			});
 			expect(result).toHaveLength(2);
 		});
 
@@ -85,7 +47,9 @@ describe('seasonal-ingredients repository', () => {
 			const tomato = await createIngredient({ name: 'Tomato' }, testUserId, logger);
 			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id], testUserId, logger);
 
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
+			const result = await db.query.seasonalIngredients.findMany({
+				where: and(eq(seasonalIngredients.seasonId, testSeasonId), isNull(seasonalIngredients.deletedAt)),
+			});
 			expect(result[0].seasonId).toBe(testSeasonId);
 			expect(result[0].createdBy).toBe(testUserId);
 		});
@@ -97,9 +61,11 @@ describe('seasonal-ingredients repository', () => {
 			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id, onion.id], testUserId, logger);
 			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id], testUserId, logger);
 
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
+			const result = await db.query.seasonalIngredients.findMany({
+				where: and(eq(seasonalIngredients.seasonId, testSeasonId), isNull(seasonalIngredients.deletedAt)),
+			});
 			expect(result).toHaveLength(1);
-			expect(result[0].ingredient.id).toBe(tomato.id);
+			expect(result[0].ingredientId).toBe(tomato.id);
 		});
 
 		it('does not duplicate existing ingredients when called again with same list', async () => {
@@ -108,7 +74,9 @@ describe('seasonal-ingredients repository', () => {
 			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id], testUserId, logger);
 			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id], testUserId, logger);
 
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
+			const result = await db.query.seasonalIngredients.findMany({
+				where: and(eq(seasonalIngredients.seasonId, testSeasonId), isNull(seasonalIngredients.deletedAt)),
+			});
 			expect(result).toHaveLength(1);
 		});
 
@@ -120,10 +88,12 @@ describe('seasonal-ingredients repository', () => {
 			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id, onion.id], testUserId, logger);
 			await updateSeasonalIngredientsForSeason(testSeasonId, [onion.id, garlic.id], testUserId, logger);
 
-			const result = await getIngredientsBySeasonId(testSeasonId, logger);
+			const result = await db.query.seasonalIngredients.findMany({
+				where: and(eq(seasonalIngredients.seasonId, testSeasonId), isNull(seasonalIngredients.deletedAt)),
+			});
 			expect(result).toHaveLength(2);
 
-			const ingredientIds = result.map(r => r.ingredient.id);
+			const ingredientIds = result.map(r => r.ingredientId);
 			expect(ingredientIds).toContain(onion.id);
 			expect(ingredientIds).toContain(garlic.id);
 			expect(ingredientIds).not.toContain(tomato.id);
@@ -138,9 +108,11 @@ describe('seasonal-ingredients repository', () => {
 			await updateSeasonalIngredientsForSeason(otherSeason.id, [onion.id], testUserId, logger);
 			await updateSeasonalIngredientsForSeason(testSeasonId, [tomato.id], testUserId, logger);
 
-			const otherResult = await getIngredientsBySeasonId(otherSeason.id, logger);
+			const otherResult = await db.query.seasonalIngredients.findMany({
+				where: and(eq(seasonalIngredients.seasonId, otherSeason.id), isNull(seasonalIngredients.deletedAt)),
+			});
 			expect(otherResult).toHaveLength(1);
-			expect(otherResult[0].ingredient.id).toBe(onion.id);
+			expect(otherResult[0].ingredientId).toBe(onion.id);
 		});
 	});
 });
