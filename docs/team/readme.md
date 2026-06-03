@@ -6,6 +6,7 @@ Internal reference for product, QA, and design work on Rezept. Covers how featur
 
 - [Authentication](auth.md) — passkey flow, sessions, protected routes, permissions
 - [Forms](forms.md) — input types, validation behavior, file uploads, known UX gaps
+- [User Management](user-management.md) — roles, upgrading accounts, admin workflow
 
 _More sections coming soon: recipe management, seasons, scraping pipeline, and more._
 

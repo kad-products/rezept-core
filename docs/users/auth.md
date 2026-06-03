@@ -34,6 +34,14 @@ Passkeys are tied to the device or browser where you registered. If you want to 
 
 If your device supports a password manager or cloud keychain (iCloud Keychain, Google Password Manager, etc.) your passkey may sync automatically across devices. This depends on your device settings, not the app.
 
+## Requesting a role upgrade
+
+New accounts start with a **Basic** role, which lets you create and manage recipes. Some features — like managing seasons — require an **Admin** role.
+
+To request an upgrade, create an [issue in Rezept](https://github.com/kad-products/rezept-core/issues) (use the blank issue option) and include your username so he can find your account.
+
+---
+
 ## If you lose access to your device
 
 If you lose the device you registered with and don't have access to a synced keychain, you won't be able to log in without registering a new passkey from a different device. Account recovery options are not yet available — this is a known limitation.
