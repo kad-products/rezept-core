@@ -4,21 +4,6 @@ import type RzLogger from '@/logger';
 import { recipeIngredients } from '@/models';
 import type { RecipeIngredientDBRead, RecipeIngredientWriteInput } from '@/types';
 
-export async function getIngredientsByRecipeSectionId(
-	recipeSectionId: string,
-	logger: RzLogger,
-): Promise<RecipeIngredientDBRead[]> {
-	logger.debug(`Fetching ingredients for section ${recipeSectionId}`);
-	const results = await db.query.recipeIngredients.findMany({
-		where: and(eq(recipeIngredients.recipeSectionId, recipeSectionId), isNull(recipeIngredients.deletedAt)),
-		with: {
-			unit: true,
-		},
-	});
-	logger.debug(`Fetched ${results.length} ingredients for section ${recipeSectionId}`);
-	return results;
-}
-
 export async function updateRecipeIngredients(
 	recipeSectionId: string,
 	ingredientsData: RecipeIngredientWriteInput[],
