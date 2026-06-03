@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 import type { seasons } from '@/models';
 import type { seasonsSchemas } from '@/schemas';
+import type { SeasonalIngredientWithRelations } from '@/types';
 
 export type SeasonDBRead = typeof seasons.$inferSelect;
 export type SeasonWriteInput = Omit<
@@ -9,3 +10,7 @@ export type SeasonWriteInput = Omit<
 >;
 
 export type SeasonFormInput = z.input<typeof seasonsSchemas.form>;
+
+export type SeasonWithIngredients = SeasonDBRead & {
+	seasonalIngredients: SeasonalIngredientWithRelations[];
+};

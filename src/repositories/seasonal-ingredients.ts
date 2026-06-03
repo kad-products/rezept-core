@@ -2,23 +2,6 @@ import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import db from '@/db';
 import type RzLogger from '@/logger';
 import { seasonalIngredients } from '@/models';
-import type { SeasonalIngredientWithRelations } from '@/types';
-
-// biome-ignore lint/nursery/useExplicitType: Drizzle query builder return type is not practically writable
-const getSeasonalIngredientsQuery = (seasonId: string) =>
-	db.query.seasonalIngredients.findMany({
-		where: and(eq(seasonalIngredients.seasonId, seasonId), isNull(seasonalIngredients.deletedAt)),
-		with: {
-			ingredient: true,
-		},
-	});
-
-export async function getIngredientsBySeasonId(seasonId: string, logger: RzLogger): Promise<SeasonalIngredientWithRelations[]> {
-	logger.debug(`Fetching ingredients for season ${seasonId}`);
-	const results = await getSeasonalIngredientsQuery(seasonId);
-	logger.debug(`Fetched ${results.length} ingredients for season ${seasonId}`);
-	return results;
-}
 
 export async function updateSeasonalIngredientsForSeason(
 	seasonId: string,
