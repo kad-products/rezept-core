@@ -1,3 +1,9 @@
+## [1.41.4](https://github.com/kad-products/rezept-core/compare/v1.41.3...v1.41.4) (2026-06-03)
+
+### Bug Fixes
+
+* use DB read as action return types ([9e9df48](https://github.com/kad-products/rezept-core/commit/9e9df488fde47c74940ad1d733784c3586c7d090))
+
 ## [1.41.3](https://github.com/kad-products/rezept-core/compare/v1.41.2...v1.41.3) (2026-06-03)
 
 ### Code Refactoring
