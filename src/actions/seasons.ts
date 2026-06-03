@@ -3,7 +3,7 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createSeason, updateSeason } from '@/repositories';
 import { seasonsSchemas } from '@/schemas';
-import type { ActionState, SeasonWriteInput } from '@/types';
+import type { ActionState, SeasonDBRead, SeasonWriteInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
 export const saveSeason = serverAction([
@@ -15,7 +15,7 @@ export const saveSeason = serverAction([
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _saveSeason(formData: SeasonWriteInput): Promise<ActionState<SeasonWriteInput>> {
+export async function _saveSeason(formData: SeasonWriteInput): Promise<ActionState<SeasonDBRead>> {
 	const { ctx } = requestInfo;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
@@ -26,16 +26,16 @@ export async function _saveSeason(formData: SeasonWriteInput): Promise<ActionSta
 		const parsed = seasonsSchemas.form.safeParse(formData);
 		if (!parsed.success) {
 			requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
-			return errorResponse<SeasonWriteInput>(parsed.error.flatten().fieldErrors, 400);
+			return errorResponse<SeasonDBRead>(parsed.error.flatten().fieldErrors, 400);
 		}
 		if (parsed.data.id) {
 			const updatedSeason = await updateSeason(parsed.data.id, parsed.data, userId, requestInfo.ctx.logger);
-			return successResponse<SeasonWriteInput>(updatedSeason);
+			return successResponse<SeasonDBRead>(updatedSeason);
 		}
 		const createdSeason = await createSeason(parsed.data, userId, requestInfo.ctx.logger);
-		return successResponse<SeasonWriteInput>(createdSeason);
+		return successResponse<SeasonDBRead>(createdSeason);
 	} catch (error) {
 		requestInfo.ctx.logger.info(`Error saving season: ${error} `);
-		return errorResponse<SeasonWriteInput>(error, 500, 'Failed to save season');
+		return errorResponse<SeasonDBRead>(error, 500, 'Failed to save season');
 	}
 }
