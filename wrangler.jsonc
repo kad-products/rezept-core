@@ -52,6 +52,13 @@
 			"bucket_name": "rezept-images-local"
 		}
 	],
+	"workflows": [
+		{
+			"name": "recipe-scrape-cover-image-retry-workflow",
+			"binding": "RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW",
+			"class_name": "RecipeScrapeCoverImageRetryWorkflow"
+		}
+	],
 	"env": {
 		"integration": {
 			"d1_databases": [

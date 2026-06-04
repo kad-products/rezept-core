@@ -3,7 +3,7 @@ import Logger from '@/logger';
 import { createUser, getImageTypeByName } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import { createImage } from '../images';
-import { createRecipe, deleteRecipe, getRecipeById, getRecipes, updateRecipe } from '../recipes';
+import { createRecipe, deleteRecipe, getRecipeById, getRecipes, updateRecipe, updateRecipeCoverImage } from '../recipes';
 
 const logger = new Logger();
 
@@ -178,6 +178,83 @@ describe('recipes repository', () => {
 
 		it('throws when id is not a valid uuid', async () => {
 			await expect(deleteRecipe('not-a-uuid', testUserId, logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a Recipe',
+			);
+		});
+	});
+
+	describe('updateRecipeCoverImage', () => {
+		it('sets coverImageId on the recipe', async () => {
+			const imageType = await getImageTypeByName('RECIPE_COVER_IMAGE', logger);
+			const image = await createImage(
+				{ imageTypeId: imageType.id, name: 'cover', originalFilename: 'cover.jpg', mimeType: 'image/jpeg', fileSize: 1024 },
+				testUserId,
+				logger,
+			);
+			const recipe = await createRecipe(baseRecipeData, testUserId, logger);
+			expect(recipe.coverImageId).toBeNull();
+
+			const result = await updateRecipeCoverImage(recipe.id, image.id, testUserId, logger);
+			expect(result.coverImageId).toBe(image.id);
+		});
+
+		it('sets updatedBy and updatedAt', async () => {
+			const imageType = await getImageTypeByName('RECIPE_COVER_IMAGE', logger);
+			const image = await createImage(
+				{ imageTypeId: imageType.id, name: 'cover', originalFilename: 'cover.jpg', mimeType: 'image/jpeg', fileSize: 1024 },
+				testUserId,
+				logger,
+			);
+			const recipe = await createRecipe(baseRecipeData, testUserId, logger);
+
+			const result = await updateRecipeCoverImage(recipe.id, image.id, testUserId, logger);
+			expect(result.updatedBy).toBe(testUserId);
+			expect(result.updatedAt).not.toBeNull();
+		});
+
+		it('preserves other recipe fields', async () => {
+			const imageType = await getImageTypeByName('RECIPE_COVER_IMAGE', logger);
+			const image = await createImage(
+				{ imageTypeId: imageType.id, name: 'cover', originalFilename: 'cover.jpg', mimeType: 'image/jpeg', fileSize: 1024 },
+				testUserId,
+				logger,
+			);
+			const recipe = await createRecipe(
+				{ ...baseRecipeData, description: 'Original description', servings: 4 },
+				testUserId,
+				logger,
+			);
+
+			const result = await updateRecipeCoverImage(recipe.id, image.id, testUserId, logger);
+			expect(result.title).toBe(recipe.title);
+			expect(result.description).toBe('Original description');
+			expect(result.servings).toBe(4);
+		});
+
+		it('does not affect other recipes', async () => {
+			const imageType = await getImageTypeByName('RECIPE_COVER_IMAGE', logger);
+			const image = await createImage(
+				{ imageTypeId: imageType.id, name: 'cover', originalFilename: 'cover.jpg', mimeType: 'image/jpeg', fileSize: 1024 },
+				testUserId,
+				logger,
+			);
+			const recipe1 = await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+			const recipe2 = await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+
+			await updateRecipeCoverImage(recipe1.id, image.id, testUserId, logger);
+
+			const unchanged = await getRecipeById(recipe2.id, logger);
+			expect(unchanged.coverImageId).toBeNull();
+		});
+
+		it('throws when recipe does not exist', async () => {
+			await expect(updateRecipeCoverImage(crypto.randomUUID(), crypto.randomUUID(), testUserId, logger)).rejects.toThrow(
+				'Expected 1 Recipe record(s), but found 0',
+			);
+		});
+
+		it('throws when id is not a valid uuid', async () => {
+			await expect(updateRecipeCoverImage('not-a-uuid', crypto.randomUUID(), testUserId, logger)).rejects.toThrow(
 				'The value "not-a-uuid" is not a valid ID for a Recipe',
 			);
 		});
