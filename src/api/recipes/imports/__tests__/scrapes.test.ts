@@ -87,6 +87,7 @@ const mockValidatedRecipe = {
 };
 
 const mockSavedRecipe = { id: 'recipe-id', title: 'Test Recipe' };
+const mockImage = { id: 'image-001' };
 
 const mockSavedSections = [{ id: 'section-id' }];
 
@@ -101,7 +102,7 @@ describe('_postHandler', () => {
 		vi.mocked(parseBodyJson).mockResolvedValue({ url: 'https://example.com/recipe' } as any);
 		vi.mocked(initializeScrape).mockResolvedValue(mockScrape as any);
 		vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipe as any);
-		vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(null);
+		vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(mockImage as any);
 		vi.mocked(validateAsRecipe).mockResolvedValue(mockValidatedRecipe as any);
 		vi.mocked(saveRecipe).mockResolvedValue(mockSavedRecipe as any);
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
@@ -359,7 +360,6 @@ describe('_postHandler', () => {
 	});
 
 	describe('cover image handling', () => {
-		const mockCoverImage = { id: 'image-001' };
 		const mockTransformedRecipeWithImage = {
 			...mockTransformedRecipe,
 			coverImage: { url: 'https://example.com/image.jpg', width: 1500, height: 1125 },
@@ -367,7 +367,7 @@ describe('_postHandler', () => {
 
 		it('passes coverImageId to saveRecipe when image is fetched successfully', async () => {
 			vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipeWithImage as any);
-			vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(mockCoverImage as any);
+			vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(mockImage as any);
 
 			await _postHandler({ request: makeRequest(), ctx } as any);
 
@@ -461,7 +461,7 @@ describe('route handler', () => {
 		vi.mocked(parseBodyJson).mockResolvedValue({ url: 'https://example.com/recipe' } as any);
 		vi.mocked(initializeScrape).mockResolvedValue(mockScrape as any);
 		vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipe as any);
-		vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(null);
+		vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(mockImage as any);
 		vi.mocked(validateAsRecipe).mockResolvedValue(mockValidatedRecipe as any);
 		vi.mocked(saveRecipe).mockResolvedValue(mockSavedRecipe as any);
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
