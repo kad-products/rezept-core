@@ -11,6 +11,10 @@ const mockEnv = vi.hoisted(() => ({
 		put: vi.fn(),
 		delete: vi.fn(),
 	},
+	RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW: {
+		get: vi.fn(),
+		create: vi.fn(),
+	},
 }));
 
 vi.mock('cloudflare:workers', () => ({ env: mockEnv }));
@@ -106,6 +110,8 @@ describe('_postHandler', () => {
 		vi.mocked(createRecipeScrapeAttempt).mockResolvedValue(undefined as any);
 		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(mockScrape as any);
 		vi.mocked(linkRecipeScrapeToRecipe).mockResolvedValue(undefined as any);
+		mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.get.mockResolvedValue(null);
+		mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.create.mockResolvedValue(undefined);
 	});
 
 	afterEach(() => {
@@ -349,6 +355,91 @@ describe('_postHandler', () => {
 			const body = (await response.json()) as any;
 			expect(body.success).toBe(false);
 			expect(body.error).toBe('Forbidden');
+		});
+	});
+
+	describe('cover image handling', () => {
+		const mockCoverImage = { id: 'image-001' };
+		const mockTransformedRecipeWithImage = {
+			...mockTransformedRecipe,
+			coverImage: { url: 'https://example.com/image.jpg', width: 1500, height: 1125 },
+		};
+
+		it('passes coverImageId to saveRecipe when image is fetched successfully', async () => {
+			vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipeWithImage as any);
+			vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(mockCoverImage as any);
+
+			await _postHandler({ request: makeRequest(), ctx } as any);
+
+			expect(saveRecipe).toHaveBeenCalledWith(
+				expect.objectContaining({ coverImageId: 'image-001' }),
+				'user-id',
+				expect.anything(),
+			);
+		});
+
+		it('does not call fetchAndStoreCoverImage and saves with null coverImageId when transformedRecipe has no coverImage', async () => {
+			// default mockTransformedRecipe has no coverImage field
+			await _postHandler({ request: makeRequest(), ctx } as any);
+
+			expect(fetchAndStoreCoverImage).not.toHaveBeenCalled();
+			expect(saveRecipe).toHaveBeenCalledWith(expect.objectContaining({ coverImageId: null }), 'user-id', expect.anything());
+		});
+
+		it('creates retry workflow when fetchAndStoreCoverImage throws a retryable error', async () => {
+			vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipeWithImage as any);
+			vi.mocked(fetchAndStoreCoverImage).mockRejectedValue(new RzStepError(503, 'Server error', 'Server error', true));
+
+			const response = await _postHandler({ request: makeRequest(), ctx } as any);
+
+			expect(mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.create).toHaveBeenCalledWith({
+				id: 'scrape-id',
+				params: {
+					coverImage: mockTransformedRecipeWithImage.coverImage,
+					recipeScrapeId: 'scrape-id',
+					userId: 'user-id',
+				},
+			});
+			expect(response.status).toBe(200);
+		});
+
+		it('does not create retry workflow for non-retryable errors', async () => {
+			vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipeWithImage as any);
+			vi.mocked(fetchAndStoreCoverImage).mockRejectedValue(new RzStepError(403, 'Forbidden', 'Forbidden', false));
+
+			const response = await _postHandler({ request: makeRequest(), ctx } as any);
+
+			expect(mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.create).not.toHaveBeenCalled();
+			expect(response.status).toBe(200);
+		});
+
+		it('does not create retry workflow when one already exists for the scrape', async () => {
+			vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipeWithImage as any);
+			vi.mocked(fetchAndStoreCoverImage).mockRejectedValue(new RzStepError(503, 'Server error', 'Server error', true));
+			mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.get.mockResolvedValue({ id: 'scrape-id' });
+
+			const response = await _postHandler({ request: makeRequest(), ctx } as any);
+
+			expect(mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.get).toHaveBeenCalledWith('scrape-id');
+			expect(mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.create).not.toHaveBeenCalled();
+			expect(response.status).toBe(200);
+		});
+
+		it('cover image error does not fail the scrape', async () => {
+			vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipeWithImage as any);
+			vi.mocked(fetchAndStoreCoverImage).mockRejectedValue(new RzStepError(503, 'Server error', 'Server error', true));
+
+			const response = await _postHandler({ request: makeRequest(), ctx } as any);
+
+			expect(response.status).toBe(200);
+			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'COMPLETED', null, 'user-id', expect.anything());
+			expect(updateRecipeScrapeStatus).not.toHaveBeenCalledWith(
+				expect.anything(),
+				'FAILED',
+				expect.anything(),
+				expect.anything(),
+				expect.anything(),
+			);
 		});
 	});
 });

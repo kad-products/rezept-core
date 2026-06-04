@@ -46,17 +46,6 @@ describe('fetchAndStoreCoverImage', () => {
 		mockImagesBucket.put.mockResolvedValue(undefined);
 	});
 
-	describe('when no cover image is provided', () => {
-		it('returns null without making any calls', async () => {
-			const result = await fetchAndStoreCoverImage(undefined, userId, logger);
-
-			expect(result).toBeNull();
-			expect(getImageTypeByName).not.toHaveBeenCalled();
-			expect(createImage).not.toHaveBeenCalled();
-			expect(mockImagesBucket.put).not.toHaveBeenCalled();
-		});
-	});
-
 	describe('successful fetch and store', () => {
 		it('returns the created image record', async () => {
 			const buffer = new ArrayBuffer(1024);

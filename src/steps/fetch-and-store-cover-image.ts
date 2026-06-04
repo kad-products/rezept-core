@@ -5,15 +5,10 @@ import { createImage, getImageTypeByName } from '@/repositories';
 import type { ImageDBRead, ParsedRecipeScrapeImage } from '@/types';
 
 export async function fetchAndStoreCoverImage(
-	coverImage: ParsedRecipeScrapeImage | undefined,
+	coverImage: ParsedRecipeScrapeImage,
 	userId: string,
 	logger: RzLogger,
-): Promise<ImageDBRead | null> {
-	if (!coverImage) {
-		logger.debug('No cover image in scrape payload');
-		return null;
-	}
-
+): Promise<ImageDBRead> {
 	let buffer: ArrayBuffer;
 	let mimeType: string;
 

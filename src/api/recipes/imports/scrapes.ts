@@ -39,22 +39,25 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 
 		// Non-fatal: image fetch failure logs and returns null rather than failing the scrape
 		let coverImage: ImageDBRead | null = null;
-		try {
-			coverImage = await fetchAndStoreCoverImage(transformedRecipe.coverImage, userId, ctx.logger);
-		} catch (err) {
-			if (err instanceof RzStepError && err.retryable) {
-				const workflowInstance = await env.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.get(recipeScrape.id);
-				if (workflowInstance) {
-					ctx.logger.info(`Existing cover image retry workflow found for scrape ${recipeScrape.id}, not creating a new one`);
+		if (transformedRecipe.coverImage) {
+			try {
+				coverImage = await fetchAndStoreCoverImage(transformedRecipe.coverImage, userId, ctx.logger);
+			} catch (err) {
+				if (err instanceof RzStepError && err.retryable) {
+					const workflowInstance = await env.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.get(recipeScrape.id);
+					if (workflowInstance) {
+						ctx.logger.info(`Existing cover image retry workflow found for scrape ${recipeScrape.id}, not creating a new one`);
+					} else {
+						await env.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.create({
+							id: recipeScrape.id,
+							params: {
+								coverImage: transformedRecipe.coverImage,
+								recipeScrapeId: recipeScrape.id,
+								userId,
+							},
+						});
+					}
 				}
-				await env.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.create({
-					id: recipeScrape.id,
-					params: {
-						coverImage: transformedRecipe.coverImage,
-						recipeScrapeId: recipeScrape.id,
-						userId,
-					},
-				});
 			}
 		}
 
