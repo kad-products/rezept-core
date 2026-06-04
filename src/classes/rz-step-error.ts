@@ -5,6 +5,7 @@ export class RzStepError extends Error {
 		public code: number,
 		public publicMessage: string,
 		devMessage: string,
+		public retryable: boolean = false,
 	) {
 		super(devMessage);
 		this.name = 'RzStepError';

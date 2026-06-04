@@ -87,6 +87,36 @@ export async function deleteRecipe(recipeId: string, actingUserId: string, logge
 	return deleted[0];
 }
 
+export async function updateRecipeCoverImage(
+	recipeId: string,
+	coverImageId: string,
+	actingUserId: string,
+	logger: RzLogger,
+): Promise<RecipeDBRead> {
+	if (!validateUuid(recipeId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeId, 'Recipe']);
+	}
+
+	logger.debug(`Setting cover image for recipe ${recipeId}`);
+
+	const updated = await db
+		.update(recipes)
+		.set({
+			coverImageId,
+			updatedAt: sql`(datetime('now', 'localtime'))`,
+			updatedBy: actingUserId,
+		})
+		.where(eq(recipes.id, recipeId))
+		.returning();
+
+	if (updated.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [updated.length, 1, 'Recipe']);
+	}
+
+	logger.info(`Set cover image ${coverImageId} on recipe ${recipeId}`);
+	return updated[0];
+}
+
 export async function updateRecipe(
 	recipeId: string,
 	recipeData: RecipeWriteInput,

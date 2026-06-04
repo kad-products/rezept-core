@@ -1,5 +1,7 @@
+import { env } from 'cloudflare:workers';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { apiErrorResponse, successResponse } from '@/api/utils';
+import { RzStepError } from '@/classes/rz-step-error';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createRecipeScrapeAttempt, linkRecipeScrapeToRecipe, updateRecipeScrapeStatus } from '@/repositories';
 import {
@@ -13,7 +15,7 @@ import {
 	transformScrapeToRecipe,
 	validateAsRecipe,
 } from '@/steps';
-import type { RecipeIngredientWriteInput, RecipeInstructionWriteInput, RecipeScrapeDBRead } from '@/types';
+import type { ImageDBRead, RecipeIngredientWriteInput, RecipeInstructionWriteInput, RecipeScrapeDBRead } from '@/types';
 
 export default {
 	post: [requireAuthentication, requirePermissions('recipes:scrape'), _postHandler] as const,
@@ -36,7 +38,25 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		await updateRecipeScrapeStatus(recipeScrape.id, 'TRANSFORMED', null, userId, ctx.logger);
 
 		// Non-fatal: image fetch failure logs and returns null rather than failing the scrape
-		const coverImage = await fetchAndStoreCoverImage(transformedRecipe.coverImage, userId, ctx.logger);
+		let coverImage: ImageDBRead | null = null;
+		try {
+			coverImage = await fetchAndStoreCoverImage(transformedRecipe.coverImage, userId, ctx.logger);
+		} catch (err) {
+			if (err instanceof RzStepError && err.retryable) {
+				const workflowInstance = await env.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.get(recipeScrape.id);
+				if (workflowInstance) {
+					ctx.logger.info(`Existing cover image retry workflow found for scrape ${recipeScrape.id}, not creating a new one`);
+				}
+				await env.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.create({
+					id: recipeScrape.id,
+					params: {
+						coverImage: transformedRecipe.coverImage,
+						recipeScrapeId: recipeScrape.id,
+						userId,
+					},
+				});
+			}
+		}
 
 		const validatedRecipe = await validateAsRecipe(transformedRecipe, userId, ctx.logger);
 		await updateRecipeScrapeStatus(recipeScrape.id, 'VALIDATED', null, userId, ctx.logger);

@@ -23,6 +23,7 @@ import testBridgeRoutes from './test-bridge';
 import { handlePageError } from './worker-error';
 
 export { SessionDurableObject } from '@/durable-objects';
+export { RecipeScrapeCoverImageRetryWorkflow } from '@/workflows';
 
 export default defineApp(
 	[

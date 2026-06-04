@@ -1,4 +1,5 @@
 import { env } from 'cloudflare:workers';
+import { RzStepError } from '@/classes';
 import type RzLogger from '@/logger';
 import { createImage, getImageTypeByName } from '@/repositories';
 import type { ImageDBRead, ParsedRecipeScrapeImage } from '@/types';
@@ -16,21 +17,32 @@ export async function fetchAndStoreCoverImage(
 	let buffer: ArrayBuffer;
 	let mimeType: string;
 
+	let response: Response;
 	try {
 		logger.debug(`Fetching cover image from ${coverImage.url}`);
-		const response = await fetch(coverImage.url);
-
-		if (!response.ok) {
-			logger.warn(`Cover image fetch failed: HTTP ${response.status} for ${coverImage.url}`);
-			return null;
-		}
-
-		buffer = await response.arrayBuffer();
-		mimeType = response.headers.get('content-type')?.split(';')[0].trim() ?? 'application/octet-stream';
+		response = await fetch(coverImage.url);
 	} catch (err) {
 		logger.warn(`Cover image fetch error for ${coverImage.url}: ${err}`);
-		return null;
+		throw new RzStepError(
+			500,
+			`Failed to fetch cover image: ${err}`,
+			`Error occurred while fetching cover image from ${coverImage.url}`,
+			true,
+		);
 	}
+
+	if (!response.ok) {
+		logger.warn(`Cover image fetch failed: HTTP ${response.status} for ${coverImage.url}`);
+		throw new RzStepError(
+			response.status,
+			`Failed to fetch cover image: HTTP ${response.status}`,
+			`HTTP error ${response.status} while fetching cover image from ${coverImage.url}`,
+			response.status >= 500 || response.status === 408 || response.status === 429,
+		);
+	}
+
+	buffer = await response.arrayBuffer();
+	mimeType = response.headers.get('content-type')?.split(';')[0].trim() ?? 'application/octet-stream';
 
 	const { name, originalFilename } = deriveImageName(coverImage.url);
 	const fileSize = buffer.byteLength;
@@ -53,7 +65,12 @@ export async function fetchAndStoreCoverImage(
 		);
 	} catch (err) {
 		logger.warn(`Failed to create cover image DB record: ${err}`);
-		return null;
+		throw new RzStepError(
+			500,
+			`Failed to process cover image: ${err}`,
+			`Error occurred while creating DB record for cover image from ${coverImage.url}`,
+			true,
+		);
 	}
 
 	try {
@@ -61,7 +78,12 @@ export async function fetchAndStoreCoverImage(
 		logger.info(`Cover image stored: ${image.id}`);
 	} catch (err) {
 		logger.warn(`Cover image DB record ${image.id} created but R2 store failed: ${err}`);
-		return null;
+		throw new RzStepError(
+			500,
+			`Failed to store cover image: ${err}`,
+			`Error occurred while storing cover image ${image.id}`,
+			true,
+		);
 	}
 
 	return image;

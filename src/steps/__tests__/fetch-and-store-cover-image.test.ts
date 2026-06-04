@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { RzStepError } from '@/classes';
 import Logger from '@/logger';
 
 const mockImagesBucket = vi.hoisted(() => ({
@@ -139,60 +140,85 @@ describe('fetchAndStoreCoverImage', () => {
 		});
 	});
 
-	describe('failure handling — non-fatal', () => {
-		it('returns null when fetch returns a non-200 status', async () => {
+	describe('failure handling', () => {
+		it('throws non-retryable RzStepError for 4xx responses', async () => {
 			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 403 })));
 
-			const result = await fetchAndStoreCoverImage(baseCoverImage, userId, logger);
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
 
-			expect(result).toBeNull();
+			expect(err).toBeInstanceOf(RzStepError);
+			expect(err.retryable).toBe(false);
 			expect(createImage).not.toHaveBeenCalled();
 			vi.unstubAllGlobals();
 		});
 
-		it('returns null when fetch throws a network error', async () => {
+		it('throws retryable RzStepError for 5xx responses', async () => {
+			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 503 })));
+
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
+
+			expect(err).toBeInstanceOf(RzStepError);
+			expect(err.retryable).toBe(true);
+			expect(createImage).not.toHaveBeenCalled();
+			vi.unstubAllGlobals();
+		});
+
+		it('throws retryable RzStepError for 408 and 429 responses', async () => {
+			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 429 })));
+
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
+
+			expect(err).toBeInstanceOf(RzStepError);
+			expect(err.retryable).toBe(true);
+			vi.unstubAllGlobals();
+		});
+
+		it('throws RzStepError when fetch throws a network error', async () => {
 			vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network timeout')));
 
-			const result = await fetchAndStoreCoverImage(baseCoverImage, userId, logger);
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
 
-			expect(result).toBeNull();
+			expect(err).toBeInstanceOf(RzStepError);
+			expect(err.retryable).toBe(true);
 			expect(createImage).not.toHaveBeenCalled();
 			vi.unstubAllGlobals();
 		});
 
-		it('returns null when creating the DB record fails', async () => {
+		it('throws RzStepError when creating the DB record fails', async () => {
 			const buffer = new ArrayBuffer(512);
 			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(makeOkResponse(buffer)));
 			vi.mocked(createImage).mockRejectedValueOnce(new Error('DB error'));
 
-			const result = await fetchAndStoreCoverImage(baseCoverImage, userId, logger);
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
 
-			expect(result).toBeNull();
+			expect(err).toBeInstanceOf(RzStepError);
+			expect(err.retryable).toBe(true);
 			expect(mockImagesBucket.put).not.toHaveBeenCalled();
 			vi.unstubAllGlobals();
 		});
 
-		it('returns null when R2 put fails, after DB record is created', async () => {
+		it('throws RzStepError when R2 put fails, after DB record is created', async () => {
 			const buffer = new ArrayBuffer(512);
 			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(makeOkResponse(buffer)));
 			mockImagesBucket.put.mockRejectedValueOnce(new Error('R2 unavailable'));
 
-			const result = await fetchAndStoreCoverImage(baseCoverImage, userId, logger);
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
 
-			expect(result).toBeNull();
-			// DB record was still created
+			expect(err).toBeInstanceOf(RzStepError);
+			expect(err.retryable).toBe(true);
 			expect(createImage).toHaveBeenCalledTimes(1);
 			vi.unstubAllGlobals();
 		});
 
-		it('returns null when getImageTypeByName fails', async () => {
+		it('throws RzStepError when getImageTypeByName fails', async () => {
 			const buffer = new ArrayBuffer(512);
 			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(makeOkResponse(buffer)));
 			vi.mocked(getImageTypeByName).mockRejectedValueOnce(new Error('type not found'));
 
-			const result = await fetchAndStoreCoverImage(baseCoverImage, userId, logger);
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
 
-			expect(result).toBeNull();
+			expect(err).toBeInstanceOf(RzStepError);
+			expect(err.retryable).toBe(true);
 			vi.unstubAllGlobals();
 		});
 	});
