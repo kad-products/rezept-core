@@ -1,3 +1,9 @@
+## [1.42.0](https://github.com/kad-products/rezept-core/compare/v1.41.4...v1.42.0) (2026-06-04)
+
+### Features
+
+* initial retry workflow for image scrapes ([2cdfc3d](https://github.com/kad-products/rezept-core/commit/2cdfc3df3ae27dce2f64cc0e2e4c5aa3fd6cad0b))
+
 ## [1.41.4](https://github.com/kad-products/rezept-core/compare/v1.41.3...v1.41.4) (2026-06-03)
 
 ### Bug Fixes
