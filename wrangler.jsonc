@@ -28,6 +28,10 @@
 		{
 			"binding": "AED_API_KEY_USED",
 			"dataset": "api_key_used_local"
+		},
+		{
+			"binding": "AED_SCRAPE_ATTEMPTS",
+			"dataset": "scrape_attempts_local"
 		}
 	],
 	// Top-level bindings used by wrangler dev (local/miniflare)
@@ -108,6 +112,10 @@
 				{
 					"binding": "AED_API_KEY_USED",
 					"dataset": "api_key_used_integration"
+				},
+				{
+					"binding": "AED_SCRAPE_ATTEMPTS",
+					"dataset": "scrape_attempts_integration"
 				}
 			],
 			"vars": {
@@ -154,6 +162,10 @@
 				{
 					"binding": "AED_API_KEY_USED",
 					"dataset": "api_key_used_staging"
+				},
+				{
+					"binding": "AED_SCRAPE_ATTEMPTS",
+					"dataset": "scrape_attempts_staging"
 				}
 			],
 			"vars": {
@@ -200,6 +212,10 @@
 				{
 					"binding": "AED_API_KEY_USED",
 					"dataset": "api_key_used_production"
+				},
+				{
+					"binding": "AED_SCRAPE_ATTEMPTS",
+					"dataset": "scrape_attempts_production"
 				}
 			],
 			"vars": {

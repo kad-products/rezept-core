@@ -160,7 +160,7 @@ describe('barrel exports', () => {
 		expect(existsSync(join(SRC, 'actions/index.ts'))).toBe(false);
 	});
 
-	it.each(['repositories', 'schemas', 'steps', 'interrupters'])('src/%s has an index.ts barrel file', dir => {
+	it.each(['repositories', 'schemas', 'steps', 'interrupters', 'analytics'])('src/%s has an index.ts barrel file', dir => {
 		expect(existsSync(join(SRC, `${dir}/index.ts`))).toBe(true);
 	});
 
@@ -184,5 +184,10 @@ describe('barrel exports', () => {
 	it('no source file uses a @/interrupters sub-path import', () => {
 		const bad = allSource.filter(p => /from ['"]@\/interrupters\//.test(read(p)));
 		expect(bad.map(rel), 'Import from @/interrupters barrel, not sub-paths').toHaveLength(0);
+	});
+
+	it('no source file uses a @/analytics sub-path import', () => {
+		const bad = allSource.filter(p => /from ['"]@\/analytics\//.test(read(p)));
+		expect(bad.map(rel), 'Import from @/analytics barrel, not sub-paths').toHaveLength(0);
 	});
 });
