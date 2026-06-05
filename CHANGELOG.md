@@ -1,3 +1,9 @@
+## [1.42.1](https://github.com/kad-products/rezept-core/compare/v1.42.0...v1.42.1) (2026-06-05)
+
+### Bug Fixes
+
+* noop fix to trigger a new release ([430c826](https://github.com/kad-products/rezept-core/commit/430c82677a73cbb6ebe7eb16c9040c2653774353))
+
 ## [1.42.0](https://github.com/kad-products/rezept-core/compare/v1.41.4...v1.42.0) (2026-06-04)
 
 ### Features
