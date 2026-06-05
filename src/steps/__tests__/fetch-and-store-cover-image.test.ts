@@ -7,7 +7,7 @@ const mockImagesBucket = vi.hoisted(() => ({
 }));
 
 vi.mock('cloudflare:workers', () => ({
-	env: { rezept_images: mockImagesBucket },
+	env: { REZEPT_IMAGES: mockImagesBucket },
 }));
 
 vi.mock('@/repositories', () => ({

@@ -106,13 +106,13 @@ These run inside Miniflare (the local Workers runtime) with a real D1 binding:
 // tests/setup.workers.ts
 beforeEach(async () => {
   await reset();                                          // wipe all D1 data
-  await applyD1Migrations(env.rezept_core, env.TEST_MIGRATIONS);  // re-apply schema
+  await applyD1Migrations(env.REZEPT_CORE, env.TEST_MIGRATIONS);  // re-apply schema
 });
 ```
 
 **Key points:**
 - `reset()` + `applyD1Migrations()` in `beforeEach` gives per-test isolation — the workers pool does not isolate D1 storage between tests automatically
-- `env.rezept_core` is a real D1 binding; `src/db.ts` resolves normally against it
+- `env.REZEPT_CORE` is a real D1 binding; `src/db.ts` resolves normally against it
 - Uses `tests/wrangler.test.jsonc` — a minimal config with only the D1 binding (no Durable Objects, R2, or assets) to avoid Miniflare holding open background connections
 
 ## Database Mock Pattern

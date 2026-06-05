@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Logger from '@/logger';
 
 const mockEnv = vi.hoisted(() => ({
-	rezept_images: {
+	REZEPT_IMAGES: {
 		get: vi.fn(),
 	},
 }));
@@ -25,43 +25,43 @@ describe('_getHandler', () => {
 	});
 
 	it('returns 200 with the R2 object body when the image exists', async () => {
-		mockEnv.rezept_images.get.mockResolvedValue(makeR2Object('image/png'));
+		mockEnv.REZEPT_IMAGES.get.mockResolvedValue(makeR2Object('image/png'));
 		const response = await _getHandler({ params: { imageId: 'abc123' }, ctx } as any);
 		expect(response.status).toBe(200);
 	});
 
 	it('returns the Content-Type from R2 metadata', async () => {
-		mockEnv.rezept_images.get.mockResolvedValue(makeR2Object('image/webp'));
+		mockEnv.REZEPT_IMAGES.get.mockResolvedValue(makeR2Object('image/webp'));
 		const response = await _getHandler({ params: { imageId: 'abc123' }, ctx } as any);
 		expect(response.headers.get('Content-Type')).toBe('image/webp');
 	});
 
 	it('falls back to application/octet-stream when R2 metadata has no contentType', async () => {
-		mockEnv.rezept_images.get.mockResolvedValue(makeR2Object());
+		mockEnv.REZEPT_IMAGES.get.mockResolvedValue(makeR2Object());
 		const response = await _getHandler({ params: { imageId: 'abc123' }, ctx } as any);
 		expect(response.headers.get('Content-Type')).toBe('application/octet-stream');
 	});
 
 	it('sets a long-lived immutable Cache-Control header', async () => {
-		mockEnv.rezept_images.get.mockResolvedValue(makeR2Object('image/png'));
+		mockEnv.REZEPT_IMAGES.get.mockResolvedValue(makeR2Object('image/png'));
 		const response = await _getHandler({ params: { imageId: 'abc123' }, ctx } as any);
 		expect(response.headers.get('Cache-Control')).toBe('public, max-age=31536000, immutable');
 	});
 
 	it('returns 404 when the image does not exist in R2', async () => {
-		mockEnv.rezept_images.get.mockResolvedValue(null);
+		mockEnv.REZEPT_IMAGES.get.mockResolvedValue(null);
 		const response = await _getHandler({ params: { imageId: 'missing' }, ctx } as any);
 		expect(response.status).toBe(404);
 	});
 
 	it('fetches the image using the imageId from params', async () => {
-		mockEnv.rezept_images.get.mockResolvedValue(makeR2Object('image/jpeg'));
+		mockEnv.REZEPT_IMAGES.get.mockResolvedValue(makeR2Object('image/jpeg'));
 		await _getHandler({ params: { imageId: 'img-xyz' }, ctx } as any);
-		expect(mockEnv.rezept_images.get).toHaveBeenCalledWith('img-xyz');
+		expect(mockEnv.REZEPT_IMAGES.get).toHaveBeenCalledWith('img-xyz');
 	});
 
 	it('propagates R2 errors', async () => {
-		mockEnv.rezept_images.get.mockRejectedValue(new Error('R2 unavailable'));
+		mockEnv.REZEPT_IMAGES.get.mockRejectedValue(new Error('R2 unavailable'));
 		await expect(_getHandler({ params: { imageId: 'abc123' }, ctx } as any)).rejects.toThrow('R2 unavailable');
 	});
 });

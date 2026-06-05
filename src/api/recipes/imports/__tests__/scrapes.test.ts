@@ -4,10 +4,10 @@ import Logger from '@/logger';
 
 const mockEnv = vi.hoisted(() => ({
 	REZEPT_ENV: 'development' as string,
-	rezept_recipe_uploads: {
+	REZEPT_RECIPE_UPLOADS: {
 		put: vi.fn(),
 	},
-	rezept_recipe_scrapes: {
+	REZEPT_RECIPE_SCRAPES: {
 		put: vi.fn(),
 		delete: vi.fn(),
 	},
