@@ -20,6 +20,16 @@
 			"new_sqlite_classes": ["SessionDurableObject"]
 		}
 	],
+	"analytics_engine_datasets": [
+		{
+			"binding": "AED_LOGIN_ATTEMPTS",
+			"dataset": "login_attempts_local"
+		},
+		{
+			"binding": "AED_API_KEY_USED",
+			"dataset": "api_key_used_local"
+		}
+	],
 	// Top-level bindings used by wrangler dev (local/miniflare)
 	"durable_objects": {
 		"bindings": [
@@ -90,6 +100,16 @@
 					"bucket_name": "rezept-images-integration"
 				}
 			],
+			"analytics_engine_datasets": [
+				{
+					"binding": "AED_LOGIN_ATTEMPTS",
+					"dataset": "login_attempts_integration"
+				},
+				{
+					"binding": "AED_API_KEY_USED",
+					"dataset": "api_key_used_integration"
+				}
+			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
 				"REZEPT_ENV": "integration"
@@ -127,6 +147,16 @@
 					"bucket_name": "rezept-images-staging"
 				}
 			],
+			"analytics_engine_datasets": [
+				{
+					"binding": "AED_LOGIN_ATTEMPTS",
+					"dataset": "login_attempts_staging"
+				},
+				{
+					"binding": "AED_API_KEY_USED",
+					"dataset": "api_key_used_staging"
+				}
+			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
 				"REZEPT_ENV": "staging"
@@ -162,6 +192,16 @@
 				{
 					"binding": "rezept_images",
 					"bucket_name": "rezept-images-production"
+				}
+			],
+			"analytics_engine_datasets": [
+				{
+					"binding": "AED_LOGIN_ATTEMPTS",
+					"dataset": "login_attempts_production"
+				},
+				{
+					"binding": "AED_API_KEY_USED",
+					"dataset": "api_key_used_production"
 				}
 			],
 			"vars": {

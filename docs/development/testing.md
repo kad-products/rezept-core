@@ -40,6 +40,8 @@ src/
       *.integration.test.ts  # Integration tests (real D1 binding)
   middleware/
     __tests__/           # Middleware tests (unit with mocks)
+  analytics/
+    __tests__/           # Analytics helper tests (unit with mocked AE bindings)
   session/
     __tests__/           # Session/auth tests
 
@@ -428,6 +430,7 @@ beforeEach(async () => {
 ✅ **Action business logic (unit)** - Auth, validation, error handling with mocked repos
 ✅ **Action integration** - Full stack from action → repository → D1 in Workers runtime
 ✅ **Middleware** - Request/response handling, session management
+✅ **Analytics helpers** - CF Analytics Engine helpers with mocked `writeDataPoint` bindings
 ✅ **Session management** - Create, read, expire, revoke flows
 ✅ **React components** - Behavioral and visual tests via Playwright CT (`.ct.test.tsx`)
 

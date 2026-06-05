@@ -49,6 +49,7 @@ flowchart TD
         DO[durable-objects/]
         WF[workflows/]
         INT[interrupters/]
+        ANA[analytics/]
     end
 
     subgraph entry["Entry Points"]
@@ -110,6 +111,10 @@ flowchart TD
     DATA -->|static data| FORMS
     DATA -->|static data| PG
 
+    MW --> ANA
+    ACT --> ANA
+    API -.->|optional| ANA
+
     TYPES -.->|imported by all| entry
     TYPES -.->|imported by all| logic
     TYPES -.->|imported by all| data
@@ -135,6 +140,7 @@ flowchart TD
 | `src/models/` | Models | Drizzle table schemas and relations; source of truth for migrations |
 | `src/durable-objects/` | Durable Objects | Cloudflare Durable Object classes (currently: session management) |
 | `src/workflows/` | Workflows | Cloudflare Workflow classes for durable background processing; triggered via API, each step independently retried |
+| `src/analytics/` | Analytics | Fire-and-forget CF Analytics Engine helpers; called by middleware and actions to record discrete events |
 | `src/data/` | Static data | Reference data used by forms and pages (countries, months, permissions) |
 
 ## Internal utilities
