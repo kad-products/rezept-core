@@ -25,7 +25,7 @@ export const recipeScrapes = sqliteTable(
 		userId: text()
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
-		// Raw JSON is stored in R2 using the scrape ID as the object key (rezept_recipe_scrapes bucket)
+		// Raw JSON is stored in R2 using the scrape ID as the object key (REZEPT_RECIPE_SCRAPES bucket)
 		bodySize: integer().notNull(), // bytes
 		status: text({ enum: recipeScrapeStatus }).notNull().default('SCRAPED'),
 		recipeId: text().references(() => recipes.id),

@@ -9,5 +9,5 @@ import { beforeEach } from 'vitest';
 // starts with a clean schema and no leftover data.
 beforeEach(async () => {
 	await reset();
-	await applyD1Migrations(env.rezept_core, env.TEST_MIGRATIONS);
+	await applyD1Migrations(env.REZEPT_CORE, env.TEST_MIGRATIONS);
 });

@@ -13,7 +13,7 @@
 	},
 	"d1_databases": [
 		{
-			"binding": "rezept_core",
+			"binding": "REZEPT_CORE",
 			"database_name": "rezept-core-test",
 			"database_id": "local"
 		}

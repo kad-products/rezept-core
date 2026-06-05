@@ -25,7 +25,7 @@ Unit and schema tests use a Node.js environment with mocked Cloudflare bindings.
 
 ### Workers pool test support (`vitest.workers.config.ts`)
 
-**`wrangler.test.jsonc`** — Minimal wrangler config used only during integration tests. Declares just the `rezept_core` D1 binding — no Durable Objects, R2 buckets, or assets. The full `wrangler.jsonc` includes Durable Objects with SQLite storage that cause Miniflare to hold open WebSocket servers, preventing the process from exiting after tests complete.
+**`wrangler.test.jsonc`** — Minimal wrangler config used only during integration tests. Declares just the `REZEPT_CORE` D1 binding — no Durable Objects, R2 buckets, or assets. The full `wrangler.jsonc` includes Durable Objects with SQLite storage that cause Miniflare to hold open WebSocket servers, preventing the process from exiting after tests complete.
 
 **`worker.ts`** — Stub worker entrypoint required by `cloudflareTest`. Integration tests import action and repository functions directly rather than via `SELF.fetch()`, so the worker itself does nothing — it exists only to satisfy the configuration requirement.
 
