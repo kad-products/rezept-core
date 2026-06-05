@@ -1,3 +1,14 @@
+## [1.43.0](https://github.com/kad-products/rezept-core/compare/v1.42.1...v1.43.0) (2026-06-05)
+
+### Features
+
+* add initial couple use cases of CF analytics ([7888541](https://github.com/kad-products/rezept-core/commit/7888541f96d3f5f65f5ee8ec722e3827a4c2d839))
+* scrape attempt analytics ([119f1e8](https://github.com/kad-products/rezept-core/commit/119f1e899973a5f42617bc13cd60fb69ef633b3c))
+
+### Code Refactoring
+
+* make all bindings for wrangler uppercase ([ca883a0](https://github.com/kad-products/rezept-core/commit/ca883a0f0be8942176aba1d90924ed31aa3c8d89))
+
 ## [1.42.1](https://github.com/kad-products/rezept-core/compare/v1.42.0...v1.42.1) (2026-06-05)
 
 ### Bug Fixes
