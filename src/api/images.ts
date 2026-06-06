@@ -12,7 +12,7 @@ export async function _getHandler({ params, ctx }: RequestInfo): Promise<Respons
 	const imageId = params.imageId;
 	ctx.logger.debug(`Fetching image ${imageId}`);
 
-	const obj = await env.rezept_images.get(imageId);
+	const obj = await env.REZEPT_IMAGES.get(imageId);
 
 	if (!obj) {
 		ctx.logger.debug(`Image ${imageId} not found`);

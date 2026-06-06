@@ -5,6 +5,7 @@ import {
 	verifyAuthenticationResponse,
 } from '@simplewebauthn/server';
 import { requestInfo } from 'rwsdk/worker';
+import { trackLoginAttempt } from '@/analytics';
 import { sessions } from '@/durable-objects';
 import { getCredentialById, getUserById, updateCredentialCounter } from '@/repositories';
 import type { ActionState, CredentialDBRead } from '@/types';
@@ -25,9 +26,19 @@ export async function startPasskeyLogin(): Promise<ActionState<PublicKeyCredenti
 		});
 
 		await sessions.save(response.headers, { challenge: options.challenge });
-
+		trackLoginAttempt({
+			type: 'PASSKEY',
+			stage: 'START',
+			success: true,
+		});
 		return successResponse(options);
 	} catch (err) {
+		trackLoginAttempt({
+			type: 'PASSKEY',
+			stage: 'START',
+			success: false,
+		});
+
 		return errorResponse(err, 500, 'Failed to start passkey login');
 	}
 }
@@ -45,6 +56,12 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 		requestInfo.ctx.logger.info(`Challenge: ${JSON.stringify(challenge, null, 4)}`);
 
 		if (!challenge) {
+			trackLoginAttempt({
+				type: 'PASSKEY',
+				stage: 'FINISH',
+				success: false,
+			});
+
 			return errorResponse('No challenge found in session', 400);
 		}
 
@@ -54,6 +71,11 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 
 			requestInfo.ctx.logger.info(`Credential: ${JSON.stringify(credential, null, 4)}`);
 		} catch (err) {
+			trackLoginAttempt({
+				type: 'PASSKEY',
+				stage: 'FINISH',
+				success: false,
+			});
 			return errorResponse(err, 400, 'Credential not found');
 		}
 
@@ -73,6 +95,11 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 		requestInfo.ctx.logger.info(`Verification: ${JSON.stringify(verification, null, 4)}`);
 
 		if (!verification.verified) {
+			trackLoginAttempt({
+				type: 'PASSKEY',
+				stage: 'FINISH',
+				success: false,
+			});
 			return errorResponse('Invalid passkey login', 400);
 		}
 
@@ -92,8 +119,20 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 			challenge: null,
 		});
 
+		trackLoginAttempt({
+			type: 'PASSKEY',
+			stage: 'FINISH',
+			success: true,
+			userId: user.id,
+		});
+
 		return successResponse(true);
 	} catch (err) {
+		trackLoginAttempt({
+			type: 'PASSKEY',
+			stage: 'FINISH',
+			success: false,
+		});
 		return errorResponse(err, 500, 'Failed to finish passkey login');
 	}
 }

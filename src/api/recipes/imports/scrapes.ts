@@ -1,5 +1,6 @@
 import { env } from 'cloudflare:workers';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
+import { trackScrapeAttempt } from '@/analytics';
 import { apiErrorResponse, successResponse } from '@/api/utils';
 import { RzStepError } from '@/classes/rz-step-error';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
@@ -28,10 +29,13 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication interrupter
 	const userId = ctx.user!.id;
 
+	const startedAt = Date.now();
+	let sourceDomain = 'unknown';
+
 	let recipeScrape: RecipeScrapeDBRead | undefined;
 	try {
 		const parsedBodyJson = await parseBodyJson(request);
-
+		sourceDomain = parsedBodyJson.url ? new URL(parsedBodyJson.url).hostname : 'unknown';
 		recipeScrape = await initializeScrape(parsedBodyJson, userId, ctx.logger);
 
 		const transformedRecipe = await transformScrapeToRecipe(parsedBodyJson, ctx.logger);
@@ -120,8 +124,21 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 				ctx.logger,
 			);
 		}
+		const duration = Date.now() - startedAt;
+		trackScrapeAttempt({
+			domain: sourceDomain,
+			success: false,
+			durationMs: duration,
+			userId,
+		});
 		return apiErrorResponse(err, 'Error processing recipe scrape');
 	}
-
+	const duration = Date.now() - startedAt;
+	trackScrapeAttempt({
+		domain: sourceDomain,
+		success: true,
+		durationMs: duration,
+		userId,
+	});
 	return successResponse(recipeScrape);
 }

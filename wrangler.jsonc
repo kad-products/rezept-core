@@ -20,6 +20,20 @@
 			"new_sqlite_classes": ["SessionDurableObject"]
 		}
 	],
+	"analytics_engine_datasets": [
+		{
+			"binding": "AED_LOGIN_ATTEMPTS",
+			"dataset": "login_attempts_local"
+		},
+		{
+			"binding": "AED_API_KEY_USED",
+			"dataset": "api_key_used_local"
+		},
+		{
+			"binding": "AED_SCRAPE_ATTEMPTS",
+			"dataset": "scrape_attempts_local"
+		}
+	],
 	// Top-level bindings used by wrangler dev (local/miniflare)
 	"durable_objects": {
 		"bindings": [
@@ -31,7 +45,7 @@
 	},
 	"d1_databases": [
 		{
-			"binding": "rezept_core",
+			"binding": "REZEPT_CORE",
 			"database_name": "rezept-core-local",
 			"database_id": "local",
 			"migrations_dir": "drizzle"
@@ -39,15 +53,15 @@
 	],
 	"r2_buckets": [
 		{
-			"binding": "rezept_recipe_uploads",
+			"binding": "REZEPT_RECIPE_UPLOADS",
 			"bucket_name": "rezept-recipe-uploads-local"
 		},
 		{
-			"binding": "rezept_recipe_scrapes",
+			"binding": "REZEPT_RECIPE_SCRAPES",
 			"bucket_name": "rezept-recipe-scrapes-local"
 		},
 		{
-			"binding": "rezept_images",
+			"binding": "REZEPT_IMAGES",
 			"bucket_name": "rezept-images-local"
 		}
 	],
@@ -62,7 +76,7 @@
 		"integration": {
 			"d1_databases": [
 				{
-					"binding": "rezept_core",
+					"binding": "REZEPT_CORE",
 					"database_id": "1ea3d2e0-e4fe-4cd6-8469-2ab23bd51558",
 					"database_name": "rezept-core-integration",
 					"migrations_dir": "drizzle"
@@ -78,16 +92,37 @@
 			},
 			"r2_buckets": [
 				{
-					"binding": "rezept_recipe_uploads",
+					"binding": "REZEPT_RECIPE_UPLOADS",
 					"bucket_name": "rezept-recipe-uploads-integration"
 				},
 				{
-					"binding": "rezept_recipe_scrapes",
+					"binding": "REZEPT_RECIPE_SCRAPES",
 					"bucket_name": "rezept-recipe-scrapes-integration"
 				},
 				{
-					"binding": "rezept_images",
+					"binding": "REZEPT_IMAGES",
 					"bucket_name": "rezept-images-integration"
+				}
+			],
+			"analytics_engine_datasets": [
+				{
+					"binding": "AED_LOGIN_ATTEMPTS",
+					"dataset": "login_attempts_integration"
+				},
+				{
+					"binding": "AED_API_KEY_USED",
+					"dataset": "api_key_used_integration"
+				},
+				{
+					"binding": "AED_SCRAPE_ATTEMPTS",
+					"dataset": "scrape_attempts_integration"
+				}
+			],
+			"workflows": [
+				{
+					"name": "recipe-scrape-cover-image-retry-workflow",
+					"binding": "RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW",
+					"class_name": "RecipeScrapeCoverImageRetryWorkflow"
 				}
 			],
 			"vars": {
@@ -99,7 +134,7 @@
 		"staging": {
 			"d1_databases": [
 				{
-					"binding": "rezept_core",
+					"binding": "REZEPT_CORE",
 					"database_id": "8ef40bea-0c58-43b3-a1f0-7ebecd3ee11d",
 					"database_name": "rezept-core-staging",
 					"migrations_dir": "drizzle"
@@ -115,16 +150,37 @@
 			},
 			"r2_buckets": [
 				{
-					"binding": "rezept_recipe_uploads",
+					"binding": "REZEPT_RECIPE_UPLOADS",
 					"bucket_name": "rezept-recipe-uploads-staging"
 				},
 				{
-					"binding": "rezept_recipe_scrapes",
+					"binding": "REZEPT_RECIPE_SCRAPES",
 					"bucket_name": "rezept-recipe-scrapes-staging"
 				},
 				{
-					"binding": "rezept_images",
+					"binding": "REZEPT_IMAGES",
 					"bucket_name": "rezept-images-staging"
+				}
+			],
+			"analytics_engine_datasets": [
+				{
+					"binding": "AED_LOGIN_ATTEMPTS",
+					"dataset": "login_attempts_staging"
+				},
+				{
+					"binding": "AED_API_KEY_USED",
+					"dataset": "api_key_used_staging"
+				},
+				{
+					"binding": "AED_SCRAPE_ATTEMPTS",
+					"dataset": "scrape_attempts_staging"
+				}
+			],
+			"workflows": [
+				{
+					"name": "recipe-scrape-cover-image-retry-workflow",
+					"binding": "RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW",
+					"class_name": "RecipeScrapeCoverImageRetryWorkflow"
 				}
 			],
 			"vars": {
@@ -134,9 +190,19 @@
 			"workers_dev": true
 		},
 		"production": {
+			"routes": [
+				{
+					"pattern": "kad-rezept.com",
+					"custom_domain": true
+				},
+				{
+					"pattern": "www.kad-rezept.com",
+					"custom_domain": true
+				}
+			],
 			"d1_databases": [
 				{
-					"binding": "rezept_core",
+					"binding": "REZEPT_CORE",
 					"database_id": "ff54cd4d-0099-4cb5-90e9-b9a2d8d6121e",
 					"database_name": "rezept-core-production",
 					"migrations_dir": "drizzle"
@@ -152,16 +218,37 @@
 			},
 			"r2_buckets": [
 				{
-					"binding": "rezept_recipe_uploads",
+					"binding": "REZEPT_RECIPE_UPLOADS",
 					"bucket_name": "rezept-recipe-uploads-production"
 				},
 				{
-					"binding": "rezept_recipe_scrapes",
+					"binding": "REZEPT_RECIPE_SCRAPES",
 					"bucket_name": "rezept-recipe-scrapes-production"
 				},
 				{
-					"binding": "rezept_images",
+					"binding": "REZEPT_IMAGES",
 					"bucket_name": "rezept-images-production"
+				}
+			],
+			"analytics_engine_datasets": [
+				{
+					"binding": "AED_LOGIN_ATTEMPTS",
+					"dataset": "login_attempts_production"
+				},
+				{
+					"binding": "AED_API_KEY_USED",
+					"dataset": "api_key_used_production"
+				},
+				{
+					"binding": "AED_SCRAPE_ATTEMPTS",
+					"dataset": "scrape_attempts_production"
+				}
+			],
+			"workflows": [
+				{
+					"name": "recipe-scrape-cover-image-retry-workflow",
+					"binding": "RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW",
+					"class_name": "RecipeScrapeCoverImageRetryWorkflow"
 				}
 			],
 			"vars": {

@@ -8,20 +8,10 @@ Gathering notes as I start the process of going from just local to the integrati
 
 I updated my wrangler file to have things structured for multiple environments.  I started reading the docs and honestly kind of figured I might as well just have Claude do it.  I'm not going to meaningfully retain that information anyway.  Commit 0120b3e32f7f5057969d097cd3877c9df5780a36 is the one for these changes.  Keep everything at the top level as that is what wrangler uses locally.
 
-### Provision Infrastructure
-
-The `wrangler.jsonc` manages mapping details but it doesn't actually do the provisioning.  So before deploying to a new environment we need to do the provisioning.  Since we use TF for other provisioning we're using it here, too.  
-
-1. `cd` into `terraform/<environment>`
-2. `terraform init`
-3. `terraform apply`
-4. `terraform output -raw wrangler_env | jq` to get the outputs
-5. Paste them into the appropriate environment within the `wrangler.json`
-
 ### Secret
 
 1. `openssl rand -base64 32` for a random string
-2. `npx wrangler secret put SESSION_SECRET_KEY --env <env name>` and it'll prompt you for the secret action
+2. `pnpm exec wrangler secret put SESSION_SECRET_KEY --env <env name>` and it'll prompt you for the secret action
 
 ### Deploy
 

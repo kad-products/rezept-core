@@ -69,7 +69,7 @@ export async function fetchAndStoreCoverImage(
 	}
 
 	try {
-		await env.rezept_images.put(image.id, buffer, { httpMetadata: { contentType: mimeType } });
+		await env.REZEPT_IMAGES.put(image.id, buffer, { httpMetadata: { contentType: mimeType } });
 		logger.info(`Cover image stored: ${image.id}`);
 	} catch (err) {
 		logger.warn(`Cover image DB record ${image.id} created but R2 store failed: ${err}`);

@@ -11,7 +11,7 @@ export async function initializeScrape(parsedBody: unknown, userId: string, logg
 	const bodySize = stringified.length;
 
 	try {
-		await env.rezept_recipe_scrapes.put(id, stringified);
+		await env.REZEPT_RECIPE_SCRAPES.put(id, stringified);
 	} catch (err) {
 		logger.warn(`Error writing scrape to R2: ${err}`);
 		throw new RzStepError(400, 'Failed to initialize recipe scrape', `Error writing scrape to R2: ${err}`);
@@ -24,7 +24,7 @@ export async function initializeScrape(parsedBody: unknown, userId: string, logg
 	} catch (err) {
 		logger.warn(`Error creating scrape record, cleaning up R2 object ${id}: ${err}`);
 		try {
-			await env.rezept_recipe_scrapes.delete(id);
+			await env.REZEPT_RECIPE_SCRAPES.delete(id);
 		} catch (deleteErr) {
 			logger.warn(`Failed to clean up R2 object ${id}: ${deleteErr}`);
 		}
