@@ -1,3 +1,27 @@
+## [1.43.1](https://github.com/kad-products/rezept-core/compare/v1.43.0...v1.43.1) (2026-06-06)
+
+### Bug Fixes
+
+* prod has a domain ([99b4e33](https://github.com/kad-products/rezept-core/commit/99b4e3322bb6f1951c2ad3e9b1ef98107fb33c13))
+* wrangler build vars ([282f73c](https://github.com/kad-products/rezept-core/commit/282f73c001376a574e4fb5f5224ca99f07cc2ead))
+
+## [1.43.0](https://github.com/kad-products/rezept-core/compare/v1.42.1...v1.43.0) (2026-06-05)
+
+### Features
+
+* add initial couple use cases of CF analytics ([7888541](https://github.com/kad-products/rezept-core/commit/7888541f96d3f5f65f5ee8ec722e3827a4c2d839))
+* scrape attempt analytics ([119f1e8](https://github.com/kad-products/rezept-core/commit/119f1e899973a5f42617bc13cd60fb69ef633b3c))
+
+### Code Refactoring
+
+* make all bindings for wrangler uppercase ([ca883a0](https://github.com/kad-products/rezept-core/commit/ca883a0f0be8942176aba1d90924ed31aa3c8d89))
+
+## [1.42.1](https://github.com/kad-products/rezept-core/compare/v1.42.0...v1.42.1) (2026-06-05)
+
+### Bug Fixes
+
+* noop fix to trigger a new release ([430c826](https://github.com/kad-products/rezept-core/commit/430c82677a73cbb6ebe7eb16c9040c2653774353))
+
 ## [1.42.0](https://github.com/kad-products/rezept-core/compare/v1.41.4...v1.42.0) (2026-06-04)
 
 ### Features

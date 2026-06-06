@@ -8,7 +8,7 @@ const mockScrapesBucket = vi.hoisted(() => ({
 }));
 
 vi.mock('cloudflare:workers', () => ({
-	env: { rezept_recipe_scrapes: mockScrapesBucket },
+	env: { REZEPT_RECIPE_SCRAPES: mockScrapesBucket },
 }));
 
 vi.mock('@/repositories', () => ({

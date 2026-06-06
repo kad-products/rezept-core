@@ -6,6 +6,10 @@ const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
 
 vi.mock('cloudflare:workers', () => ({ env: mockEnv }));
 
+vi.mock('@/analytics', () => ({
+	trackLoginAttempt: vi.fn(),
+}));
+
 vi.mock('@simplewebauthn/server', () => ({
 	generateAuthenticationOptions: vi.fn(),
 	verifyAuthenticationResponse: vi.fn(),
@@ -51,6 +55,7 @@ vi.mock('rwsdk/worker', () => ({
 }));
 
 import { generateAuthenticationOptions, verifyAuthenticationResponse } from '@simplewebauthn/server';
+import { trackLoginAttempt } from '@/analytics';
 import { sessions } from '@/durable-objects';
 import { getCredentialById, getUserById, updateCredentialCounter } from '@/repositories';
 import { finishPasskeyLogin, startPasskeyLogin } from '../auth';
@@ -243,5 +248,87 @@ describe('finishPasskeyLogin', () => {
 		const result = await finishPasskeyLogin(mockLogin as any);
 		expect(result.success).toBe(true);
 		expect(result.data).toBe(true);
+	});
+});
+
+describe('analytics tracking', () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		mockEnv.REZEPT_ENV = 'development';
+	});
+
+	describe('startPasskeyLogin', () => {
+		beforeEach(() => {
+			vi.mocked(generateAuthenticationOptions).mockResolvedValue(mockOptions as any);
+			vi.mocked(sessions.save).mockResolvedValue(undefined as any);
+		});
+
+		it('tracks a successful start attempt', async () => {
+			await startPasskeyLogin();
+
+			expect(trackLoginAttempt).toHaveBeenCalledWith({ type: 'PASSKEY', stage: 'START', success: true });
+		});
+
+		it('tracks a failed start attempt', async () => {
+			vi.mocked(generateAuthenticationOptions).mockRejectedValue(new Error('WebAuthn error'));
+
+			await startPasskeyLogin();
+
+			expect(trackLoginAttempt).toHaveBeenCalledWith({ type: 'PASSKEY', stage: 'START', success: false });
+		});
+	});
+
+	describe('finishPasskeyLogin', () => {
+		beforeEach(() => {
+			vi.mocked(sessions.load).mockResolvedValue({ challenge: 'stored-challenge' } as any);
+			vi.mocked(sessions.save).mockResolvedValue(undefined as any);
+			vi.mocked(getCredentialById).mockResolvedValue(mockCredential as any);
+			vi.mocked(verifyAuthenticationResponse).mockResolvedValue(mockVerification as any);
+			vi.mocked(updateCredentialCounter).mockResolvedValue(undefined as any);
+			vi.mocked(getUserById).mockResolvedValue(mockUser as any);
+		});
+
+		it('tracks a failed attempt when no challenge is in the session', async () => {
+			vi.mocked(sessions.load).mockResolvedValue(null as any);
+
+			await finishPasskeyLogin(mockLogin as any);
+
+			expect(trackLoginAttempt).toHaveBeenCalledWith({ type: 'PASSKEY', stage: 'FINISH', success: false });
+		});
+
+		it('tracks a failed attempt when credential is not found', async () => {
+			vi.mocked(getCredentialById).mockRejectedValue(new Error('not found'));
+
+			await finishPasskeyLogin(mockLogin as any);
+
+			expect(trackLoginAttempt).toHaveBeenCalledWith({ type: 'PASSKEY', stage: 'FINISH', success: false });
+		});
+
+		it('tracks a failed attempt when verification fails', async () => {
+			vi.mocked(verifyAuthenticationResponse).mockResolvedValue({ verified: false } as any);
+
+			await finishPasskeyLogin(mockLogin as any);
+
+			expect(trackLoginAttempt).toHaveBeenCalledWith({ type: 'PASSKEY', stage: 'FINISH', success: false });
+		});
+
+		it('tracks a successful login with the userId', async () => {
+			await finishPasskeyLogin(mockLogin as any);
+
+			expect(trackLoginAttempt).toHaveBeenCalledWith({
+				type: 'PASSKEY',
+				stage: 'FINISH',
+				success: true,
+				userId: 'user-id',
+			});
+		});
+
+		it('tracks a failed attempt when an unexpected error occurs', async () => {
+			vi.mocked(getUserById).mockRejectedValue(new Error('unexpected'));
+
+			await finishPasskeyLogin(mockLogin as any);
+
+			expect(trackLoginAttempt).toHaveBeenCalledWith({ type: 'PASSKEY', stage: 'FINISH', success: false });
+		});
 	});
 });

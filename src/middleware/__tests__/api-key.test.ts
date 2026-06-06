@@ -2,6 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type RzLogger from '@/logger';
 import Logger from '@/logger';
 
+vi.mock('@/analytics', () => ({
+	trackApiKeyUsed: vi.fn(),
+}));
+
 vi.mock('@/repositories', () => ({
 	getApiKeyByKey: vi.fn(),
 }));
@@ -29,6 +33,7 @@ vi.mock('rwsdk/worker', () => ({
 	},
 }));
 
+import { trackApiKeyUsed } from '@/analytics';
 import { getApiKeyByKey } from '@/repositories';
 import apiKeyMiddleware from '../api-key';
 
@@ -212,6 +217,68 @@ describe('apiKeyMiddleware', () => {
 
 			expect(result).toBeUndefined();
 			expect(mockRequestInfo.ctx.apiKey).toBeDefined();
+		});
+	});
+
+	describe('analytics tracking', () => {
+		it('tracks valid key usage with valid: true and the userId from the key', async () => {
+			mockRequestInfo.request = new Request('https://example.com/api/recipes', {
+				headers: { Authorization: 'Bearer rz_std_abc123' },
+			});
+			vi.mocked(getApiKeyByKey).mockResolvedValue(mockApiKey as any);
+
+			await apiKeyMiddleware(mockRequestInfo);
+
+			expect(trackApiKeyUsed).toHaveBeenCalledWith({
+				userId: 'test-user-id',
+				path: '/api/recipes',
+				method: 'GET',
+				valid: true,
+			});
+		});
+
+		it('tracks invalid key usage with valid: false and userId "unknown"', async () => {
+			mockRequestInfo.request = new Request('https://example.com/api/recipes', {
+				headers: { Authorization: 'Bearer rz_std_invalid' },
+			});
+			vi.mocked(getApiKeyByKey).mockRejectedValue(new Error('not found'));
+
+			await apiKeyMiddleware(mockRequestInfo);
+
+			expect(trackApiKeyUsed).toHaveBeenCalledWith({
+				userId: 'unknown',
+				path: '/api/recipes',
+				method: 'GET',
+				valid: false,
+			});
+		});
+
+		// Revoked keys return early before trackApiKeyUsed — we don't want to count a revoked
+		// key as either valid or invalid since it's a distinct category.
+		it('does not track revoked key usage', async () => {
+			mockRequestInfo.request = new Request('https://example.com/api/recipes', {
+				headers: { Authorization: 'Bearer rz_std_abc123' },
+			});
+			vi.mocked(getApiKeyByKey).mockResolvedValue({
+				...mockApiKey,
+				revokeAt: new Date(Date.now() - 1000).toISOString(),
+			} as any);
+
+			await apiKeyMiddleware(mockRequestInfo);
+
+			expect(trackApiKeyUsed).not.toHaveBeenCalled();
+		});
+
+		it('includes the request method in the tracked data point', async () => {
+			mockRequestInfo.request = new Request('https://example.com/api/recipes/import', {
+				method: 'POST',
+				headers: { Authorization: 'Bearer rz_std_abc123' },
+			});
+			vi.mocked(getApiKeyByKey).mockResolvedValue(mockApiKey as any);
+
+			await apiKeyMiddleware(mockRequestInfo);
+
+			expect(trackApiKeyUsed).toHaveBeenCalledWith(expect.objectContaining({ method: 'POST' }));
 		});
 	});
 });

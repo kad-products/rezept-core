@@ -4,10 +4,10 @@ import Logger from '@/logger';
 
 const mockEnv = vi.hoisted(() => ({
 	REZEPT_ENV: 'development' as string,
-	rezept_recipe_uploads: {
+	REZEPT_RECIPE_UPLOADS: {
 		put: vi.fn(),
 	},
-	rezept_recipe_scrapes: {
+	REZEPT_RECIPE_SCRAPES: {
 		put: vi.fn(),
 		delete: vi.fn(),
 	},
@@ -18,6 +18,10 @@ const mockEnv = vi.hoisted(() => ({
 }));
 
 vi.mock('cloudflare:workers', () => ({ env: mockEnv }));
+
+vi.mock('@/analytics', () => ({
+	trackScrapeAttempt: vi.fn(),
+}));
 
 vi.mock('@/steps', () => ({
 	parseBodyJson: vi.fn(),
@@ -42,6 +46,7 @@ vi.mock('@/interrupters', () => ({
 	requirePermissions: vi.fn(() => vi.fn()),
 }));
 
+import { trackScrapeAttempt } from '@/analytics';
 import { RzStepError } from '@/classes';
 import { requireAuthentication } from '@/interrupters';
 import { createRecipeScrapeAttempt, linkRecipeScrapeToRecipe, updateRecipeScrapeStatus } from '@/repositories';
@@ -441,6 +446,91 @@ describe('_postHandler', () => {
 				expect.anything(),
 			);
 		});
+	});
+});
+
+describe('analytics tracking', () => {
+	let ctx: { user: { id: string }; logger: RzLogger };
+
+	beforeEach(() => {
+		vi.clearAllMocks();
+		vi.stubEnv('VITE_APP_VERSION', 'test-version');
+		ctx = { user: { id: 'user-id' }, logger: new Logger() };
+
+		vi.mocked(parseBodyJson).mockResolvedValue({ url: 'https://allrecipes.com/recipe/123' } as any);
+		vi.mocked(initializeScrape).mockResolvedValue(mockScrape as any);
+		vi.mocked(transformScrapeToRecipe).mockResolvedValue(mockTransformedRecipe as any);
+		vi.mocked(fetchAndStoreCoverImage).mockResolvedValue(mockImage as any);
+		vi.mocked(validateAsRecipe).mockResolvedValue(mockValidatedRecipe as any);
+		vi.mocked(saveRecipe).mockResolvedValue(mockSavedRecipe as any);
+		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
+		vi.mocked(saveRecipeInstructions).mockResolvedValue({} as any);
+		vi.mocked(saveRecipeIngredients).mockResolvedValue({} as any);
+		vi.mocked(createRecipeScrapeAttempt).mockResolvedValue(undefined as any);
+		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(mockScrape as any);
+		vi.mocked(linkRecipeScrapeToRecipe).mockResolvedValue(undefined as any);
+		mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.get.mockResolvedValue(null);
+		mockEnv.RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW.create.mockResolvedValue(undefined);
+	});
+
+	afterEach(() => {
+		vi.unstubAllEnvs();
+	});
+
+	it('tracks a successful scrape with success: true', async () => {
+		await _postHandler({ request: makeRequest(), ctx } as any);
+
+		expect(trackScrapeAttempt).toHaveBeenCalledWith(expect.objectContaining({ success: true }));
+	});
+
+	it('tracks a failed scrape with success: false', async () => {
+		vi.mocked(transformScrapeToRecipe).mockRejectedValue(new RzStepError(422, 'Failed', 'Failed'));
+
+		await _postHandler({ request: makeRequest(), ctx } as any);
+
+		expect(trackScrapeAttempt).toHaveBeenCalledWith(expect.objectContaining({ success: false }));
+	});
+
+	it('extracts the domain from the parsed body URL', async () => {
+		await _postHandler({ request: makeRequest(), ctx } as any);
+
+		expect(trackScrapeAttempt).toHaveBeenCalledWith(expect.objectContaining({ domain: 'allrecipes.com' }));
+	});
+
+	it('falls back to "unknown" when the parsed body has no URL', async () => {
+		vi.mocked(parseBodyJson).mockResolvedValue({} as any);
+		vi.mocked(transformScrapeToRecipe).mockRejectedValue(new RzStepError(422, 'Failed', 'Failed'));
+
+		await _postHandler({ request: makeRequest(), ctx } as any);
+
+		expect(trackScrapeAttempt).toHaveBeenCalledWith(expect.objectContaining({ domain: 'unknown' }));
+	});
+
+	it('includes the userId in the tracked data point', async () => {
+		await _postHandler({ request: makeRequest(), ctx } as any);
+
+		expect(trackScrapeAttempt).toHaveBeenCalledWith(expect.objectContaining({ userId: 'user-id' }));
+	});
+
+	it('includes a non-negative durationMs', async () => {
+		await _postHandler({ request: makeRequest(), ctx } as any);
+
+		const call = vi.mocked(trackScrapeAttempt).mock.calls[0][0];
+		expect(call.durationMs).toBeGreaterThanOrEqual(0);
+	});
+
+	it('tracks exactly once per request on success', async () => {
+		await _postHandler({ request: makeRequest(), ctx } as any);
+
+		expect(trackScrapeAttempt).toHaveBeenCalledTimes(1);
+	});
+
+	it('tracks exactly once per request on failure', async () => {
+		vi.mocked(transformScrapeToRecipe).mockRejectedValue(new RzStepError(422, 'Failed', 'Failed'));
+
+		await _postHandler({ request: makeRequest(), ctx } as any);
+
+		expect(trackScrapeAttempt).toHaveBeenCalledTimes(1);
 	});
 });
 

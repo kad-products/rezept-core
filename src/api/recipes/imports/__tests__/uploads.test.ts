@@ -4,7 +4,7 @@ import Logger from '@/logger';
 
 const mockEnv = vi.hoisted(() => ({
 	REZEPT_ENV: 'development' as string,
-	rezept_recipe_uploads: {
+	REZEPT_RECIPE_UPLOADS: {
 		put: vi.fn(),
 	},
 }));
@@ -55,7 +55,7 @@ describe('_postHandler', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockEnv.REZEPT_ENV = 'development';
-		mockEnv.rezept_recipe_uploads.put.mockResolvedValue({});
+		mockEnv.REZEPT_RECIPE_UPLOADS.put.mockResolvedValue({});
 		vi.mocked(createRecipeUpload).mockResolvedValue(mockUpload as any);
 		ctx = { user: { id: 'user-id' }, logger: new Logger() };
 	});
@@ -65,7 +65,7 @@ describe('_postHandler', () => {
 	describe('file upload', () => {
 		it('uploads the file to R2 using a UUID as the key', async () => {
 			await _postHandler({ request: makeRequest(), ctx } as any);
-			expect(mockEnv.rezept_recipe_uploads.put).toHaveBeenCalledWith(expect.stringMatching(uuidPattern), expect.anything(), {
+			expect(mockEnv.REZEPT_RECIPE_UPLOADS.put).toHaveBeenCalledWith(expect.stringMatching(uuidPattern), expect.anything(), {
 				httpMetadata: { contentType: 'text/csv' },
 			});
 		});
@@ -87,7 +87,7 @@ describe('_postHandler', () => {
 
 		it('uses the same UUID for the R2 key and the upload record id', async () => {
 			await _postHandler({ request: makeRequest(), ctx } as any);
-			const r2Key = mockEnv.rezept_recipe_uploads.put.mock.calls[0][0];
+			const r2Key = mockEnv.REZEPT_RECIPE_UPLOADS.put.mock.calls[0][0];
 			const uploadId = vi.mocked(createRecipeUpload).mock.calls[0][0].id;
 			expect(r2Key).toBe(uploadId);
 		});
@@ -121,7 +121,7 @@ describe('_postHandler', () => {
 			expect(response.status).toBe(400);
 			const body = (await response.json()) as any;
 			expect(body.error).toBe('A file is required');
-			expect(mockEnv.rezept_recipe_uploads.put).not.toHaveBeenCalled();
+			expect(mockEnv.REZEPT_RECIPE_UPLOADS.put).not.toHaveBeenCalled();
 		});
 
 		it('returns 400 when the file field is a string rather than a file', async () => {
@@ -135,7 +135,7 @@ describe('_postHandler', () => {
 			expect(response.status).toBe(400);
 			const body = (await response.json()) as any;
 			expect(body.error).toBe('A file is required');
-			expect(mockEnv.rezept_recipe_uploads.put).not.toHaveBeenCalled();
+			expect(mockEnv.REZEPT_RECIPE_UPLOADS.put).not.toHaveBeenCalled();
 		});
 
 		it('returns 413 when the file exceeds 100MB', async () => {
@@ -152,7 +152,7 @@ describe('_postHandler', () => {
 			expect(response.status).toBe(413);
 			const body = (await response.json()) as any;
 			expect(body.error).toBe('File exceeds the 100MB size limit');
-			expect(mockEnv.rezept_recipe_uploads.put).not.toHaveBeenCalled();
+			expect(mockEnv.REZEPT_RECIPE_UPLOADS.put).not.toHaveBeenCalled();
 		});
 	});
 
@@ -191,7 +191,7 @@ describe('route handler', () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		mockEnv.rezept_recipe_uploads.put.mockResolvedValue({});
+		mockEnv.REZEPT_RECIPE_UPLOADS.put.mockResolvedValue({});
 		vi.mocked(createRecipeUpload).mockResolvedValue(mockUpload as any);
 		authCheck = handler.post[0] as ReturnType<typeof vi.fn>;
 		vi.mocked(authCheck).mockReturnValue(undefined); // passes through by default
