@@ -1,3 +1,9 @@
+## [1.43.2](https://github.com/kad-products/rezept-core/compare/v1.43.1...v1.43.2) (2026-06-06)
+
+### Code Refactoring
+
+* standardize form component names ([f86efc3](https://github.com/kad-products/rezept-core/commit/f86efc3a18de991abf287c1c481c44d3b62bd1f0))
+
 ## [1.43.1](https://github.com/kad-products/rezept-core/compare/v1.43.0...v1.43.1) (2026-06-06)
 
 ### Bug Fixes
