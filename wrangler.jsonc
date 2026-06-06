@@ -190,6 +190,16 @@
 			"workers_dev": true
 		},
 		"production": {
+			"routes": [
+				{
+					"pattern": "kad-rezept.com",
+					"custom_domain": true
+				},
+				{
+					"pattern": "www.kad-rezept.com",
+					"custom_domain": true
+				}
+			],
 			"d1_databases": [
 				{
 					"binding": "REZEPT_CORE",
