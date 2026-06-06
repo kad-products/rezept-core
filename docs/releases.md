@@ -21,7 +21,7 @@ The `wrangler.jsonc` manages mapping details but it doesn't actually do the prov
 ### Secret
 
 1. `openssl rand -base64 32` for a random string
-2. `npx wrangler secret put SESSION_SECRET_KEY --env <env name>` and it'll prompt you for the secret action
+2. `pnpm exec wrangler secret put SESSION_SECRET_KEY --env <env name>` and it'll prompt you for the secret action
 
 ### Deploy
 
