@@ -7,7 +7,7 @@ import type { ActionState, IngredientDBRead, RecipeFormInput, RecipeWithSections
 import { useAppForm } from './context';
 import { FormDevtools } from './FormDevtools';
 
-export default function Recipe({
+export default function RecipeForm({
 	recipe,
 	allIngredients,
 	currentUserId,

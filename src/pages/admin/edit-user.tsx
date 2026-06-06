@@ -1,5 +1,5 @@
 import type { RequestInfo } from 'rwsdk/worker';
-import UserEditForm from '@/forms/user';
+import UserForm from '@/forms/user';
 import AdminLayout from '@/layouts/admin';
 import { getUserById } from '@/repositories';
 
@@ -11,7 +11,7 @@ export default async function Pages__admin__editUser({ ctx, params }: RequestInf
 			<nav className="in-page-nav">
 				<a href="/admin/users">Users</a>
 			</nav>
-			<UserEditForm user={user} />
+			<UserForm user={user} />
 		</AdminLayout>
 	);
 }

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import FormApiKey from '@/forms/api-key';
+import ApiKeyForm from '@/forms/api-key';
 import AppLayout from '@/layouts/app';
 import { getApiKeyById } from '@/repositories';
 import type { ApiKeyDBRead } from '@/types';
@@ -27,7 +27,7 @@ export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo
 						<a href={`/api-keys/${apiKey.id}`}>View</a>
 					</nav>
 				)}
-				<FormApiKey apiKey={apiKey} currentUserId={userId} />
+				<ApiKeyForm apiKey={apiKey} currentUserId={userId} />
 			</Suspense>
 		</AppLayout>
 	);

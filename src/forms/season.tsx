@@ -7,7 +7,7 @@ import type { ActionState, SeasonalIngredientWithRelations, SeasonDBRead, Season
 import { useAppForm } from './context';
 import { FormDevtools } from './FormDevtools';
 
-export default function Season({
+export default function SeasonForm({
 	season,
 	ingredientOptions,
 	seasonalIngredients,
