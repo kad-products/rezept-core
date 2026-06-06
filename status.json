@@ -5,8 +5,8 @@
       "deployedAt": "2026-06-06T04:24:00Z"
     },
     "staging": {
-      "version": null,
-      "deployedAt": null
+      "version": "1.43.0",
+      "deployedAt": "2026-06-06T04:33:08Z"
     },
     "production": {
       "version": null,
