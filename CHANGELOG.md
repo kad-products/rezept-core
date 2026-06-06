@@ -1,3 +1,10 @@
+## [1.43.1](https://github.com/kad-products/rezept-core/compare/v1.43.0...v1.43.1) (2026-06-06)
+
+### Bug Fixes
+
+* prod has a domain ([99b4e33](https://github.com/kad-products/rezept-core/commit/99b4e3322bb6f1951c2ad3e9b1ef98107fb33c13))
+* wrangler build vars ([282f73c](https://github.com/kad-products/rezept-core/commit/282f73c001376a574e4fb5f5224ca99f07cc2ead))
+
 ## [1.43.0](https://github.com/kad-products/rezept-core/compare/v1.42.1...v1.43.0) (2026-06-05)
 
 ### Features
