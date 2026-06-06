@@ -97,7 +97,7 @@ Each `src/` directory has a `readme.md` defining the pattern for that type. Read
 Do **not** add `database` parameters to production functions — use the proxy pattern for testing.
 
 ### Types
-All shared types live in `src/types` and are barrel-exported from there. Types are never defined inline in step, action, repository, or schema files — always define in `src/types` and import from `@/types`. Co-locating type definitions makes it easier to spot duplicates.
+Types used by more than one file live in `src/types`, barrel-exported from `index.ts`, and imported as `@/types`. Single-use types (used only within one file) may be defined inline in that file. Once a type is referenced from a second file, move it to `src/types`.
 
 ### Forms
 TanStack Form for state management and validation, Radix Form for accessibility structure. See `src/forms/readme.md` and `docs/decisions/0001-form-management-library.md`.
