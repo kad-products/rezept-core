@@ -1,3 +1,9 @@
+## [1.43.3](https://github.com/kad-products/rezept-core/compare/v1.43.2...v1.43.3) (2026-06-06)
+
+### Bug Fixes
+
+* clean up a bunch of console logs and stringification stuff ([1511d1f](https://github.com/kad-products/rezept-core/commit/1511d1fc9dfdf668649ba11f2519a1a77d825422))
+
 ## [1.43.2](https://github.com/kad-products/rezept-core/compare/v1.43.1...v1.43.2) (2026-06-06)
 
 ### Code Refactoring
