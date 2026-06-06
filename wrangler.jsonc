@@ -118,7 +118,15 @@
 					"dataset": "scrape_attempts_integration"
 				}
 			],
+			"workflows": [
+				{
+					"name": "recipe-scrape-cover-image-retry-workflow",
+					"binding": "RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW",
+					"class_name": "RecipeScrapeCoverImageRetryWorkflow"
+				}
+			],
 			"vars": {
+				"WEBAUTHN_APP_NAME": "rezept",
 				"REZEPT_ENV": "integration"
 			},
 			"workers_dev": true
@@ -168,7 +176,15 @@
 					"dataset": "scrape_attempts_staging"
 				}
 			],
+			"workflows": [
+				{
+					"name": "recipe-scrape-cover-image-retry-workflow",
+					"binding": "RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW",
+					"class_name": "RecipeScrapeCoverImageRetryWorkflow"
+				}
+			],
 			"vars": {
+				"WEBAUTHN_APP_NAME": "rezept",
 				"REZEPT_ENV": "staging"
 			},
 			"workers_dev": true
@@ -218,7 +234,15 @@
 					"dataset": "scrape_attempts_production"
 				}
 			],
+			"workflows": [
+				{
+					"name": "recipe-scrape-cover-image-retry-workflow",
+					"binding": "RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW",
+					"class_name": "RecipeScrapeCoverImageRetryWorkflow"
+				}
+			],
 			"vars": {
+				"WEBAUTHN_APP_NAME": "rezept",
 				"REZEPT_ENV": "production"
 			},
 			"workers_dev": false
