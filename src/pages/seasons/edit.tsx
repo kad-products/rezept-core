@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import { countryOptions } from '@/data/countries';
 import { monthOptions } from '@/data/months';
-import Season from '@/forms/season';
+import SeasonForm from '@/forms/season';
 import AppLayout from '@/layouts/app';
 import { getIngredients, getSeasonById } from '@/repositories';
 import type { SeasonWithIngredients } from '@/types';
@@ -34,7 +34,7 @@ export default async function Pages__seasons__edit({ ctx, params }: RequestInfo)
 						<a href={`/seasons/${season.id}`}>View</a>
 					</nav>
 				)}
-				<Season
+				<SeasonForm
 					season={season}
 					ingredientOptions={ingredientOptions}
 					countryOptions={countryOptions}

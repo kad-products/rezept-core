@@ -8,7 +8,7 @@ import type { ActionState, ApiKeyDBRead, ApiKeyFormInput } from '@/types';
 import { useAppForm } from './context';
 import { FormDevtools } from './FormDevtools';
 
-export default function FormApiKey({
+export default function ApiKeyForm({
 	apiKey,
 	currentUserId,
 }: {

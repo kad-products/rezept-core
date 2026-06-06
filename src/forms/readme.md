@@ -33,7 +33,7 @@ import { useAppForm } from './context';
 import { saveRecipe } from '@/actions/recipes';
 import type { ActionState, RecipeFormData } from '@/types';
 
-export default function FormRecipe({ recipe }: { recipe?: Recipe }) {
+export default function RecipeForm({ recipe }: { recipe?: Recipe }) {
     const [formState, setFormState] = useState<ActionState<RecipeFormData>>();
 
     const form = useAppForm({
@@ -104,7 +104,7 @@ Forms validate with `validators: { onBlur: schema }` — validation runs when a 
 
 ## Naming
 
-Form components use a `Form` prefix: `FormRecipe`, `FormSeason`, `FormApiKey`. This aids autocomplete and makes it clear in the component tree that a component is a form.
+Form components use an `<Entity>Form` suffix: `RecipeForm`, `SeasonForm`, `ApiKeyForm`. If an entity has separate add and edit forms, add a verb: `RecipeAddForm`, `RecipeEditForm`.
 
 ## Guidelines
 

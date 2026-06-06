@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import Recipe from '@/forms/recipe';
+import RecipeForm from '@/forms/recipe';
 import AppLayout from '@/layouts/app';
 import { getIngredients, getRecipeById } from '@/repositories';
 import type { RecipeWithSections } from '@/types';
@@ -21,7 +21,7 @@ export default async function Pages__recipes__edit({ ctx, params }: RequestInfo)
 						<a href={`/recipes/${recipe.id}`}>View</a>
 					</nav>
 				)}
-				<Recipe recipe={recipe} allIngredients={allIngredients} currentUserId={userId} />
+				<RecipeForm recipe={recipe} allIngredients={allIngredients} currentUserId={userId} />
 			</Suspense>
 		</AppLayout>
 	);

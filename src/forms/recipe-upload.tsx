@@ -6,7 +6,7 @@ type CFR2PutResponse = {
 	key: string;
 };
 
-export default function FileUploadForm(): React.ReactNode {
+export default function RecipeUploadForm(): React.ReactNode {
 	const [preview, setPreview] = useState<string | null>(null);
 	const [file, setFile] = useState<File | null>(null);
 	const [uploading, setUploading] = useState(false);
