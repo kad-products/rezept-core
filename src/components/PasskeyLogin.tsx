@@ -21,14 +21,11 @@ export default function PasskeyLogin(): React.ReactNode {
 			const login = await startAuthentication({
 				optionsJSON: startResult.data as unknown as PublicKeyCredentialRequestOptionsJSON,
 			});
-			console.log(login);
 
 			// 3. Give the signed challenge to the worker to finish the login process
 			const finishResult = await finishPasskeyLogin(login);
-			console.log(finishResult);
 
 			if (!finishResult.success) {
-				console.log('Failed');
 				setResult(finishResult.errors?._form?.[0] ?? 'Login failed');
 			} else {
 				setResult('Login successful!');

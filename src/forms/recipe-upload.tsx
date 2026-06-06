@@ -45,7 +45,6 @@ export default function RecipeUploadForm(): React.ReactNode {
 			if (!response.key) {
 				throw new Error(`No key returned`);
 			}
-			console.log('Uploaded to:', response.key);
 
 			// Reset form
 			if (preview) URL.revokeObjectURL(preview);
