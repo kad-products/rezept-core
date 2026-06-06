@@ -49,17 +49,8 @@ export default function ApiKeyForm({
 			<Form.Root
 				className="rz-form"
 				onSubmit={(e: React.FormEvent): void => {
-					console.log(`Trying to submit the form`);
 					e.preventDefault();
 					e.stopPropagation();
-					console.log(`About to hit the go button`);
-
-					console.log('=== PRE-SUBMISSION STATE ===');
-					console.log('canSubmit:', form.state.canSubmit);
-					console.log('isValid:', form.state.isValid);
-					console.log('Errors:', form.state.errors);
-					console.log('Values:', form.state.values);
-					console.log('Submission attempts:', form.state.submissionAttempts);
 					form.handleSubmit();
 				}}
 			>
@@ -74,20 +65,6 @@ export default function ApiKeyForm({
 				<form.AppForm>
 					<form.Submit label={buttonText} />
 				</form.AppForm>
-				<form.Subscribe
-					key={form.state.submissionAttempts} // Force re-render on each attempt
-					selector={(state: { errors: unknown[]; submissionAttempts: number }): { errors: unknown[]; attempts: number } => ({
-						errors: state.errors,
-						attempts: state.submissionAttempts,
-					})}
-				>
-					{(state: { errors: unknown[]; attempts: number }): React.ReactNode => (
-						<div>
-							<pre>Submission Attempts: {state.attempts}</pre>
-							<pre>Errors: {JSON.stringify(state.errors, null, 2)}</pre>
-						</div>
-					)}
-				</form.Subscribe>
 			</Form.Root>
 			<FormDevtools />
 		</>
