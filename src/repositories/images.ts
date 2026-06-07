@@ -1,9 +1,8 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { images } from '@/models';
-import type { ImageDBRead, ImageWriteInput } from '@/types';
+import type { ImageDBRead, ImageWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getImages(logger: RzLogger): Promise<ImageDBRead[]> {

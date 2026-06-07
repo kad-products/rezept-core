@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import { createRecipeUpload, getRecipeUploadById, getRecipeUploads } from '../recipe-uploads';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 const baseUploadData = {
 	originalFilename: 'recipe.pdf',

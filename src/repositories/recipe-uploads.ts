@@ -1,9 +1,8 @@
 import { and, eq, isNull } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { recipeUploads } from '@/models';
-import type { RecipeUploadDBRead, RecipeUploadWriteInput } from '@/types';
+import type { RecipeUploadDBRead, RecipeUploadWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
 export async function createRecipeUpload(

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type RzLogger from '@/logger';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
+import type { RzLogger } from '@/types';
 
 vi.mock('@/analytics', () => ({
 	trackApiKeyUsed: vi.fn(),
@@ -23,7 +23,7 @@ const mockRequestInfo: MockRequestInfo = {
 		user: {
 			id: 'test-user-id',
 		},
-		logger: new Logger(),
+		logger: createNoopLogger(),
 	},
 };
 
@@ -55,7 +55,7 @@ describe('apiKeyMiddleware', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockRequestInfo = {
-			ctx: { logger: new Logger() },
+			ctx: { logger: createNoopLogger() },
 			request: new Request('https://example.com/api/test'),
 			response: { headers: new Headers() },
 		};

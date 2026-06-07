@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import type { ApiKeyFormInput } from '@/types';
 import { resetDb } from '../../../tests/mocks/db';
 import { createApiKey, deleteApiKey, getApiKeyById, getApiKeyByKey, getApiKeysByUserId, updateApiKey } from '../api-keys';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'permissions'> = {
 	name: 'Test API Key',

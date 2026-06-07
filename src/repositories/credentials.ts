@@ -1,9 +1,8 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { credentials } from '@/models';
-import type { CredentialDBRead, CredentialWriteInput } from '@/types';
+import type { CredentialDBRead, CredentialWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
 export async function createCredential(

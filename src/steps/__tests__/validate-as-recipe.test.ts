@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { RzStepError } from '@/classes';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { validateAsRecipe } from '@/steps';
 import type { ParsedRecipeScrape } from '@/types';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 const userId = '123e4567-e89b-42d3-a456-556642440000';
 
 const validScrape: ParsedRecipeScrape = {

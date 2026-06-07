@@ -9,7 +9,9 @@
 	"compatibility_flags": ["nodejs_compat"],
 	"vars": {
 		"REZEPT_ENV": "development",
-		"WEBAUTHN_APP_NAME": "rezept"
+		"WEBAUTHN_APP_NAME": "rezept",
+		"LOG_LEVEL": "error",
+		"LOG_LEVEL_TASK_OVERRIDE": ""
 	},
 	"d1_databases": [
 		{

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { RzStepError } from '@/classes';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 
 const mockScrapesBucket = vi.hoisted(() => ({
 	put: vi.fn(),
@@ -19,7 +19,7 @@ import { createRecipeScrape } from '@/repositories';
 import { initializeScrape } from '@/steps';
 import type { RecipeScrapeDBRead } from '@/types';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 const userId = '00000000-0000-0000-0000-000000000001';
 const mockScrape = { id: 'scrape-123', userId } as unknown as RecipeScrapeDBRead;
 

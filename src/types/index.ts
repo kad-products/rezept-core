@@ -1,3 +1,4 @@
+export type { LogLevel, RzLogger } from '@/logger';
 export * from './action-state';
 export * from './api-keys';
 export * from './credentials';

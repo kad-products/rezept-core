@@ -1,9 +1,8 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import type { BatchItem } from 'drizzle-orm/batch';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { recipeInstructions } from '@/models';
-import type { RecipeInstructionDBRead, RecipeInstructionWriteInput } from '@/types';
+import type { RecipeInstructionDBRead, RecipeInstructionWriteInput, RzLogger } from '@/types';
 
 export async function updateRecipeInstructions(
 	recipeSectionId: string,

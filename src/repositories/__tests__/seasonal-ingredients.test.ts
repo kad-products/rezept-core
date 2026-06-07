@@ -1,7 +1,7 @@
 import { and, eq, isNull } from 'drizzle-orm';
 import { beforeEach, describe, expect, it } from 'vitest';
 import db from '@/db';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { seasonalIngredients } from '@/models';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
@@ -9,7 +9,7 @@ import { createIngredient } from '../ingredients';
 import { updateSeasonalIngredientsForSeason } from '../seasonal-ingredients';
 import { createSeason } from '../seasons';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 const baseSeasonData = {
 	name: 'Spring',

@@ -1,16 +1,15 @@
 import type { WorkflowEvent } from 'cloudflare:workers';
 import { WorkflowEntrypoint, type WorkflowStep } from 'cloudflare:workers';
-import Logger from '@/logger';
+import { createWorkflowLogger } from '@/logger';
 import { getRecipeScrapeById, updateRecipeCoverImage } from '@/repositories';
 import { fetchAndStoreCoverImage } from '@/steps';
 import type { ParsedRecipeScrapeImage } from '@/types/recipes';
-
-const logger = new Logger();
 
 type Params = { coverImage: ParsedRecipeScrapeImage; recipeScrapeId: string; userId: string };
 
 export class RecipeScrapeCoverImageRetryWorkflow extends WorkflowEntrypoint<Env, Params> {
 	async run(event: WorkflowEvent<Params>, step: WorkflowStep): Promise<void> {
+		const logger = createWorkflowLogger(event);
 		const { coverImage, recipeScrapeId, userId } = event.payload;
 
 		await step.sleep('initial delay', '5 seconds');

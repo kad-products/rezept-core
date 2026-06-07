@@ -1,9 +1,8 @@
 import { env } from 'cloudflare:workers';
 import crypto from 'node:crypto';
 import { RzStepError } from '@/classes';
-import type RzLogger from '@/logger';
 import { createRecipeScrape } from '@/repositories';
-import type { RecipeScrapeDBRead } from '@/types';
+import type { RecipeScrapeDBRead, RzLogger } from '@/types';
 
 export async function initializeScrape(parsedBody: unknown, userId: string, logger: RzLogger): Promise<RecipeScrapeDBRead> {
 	const id = crypto.randomUUID();

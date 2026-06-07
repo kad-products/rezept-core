@@ -1,9 +1,8 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { apiKeys } from '@/models';
-import type { ApiKeyDBRead, ApiKeyFormInput } from '@/types';
+import type { ApiKeyDBRead, ApiKeyFormInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getApiKeysByUserId(userId: string, logger: RzLogger): Promise<ApiKeyDBRead[]> {

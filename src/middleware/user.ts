@@ -10,6 +10,7 @@ export default async function userMiddleware({
 	if (ctx.session?.userId) {
 		try {
 			ctx.user = await getUserById(ctx.session.userId, ctx.logger);
+			ctx.logger = ctx.logger.child({ userId: ctx.user.id });
 		} catch (err) {
 			ctx.logger.error(`Error fetching current user: ${err}`);
 			await sessions.remove(request, response.headers);

@@ -1,9 +1,14 @@
 import { asc, eq, inArray, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { recipeScrapeAttempts, recipeScrapes } from '@/models';
-import type { RecipeScrapeAttemptDBRead, RecipeScrapeAttemptSource, RecipeScrapeDBRead, RecipeScrapeStatus } from '@/types';
+import type {
+	RecipeScrapeAttemptDBRead,
+	RecipeScrapeAttemptSource,
+	RecipeScrapeDBRead,
+	RecipeScrapeStatus,
+	RzLogger,
+} from '@/types';
 import { validateUuid } from './utils';
 
 export async function createRecipeScrape(

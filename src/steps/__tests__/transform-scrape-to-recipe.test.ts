@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { RzStepError } from '@/classes';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { transformScrapeToRecipe } from '@/steps';
 import type { JsonLdPayload } from '@/types';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 const baseRecipe = {
 	'@type': 'Recipe',

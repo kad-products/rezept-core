@@ -1,7 +1,6 @@
 import { RzStepError } from '@/classes';
-import type RzLogger from '@/logger';
 import { updateRecipeSections } from '@/repositories';
-import type { RecipeSectionDBRead, RecipeSectionWriteInput } from '@/types';
+import type { RecipeSectionDBRead, RecipeSectionWriteInput, RzLogger } from '@/types';
 
 export async function saveRecipeSections(
 	recipeId: string,

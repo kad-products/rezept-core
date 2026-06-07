@@ -1,9 +1,8 @@
 import { and, asc, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { recipeIngredients, recipeInstructions, recipeSections, recipes } from '@/models';
-import type { RecipeDBRead, RecipeWithSections, RecipeWriteInput } from '@/types';
+import type { RecipeDBRead, RecipeWithSections, RecipeWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getRecipes(logger: RzLogger): Promise<RecipeDBRead[]> {
