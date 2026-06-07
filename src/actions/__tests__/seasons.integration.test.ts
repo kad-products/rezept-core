@@ -1,8 +1,8 @@
 /// <reference types="@cloudflare/vitest-pool-workers/types" />
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type RzLogger from '@/logger';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { createUser, getSeasonById, getSeasons } from '@/repositories';
+import type { RzLogger } from '@/types';
 import { _saveSeason } from '../seasons';
 
 interface MockRequestInfo {
@@ -15,7 +15,7 @@ interface MockRequestInfo {
 const mockRequestInfo: MockRequestInfo = {
 	ctx: {
 		user: { id: 'test-user-id' },
-		logger: new Logger(),
+		logger: createNoopLogger(),
 	},
 };
 

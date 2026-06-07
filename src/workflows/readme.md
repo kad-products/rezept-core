@@ -66,6 +66,23 @@ for (const record of records) {
 
 The parent can fire-and-forget children or retain their instance IDs for status checking, depending on whether the parent needs to coordinate completion.
 
+## Logging
+
+Create the logger at the top of `run()` by passing the event to `createWorkflowLogger`. This automatically binds `instanceId`, `workflowName`, and `triggeredAt` to every log line, making it straightforward to find all logs for a specific workflow run in the CF log viewer.
+
+```typescript
+import { createWorkflowLogger } from '@/logger';
+
+export class ScrapeReprocessWorkflow extends WorkflowEntrypoint<Env, Params> {
+  async run(event: WorkflowEvent<Params>, step: WorkflowStep) {
+    const logger = createWorkflowLogger(event);
+    // All log lines from this run will include instanceId, workflowName, triggeredAt
+  }
+}
+```
+
+Use `logger.child({ task: 'step-name' })` to scope logs to a specific step, or pass `logger` directly to steps and repositories as with request handlers.
+
 ## Testing
 
 Step logic should be implemented as standalone exported async functions, keeping them independently unit-testable without involving the workflow runtime:
@@ -83,6 +100,7 @@ export async function reprocessScrape(scrapeId: string, logger: RzLogger): Promi
 
 export class ScrapeReprocessWorkflow extends WorkflowEntrypoint<Env, Params> {
   async run(event: WorkflowEvent<Params>, step: WorkflowStep) {
+    const logger = createWorkflowLogger(event);
     const scrapes = await step.do('fetch-scrapes', () => fetchScrapesToReprocess(logger));
     for (const scrape of scrapes) {
       await step.do(`reprocess-${scrape.id}`, () => reprocessScrape(scrape.id, logger));

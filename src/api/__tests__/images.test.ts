@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 
 const mockEnv = vi.hoisted(() => ({
 	REZEPT_IMAGES: {
@@ -17,11 +17,11 @@ const makeR2Object = (contentType?: string) => ({
 });
 
 describe('_getHandler', () => {
-	let ctx: { logger: InstanceType<typeof Logger> };
+	let ctx: { logger: ReturnType<typeof createNoopLogger> };
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		ctx = { logger: new Logger() };
+		ctx = { logger: createNoopLogger() };
 	});
 
 	it('returns 200 with the R2 object body when the image exists', async () => {

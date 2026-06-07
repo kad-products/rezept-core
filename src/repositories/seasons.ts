@@ -1,9 +1,8 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { seasonalIngredients, seasons } from '@/models';
-import type { SeasonDBRead, SeasonWithIngredients, SeasonWriteInput } from '@/types';
+import type { RzLogger, SeasonDBRead, SeasonWithIngredients, SeasonWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getSeasons(logger: RzLogger): Promise<SeasonDBRead[]> {

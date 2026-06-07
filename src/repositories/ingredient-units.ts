@@ -1,8 +1,7 @@
 import { isNull } from 'drizzle-orm';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { ingredientUnits } from '@/models';
-import type { IngredientUnitDBRead } from '@/types';
+import type { IngredientUnitDBRead, RzLogger } from '@/types';
 
 export async function getUnits(logger: RzLogger): Promise<IngredientUnitDBRead[]> {
 	logger.debug('Fetching all ingredient units');

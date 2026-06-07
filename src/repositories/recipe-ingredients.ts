@@ -1,8 +1,7 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { recipeIngredients } from '@/models';
-import type { RecipeIngredientDBRead, RecipeIngredientWriteInput } from '@/types';
+import type { RecipeIngredientDBRead, RecipeIngredientWriteInput, RzLogger } from '@/types';
 
 export async function updateRecipeIngredients(
 	recipeSectionId: string,

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import type { UserDBRead } from '@/types';
 
 vi.mock('@/repositories', () => ({
@@ -26,7 +26,7 @@ const mockUser = {
 
 const mockRequestInfo = {
 	ctx: {
-		logger: new Logger(),
+		logger: createNoopLogger(),
 	} as any,
 	request: new Request('https://example.com/test'),
 	response: {
@@ -38,7 +38,7 @@ describe('userMiddleware', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockRequestInfo.ctx = {
-			logger: new Logger(),
+			logger: createNoopLogger(),
 		};
 		mockRequestInfo.request = new Request('https://example.com/test');
 		mockRequestInfo.response = { headers: new Headers() };

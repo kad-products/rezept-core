@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type RzLogger from '@/logger';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
+import type { RzLogger } from '@/types';
 
 const mockEnv = vi.hoisted(() => ({
 	REZEPT_ENV: 'development' as string,
@@ -57,7 +57,7 @@ describe('_postHandler', () => {
 		mockEnv.REZEPT_ENV = 'development';
 		mockEnv.REZEPT_RECIPE_UPLOADS.put.mockResolvedValue({});
 		vi.mocked(createRecipeUpload).mockResolvedValue(mockUpload as any);
-		ctx = { user: { id: 'user-id' }, logger: new Logger() };
+		ctx = { user: { id: 'user-id' }, logger: createNoopLogger() };
 	});
 
 	const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -197,7 +197,7 @@ describe('route handler', () => {
 		vi.mocked(authCheck).mockReturnValue(undefined); // passes through by default
 		permissionCheck = handler.post[1] as ReturnType<typeof vi.fn>;
 		vi.mocked(permissionCheck).mockResolvedValue(undefined); // passes through by default
-		ctx = { user: { id: 'user-id' }, logger: new Logger() };
+		ctx = { user: { id: 'user-id' }, logger: createNoopLogger() };
 	});
 
 	it('handler chain ends with _postHandler', () => {

@@ -1,6 +1,5 @@
 import { RzStepError } from '@/classes';
-import type RzLogger from '@/logger';
-import type { JsonLdPayload, ParsedRecipeScrape, ParsedRecipeScrapeImage } from '@/types';
+import type { JsonLdPayload, ParsedRecipeScrape, ParsedRecipeScrapeImage, RzLogger } from '@/types';
 
 type JsonLdNode = Record<string, unknown>;
 

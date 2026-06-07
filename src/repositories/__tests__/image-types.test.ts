@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import {
@@ -11,7 +11,7 @@ import {
 	updateImageType,
 } from '../image-types';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 describe('image-types repository', () => {
 	let testUserId: string;

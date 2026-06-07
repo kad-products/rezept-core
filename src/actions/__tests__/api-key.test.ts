@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type RzLogger from '@/logger';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
+import type { RzLogger } from '@/types';
 
 const mockEnv = vi.hoisted(() => ({ REZEPT_ENV: 'development' as string }));
 const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
@@ -28,7 +28,7 @@ const mockRequestInfo: MockRequestInfo = {
 		user: {
 			id: randomUUID(),
 		},
-		logger: new Logger(),
+		logger: createNoopLogger(),
 	},
 };
 

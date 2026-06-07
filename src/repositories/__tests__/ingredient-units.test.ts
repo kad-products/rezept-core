@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { ingredientUnits } from '@/models';
 import { createUser } from '@/repositories';
 import db, { resetDb } from '../../../tests/mocks/db';
 import { getUnits } from '../ingredient-units';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 describe('ingredient-units repository', () => {
 	let testUserId: string;

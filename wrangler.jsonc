@@ -12,7 +12,9 @@
 	},
 	"vars": {
 		"WEBAUTHN_APP_NAME": "rezept",
-		"REZEPT_ENV": "development"
+		"REZEPT_ENV": "development",
+		"LOG_LEVEL": "debug",
+		"LOG_LEVEL_TASK_OVERRIDE": ""
 	},
 	"migrations": [
 		{
@@ -127,7 +129,9 @@
 			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
-				"REZEPT_ENV": "integration"
+				"REZEPT_ENV": "integration",
+				"LOG_LEVEL": "info",
+				"LOG_LEVEL_TASK_OVERRIDE": ""
 			},
 			"workers_dev": true
 		},
@@ -185,7 +189,9 @@
 			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
-				"REZEPT_ENV": "staging"
+				"REZEPT_ENV": "staging",
+				"LOG_LEVEL": "info",
+				"LOG_LEVEL_TASK_OVERRIDE": ""
 			},
 			"workers_dev": true
 		},
@@ -253,7 +259,9 @@
 			],
 			"vars": {
 				"WEBAUTHN_APP_NAME": "rezept",
-				"REZEPT_ENV": "production"
+				"REZEPT_ENV": "production",
+				"LOG_LEVEL": "info",
+				"LOG_LEVEL_TASK_OVERRIDE": ""
 			},
 			"workers_dev": false
 		}

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { beforeEach, describe, expect, it } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import type { CredentialWriteInput } from '@/types';
 import { resetDb } from '../../../tests/mocks/db';
 import {
@@ -12,7 +12,7 @@ import {
 } from '../credentials';
 import { createUser, deleteUser } from '../users';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 beforeEach(async () => {
 	await resetDb();

@@ -1,8 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { RzStepError } from '@/classes';
-import type RzLogger from '@/logger';
 import { createImage, getImageTypeByName } from '@/repositories';
-import type { ImageDBRead, ParsedRecipeScrapeImage } from '@/types';
+import type { ImageDBRead, ParsedRecipeScrapeImage, RzLogger } from '@/types';
 
 export async function fetchAndStoreCoverImage(
 	coverImage: ParsedRecipeScrapeImage,

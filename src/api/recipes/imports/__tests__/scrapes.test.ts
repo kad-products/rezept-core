@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type RzLogger from '@/logger';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
+import type { RzLogger } from '@/types';
 
 const mockEnv = vi.hoisted(() => ({
 	REZEPT_ENV: 'development' as string,
@@ -102,7 +102,7 @@ describe('_postHandler', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		vi.stubEnv('VITE_APP_VERSION', 'test-version');
-		ctx = { user: { id: 'user-id' }, logger: new Logger() };
+		ctx = { user: { id: 'user-id' }, logger: createNoopLogger() };
 
 		vi.mocked(parseBodyJson).mockResolvedValue({ url: 'https://example.com/recipe' } as any);
 		vi.mocked(initializeScrape).mockResolvedValue(mockScrape as any);
@@ -455,7 +455,7 @@ describe('analytics tracking', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		vi.stubEnv('VITE_APP_VERSION', 'test-version');
-		ctx = { user: { id: 'user-id' }, logger: new Logger() };
+		ctx = { user: { id: 'user-id' }, logger: createNoopLogger() };
 
 		vi.mocked(parseBodyJson).mockResolvedValue({ url: 'https://allrecipes.com/recipe/123' } as any);
 		vi.mocked(initializeScrape).mockResolvedValue(mockScrape as any);
@@ -564,7 +564,7 @@ describe('route handler', () => {
 		// handler.post[1] is the function returned by requirePermissions() at module init
 		permissionCheck = handler.post[1] as ReturnType<typeof vi.fn>;
 		vi.mocked(permissionCheck).mockResolvedValue(undefined); // passes through by default
-		ctx = { user: { id: 'user-id' }, logger: new Logger() };
+		ctx = { user: { id: 'user-id' }, logger: createNoopLogger() };
 	});
 
 	it('handler chain ends with _postHandler', () => {

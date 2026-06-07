@@ -1,7 +1,7 @@
 import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { seasonalIngredients } from '@/models';
+import type { RzLogger } from '@/types';
 
 export async function updateSeasonalIngredientsForSeason(
 	seasonId: string,

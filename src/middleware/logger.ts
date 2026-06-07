@@ -1,6 +1,6 @@
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
-import Logger from '@/logger';
+import { createRequestLogger } from '@/logger';
 
-export default function loggerMiddleware({ ctx }: RequestInfo<DefaultAppContext>): void {
-	ctx.logger = new Logger();
+export default function loggerMiddleware({ ctx, request }: RequestInfo<DefaultAppContext>): void {
+	ctx.logger = createRequestLogger(request);
 }

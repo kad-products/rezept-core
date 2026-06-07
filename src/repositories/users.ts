@@ -1,9 +1,8 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import type RzLogger from '@/logger';
 import { users } from '@/models';
-import type { UserDBRead, UserWriteInput } from '@/types';
+import type { RzLogger, UserDBRead, UserWriteInput } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getUsers(logger: RzLogger, includeDeleted = false): Promise<UserDBRead[]> {

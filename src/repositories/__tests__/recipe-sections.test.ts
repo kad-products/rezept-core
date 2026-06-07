@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import { getSectionsByRecipeId, updateRecipeSections } from '../recipe-sections';
 import { createRecipe } from '../recipes';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 describe('recipe-sections repository', () => {
 	let testUserId: string;

@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import Logger from '@/logger';
+import { createNoopLogger } from '@/logger';
 import { resetDb } from '../../../tests/mocks/db';
 import { createUser, deleteUser, getUserById, getUsers, updateUser } from '../users';
 
-const logger = new Logger();
+const logger = createNoopLogger();
 
 beforeEach(async () => {
 	await resetDb();
