@@ -12,8 +12,7 @@ export async function validateAsRecipe(
 
 		if (parsed.error) {
 			const fieldErrors = JSON.stringify(parsed.error.flatten().fieldErrors);
-			logger.warn(`Recipe data failed validation: ${fieldErrors}`);
-			logger.debug(`Original scrape payload: ${JSON.stringify(transformedRecipe, null, 2)}`);
+			logger.warn('Recipe data failed validation', { fieldErrors: parsed.error.flatten().fieldErrors });
 			throw new RzStepError(400, 'The recipe data could not be validated', `Recipe data failed validation: ${fieldErrors}`);
 		}
 

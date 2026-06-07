@@ -20,12 +20,11 @@ export async function _saveSeason(formData: SeasonWriteInput): Promise<ActionSta
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
 
-	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
+	requestInfo.ctx.logger.debug('Season form data received', { id: formData.id, name: formData.name });
 
 	try {
 		const parsed = seasonsSchemas.form.safeParse(formData);
 		if (!parsed.success) {
-			requestInfo.ctx.logger.info(`Errors: ${JSON.stringify(parsed.error.flatten().fieldErrors, null, 4)}`);
 			return errorResponse<SeasonDBRead>(parsed.error.flatten().fieldErrors, 400);
 		}
 		if (parsed.data.id) {
@@ -35,7 +34,7 @@ export async function _saveSeason(formData: SeasonWriteInput): Promise<ActionSta
 		const createdSeason = await createSeason(parsed.data, userId, requestInfo.ctx.logger);
 		return successResponse<SeasonDBRead>(createdSeason);
 	} catch (error) {
-		requestInfo.ctx.logger.info(`Error saving season: ${error} `);
+		requestInfo.ctx.logger.error('Failed to save season', { error });
 		return errorResponse<SeasonDBRead>(error, 500, 'Failed to save season');
 	}
 }

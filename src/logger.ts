@@ -13,6 +13,18 @@ export interface RzLogger {
 
 const LEVEL_ORDER: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
 
+// Matches any key name containing these substrings (case-insensitive), e.g. publicKey, apiKey, accessToken, clientSecret.
+const REDACTED_PATTERN = /password|secret|token|key/i;
+const CENSOR = '[Redacted]';
+
+function redact(value: unknown): unknown {
+	if (value === null || typeof value !== 'object') return value;
+	if (Array.isArray(value)) return value.map(redact);
+	return Object.fromEntries(
+		Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, REDACTED_PATTERN.test(k) ? CENSOR : redact(v)]),
+	);
+}
+
 function parseLevel(level: string | undefined, fallback: LogLevel): LogLevel {
 	if (level === 'debug' || level === 'info' || level === 'warn' || level === 'error') return level;
 	return fallback;
@@ -47,7 +59,7 @@ function write(
 		: undefined;
 	const entry = { level, message, timestamp: new Date().toISOString(), ...bindings, ...serializedMeta };
 	// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
-	console.log(JSON.stringify(entry));
+	console.log(JSON.stringify(redact(entry)));
 }
 
 function buildLogger(bindings: Record<string, unknown>, level: LogLevel, taskOverrides: Map<string, LogLevel>): RzLogger {
