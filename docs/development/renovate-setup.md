@@ -20,7 +20,7 @@ The following settings are managed in `terraform/` and applied via `terraform ap
 
 - `github_repository.allow_auto_merge = true` — enables GitHub's native auto-merge feature on PRs
 - `github_branch_protection` required status checks — `Unit Tests / unit-tests` is required, so automerge waits for CI to pass before merging
-- `github_actions_secret.RENOVATE_TOKEN` — the secret slot exists in Terraform; value is passed as the `renovate_token` variable at apply time
+- `github_actions_secret.REZEPT_CORE_WORKFLOW_AUTOMATION` — the secret slot exists in Terraform; value is passed as the `REZEPT_CORE_WORKFLOW_AUTOMATION` variable at apply time
 
 ---
 
@@ -38,26 +38,26 @@ Go to [GitHub → Settings → Personal access tokens → Fine-grained tokens](h
 - **Repository access:** Only `kad-products/rezept-core`
 - **Repository permissions:**
 
-  | Permission | Access |
-  |---|---|
-  | Contents | Read and write |
-  | Issues | Read and write |
-  | Metadata | Read (required, auto-granted) |
-  | Pull requests | Read and write |
-  | Workflows | Read and write |
+  | Permission    | Access                        |
+  | ------------- | ----------------------------- |
+  | Contents      | Read and write                |
+  | Issues        | Read and write                |
+  | Metadata      | Read (required, auto-granted) |
+  | Pull requests | Read and write                |
+  | Workflows     | Read and write                |
 
   > `Workflows` is required because Renovate will open PRs that update files in `.github/workflows/` when GitHub Actions versions change.
 
 ### 2. Apply Terraform with the token value
 
-Pass the token as the `renovate_token` variable when applying:
+Pass the token as the `REZEPT_CORE_WORKFLOW_AUTOMATION` variable when applying:
 
 ```bash
 cd terraform
-terraform apply -var="renovate_token=github_pat_..."
+terraform apply -var="REZEPT_CORE_WORKFLOW_AUTOMATION=github_pat_..."
 ```
 
-This stores the token as the `RENOVATE_TOKEN` Actions secret, alongside the other repo and branch protection settings.
+This stores the token as the `REZEPT_CORE_WORKFLOW_AUTOMATION` Actions secret, alongside the other repo and branch protection settings.
 
 ---
 
@@ -66,7 +66,7 @@ This stores the token as the `RENOVATE_TOKEN` Actions secret, alongside the othe
 Every 90 days:
 
 1. Generate a new fine-grained token with the same settings as above
-2. Re-run `terraform apply -var="renovate_token=github_pat_..."` with the new value
+2. Re-run `terraform apply -var="REZEPT_CORE_WORKFLOW_AUTOMATION=github_pat_..."` with the new value
 3. Delete the old token from your GitHub profile
 
 ---
