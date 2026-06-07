@@ -1,3 +1,13 @@
+## [1.44.0](https://github.com/kad-products/rezept-core/compare/v1.43.3...v1.44.0) (2026-06-07)
+
+### Features
+
+* have a much better logging setup ([107cfa1](https://github.com/kad-products/rezept-core/commit/107cfa17ad7c22c180c3701e47e52e109d0a72a0))
+
+### Bug Fixes
+
+* use new logger in error handler ([00fa559](https://github.com/kad-products/rezept-core/commit/00fa559bb5f74490ae3bd0bd7586dbb4b2604efa))
+
 ## [1.43.3](https://github.com/kad-products/rezept-core/compare/v1.43.2...v1.43.3) (2026-06-06)
 
 ### Bug Fixes
