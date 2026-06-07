@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
-import type { RequestInfo } from 'rwsdk/worker';
+import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { RzAccessError } from '@/classes';
 import RootErrorHandler from './components/RootErrorHandler';
 
@@ -12,7 +12,7 @@ import RootErrorHandler from './components/RootErrorHandler';
  *   so the form layer can surface the error.
  * - Page navigation requests always get the React RootErrorHandler component.
  */
-export function handlePageError(error: unknown, { request }: RequestInfo): Response | JSX.Element {
+export function handlePageError(error: unknown, { request, ctx }: RequestInfo<DefaultAppContext>): Response | JSX.Element {
 	const isActionRequest = new URL(request.url).searchParams.has('__rsc_action_id');
 
 	if (isActionRequest) {
@@ -21,7 +21,6 @@ export function handlePageError(error: unknown, { request }: RequestInfo): Respo
 		return Response.json({ success: false, code, errors: { _form: [message] } }, { status: code });
 	}
 
-	// biome-ignore lint/suspicious/noConsole: just logging what lands here as "unhandled" so we can triage and add more specific handling as needed
-	console.error('Unhandled error:', error);
+	ctx.logger.error('Unhandled error', { error });
 	return <RootErrorHandler error={error as Error} />;
 }

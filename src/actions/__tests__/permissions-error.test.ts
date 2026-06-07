@@ -6,13 +6,17 @@
  * - Server action requests (__rsc_action_id query param) → JSON ActionState
  * - Page navigation requests → React RootErrorHandler component
  */
-import type { RequestInfo } from 'rwsdk/worker';
+import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { describe, expect, it } from 'vitest';
 import { RzAccessError } from '@/classes';
+import { createNoopLogger } from '@/logger';
 import { handlePageError } from '../../worker-error';
 
-function makeReqInfo(url: string): RequestInfo {
-	return { request: new Request(url) } as unknown as RequestInfo;
+function makeReqInfo(url: string): RequestInfo<DefaultAppContext> {
+	return {
+		request: new Request(url),
+		ctx: { logger: createNoopLogger() } as DefaultAppContext,
+	} as unknown as RequestInfo<DefaultAppContext>;
 }
 
 const actionReqInfo = makeReqInfo('https://example.com/recipes?__rsc_action_id=abc123');

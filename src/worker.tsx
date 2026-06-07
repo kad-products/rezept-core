@@ -1,5 +1,5 @@
 import { except, prefix, render, route } from 'rwsdk/router';
-import { defineApp, type RequestInfo } from 'rwsdk/worker';
+import { type DefaultAppContext, defineApp, type RequestInfo } from 'rwsdk/worker';
 import apiRoutes from '@/api/routes';
 import AdminDocument from '@/documents/admin';
 import AppDocument from '@/documents/app';
@@ -40,7 +40,7 @@ export default defineApp(
 		render(AdminDocument, [prefix('/admin', adminRoutes.admin)]),
 		render(NoJSDocument, [prefix('/recipes', recipeRoutes.noJS)]),
 		render(AppDocument, [
-			except<RequestInfo>(handlePageError),
+			except<RequestInfo<DefaultAppContext>>(handlePageError),
 			route('/', Pages__root),
 			prefix('/auth', authRoutes.app),
 			prefix('/profile', profileRoutes.app),
