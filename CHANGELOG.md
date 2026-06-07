@@ -1,3 +1,9 @@
+## [1.44.1](https://github.com/kad-products/rezept-core/compare/v1.44.0...v1.44.1) (2026-06-07)
+
+### Bug Fixes
+
+* cleanup aggressive debug logging ([f924f48](https://github.com/kad-products/rezept-core/commit/f924f483abd8ada3a22acb6828563abec9adf813))
+
 ## [1.44.0](https://github.com/kad-products/rezept-core/compare/v1.43.3...v1.44.0) (2026-06-07)
 
 ### Features
