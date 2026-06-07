@@ -8,7 +8,7 @@ export function getWebAuthnConfig(request: Request): { rpName: string; rpID: str
 	// Cloudflare (production) and tunnel (dev) both terminate TLS before the Worker.
 	// wrangler dev reports http:// in req.url even when the tunnel provides HTTPS,
 	// so force https for any non-localhost host to match what the browser actually sees.
-	const origin = url.hostname === 'localhost' || url.hostname === '127.0.0.1' ? url.origin : `https://${url.host}`;
+	const origin = url.hostname.includes('localhost') || url.hostname === '127.0.0.1' ? url.origin : `https://${url.host}`;
 
 	return {
 		rpName,
