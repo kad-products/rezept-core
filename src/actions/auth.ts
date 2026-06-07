@@ -48,12 +48,11 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 		const { request, response } = requestInfo;
 		const { origin } = getWebAuthnConfig(requestInfo.request);
 
-		requestInfo.ctx.logger.info(`Login: ${JSON.stringify(login, null, 4)}`);
+		const taskLogger = requestInfo.ctx.logger.child({ task: 'passkey-login' });
+		taskLogger.debug('Passkey login attempt', { credentialId: login.id });
 
 		const session = await sessions.load(request);
 		const challenge = session?.challenge;
-
-		requestInfo.ctx.logger.info(`Challenge: ${JSON.stringify(challenge, null, 4)}`);
 
 		if (!challenge) {
 			trackLoginAttempt({
@@ -67,9 +66,9 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 
 		let credential: CredentialDBRead;
 		try {
-			credential = await getCredentialById(login.id, requestInfo.ctx.logger);
+			credential = await getCredentialById(login.id, taskLogger);
 
-			requestInfo.ctx.logger.info(`Credential: ${JSON.stringify(credential, null, 4)}`);
+			taskLogger.debug('Credential found', { credentialId: credential.credentialId, userId: credential.userId });
 		} catch (err) {
 			trackLoginAttempt({
 				type: 'PASSKEY',
@@ -92,7 +91,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 			},
 		});
 
-		requestInfo.ctx.logger.info(`Verification: ${JSON.stringify(verification, null, 4)}`);
+		taskLogger.debug('Passkey verification result', { verified: verification.verified });
 
 		if (!verification.verified) {
 			trackLoginAttempt({
@@ -112,7 +111,7 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 
 		const user = await getUserById(credential.userId, requestInfo.ctx.logger);
 
-		requestInfo.ctx.logger.info(`User: ${JSON.stringify(user, null, 4)}`);
+		taskLogger.debug('User resolved', { userId: user.id });
 
 		await sessions.save(response.headers, {
 			userId: user.id,

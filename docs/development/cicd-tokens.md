@@ -32,4 +32,4 @@ cd terraform && terraform apply
   - Read/write `administration` permission to allow for branch protection manipulation
   - Read permission on `metadata`
 - Rotate 90 days
-- Saved as `SEMANTIC_RELEASE_TOKEN` in [GitHub Secrets](https://github.com/kad-products/rezept-core/settings/secrets/actions)
+- Saved as `REZEPT_CORE_WORKFLOW_AUTOMATION` in [GitHub Secrets](https://github.com/kad-products/rezept-core/settings/secrets/actions)

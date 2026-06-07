@@ -16,4 +16,4 @@ jobs:
             -f limit=collaborators_only \
             -f expiry=six_months
         env:
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.REZEPT_CORE_WORKFLOW_AUTOMATION }}

@@ -48,8 +48,7 @@ export async function transformScrapeToRecipe(parsedBody: JsonLdPayload, logger:
 		logger.debug(`Transformed scrape to recipe: "${result.title}"`);
 		return result;
 	} catch (err) {
-		logger.warn(`Error transforming JSON-LD payload to recipe: ${err}`);
-		logger.debug(`Original scrape payload: ${JSON.stringify(parsedBody, null, 2)}`);
+		logger.warn('Error transforming JSON-LD payload to recipe', { error: err });
 		throw new RzStepError(
 			400,
 			'Could not extract a recipe from the page content',

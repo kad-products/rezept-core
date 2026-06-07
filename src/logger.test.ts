@@ -169,6 +169,78 @@ describe('RzLogger', () => {
 		});
 	});
 
+	describe('redaction', () => {
+		it('replaces top-level sensitive keys in meta with [Redacted]', () => {
+			const request = new Request('https://example.com/');
+			const logger = createRequestLogger(request);
+			logger.info('auth attempt', { password: 'hunter2', userId: 'u-123' });
+			const entry = lastOutput();
+			expect(entry.password).toBe('[Redacted]');
+			expect(entry.userId).toBe('u-123');
+		});
+
+		it('redacts nested sensitive keys inside objects', () => {
+			const request = new Request('https://example.com/');
+			const logger = createRequestLogger(request);
+			logger.info('credential stored', { credential: { publicKey: new Uint8Array([1, 2, 3]), id: 'cred-abc' } });
+			const entry = lastOutput();
+			const credential = entry.credential as Record<string, unknown>;
+			expect(credential.publicKey).toBe('[Redacted]');
+			expect(credential.id).toBe('cred-abc');
+		});
+
+		it('redacts keys containing password, secret, token, or key as substrings', () => {
+			const request = new Request('https://example.com/');
+			const logger = createRequestLogger(request);
+			logger.info('multi-redact', {
+				password: 'pw',
+				passwordHash: 'hash',
+				secret: 'sec',
+				clientSecret: 'cs',
+				token: 'tok',
+				accessToken: 'at',
+				key: 'k',
+				publicKey: 'pk',
+				apiKey: 'ak',
+			});
+			const entry = lastOutput();
+			for (const field of [
+				'password',
+				'passwordHash',
+				'secret',
+				'clientSecret',
+				'token',
+				'accessToken',
+				'key',
+				'publicKey',
+				'apiKey',
+			]) {
+				expect(entry[field], `expected ${field} to be redacted`).toBe('[Redacted]');
+			}
+		});
+
+		it('redacts sensitive keys inside a serialized error', () => {
+			const request = new Request('https://example.com/');
+			const logger = createRequestLogger(request);
+			const err = Object.assign(new Error('credential error'), { publicKey: Buffer.from([1, 2, 3]) });
+			logger.error('passkey failed', { error: err });
+			const entry = lastOutput();
+			const serializedError = entry.error as Record<string, unknown>;
+			expect(serializedError.publicKey).toBe('[Redacted]');
+			expect(serializedError.message).toBe('credential error');
+		});
+
+		it('leaves non-sensitive keys unchanged', () => {
+			const request = new Request('https://example.com/');
+			const logger = createRequestLogger(request);
+			logger.info('safe log', { recipeId: 'r-123', publicMessage: 'hello', tags: ['pasta'] });
+			const entry = lastOutput();
+			expect(entry.recipeId).toBe('r-123');
+			expect(entry.publicMessage).toBe('hello');
+			expect(entry.tags).toEqual(['pasta']);
+		});
+	});
+
 	describe('meta serialization', () => {
 		it('merges meta fields into the log entry', () => {
 			const request = new Request('https://example.com/');

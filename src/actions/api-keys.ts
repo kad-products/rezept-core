@@ -21,15 +21,13 @@ export async function _saveApiKey(formData: ApiKeyFormInput): Promise<ActionStat
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
 
-	requestInfo.ctx.logger.info(`Form data received: ${JSON.stringify(formData, null, 4)} `);
+	requestInfo.ctx.logger.debug('API key form data received', { id: formData.id, name: formData.name });
 
 	const parsed = apiKeysSchemas.form.safeParse(formData);
 
 	if (parsed.error) {
 		return errorResponse<ApiKeyDBRead>(parsed.error.flatten().fieldErrors, 400);
 	}
-
-	requestInfo.ctx.logger.info(`Validated form data: ${JSON.stringify(parsed, null, 4)} `);
 
 	let apiKey: ApiKeyDBRead;
 	try {
@@ -38,11 +36,11 @@ export async function _saveApiKey(formData: ApiKeyFormInput): Promise<ActionStat
 		} else {
 			apiKey = await createApiKey(parsed.data, userId, requestInfo.ctx.logger);
 		}
-		requestInfo.ctx.logger.info(`API Key ${apiKey.id} saved`);
+		requestInfo.ctx.logger.info('API key saved', { apiKeyId: apiKey.id });
 
 		return successResponse<ApiKeyDBRead>(apiKey, 200);
 	} catch (error) {
-		requestInfo.ctx.logger.info(`Error saving API Key: ${error} `);
+		requestInfo.ctx.logger.error('Failed to save API key', { error });
 		return errorResponse<ApiKeyDBRead>(error, 400, 'Failed to save item');
 	}
 }
