@@ -8,16 +8,16 @@ Just a quick way to apply some rules to the repo.  Could pull out into a module 
 cd terraform
 
 # Set GitHub token
-export GITHUB_TOKEN=ghp_your_token_here
+export GITHUB_TOKEN=ghp_your_token_here_with_gh_project_perms
 
 # Initialize
 terraform init
 
 # Preview changes
-terraform plan
+terraform plan -var="rezept_core_workflow_automation=$GITHUB_TOKEN_REZEPT_CORE_WORKFLOW_AUTOMATION"
 
 # Apply protection rules
-terraform apply
+terraform apply -var="rezept_core_workflow_automation=$GITHUB_TOKEN_REZEPT_CORE_WORKFLOW_AUTOMATION"
 ```
 
 ## Steps

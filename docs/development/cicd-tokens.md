@@ -14,7 +14,7 @@ cd terraform && terraform apply
 - No org permissions
 - Repository permissions:
   - Read/write `administration` — repo settings (`allow_auto_merge`, etc.) and branch protection rules
-  - Read/write `secrets` — Actions secrets (`RENOVATE_TOKEN`, etc.)
+  - Read/write `secrets` — Actions secrets (`REZEPT_CORE_WORKFLOW_AUTOMATION`, etc.)
   - Read `metadata` (required, auto-granted)
 - Rotate 90 days
 

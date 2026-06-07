@@ -1,5 +1,5 @@
-resource "github_actions_secret" "renovate_token" {
+resource "github_actions_secret" "rezept_core_workflow_automation" {
   repository      = "rezept-core"
-  secret_name     = "RENOVATE_TOKEN"
-  plaintext_value = var.renovate_token
+  secret_name     = "REZEPT_CORE_WORKFLOW_AUTOMATION"
+  plaintext_value = var.rezept_core_workflow_automation
 }

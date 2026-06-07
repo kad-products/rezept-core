@@ -1,5 +1,5 @@
-variable "renovate_token" {
-  description = "Fine-grained PAT used by the self-hosted Renovate workflow to open and automerge dependency PRs. See docs/development/renovate-setup.md."
+variable "rezept_core_workflow_automation" {
+  description = "Fine-grained PAT used by Renovate, Semantic Release, and Interaction Limits workflows"
   type        = string
   sensitive   = true
 }
