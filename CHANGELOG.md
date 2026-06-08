@@ -1,3 +1,9 @@
+## [1.45.1](https://github.com/kad-products/rezept-core/compare/v1.45.0...v1.45.1) (2026-06-08)
+
+### Code Refactoring
+
+* organize design system components into their own directory ([c10804c](https://github.com/kad-products/rezept-core/commit/c10804c017b534b6e4c3e148f4a186d4cb347692))
+
 ## [1.45.0](https://github.com/kad-products/rezept-core/compare/v1.44.1...v1.45.0) (2026-06-08)
 
 ### Features
