@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/experimental-ct-react';
 import type { RzTableColumn } from '@/types';
-import RzTable from '../RzTable';
+import RzTable from './RzTable';
 
 const columns: RzTableColumn[] = [
 	{ key: 'title', label: 'Title' },

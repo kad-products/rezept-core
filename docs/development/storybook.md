@@ -12,11 +12,13 @@ If you've worked on a Next.js project before, your machine is probably already s
 
 ## Setup
 
+Check out the [**video walkthrough**](../videos/storybook.mp4) of this setup if that's more your style.
+
 ### 1. Follow Get Started
 
 Follow the [Getting Started](./getting-started.md) docs to get your local environment setup.
 
-### 3. Start Storybook
+### 2. Start Storybook
 
 ```bash
 pnpm storybook:dev

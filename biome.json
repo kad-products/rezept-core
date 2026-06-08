@@ -59,7 +59,8 @@
 				"src/models/**",
 				"src/schemas/**",
 				".storybook/**",
-				"**/*.stories.tsx"
+				"**/*.stories.tsx",
+				"**/*.test.tsx"
 			],
 			"linter": {
 				"rules": {
