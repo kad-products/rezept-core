@@ -7,7 +7,7 @@
 
 ## Setup
 
-Check out the [**video walkthrough**](../videos/getting-started.mov) of this setup if that's more your style.
+Check out the [**video walkthrough**](../videos/getting-started.mp4) of this setup if that's more your style.
 
 ### 1. Clone the Repo
 
