@@ -1,6 +1,6 @@
 import { DurableObject, env } from 'cloudflare:workers';
 import { defineDurableSession, MAX_SESSION_DURATION } from 'rwsdk/auth';
-import type { Session, SessionError } from '@/types';
+import type { Permission, Session, SessionError } from '@/types';
 
 export const sessions = defineDurableSession({
 	secretKey: env.SESSION_SECRET_KEY,
@@ -22,14 +22,17 @@ export class SessionDurableObject extends DurableObject {
 	async saveSession({
 		userId = null,
 		challenge = null,
+		permissionsOverride = undefined,
 	}: {
 		userId?: string | null;
 		challenge?: string | null;
+		permissionsOverride?: Permission[] | undefined;
 	}): Promise<Session> {
 		const now = this.now();
 		const session: Session = {
 			userId,
 			challenge,
+			permissionsOverride,
 			createdAt: now,
 			lastAccessedAt: now,
 		};

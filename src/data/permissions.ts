@@ -1,8 +1,10 @@
+import type { Permission } from '@/types/permissions';
 import type { PermissionRole } from './roles';
 
 type RoleEntry = PermissionRole | '*';
 
-const permissions: Record<string, Record<string, RoleEntry[]>> = {
+// biome-ignore lint/nursery/useExplicitType: This is a constant and a data source/inference source for other types so we can't type this without causing problems in those
+const permissions = {
 	admin: {
 		read: ['ADMIN'],
 	},
@@ -21,6 +23,9 @@ const permissions: Record<string, Record<string, RoleEntry[]>> = {
 		read: ['*'],
 		update: ['ADMIN', 'BASIC'],
 		delete: ['ADMIN', 'BASIC'],
+	},
+	permissions: {
+		override: ['ADMIN'],
 	},
 	profile: {
 		read: ['ADMIN', 'BASIC'],
@@ -47,11 +52,11 @@ const permissions: Record<string, Record<string, RoleEntry[]>> = {
 
 export default permissions;
 
-export const flattenedPermissions: Array<{ permission: string; roles: string[] }> = Object.entries(permissions).flatMap(
+export const flattenedPermissions: Array<{ permission: Permission; roles: string[] }> = Object.entries(permissions).flatMap(
 	([resource, actions]) =>
 		Object.entries(actions).map(([action, roles]) => ({
-			permission: `${resource}:${action}`,
-			roles,
+			permission: `${resource}:${action}` as Permission,
+			roles: roles as string[],
 		})),
 );
 
