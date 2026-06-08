@@ -4,7 +4,11 @@ import type { PermissionRole } from '@/data/roles';
 import type { Permission } from '@/types';
 
 export default function permissionsMiddleware({ ctx }: RequestInfo<DefaultAppContext>): void {
-	if (ctx.session?.permissionsOverride) {
+	if (
+		ctx.session?.permissionsOverride &&
+		Array.isArray(ctx.session.permissionsOverride) &&
+		ctx.session?.permissionsOverride.length > 0
+	) {
 		ctx.permissions = ctx.session.permissionsOverride;
 		return;
 	}

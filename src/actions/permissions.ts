@@ -36,7 +36,9 @@ export async function _savePermissionsOverride(formData: { permissions: Permissi
 
 	try {
 		const currentSessionData = await sessions.load(requestInfo.request);
-
+		if (!currentSessionData) {
+			return errorResponse('No active session', 400);
+		}
 		await sessions.save(response.headers, {
 			...currentSessionData,
 			permissionsOverride: parsed.data.permissions,
