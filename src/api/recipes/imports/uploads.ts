@@ -33,7 +33,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 	const uploadId = crypto.randomUUID();
 
 	// Stream the file directly to R2
-	const results = await env.REZEPT_RECIPE_UPLOADS.put(uploadId, file.stream(), {
+	await env.REZEPT_RECIPE_UPLOADS.put(uploadId, file.stream(), {
 		httpMetadata: {
 			contentType: file.type,
 		},
@@ -58,7 +58,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		return apiErrorResponse(err, 'Error uploading recipe');
 	}
 
-	ctx.logger.info(results);
+	ctx.logger.info('Recipe file uploaded', { uploadId, size: file.size });
 
 	return successResponse(uploadedRecipe);
 }
