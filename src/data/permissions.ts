@@ -6,10 +6,6 @@ const permissions: Record<string, Record<string, RoleEntry[]>> = {
 	admin: {
 		read: ['ADMIN'],
 	},
-	users: {
-		read: ['ADMIN'],
-		update: ['ADMIN'],
-	},
 	'api-keys': {
 		create: ['BASIC', 'ADMIN'],
 		read: ['BASIC', 'ADMIN'],
@@ -29,12 +25,6 @@ const permissions: Record<string, Record<string, RoleEntry[]>> = {
 	profile: {
 		read: ['ADMIN', 'BASIC'],
 	},
-	seasons: {
-		create: ['ADMIN'],
-		read: ['*'],
-		update: ['ADMIN'],
-		delete: ['ADMIN'],
-	},
 	recipes: {
 		create: ['ADMIN', 'BASIC'],
 		read: ['*'],
@@ -42,6 +32,16 @@ const permissions: Record<string, Record<string, RoleEntry[]>> = {
 		delete: ['ADMIN', 'BASIC'],
 		scrape: ['ADMIN', 'BASIC'],
 		upload: ['ADMIN', 'BASIC'],
+	},
+	seasons: {
+		create: ['ADMIN'],
+		read: ['*'],
+		update: ['ADMIN'],
+		delete: ['ADMIN'],
+	},
+	users: {
+		read: ['ADMIN'],
+		update: ['ADMIN'],
 	},
 } as const satisfies Record<string, Record<string, RoleEntry[]>>;
 
