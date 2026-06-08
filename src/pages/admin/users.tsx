@@ -1,5 +1,5 @@
 import type { RequestInfo } from 'rwsdk/worker';
-import RzTable from '@/components/RzTable';
+import { RzTable } from '@/components/design-system';
 import AdminLayout from '@/layouts/admin';
 import { getUsers } from '@/repositories';
 import type { RzTableColumn } from '@/types';

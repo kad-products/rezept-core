@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/experimental-ct-react';
-import RzDialog from '../RzDialog';
+import RzDialog from './RzDialog';
 
 // RzDialog uses Dialog.Portal, so content renders into document.body outside
 // the component's DOM subtree. Use `page` (not the mounted component locator)

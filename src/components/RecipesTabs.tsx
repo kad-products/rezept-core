@@ -1,6 +1,6 @@
 'use client';
 import { Tabs } from 'radix-ui';
-import RzCard from '@/components/RzCard';
+import { RzCard } from '@/components/design-system';
 import type { ApiKeyDBRead, RecipeDBRead, RecipeUploadDBRead } from '@/types';
 import BookmarkletInstall from './BookmarkletInstall';
 

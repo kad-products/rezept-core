@@ -190,4 +190,9 @@ describe('barrel exports', () => {
 		const bad = allSource.filter(p => /from ['"]@\/analytics\//.test(read(p)));
 		expect(bad.map(rel), 'Import from @/analytics barrel, not sub-paths').toHaveLength(0);
 	});
+
+	it('no source file uses a @/components/design-system sub-path import', () => {
+		const bad = allSource.filter(p => /from ['"]@\/components\/design-system\//.test(read(p)));
+		expect(bad.map(rel), 'Import from @/components/design-system barrel, not sub-paths').toHaveLength(0);
+	});
 });

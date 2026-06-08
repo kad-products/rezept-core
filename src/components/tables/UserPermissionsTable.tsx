@@ -1,5 +1,5 @@
+import { RzTable } from '@/components/design-system';
 import type { RzTableColumn } from '@/types';
-import RzTable from '../RzTable';
 
 export default function UserPermissionsTable({ permissionsList }: { permissionsList: string[] }): React.ReactNode {
 	const permissionEntities = new Set(permissionsList.map(permissionString => permissionString.split(':')[0]));

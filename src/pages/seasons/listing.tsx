@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import RzCard from '@/components/RzCard';
+import { RzCard } from '@/components/design-system';
 import AppLayout from '@/layouts/app';
 import { getSeasons } from '@/repositories';
 

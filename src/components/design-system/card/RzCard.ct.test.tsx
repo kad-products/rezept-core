@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/experimental-ct-react';
-import RzCard from '../RzCard';
+import RzCard from './RzCard';
 
 test('renders title and actions', async ({ mount }) => {
 	const component = await mount(
