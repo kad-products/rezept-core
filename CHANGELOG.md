@@ -1,3 +1,23 @@
+## [1.45.1](https://github.com/kad-products/rezept-core/compare/v1.45.0...v1.45.1) (2026-06-08)
+
+### Code Refactoring
+
+* organize design system components into their own directory ([c10804c](https://github.com/kad-products/rezept-core/commit/c10804c017b534b6e4c3e148f4a186d4cb347692))
+
+## [1.45.0](https://github.com/kad-products/rezept-core/compare/v1.44.1...v1.45.0) (2026-06-08)
+
+### Features
+
+* on-the-fly permissions overrides for admin testing ([8bb1fde](https://github.com/kad-products/rezept-core/commit/8bb1fdebb4aeb99a75e3e010b0d32f6f2132ae7f))
+
+### Bug Fixes
+
+* align where app context type comes from ([4d0a013](https://github.com/kad-products/rezept-core/commit/4d0a013ae5a6d55646d393e27feec2338aba9def))
+* allow any localhost subdomain to work as local in auth flow ([f260a23](https://github.com/kad-products/rezept-core/commit/f260a237cbb2d75fa562a7bb5dea4ed5f9af14cc))
+* logger doesn't accept object as first argument ([ab254b4](https://github.com/kad-products/rezept-core/commit/ab254b40364b9b660946e87381e0e8c31af2fd34))
+* more precise error capture in auth flow ([15a1430](https://github.com/kad-products/rezept-core/commit/15a143058aed3dfd18d50b59a09938af73525898))
+* order permission entities ([4a9bca2](https://github.com/kad-products/rezept-core/commit/4a9bca269c07f8c8504b57a456b039ce13eeaf19))
+
 ## [1.44.1](https://github.com/kad-products/rezept-core/compare/v1.44.0...v1.44.1) (2026-06-07)
 
 ### Bug Fixes
