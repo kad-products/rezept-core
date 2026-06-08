@@ -12,6 +12,8 @@ See [ADR-0008](../decisions/0008-react-component-testing.md) for why we chose Pl
 
 ## Setup
 
+Check out the [**video walkthrough**](../videos/playwright-ct.mp4) of this setup if that's more your style.
+
 ### 1. Follow Getting Started
 
 Follow the [Getting Started](./getting-started.md) docs to get your local environment set up and dependencies installed.

@@ -4,6 +4,7 @@ Internal reference for product, QA, and design work on Rezept. Covers how featur
 
 ## Contents
 
+- [Dashboard](dashboard.md) — environments, test reports, design links, and project board
 - [Authentication](auth.md) — passkey flow, sessions, protected routes, permissions
 - [Forms](forms.md) — input types, validation behavior, file uploads, known UX gaps
 - [Kanban](kanban.md) — project views, issue types, how we track work

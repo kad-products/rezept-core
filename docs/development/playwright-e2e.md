@@ -13,6 +13,8 @@ E2E coverage is currently light (listing pages only). The intent is to grow it o
 
 ## Setup
 
+Check out the [**video walkthrough**](../videos/playwrite-e2e.mp4) of this setup if that's more your style.
+
 ### 1. Follow Getting Started
 
 Follow the [Getting Started](./getting-started.md) docs to get your local environment set up, including the local database.
