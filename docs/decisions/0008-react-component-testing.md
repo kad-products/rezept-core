@@ -80,7 +80,8 @@ RTL remains a valid fallback if CT proves too slow for a specific component or i
 
 ## Conventions
 
-- Component tests use the `.ct.test.tsx` extension and live in `src/components/__tests__/`
+- Component tests use the `.ct.test.tsx` extension and live alongside the component they test (e.g. `RzCard.ct.test.tsx` next to `RzCard.tsx`)
+- CT coverage is scoped to design-system components (`src/components/design-system/`); single-use page-level components are left untested at this layer
 - Use `mount` for rendering, `page` when querying content that renders via a portal
 - Behavioral tests and screenshot tests can coexist in the same file — start behavioral for components with interactive behavior, add screenshots if visual regression coverage is needed too
 

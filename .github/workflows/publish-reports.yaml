@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          lfs: true
 
       - uses: pnpm/action-setup@v6
 
@@ -35,11 +37,17 @@ jobs:
           VITE_BASE_URL: http://localhost:5173
           SESSION_SECRET_KEY: rezept-e2e-session-key
 
+      - name: Stage E2E report
+        run: mkdir -p _reports/e2e && cp -r playwright-report/. _reports/e2e/
+
+      - name: Run CT tests
+        run: pnpm playwright-ct:run
+
       - name: Stage reports
         run: |
-          mkdir -p _reports/unit _reports/e2e
+          mkdir -p _reports/unit _reports/ct
           cp -r coverage/. _reports/unit/
-          cp -r playwright-report/. _reports/e2e/
+          cp -r playwright-report/. _reports/ct/
 
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v4
