@@ -1,6 +1,7 @@
 export type { LogLevel, RzLogger } from '@/logger';
 export * from './action-state';
 export * from './api-keys';
+export * from './app-context';
 export * from './credentials';
 export * from './image-types';
 export * from './images';
