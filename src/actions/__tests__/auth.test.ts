@@ -196,12 +196,23 @@ describe('finishPasskeyLogin', () => {
 
 	// verifyAuthenticationResponse cryptographically verifies the authenticator's signature
 	// against the stored public key. It also checks the challenge, origin, and rpID match
-	// what the server expects.
+	// what the server expects. The library throws on failure rather than returning verified: false.
 	it('returns an error when verification fails', async () => {
-		vi.mocked(verifyAuthenticationResponse).mockResolvedValue({ verified: false } as any);
+		vi.mocked(verifyAuthenticationResponse).mockRejectedValue(new Error('Signature check failed'));
 		const result = await finishPasskeyLogin(mockLogin as any);
 		expect(result.success).toBe(false);
-		expect(result.errors?._form?.[0]).toContain('Invalid');
+		expect(result.code).toBe(400);
+		expect(result.errors?._form?.[0]).toContain('Signature check failed');
+	});
+
+	it('hides verification error details in production', async () => {
+		mockEnv.REZEPT_ENV = 'production';
+		vi.mocked(verifyAuthenticationResponse).mockRejectedValue(new Error('Signature check failed'));
+		const result = await finishPasskeyLogin(mockLogin as any);
+		expect(result.success).toBe(false);
+		expect(result.code).toBe(400);
+		expect(result.errors?._form?.[0]).toBe('Failed to verify authentication response');
+		expect(result.errors?._form?.[0]).not.toContain('Signature check failed');
 	});
 
 	it('passes the stored public key and counter to verifyAuthenticationResponse', async () => {

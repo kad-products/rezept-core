@@ -2,6 +2,7 @@
 import {
 	type AuthenticationResponseJSON,
 	generateAuthenticationOptions,
+	type VerifiedAuthenticationResponse,
 	verifyAuthenticationResponse,
 } from '@simplewebauthn/server';
 import { requestInfo } from 'rwsdk/worker';
@@ -78,28 +79,28 @@ export async function finishPasskeyLogin(login: AuthenticationResponseJSON): Pro
 			return errorResponse(err, 400, 'Credential not found');
 		}
 
-		const verification = await verifyAuthenticationResponse({
-			response: login,
-			expectedChallenge: challenge,
-			expectedOrigin: origin,
-			expectedRPID: new URL(request.url).hostname,
-			requireUserVerification: false,
-			credential: {
-				id: credential.credentialId,
-				publicKey: credential.publicKey.slice(),
-				counter: credential.counter,
-			},
-		});
-
-		taskLogger.debug('Passkey verification result', { verified: verification.verified });
-
-		if (!verification.verified) {
+		let verification: VerifiedAuthenticationResponse;
+		try {
+			verification = await verifyAuthenticationResponse({
+				response: login,
+				expectedChallenge: challenge,
+				expectedOrigin: origin,
+				expectedRPID: new URL(request.url).hostname,
+				requireUserVerification: false,
+				credential: {
+					id: credential.credentialId,
+					publicKey: credential.publicKey.slice(),
+					counter: credential.counter,
+				},
+			});
+			taskLogger.debug('Passkey verification result', { verified: verification.verified });
+		} catch (err) {
 			trackLoginAttempt({
 				type: 'PASSKEY',
 				stage: 'FINISH',
 				success: false,
 			});
-			return errorResponse('Invalid passkey login', 400);
+			return errorResponse(err, 400, 'Failed to verify authentication response');
 		}
 
 		await updateCredentialCounter(

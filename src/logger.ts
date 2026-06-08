@@ -1,5 +1,6 @@
 import type { WorkflowEvent } from 'cloudflare:workers';
 import { env } from 'cloudflare:workers';
+import chalk from 'chalk-template';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -58,8 +59,23 @@ function write(
 		? Object.fromEntries(Object.entries(meta).map(([k, v]) => [k, v instanceof Error ? serializeError(v) : v]))
 		: undefined;
 	const entry = { level, message, timestamp: new Date().toISOString(), ...bindings, ...serializedMeta };
-	// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
-	console.log(JSON.stringify(redact(entry)));
+	if (env.REZEPT_ENV === 'development') {
+		const { level, message, timestamp, ...rest } = entry;
+		// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
+		console.log(chalk`{yellow ${timestamp}} {bold ${level.toUpperCase()}} {white ${message}}`);
+		Object.entries(rest).forEach(([key, value]) => {
+			if (REDACTED_PATTERN.test(key)) {
+				// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
+				console.log(chalk`  {cyan ${key}}: {red ${CENSOR}}`);
+			} else {
+				// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
+				console.log(chalk`  {cyan ${key}}: {white ${JSON.stringify(value)}}`);
+			}
+		});
+	} else {
+		// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
+		console.log(JSON.stringify(redact(entry)));
+	}
 }
 
 function buildLogger(bindings: Record<string, unknown>, level: LogLevel, taskOverrides: Map<string, LogLevel>): RzLogger {
