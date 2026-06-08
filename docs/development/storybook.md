@@ -12,29 +12,9 @@ If you've worked on a Next.js project before, your machine is probably already s
 
 ## Setup
 
-### 1. Clone the repo
+### 1. Follow Get Started
 
-**Option A — VS Code**
-
-1. Open VS Code and open the Command Palette (`Cmd+Shift+P`)
-2. Type **Git: Clone** and select it
-3. Paste `https://github.com/kad-products/rezept-core.git` and press Enter
-4. Choose a folder to clone into — VS Code will open the project automatically when it's done
-
-**Option B — Terminal**
-
-```bash
-git clone https://github.com/kad-products/rezept-core.git
-cd rezept-core
-```
-
-### 2. Install dependencies
-
-Open a terminal in the project folder (in VS Code: **Terminal → New Terminal**) and run:
-
-```bash
-pnpm install
-```
+Follow the [Getting Started](./getting-started.md) docs to get your local environment setup.
 
 ### 3. Start Storybook
 

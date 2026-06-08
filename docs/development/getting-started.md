@@ -7,31 +7,44 @@
 
 ## Setup
 
-### 1. Clone and install
+### 1. Clone the Repo
+
+**Option A — VS Code**
+
+1. Open VS Code and open the Command Palette (`Cmd+Shift+P`)
+2. Type **Git: Clone** and select it
+3. Paste `https://github.com/kad-products/rezept-core.git` and press Enter
+4. Choose a folder to clone into — VS Code will open the project automatically when it's done
+
+**Option B — Terminal**
 
 ```bash
 git clone https://github.com/kad-products/rezept-core.git
 cd rezept-core
+```
+
+### 2. Install Dependencies
+
+To install all the packages, register automation hooks, and get things rolling.
+
+```bash
 pnpm install
 ```
 
-### 2. Environment variables
+### 3. Environment variables
 
-Copy the example file and fill in values:
-
-```bash
-cp .dev.vars.example .dev.vars
-```
-
-Open `.dev.vars` and set `SESSION_SECRET_KEY` to any random string (32+ characters). To generate one:
+Generate a secret key, copy the example file, and fill in values.  In the vscode terminal run these two commands:
 
 ```bash
 openssl rand -base64 32
+cp .dev.vars.example .dev.vars
 ```
+
+Copy the random string from the first command and use it as the `SESSION_SECRET_KEY` in the `.dev.vars` that should now be in the projec root after the second command.
 
 `.dev.vars` is gitignored and must never be committed. See [Environment variables](#environment-variables) below for a full reference.
 
-### 3. Generate types
+### 4. Generate types
 
 ```bash
 pnpm generate
@@ -39,7 +52,7 @@ pnpm generate
 
 This runs `wrangler types` and produces `worker-configuration.d.ts` from `wrangler.jsonc`. TypeScript and your editor need this file — without it type checking will fail.
 
-### 4. Set up the local database
+### 5. Set up the local database
 
 Apply migrations to create the local D1 database:
 
@@ -57,7 +70,7 @@ pnpm db:seed
 
 See [Seed data](#seed-data) below for what this generates.
 
-### 5. Start the dev server
+### 6. Start the dev server
 
 ```bash
 pnpm dev
@@ -73,24 +86,24 @@ The app runs at `http://rezept.localhost:5173`.
 
 These are Cloudflare Worker secrets for local development. The file is gitignored.
 
-| Variable | Required | Description |
-|---|---|---|
-| `SESSION_SECRET_KEY` | Yes | Signs session cookies. Any random string (32+ chars) works locally. |
+| Variable             | Required | Description                                                         |
+| -------------------- | -------- | ------------------------------------------------------------------- |
+| `SESSION_SECRET_KEY` | Yes      | Signs session cookies. Any random string (32+ chars) works locally. |
 
 ### `.env` — Vite client-side variables
 
-| Variable | Default | Description |
-|---|---|---|
+| Variable        | Default                        | Description                             |
+| --------------- | ------------------------------ | --------------------------------------- |
 | `VITE_BASE_URL` | `http://rezept.localhost:5173` | Base URL used by the Vite client build. |
 
 ### `wrangler.jsonc` — non-secret worker vars
 
 These are set directly in `wrangler.jsonc` and do not need to be in `.dev.vars`:
 
-| Variable | Local value | Description |
-|---|---|---|
-| `WEBAUTHN_APP_NAME` | `rezept` | Display name used in WebAuthn/passkey prompts. |
-| `REZEPT_ENV` | `development` | Runtime environment name, used for conditional behavior. |
+| Variable            | Local value   | Description                                              |
+| ------------------- | ------------- | -------------------------------------------------------- |
+| `WEBAUTHN_APP_NAME` | `rezept`      | Display name used in WebAuthn/passkey prompts.           |
+| `REZEPT_ENV`        | `development` | Runtime environment name, used for conditional behavior. |
 
 ---
 
@@ -113,14 +126,14 @@ The project ships `.vscode/` settings that configure format-on-save using Biome 
 
 ## Key commands
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Start dev server (clears Vite cache first) |
-| `pnpm generate` | Regenerate `worker-configuration.d.ts` from `wrangler.jsonc` |
-| `pnpm type-check` | TypeScript type check (no emit) |
-| `pnpm test:run` | Run all tests once with coverage |
-| `pnpm biome:fix` | Auto-fix lint and formatting |
-| `pnpm db:migrate:new` | Generate a new migration from model changes |
-| `pnpm db:migrate:dev` | Apply migrations to local DB |
-| `pnpm db:seed` | Reset and seed the local DB |
-| `pnpm db:reset-local` | Delete the local DB file (re-run migrations after) |
+| Command               | Description                                                  |
+| --------------------- | ------------------------------------------------------------ |
+| `pnpm dev`            | Start dev server (clears Vite cache first)                   |
+| `pnpm generate`       | Regenerate `worker-configuration.d.ts` from `wrangler.jsonc` |
+| `pnpm type-check`     | TypeScript type check (no emit)                              |
+| `pnpm test:run`       | Run all tests once with coverage                             |
+| `pnpm biome:fix`      | Auto-fix lint and formatting                                 |
+| `pnpm db:migrate:new` | Generate a new migration from model changes                  |
+| `pnpm db:migrate:dev` | Apply migrations to local DB                                 |
+| `pnpm db:seed`        | Reset and seed the local DB                                  |
+| `pnpm db:reset-local` | Delete the local DB file (re-run migrations after)           |
