@@ -1,25 +1,47 @@
-import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import RecipesTabs from '@/components/RecipesTabs';
+import { RzCard } from '@/components/design-system';
+import RecipesNav from '@/components/navs/RecipesNav';
 import AppLayout from '@/layouts/app';
-import { getApiKeysByUserId, getRecipes, getRecipeUploads } from '@/repositories';
+import { getRecipes } from '@/repositories';
 
 export default async function Pages__recipes__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
-	const userId = ctx.user?.id;
 	const recipes = await getRecipes(ctx.logger);
-	const recipeUploads = userId ? await getRecipeUploads(userId, ctx.logger) : [];
-	const apiKeys = userId ? await getApiKeysByUserId(userId, ctx.logger) : [];
 	return (
-		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
-			<Suspense fallback={<div>Loading recipes...</div>}>
-				<RecipesTabs
-					recipes={recipes}
-					recipeUploads={recipeUploads}
-					permissions={ctx.permissions}
-					apiKeys={apiKeys}
-					userId={userId}
-				/>
-			</Suspense>
+		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav={<RecipesNav />}>
+			{ctx.permissions?.includes('recipes:create') && <a href="/recipes/new">New Recipe</a>}
+
+			<div className="recipes-listing">
+				{recipes.map(r => {
+					return (
+						<RzCard
+							key={r.id}
+							title={r.title}
+							body={
+								<div>
+									<div className="recipe-cover-image">
+										{r.coverImageId ? (
+											<img src={`/api/images/${r.coverImageId}`} alt={`${r.title} cover`} />
+										) : (
+											<div>No cover image</div>
+										)}
+									</div>
+									<p>{r.description || ''}</p>
+								</div>
+							}
+							actions={[
+								{
+									href: `/recipes/${r.id}`,
+									text: `View`,
+								},
+								{
+									href: `/recipes/${r.id}/favorite`,
+									text: `Favorite`,
+								},
+							]}
+						/>
+					);
+				})}
+			</div>
 		</AppLayout>
 	);
 }

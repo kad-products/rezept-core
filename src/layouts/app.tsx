@@ -16,11 +16,13 @@ export default function AppLayout({
 	currentBasePage,
 	pageTitle,
 	ctx,
+	leftNav,
 }: {
 	children: React.ReactNode;
 	currentBasePage: string | undefined;
 	pageTitle: string;
 	ctx: DefaultAppContext;
+	leftNav?: React.ReactNode;
 }): React.ReactNode {
 	const navItems: Record<string, NavItem> = {
 		home: { label: 'Home', href: '/', icon: HomeIcon },
@@ -79,7 +81,10 @@ export default function AppLayout({
 			</header>
 			<main>
 				<h2 className="page-title">{pageTitle}</h2>
-				{children}
+				<div className="app-layout-inner">
+					{leftNav && <div className="app-layout-left-nav">{leftNav}</div>}
+					<div className="app-layout-content">{children}</div>
+				</div>
 			</main>
 		</StrictMode>
 	);

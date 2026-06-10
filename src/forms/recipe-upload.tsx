@@ -1,10 +1,7 @@
 'use client';
 import { Form } from 'radix-ui';
 import { useRef, useState } from 'react';
-
-type CFR2PutResponse = {
-	key: string;
-};
+import type { RecipeUploadDBRead } from '@/types';
 
 export default function RecipeUploadForm(): React.ReactNode {
 	const [preview, setPreview] = useState<string | null>(null);
@@ -22,6 +19,7 @@ export default function RecipeUploadForm(): React.ReactNode {
 
 		// Generate preview URL from the local file — no upload yet
 		const objectUrl = URL.createObjectURL(selected);
+		console.log(`ObjectURL: ${objectUrl}`);
 		setPreview(objectUrl);
 	}
 
@@ -39,10 +37,13 @@ export default function RecipeUploadForm(): React.ReactNode {
 				body: formData,
 			});
 
+			console.log(res);
+
 			if (!res.ok) throw new Error('Upload failed');
 
-			const response: CFR2PutResponse = await res.json();
-			if (!response.key) {
+			const apiResponse: { success: boolean; data: RecipeUploadDBRead } = await res.json();
+			console.log(apiResponse);
+			if (!apiResponse.data.id) {
 				throw new Error(`No key returned`);
 			}
 

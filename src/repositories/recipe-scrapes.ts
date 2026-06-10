@@ -1,4 +1,4 @@
-import { asc, eq, inArray, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { recipeScrapeAttempts, recipeScrapes } from '@/models';
@@ -32,6 +32,16 @@ export async function createRecipeScrape(
 	const result = recipeScraped[0];
 	logger.info(`Created recipe scrape ${result.id}`);
 	return result;
+}
+
+export async function getRecipeScrapes(userId: string, logger: RzLogger): Promise<RecipeScrapeDBRead[]> {
+	logger.debug(`Fetching recipe scrapes for user ${userId}`);
+	const results = await db
+		.select()
+		.from(recipeScrapes)
+		.where(and(eq(recipeScrapes.userId, userId), isNull(recipeScrapes.deletedAt)));
+	logger.debug(`Fetched ${results.length} recipe scrapes`);
+	return results;
 }
 
 export async function createRecipeScrapeAttempt(

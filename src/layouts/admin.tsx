@@ -1,4 +1,4 @@
-import AdminMenubar from './admin-menubar';
+import AdminMenubar from '../components/navs/AdminMenubar';
 
 export default function AdminLayout({ children, pageTitle }: { children: React.ReactNode; pageTitle: string }): React.ReactNode {
 	return (
