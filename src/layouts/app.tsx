@@ -2,7 +2,9 @@ import { QuestionMarkCircledIcon } from '@radix-ui/react-icons';
 import classNames from 'classnames';
 import { StrictMode } from 'react';
 import type { DefaultAppContext } from 'rwsdk/worker';
+import { RzLeftNav } from '@/components/design-system';
 import { getNavItems } from '@/data/navigation';
+import type { NavItem } from '@/types';
 
 export default function AppLayout({
 	children,
@@ -15,11 +17,15 @@ export default function AppLayout({
 	currentBasePage: string | undefined;
 	pageTitle: string;
 	ctx: DefaultAppContext;
-	leftNav?: React.ReactNode;
+	leftNav?: string;
 }): React.ReactNode {
 	const userPerms = ctx.permissions || [];
 
 	const filteredNavItems = getNavItems('main', userPerms);
+	let leftNavItems: NavItem[] = [];
+	if (leftNav) {
+		leftNavItems = getNavItems(leftNav, userPerms);
+	}
 
 	return (
 		<StrictMode>
@@ -48,7 +54,11 @@ export default function AppLayout({
 			<main>
 				<h2 className="page-title">{pageTitle}</h2>
 				<div className="app-layout-inner">
-					{leftNav && <div className="app-layout-left-nav">{leftNav}</div>}
+					{leftNav && (
+						<div className="app-layout-left-nav">
+							<RzLeftNav navItems={leftNavItems} />
+						</div>
+					)}
 					<div className="app-layout-content">{children}</div>
 				</div>
 			</main>

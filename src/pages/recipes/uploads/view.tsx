@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import RecipesNav from '@/components/navs/RecipesNav';
 import AppLayout from '@/layouts/app';
 import { getRecipeUploadById } from '@/repositories';
 
@@ -9,7 +8,7 @@ export default async function Pages__recipes__upload_view({ ctx, params }: Reque
 	const recipeUpload = await getRecipeUploadById(recipeUploadId, ctx.logger);
 
 	return (
-		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav={<RecipesNav userPerms={ctx.permissions} />}>
+		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			<Suspense fallback={<div>Loading recipe upload...</div>}>
 				<h3>{recipeUpload.originalFilename}</h3>
 				<div>
