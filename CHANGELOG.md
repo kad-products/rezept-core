@@ -1,3 +1,14 @@
+## [1.47.0](https://github.com/kad-products/rezept-core/compare/v1.46.0...v1.47.0) (2026-06-10)
+
+### Features
+
+* centralize nav logic, types, and patterns ([9ea05d1](https://github.com/kad-products/rezept-core/commit/9ea05d1e55f13c9b2a07cef6dcceadb4e6d9ca50))
+
+### Bug Fixes
+
+* adding left nav where it was missing ([4ab50fb](https://github.com/kad-products/rezept-core/commit/4ab50fb1fb0969fa8a49557ba8db41e37b07cdfc))
+* further streamline the nav data and prop flow ([497b9ca](https://github.com/kad-products/rezept-core/commit/497b9ca0a7a36b6355249a685ee831abab10d21e))
+
 ## [1.46.0](https://github.com/kad-products/rezept-core/compare/v1.45.2...v1.46.0) (2026-06-10)
 
 ### Features
