@@ -1,3 +1,9 @@
+## [1.46.0](https://github.com/kad-products/rezept-core/compare/v1.45.2...v1.46.0) (2026-06-10)
+
+### Features
+
+* create left nav pattern to clean up page architecture ([9623fb5](https://github.com/kad-products/rezept-core/commit/9623fb5abb2a70c15412b79b6125a40997bf89bd))
+
 ## [1.45.2](https://github.com/kad-products/rezept-core/compare/v1.45.1...v1.45.2) (2026-06-08)
 
 ### Bug Fixes
