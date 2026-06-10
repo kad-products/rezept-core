@@ -1,27 +1,8 @@
+import { getNavItems } from '@/data/navigation';
+import type { Permission } from '@/types';
 import { RzLeftNav } from '../design-system';
 
-export default function ProfileNav(): React.ReactNode {
-	const profileNavItems = [
-		{
-			href: '/profile',
-			label: 'Profile',
-		},
-		{
-			href: '/profile/scrape-bookmarklet',
-			label: 'Scrape Bookmarklet',
-		},
-		{
-			href: '/profile/permissions',
-			label: 'Permissions',
-		},
-		{
-			href: '/profile/api-keys',
-			label: 'API Keys',
-		},
-		{
-			href: '/profile/passkeys',
-			label: 'Passkeys / WebAuthn Credentials',
-		},
-	];
+export default function ProfileNav({ userPerms }: { userPerms: Permission[] | undefined }): React.ReactNode {
+	const profileNavItems = getNavItems('profile', userPerms);
 	return <RzLeftNav navItems={profileNavItems} />;
 }

@@ -11,7 +11,7 @@ export default async function Pages__profile__api_keys({ ctx }: RequestInfo): Pr
 
 	const apiKeys = await getApiKeysByUserId(userId, ctx.logger);
 	return (
-		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav />}>
+		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav userPerms={ctx.permissions} />}>
 			<h2>API Keys</h2>
 			<Suspense fallback={<div>Loading API keys...</div>}>
 				<ApiKeysTable apiKeys={apiKeys} />

@@ -11,7 +11,7 @@ export default async function Pages__profile__passkeys({ ctx }: RequestInfo): Pr
 
 	const credentials = await getCredentialsByUserId(userId, ctx.logger);
 	return (
-		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav />}>
+		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav userPerms={ctx.permissions} />}>
 			<h2>Passkeys / WebAuthn Credentials</h2>
 			<Suspense fallback={<div>Loading credentials...</div>}>
 				<UserCredentialsTable credentials={credentials} />

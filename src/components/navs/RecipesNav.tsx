@@ -1,19 +1,8 @@
+import { getNavItems } from '@/data/navigation';
+import type { Permission } from '@/types';
 import { RzLeftNav } from '../design-system';
 
-export default function RecipesNav(): React.ReactNode {
-	const recipesNavItems = [
-		{
-			href: '/recipes',
-			label: 'Recipes',
-		},
-		{
-			href: '/recipes/uploads',
-			label: 'Uploads',
-		},
-		{
-			href: '/recipes/scrapes',
-			label: 'Scrapes',
-		},
-	];
+export default function RecipesNav({ userPerms }: { userPerms: Permission[] | undefined }): React.ReactNode {
+	const recipesNavItems = getNavItems('recipes', userPerms);
 	return <RzLeftNav navItems={recipesNavItems} />;
 }

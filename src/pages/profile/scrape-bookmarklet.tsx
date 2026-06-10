@@ -12,7 +12,7 @@ export default async function Pages__profile__scrape_bookmarklet({ ctx, request 
 	const baseUrl = new URL(request.url).origin;
 
 	return (
-		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav />}>
+		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav userPerms={ctx.permissions} />}>
 			<h2>Bookmarklet Install</h2>
 			<BookmarkletInstall apiKeys={apiKeys} userId={userId} baseUrl={baseUrl} />
 		</AppLayout>

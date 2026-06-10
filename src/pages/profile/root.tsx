@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app';
 
 export default async function Pages__profile__root({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	return (
-		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav />}>
+		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav userPerms={ctx.permissions} />}>
 			<h2>Profile Info</h2>
 			<ul>
 				<li>ID: {ctx.user?.id}</li>
