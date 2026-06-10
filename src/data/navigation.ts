@@ -1,7 +1,7 @@
 import { ArchiveIcon, ColorWheelIcon, EnterIcon, ExitIcon, HomeIcon, PersonIcon } from '@radix-ui/react-icons';
 import type { NavItem, Permission } from '@/types';
 
-const navItems: Record<string, NavItem[]> = {
+export const navItems: Record<string, NavItem[]> = {
 	recipes: [
 		{
 			key: 'recipes',

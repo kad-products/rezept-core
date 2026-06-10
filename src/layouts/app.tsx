@@ -17,7 +17,7 @@ export default function AppLayout({
 	currentBasePage: string | undefined;
 	pageTitle: string;
 	ctx: DefaultAppContext;
-	leftNav?: string;
+	leftNav?: 'recipes' | 'profile';
 }): React.ReactNode {
 	const userPerms = ctx.permissions || [];
 

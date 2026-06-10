@@ -7,7 +7,7 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 	const recipe = await getRecipeById(params.recipeId, ctx.logger);
 
 	return (
-		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
+		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			<Suspense fallback={<div>Loading recipe...</div>}>
 				<h3>{recipe.title}</h3>
 				{ctx.permissions?.includes('recipes:update') && (
