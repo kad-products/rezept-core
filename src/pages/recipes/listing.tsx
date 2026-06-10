@@ -1,13 +1,12 @@
 import type { RequestInfo } from 'rwsdk/worker';
 import { RzCard } from '@/components/design-system';
-import RecipesNav from '@/components/navs/RecipesNav';
 import AppLayout from '@/layouts/app';
 import { getRecipes } from '@/repositories';
 
 export default async function Pages__recipes__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const recipes = await getRecipes(ctx.logger);
 	return (
-		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav={<RecipesNav />}>
+		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			{ctx.permissions?.includes('recipes:create') && <a href="/recipes/new">New Recipe</a>}
 
 			<div className="recipes-listing">

@@ -13,7 +13,7 @@ export default async function Pages__recipes__edit({ ctx, params }: RequestInfo)
 	const allIngredients = await getIngredients(ctx.logger);
 
 	return (
-		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx}>
+		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			<Suspense fallback={<div>Loading recipe...</div>}>
 				<h3>{recipe?.title || 'New Recipe'}</h3>
 				{recipe && (

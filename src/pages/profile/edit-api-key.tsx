@@ -19,7 +19,7 @@ export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo
 	}
 
 	return (
-		<AppLayout currentBasePage="profile" pageTitle="API Key" ctx={ctx}>
+		<AppLayout currentBasePage="profile" pageTitle="API Key" ctx={ctx} leftNav="profile">
 			<Suspense fallback={<div>Loading API Key...</div>}>
 				<h3>{apiKey?.id ? `Edit ${apiKey.name}` : 'New API Key'}</h3>
 				{apiKey && (

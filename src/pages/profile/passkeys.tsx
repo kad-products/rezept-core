@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import ProfileNav from '@/components/navs/ProfileNav';
 import UserCredentialsTable from '@/components/tables/UserCredentialsTable';
 import AppLayout from '@/layouts/app';
 import { getCredentialsByUserId } from '@/repositories';
@@ -11,7 +10,7 @@ export default async function Pages__profile__passkeys({ ctx }: RequestInfo): Pr
 
 	const credentials = await getCredentialsByUserId(userId, ctx.logger);
 	return (
-		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav={<ProfileNav />}>
+		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav="profile">
 			<h2>Passkeys / WebAuthn Credentials</h2>
 			<Suspense fallback={<div>Loading credentials...</div>}>
 				<UserCredentialsTable credentials={credentials} />

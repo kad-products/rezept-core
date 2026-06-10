@@ -9,7 +9,7 @@ export default async function Pages__permissions__override({ ctx }: RequestInfo)
 	}
 
 	return (
-		<AppLayout currentBasePage="profile" pageTitle="Override Permissions" ctx={ctx}>
+		<AppLayout currentBasePage="profile" pageTitle="Override Permissions" ctx={ctx} leftNav="profile">
 			<h2>Current Permissions</h2>
 			{permissionOverrideEnabled ? <p>Permissions override enabled</p> : <p>No permissions override</p>}
 			<PermissionsOverrideForm currentPermissions={ctx.permissions || []} />

@@ -18,6 +18,9 @@ const permissions = {
 		login: ['PUBLIC'],
 		logout: ['ADMIN', 'BASIC'],
 	},
+	credentials: {
+		read: ['BASIC', 'ADMIN'],
+	},
 	ingredients: {
 		create: ['ADMIN', 'BASIC'],
 		read: ['*'],
