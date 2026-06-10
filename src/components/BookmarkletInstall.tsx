@@ -6,8 +6,7 @@ import type { ApiKeyDBRead } from '@/types';
 
 const SCRAPE_PERMISSION = 'recipes:scrape';
 
-function buildBookmarklet(apiKey: string): string {
-	const baseUrl = window.location.origin;
+function buildBookmarklet(apiKey: string, baseUrl: string): string {
 	const code = `(function(){
   const scripts=[...document.querySelectorAll('script[type="application/ld+json"]')];
   const data=scripts.map(s=>{try{return JSON.parse(s.innerHTML)}catch(e){return null}}).filter(Boolean);
@@ -27,9 +26,11 @@ function buildBookmarklet(apiKey: string): string {
 export default function BookmarkletInstall({
 	apiKeys,
 	userId,
+	baseUrl,
 }: {
 	apiKeys: ApiKeyDBRead[];
 	userId: string | undefined;
+	baseUrl: string;
 }): React.ReactNode {
 	const scrapeKeys = apiKeys.filter(k => k.permissions.includes(SCRAPE_PERMISSION) && !k.deletedAt);
 
@@ -40,9 +41,9 @@ export default function BookmarkletInstall({
 
 	useEffect(() => {
 		if (linkRef.current && selectedKey) {
-			linkRef.current.href = buildBookmarklet(selectedKey.apiKey);
+			linkRef.current.href = buildBookmarklet(selectedKey.apiKey, baseUrl);
 		}
-	}, [selectedKey]);
+	}, [selectedKey, baseUrl]);
 
 	if (!userId) {
 		return <p>No user ID provided, this page expects you to be logged in.</p>;
@@ -130,11 +131,11 @@ export default function BookmarkletInstall({
 						</ol>
 
 						<div className="bookmarklet-install__code">
-							<code>{buildBookmarklet(selectedKey.apiKey)}</code>
+							<code>{buildBookmarklet(selectedKey.apiKey, baseUrl)}</code>
 							<button
 								type="button"
 								onClick={(): void => {
-									void navigator.clipboard.writeText(buildBookmarklet(selectedKey.apiKey));
+									void navigator.clipboard.writeText(buildBookmarklet(selectedKey.apiKey, baseUrl));
 								}}
 							>
 								Copy

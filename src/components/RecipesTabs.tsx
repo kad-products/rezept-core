@@ -2,11 +2,9 @@
 import { Tabs } from 'radix-ui';
 import { RzCard } from '@/components/design-system';
 import type { ApiKeyDBRead, RecipeDBRead, RecipeUploadDBRead } from '@/types';
-import BookmarkletInstall from './BookmarkletInstall';
+import RecipeUploadsTable from './tables/RecipeUploadsTable';
 
 export default function RecipesTabs({
-	apiKeys,
-	userId,
 	recipes,
 	recipeUploads,
 	permissions = [],
@@ -68,41 +66,10 @@ export default function RecipesTabs({
 			</Tabs.Content>
 			<Tabs.Content className="rz-tabs-content" value="uploads">
 				{permissions?.includes('recipes:upload') && <a href="/recipes/uploads/new">Upload Recipe</a>}
-				<div className="recipe-uploads-listing">
-					<table>
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Filename</th>
-								<th>MIME Type</th>
-								<th>File Size</th>
-								<th>Status</th>
-								<th>Date Created</th>
-								<th>Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							{recipeUploads.map(rI => {
-								return (
-									<tr key={rI.id}>
-										<td>{rI.id}</td>
-										<td>{rI.originalFilename}</td>
-										<td>{rI.mimeType}</td>
-										<td>{rI.fileSize}</td>
-										<td>{rI.status}</td>
-										<td>{rI.createdAt}</td>
-										<td>
-											<a href={`/recipes/uploads/${rI.id}`}>View</a>
-										</td>
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
-				</div>
+				<RecipeUploadsTable recipeUploads={recipeUploads} />
 			</Tabs.Content>
 			<Tabs.Content className="rz-tabs-content" value="scrapes">
-				<BookmarkletInstall apiKeys={apiKeys} userId={userId} />
+				<p>Make this list existing scrapes and their attempt info</p>
 			</Tabs.Content>
 		</Tabs.Root>
 	);

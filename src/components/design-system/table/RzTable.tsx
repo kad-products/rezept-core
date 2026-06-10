@@ -13,9 +13,11 @@ export default function RzTable<T extends Record<string, unknown>>({
 	return (
 		<table className="rz-table">
 			<thead>
-				{columns.map(c => {
-					return <th key={c.key}>{c.label}</th>;
-				})}
+				<tr>
+					{columns.map(c => {
+						return <th key={c.key}>{c.label}</th>;
+					})}
+				</tr>
 			</thead>
 			<tbody>
 				{data.map(d => {
