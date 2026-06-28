@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
-import RzLink from '@/components/design-system/link/RzLink';
+import { RzLink } from '@/components/design-system';
 import ApiKeysTable from '@/components/tables/ApiKeysTable';
 import AppLayout from '@/layouts/app';
 import { getApiKeysByUserId } from '@/repositories';

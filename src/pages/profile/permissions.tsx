@@ -1,5 +1,5 @@
 import type { RequestInfo } from 'rwsdk/worker';
-import RzLink from '@/components/design-system/link/RzLink';
+import { RzLink } from '@/components/design-system';
 import UserPermissionsTable from '@/components/tables/UserPermissionsTable';
 import AppLayout from '@/layouts/app';
 

@@ -1,5 +1,5 @@
 import type { RequestInfo } from 'rwsdk/worker';
-import RzLink from '@/components/design-system/link/RzLink';
+import { RzLink } from '@/components/design-system';
 import RecipeScrapesTable from '@/components/tables/RecipeScrapesTable';
 import AppLayout from '@/layouts/app';
 import { getRecipeScrapes } from '@/repositories';
