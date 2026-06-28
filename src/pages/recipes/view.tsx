@@ -1,5 +1,6 @@
 import { Fragment, Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
+import { RzPopMenu } from '@/components/design-system';
 import AppLayout from '@/layouts/app';
 import { getRecipeById } from '@/repositories';
 
@@ -10,11 +11,16 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			<Suspense fallback={<div>Loading recipe...</div>}>
 				<h3>{recipe.title}</h3>
-				{ctx.permissions?.includes('recipes:update') && (
-					<nav className="in-page-nav">
-						<a href={`/recipes/${recipe.id}/edit`}>Edit</a>
-					</nav>
-				)}
+				<RzPopMenu
+					permissions={ctx.permissions}
+					items={[
+						{
+							requiredPermission: 'recipes:update',
+							label: 'Edit',
+							href: `/recipes/${recipe.id}/edit`,
+						},
+					]}
+				/>
 				<div className="recipe-cover-image">
 					{recipe.coverImageId ? (
 						<img src={`/api/images/${recipe.coverImageId}`} alt={`${recipe.title} cover`} />

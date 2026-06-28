@@ -8,6 +8,11 @@ export default defineConfig(({ mode }) => {
 	const tunnelHost = env.VITE_BASE_URL ? new URL(env.VITE_BASE_URL).host : null;
 
 	return {
+		css: {
+			modules: {
+				localsConvention: 'camelCase',
+			},
+		},
 		server: {
 			...(tunnelHost && {
 				cors: false,

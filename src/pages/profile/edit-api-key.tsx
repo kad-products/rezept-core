@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
+import { RzPopMenu } from '@/components/design-system';
 import ApiKeyForm from '@/forms/api-key';
 import AppLayout from '@/layouts/app';
 import { getApiKeyById } from '@/repositories';
@@ -22,10 +23,17 @@ export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo
 		<AppLayout currentBasePage="profile" pageTitle="API Key" ctx={ctx} leftNav="profile">
 			<Suspense fallback={<div>Loading API Key...</div>}>
 				<h3>{apiKey?.id ? `Edit ${apiKey.name}` : 'New API Key'}</h3>
-				{apiKey && (
-					<nav className="in-page-nav">
-						<a href={`/api-keys/${apiKey.id}`}>View</a>
-					</nav>
+				{apiKey?.id && (
+					<RzPopMenu
+						permissions={ctx.permissions}
+						items={[
+							{
+								requiredPermission: 'api-keys:read',
+								label: 'View',
+								href: `/api-keys/${apiKey?.id}`,
+							},
+						]}
+					/>
 				)}
 				<ApiKeyForm apiKey={apiKey} currentUserId={userId} />
 			</Suspense>
