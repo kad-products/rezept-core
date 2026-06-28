@@ -10,7 +10,7 @@ export default function RecipeScrapesTable({ recipeScrapes }: { recipeScrapes: R
 		{ label: 'File Size', key: 'fileSize' },
 		{ label: 'Status', key: 'status' },
 		{ label: 'Created At', key: 'createdAt' },
-		{ key: 'editUrl', label: 'Actions', action: { type: 'link', hrefProp: 'editUrl', label: 'Edit' } },
+		{ key: 'editUrl', label: 'Actions', actions: [{ type: 'link', hrefProp: 'editUrl', label: 'Edit' }] },
 	];
 
 	return <RzTable columns={recipeUploadColumns} data={recipeScrapes} rowIndex="id" />;
