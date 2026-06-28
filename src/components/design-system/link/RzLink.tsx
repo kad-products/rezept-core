@@ -7,8 +7,7 @@ export default function RzLink({
 	...other
 }: {
 	permissions?: Permission[];
-} & RzLinkType &
-	React.ComponentPropsWithoutRef<'a'>): React.ReactNode {
+} & RzLinkType): React.ReactNode {
 	if (requiredPermission && !permissions?.includes(requiredPermission)) {
 		return null;
 	}
