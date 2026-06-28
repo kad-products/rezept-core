@@ -19,7 +19,7 @@ export default async function Pages__seasons__listing({ ctx }: RequestInfo): Pro
 								actions={[
 									{
 										href: `/seasons/${s.id}`,
-										text: `View`,
+										label: `View`,
 									},
 								]}
 							/>

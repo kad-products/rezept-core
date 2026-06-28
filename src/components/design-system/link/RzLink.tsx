@@ -1,15 +1,14 @@
-import type { Permission } from '@/types';
+import type { Permission, RzLink as RzLinkType } from '@/types';
 
 export default function RzLink({
 	label,
-	permissions,
 	requiredPermission,
+	permissions,
 	...other
 }: {
-	label: string;
 	permissions?: Permission[];
-	requiredPermission?: Permission;
-} & React.ComponentPropsWithoutRef<'a'>): React.ReactNode {
+} & RzLinkType &
+	React.ComponentPropsWithoutRef<'a'>): React.ReactNode {
 	if (requiredPermission && !permissions?.includes(requiredPermission)) {
 		return null;
 	}

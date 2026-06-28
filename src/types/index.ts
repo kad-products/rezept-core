@@ -17,6 +17,7 @@ export * from './recipe-scrapes';
 export * from './recipe-sections';
 export * from './recipe-uploads';
 export * from './recipes';
+export * from './rz-link';
 export * from './rz-table';
 export * from './seasonal-ingredients';
 export * from './seasons';

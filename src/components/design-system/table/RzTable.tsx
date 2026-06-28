@@ -1,5 +1,6 @@
 'use client';
 import type { RzTableColumn } from '@/types';
+import RzLink from '../link/RzLink';
 
 export default function RzTable<T extends Record<string, unknown>>({
 	columns,
@@ -30,11 +31,7 @@ export default function RzTable<T extends Record<string, unknown>>({
 											{c.actions.map(a => {
 												const hrefProp = a.hrefProp || 'link';
 												const href = String(d[hrefProp]);
-												return (
-													<a key={a.label} href={href}>
-														{a.label}
-													</a>
-												);
+												return <RzLink key={href} href={href} {...a} />;
 											})}
 										</td>
 									);

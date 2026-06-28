@@ -1,19 +1,15 @@
 'use client';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { DropdownMenu } from 'radix-ui';
-import type { Permission } from '@/types';
+import type { Permission, RzLink as RzLinkType } from '@/types';
+import RzLink from '../link/RzLink';
 import styleClasses from './rz-pop-menu.module.css';
-
-type Link = {
-	label: string;
-	requiredPermission?: Permission;
-} & React.ComponentPropsWithoutRef<'a'>;
 
 export default function RzPopMenu({
 	items,
 	permissions,
 }: {
-	items: Link[];
+	items: RzLinkType[];
 	permissions?: Permission[];
 } & React.ComponentPropsWithoutRef<'a'>): React.ReactNode {
 	const permittedItems = items.filter(i => {
@@ -38,10 +34,9 @@ export default function RzPopMenu({
 			<DropdownMenu.Portal>
 				<DropdownMenu.Content className="rz-pop-menu-content">
 					{permittedItems.map(i => {
-						const { label, requiredPermission, ...other } = i;
 						return (
 							<DropdownMenu.Item key={i.label} className="rz-pop-menu-item" asChild>
-								<a {...other}>{label}</a>
+								<RzLink {...i} />
 							</DropdownMenu.Item>
 						);
 					})}
