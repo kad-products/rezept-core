@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
+import { RzPopMenu } from '@/components/design-system';
 import AppLayout from '@/layouts/app';
 import { getSeasonById } from '@/repositories';
 
@@ -10,12 +11,16 @@ export default async function Pages__seasons__view({ ctx, params }: RequestInfo)
 		<AppLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading season...</div>}>
 				<h3>{season.name}</h3>
-				{ctx.permissions?.includes('seasons:update') && (
-					<nav className="in-page-nav">
-						<a href={`/seasons/${season.id}/edit`}>Edit</a>
-					</nav>
-				)}
-
+				<RzPopMenu
+					permissions={ctx.permissions}
+					items={[
+						{
+							requiredPermission: 'seasons:update',
+							label: 'Edit',
+							href: `/seasons/${season.id}/edit`,
+						},
+					]}
+				/>
 				<p>{season.description}</p>
 				<ul>
 					<li>Country: {season.country}</li>
