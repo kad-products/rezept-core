@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
 import { RzCard } from '@/components/design-system';
+import RzLink from '@/components/design-system/link/RzLink';
 import AppLayout from '@/layouts/app';
 import { getSeasons } from '@/repositories';
 
@@ -9,7 +10,7 @@ export default async function Pages__seasons__listing({ ctx }: RequestInfo): Pro
 	return (
 		<AppLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading seasons...</div>}>
-				{ctx.permissions?.includes('seasons:create') && <a href="/seasons/new">New Season</a>}
+				<RzLink permissions={ctx.permissions} requiredPermission="seasons:create" label="New Season" href="/seasons/new" />
 				<div className="seasons-listing">
 					{seasons.map(s => {
 						return (

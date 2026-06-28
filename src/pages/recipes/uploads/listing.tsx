@@ -1,4 +1,5 @@
 import type { RequestInfo } from 'rwsdk/worker';
+import RzLink from '@/components/design-system/link/RzLink';
 import RecipeUploadTable from '@/components/tables/RecipeUploadsTable';
 import AppLayout from '@/layouts/app';
 import { getRecipeUploads } from '@/repositories';
@@ -8,7 +9,12 @@ export default async function Pages__recipes__uploads__listing({ ctx }: RequestI
 	const recipeUploads = userId ? await getRecipeUploads(userId, ctx.logger) : [];
 	return (
 		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
-			{ctx.permissions?.includes('recipes:upload') && <a href="/recipes/uploads/new">Upload Recipe</a>}
+			<RzLink
+				permissions={ctx.permissions}
+				requiredPermission="recipes:upload"
+				label="Upload Recipe"
+				href="/recipes/uploads/new"
+			/>
 			<RecipeUploadTable recipeUploads={recipeUploads} />
 		</AppLayout>
 	);
