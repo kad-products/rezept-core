@@ -1,12 +1,12 @@
 import type { JSX } from 'react';
+import type { RzLink } from './rz-link';
 
 export type RzTableColumn = {
 	label: string;
 	key: string;
-	actions?: {
+	actions?: ({
 		type: 'link' | 'button';
 		hrefProp?: string;
-		label: string;
-	}[];
+	} & Omit<RzLink, 'href'>)[];
 	render?: (val: string, record: Record<string, unknown>) => JSX.Element | string;
 };

@@ -3,6 +3,7 @@ import { RzTable } from '@/components/design-system';
 import type { RecipeScrapeDBRead, RzTableColumn } from '@/types';
 
 export default function RecipeScrapesTable({ recipeScrapes }: { recipeScrapes: RecipeScrapeDBRead[] }): React.ReactNode {
+	const rows = recipeScrapes.map(u => ({ ...u, editUrl: `/recipes/scrapes/${u.id}` }));
 	const recipeUploadColumns: RzTableColumn[] = [
 		{ label: 'ID', key: 'id' },
 		{ label: 'Filename', key: 'originalFilename' },
@@ -10,8 +11,8 @@ export default function RecipeScrapesTable({ recipeScrapes }: { recipeScrapes: R
 		{ label: 'File Size', key: 'fileSize' },
 		{ label: 'Status', key: 'status' },
 		{ label: 'Created At', key: 'createdAt' },
-		{ key: 'editUrl', label: 'Actions', actions: [{ type: 'link', hrefProp: 'editUrl', label: 'Edit' }] },
+		{ key: 'actions', label: 'Actions', actions: [{ type: 'link', hrefProp: 'editUrl', label: 'Edit' }] },
 	];
 
-	return <RzTable columns={recipeUploadColumns} data={recipeScrapes} rowIndex="id" />;
+	return <RzTable columns={recipeUploadColumns} data={rows} rowIndex="id" />;
 }
