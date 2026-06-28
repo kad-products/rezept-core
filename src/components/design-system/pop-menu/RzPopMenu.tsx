@@ -29,7 +29,7 @@ export default function RzPopMenu({ items, permissions }: { items: RzLinkType[];
 				<DropdownMenu.Content className="rz-pop-menu-content">
 					{permittedItems.map(i => {
 						return (
-							<DropdownMenu.Item key={i.label} className="rz-pop-menu-item" asChild>
+							<DropdownMenu.Item key={i.href} className="rz-pop-menu-item" asChild>
 								<RzLink {...i} />
 							</DropdownMenu.Item>
 						);

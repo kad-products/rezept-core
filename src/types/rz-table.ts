@@ -7,6 +7,7 @@ export type RzTableColumn = {
 	actions?: ({
 		type: 'link' | 'button';
 		hrefProp?: string;
+		handler?: (val: string, record: Record<string, unknown>) => void;
 	} & Omit<RzLink, 'href'>)[];
 	render?: (val: string, record: Record<string, unknown>) => JSX.Element | string;
 };

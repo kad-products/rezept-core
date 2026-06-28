@@ -29,9 +29,17 @@ export default function RzTable<T extends Record<string, unknown>>({
 									return (
 										<td key={c.key}>
 											{c.actions.map(a => {
-												const hrefProp = a.hrefProp || 'link';
-												const href = String(d[hrefProp]);
-												return <RzLink key={href} href={href} {...a} />;
+												if (a.type === 'link') {
+													const hrefProp = a.hrefProp || 'link';
+													const href = String(d[hrefProp]);
+													return <RzLink key={href} href={href} {...a} />;
+												} else {
+													return (
+														<button key={String(a.handler)} type="button" onClick={(): void => a.handler?.(String(d[c.key]), d)}>
+															{a.label}
+														</button>
+													);
+												}
 											})}
 										</td>
 									);
