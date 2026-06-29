@@ -1,0 +1,10 @@
+.rz-pop-menu {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	display: block;
+	background: orange;
+	border-radius: 50%;
+	height: 2rem;
+	width: 2rem;
+}

@@ -21,7 +21,7 @@ export default function AppLayout({
 }): React.ReactNode {
 	const userPerms = ctx.permissions || [];
 
-	const filteredNavItems = getNavItems('main', userPerms);
+	const mainNavItems = getNavItems('main', userPerms);
 	let leftNavItems: NavItem[] = [];
 	if (leftNav) {
 		leftNavItems = getNavItems(leftNav, userPerms);
@@ -31,7 +31,7 @@ export default function AppLayout({
 		<StrictMode>
 			<header>
 				<nav className="main-nav">
-					{filteredNavItems.map(item => {
+					{mainNavItems.map(item => {
 						const Icon = item.icon || QuestionMarkCircledIcon;
 						return (
 							<a
@@ -56,7 +56,7 @@ export default function AppLayout({
 				<div className="app-layout-inner">
 					{leftNav && (
 						<div className="app-layout-left-nav">
-							<RzLeftNav navItems={leftNavItems} />
+							<RzLeftNav navItems={leftNavItems} userPermissions={userPerms} />
 						</div>
 					)}
 					<div className="app-layout-content">{children}</div>

@@ -1,0 +1,24 @@
+import { expect, test } from '@playwright/experimental-ct-react';
+import { navItems } from '@/data/navigation';
+import RzLeftNav from './RzLeftNav';
+
+test('renders basic left nav with single item', async ({ mount }) => {
+	const component = await mount(
+		<RzLeftNav
+			userPermissions={['__controls:read']}
+			navItems={[
+				{
+					href: '/foo/bar',
+					label: 'My label',
+					requiredPermission: '__controls:read',
+				},
+			]}
+		/>,
+	);
+	await expect(component).toHaveScreenshot();
+});
+
+test('renders profile left nav for user with no permissions', async ({ mount }) => {
+	const component = await mount(<RzLeftNav userPermissions={[]} navItems={navItems.recipes} />);
+	await expect(component).toHaveScreenshot();
+});

@@ -1,7 +1,5 @@
-type CardAction = {
-	href: string;
-	text: string;
-};
+import type { RzLink as RzLinkType } from '@/types';
+import RzLink from '../link/RzLink';
 
 export default function RzCard({
 	title,
@@ -10,7 +8,7 @@ export default function RzCard({
 }: {
 	title: string;
 	body?: string | React.ReactNode;
-	actions: CardAction[];
+	actions: RzLinkType[];
 }): React.ReactNode {
 	return (
 		<div className="rz-card">
@@ -18,11 +16,7 @@ export default function RzCard({
 			{body && <div className="rz-card-body">{body}</div>}
 			<div className="rz-card-actions">
 				{actions.map(a => {
-					return (
-						<a key={a.href} href={a.href}>
-							{a.text}
-						</a>
-					);
+					return <RzLink key={a.href} {...a} />;
 				})}
 			</div>
 		</div>

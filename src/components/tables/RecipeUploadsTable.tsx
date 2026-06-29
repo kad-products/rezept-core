@@ -11,7 +11,11 @@ export default function RecipeUploadsTable({ recipeUploads }: { recipeUploads: R
 		{ label: 'File Size', key: 'fileSize' },
 		{ label: 'Status', key: 'status' },
 		{ label: 'Created At', key: 'createdAt' },
-		{ key: 'editUrl', label: 'Actions', action: { type: 'link', hrefProp: 'editUrl', label: 'Edit' } },
+		{
+			key: 'actions',
+			label: 'Actions',
+			actions: [{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'recipes:upload' }],
+		},
 	];
 
 	return <RzTable columns={recipeUploadColumns} data={rows} rowIndex="id" />;

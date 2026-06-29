@@ -1,4 +1,5 @@
 import type { RequestInfo } from 'rwsdk/worker';
+import { RzPopMenu } from '@/components/design-system';
 import UserForm from '@/forms/user';
 import AdminLayout from '@/layouts/admin';
 import { getUserById } from '@/repositories';
@@ -8,9 +9,16 @@ export default async function Pages__admin__editUser({ ctx, params }: RequestInf
 
 	return (
 		<AdminLayout pageTitle={`Edit ${user.username}`}>
-			<nav className="in-page-nav">
-				<a href="/admin/users">Users</a>
-			</nav>
+			<RzPopMenu
+				permissions={ctx.permissions}
+				items={[
+					{
+						requiredPermission: 'users:read',
+						label: 'Users',
+						href: `/admin/users`,
+					},
+				]}
+			/>
 			<UserForm user={user} />
 		</AdminLayout>
 	);

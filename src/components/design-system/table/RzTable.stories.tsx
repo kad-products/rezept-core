@@ -38,11 +38,14 @@ export const WithEditAction: Story = {
 			{
 				key: 'actions',
 				label: 'Actions',
-				action: {
-					type: 'link',
-					hrefProp: 'editUrl',
-					label: 'Edit',
-				},
+				actions: [
+					{
+						type: 'link',
+						hrefProp: 'editUrl',
+						label: 'Edit',
+						requiredPermission: 'seasons:update',
+					},
+				],
 			},
 		],
 		data: data.map(item => ({ ...item, editUrl: `/edit/${item.id}` })),

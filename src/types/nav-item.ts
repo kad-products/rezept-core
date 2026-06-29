@@ -5,6 +5,6 @@ export type NavItem = {
 	label: string;
 	href: string;
 	icon?: React.ComponentType;
-	permCheck: (permissions: Permission[]) => boolean;
+	requiredPermission: Permission;
 	basePage?: string;
 };

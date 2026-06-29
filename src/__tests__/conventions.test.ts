@@ -93,6 +93,15 @@ describe('components', () => {
 		const bad = files.filter(p => /from ['"]@\/(db|models)['"]/.test(read(p)));
 		expect(bad.map(rel), 'Direct db/models import not allowed in components').toHaveLength(0);
 	});
+
+	it('no design-system component imports from the @/components/design-system barrel', () => {
+		const designSystemFiles = getFiles('components/design-system', SKIP);
+		const bad = designSystemFiles.filter(p => /from ['"]@\/components\/design-system['"]/.test(read(p)));
+		expect(
+			bad.map(rel),
+			'Design system components must use relative imports, not the barrel (causes circular dependencies)',
+		).toHaveLength(0);
+	});
 });
 
 // ─── Schemas ──────────────────────────────────────────────────────────────────

@@ -1,4 +1,5 @@
 import type { RequestInfo } from 'rwsdk/worker';
+import { RzLink } from '@/components/design-system';
 import UserPermissionsTable from '@/components/tables/UserPermissionsTable';
 import AppLayout from '@/layouts/app';
 
@@ -8,7 +9,12 @@ export default async function Pages__profile__permissions({ ctx }: RequestInfo):
 			<h2>Permissions</h2>
 			{ctx.session?.permissionsOverride && <p>Override active</p>}
 			<UserPermissionsTable permissionsList={ctx.permissions || []} />
-			{ctx.permissions?.includes('permissions:override') && <a href="/profile/permissions/override">Override Permissions</a>}
+			<RzLink
+				permissions={ctx.permissions}
+				requiredPermission="permissions:override"
+				label="Override Permissions"
+				href="/profile/permissions/override"
+			/>
 		</AppLayout>
 	);
 }

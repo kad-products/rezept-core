@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import type { RequestInfo } from 'rwsdk/worker';
+import { RzLink } from '@/components/design-system';
 import ApiKeysTable from '@/components/tables/ApiKeysTable';
 import AppLayout from '@/layouts/app';
 import { getApiKeysByUserId } from '@/repositories';
@@ -15,7 +16,12 @@ export default async function Pages__profile__api_keys({ ctx }: RequestInfo): Pr
 			<Suspense fallback={<div>Loading API keys...</div>}>
 				<ApiKeysTable apiKeys={apiKeys} />
 			</Suspense>
-			{ctx.permissions?.includes('api-keys:create') && <a href="/profile/api-keys/new">New API Key</a>}
+			<RzLink
+				permissions={ctx.permissions}
+				requiredPermission="api-keys:create"
+				label="New API Key"
+				href="/profile/api-keys/new"
+			/>
 		</AppLayout>
 	);
 }

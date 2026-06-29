@@ -4,6 +4,10 @@ import { RzTable } from '@/components/design-system';
 import type { ApiKeyDBRead, RzTableColumn } from '@/types';
 
 export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKeyDBRead[] }): React.ReactNode {
+	const clipboardCopy = async (_val: string, rec: Record<string, unknown>): Promise<void> => {
+		await navigator.clipboard.writeText(String(rec.apiKey));
+	};
+
 	const apiColumns: RzTableColumn[] = [
 		{ label: 'API Key', key: 'apiKey', render: (apiKey: string): string => apiKey.substring(0, 12) },
 		{ label: 'Name', key: 'name' },
@@ -13,11 +17,14 @@ export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKeyDBRead[] }): 
 		{
 			label: 'Actions',
 			key: 'actions',
-			render: (_: string, apiKey: Record<string, unknown>) => (
-				<button type="button" onClick={() => navigator.clipboard.writeText(String(apiKey.apiKey))}>
-					<CopyIcon />
-				</button>
-			),
+			actions: [
+				{
+					type: 'button',
+					handler: clipboardCopy,
+					label: <CopyIcon />,
+					requiredPermission: 'api-keys:copy',
+				},
+			],
 		},
 	];
 

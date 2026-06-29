@@ -5,10 +5,16 @@ type RoleEntry = PermissionRole | '*';
 
 // biome-ignore lint/nursery/useExplicitType: This is a constant and a data source/inference source for other types so we can't type this without causing problems in those
 const permissions = {
+	// this is here to allow our "fully public" items to have a permission to use so we can force all links and actions to have a permission
+	// but those that don't actually need to be protected can use this
+	__controls: {
+		read: ['*'],
+	},
 	admin: {
 		read: ['ADMIN'],
 	},
 	'api-keys': {
+		copy: ['BASIC', 'ADMIN'],
 		create: ['BASIC', 'ADMIN'],
 		read: ['BASIC', 'ADMIN'],
 		update: ['BASIC', 'ADMIN'],
@@ -40,6 +46,7 @@ const permissions = {
 		delete: ['ADMIN', 'BASIC'],
 		scrape: ['ADMIN', 'BASIC'],
 		upload: ['ADMIN', 'BASIC'],
+		favorite: ['ADMIN', 'BASIC'],
 	},
 	seasons: {
 		create: ['ADMIN'],

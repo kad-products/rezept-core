@@ -30,11 +30,13 @@ export default async function Pages__recipes__listing({ ctx }: RequestInfo): Pro
 							actions={[
 								{
 									href: `/recipes/${r.id}`,
-									text: `View`,
+									label: `View`,
+									requiredPermission: 'recipes:read',
 								},
 								{
 									href: `/recipes/${r.id}/favorite`,
-									text: `Favorite`,
+									label: `Favorite`,
+									requiredPermission: 'recipes:favorite',
 								},
 							]}
 						/>
