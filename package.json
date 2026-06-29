@@ -1,8 +1,8 @@
 {
-	"name": "@redwoodjs/starter",
+	"name": "@kad-products/rezept-core",
 	"version": "1.48.0",
-	"description": "A bare-bones RedwoodSDK starter",
-	"main": "index.js",
+	"description": "Seasonal ingredient and recipes made easy.",
+	"main": "src/worker.tsx",
 	"type": "module",
 	"keywords": [],
 	"author": "",

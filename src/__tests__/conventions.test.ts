@@ -44,6 +44,57 @@ describe('actions', () => {
 		const bad = allFiles.filter(p => /from ['"]@\/(db|models)['"]/.test(read(p)));
 		expect(bad.map(rel), 'Direct db/models import not allowed in actions; use repositories').toHaveLength(0);
 	});
+
+	it('all actions export only underscore-prefixed "private" methods or serverAction-wrapped methods', () => {
+		const allowedExceptions: Record<string, string[]> = {
+			'actions/auth.ts': ['startPasskeyLogin', 'finishPasskeyLogin'],
+			'actions/registration.ts': ['startPasskeyRegistration', 'finishPasskeyRegistration'],
+		};
+		const badEntries: Record<string, string>[] = [];
+		allFiles.forEach(f => {
+			const fileContents = read(f);
+			const relPath = rel(f);
+			const exportedFunctionNames = [...fileContents.matchAll(/^export async function ([^_]\w*)/gm)].map(m => String(m[1]));
+			const fileExceptions = allowedExceptions[relPath] || [];
+			exportedFunctionNames.forEach(funcName => {
+				if (fileExceptions.includes(funcName)) {
+					return;
+				}
+				badEntries.push({
+					relPath: rel(f),
+					funcName,
+				});
+			});
+		});
+		expect(
+			badEntries.map(e => `${e.relPath}:${e.funcName}`),
+			'Non-private and non-serverAction wrapped method export found',
+		).toHaveLength(0);
+	});
+
+	it('all serverActions require auth', () => {
+		const bad = allFiles.filter(f => {
+			const fileContents = read(f);
+			const matches = [...fileContents.matchAll(/serverAction\(\[([\s\S]*?)\]\)/g)].map(m => String(m[1]));
+			if (matches.length === 0) {
+				return false;
+			}
+			return matches.some(m => !/requireAuthentication/.test(m));
+		});
+		expect(bad.map(rel), 'Action defined without auth interrupter included').toHaveLength(0);
+	});
+
+	it('all serverActions require at least one permission', () => {
+		const bad = allFiles.filter(f => {
+			const fileContents = read(f);
+			const matches = [...fileContents.matchAll(/serverAction\(\[([\s\S]*?)\]\)/g)].map(m => String(m[1]));
+			if (matches.length === 0) {
+				return false;
+			}
+			return matches.some(m => !/requirePermissions/.test(m));
+		});
+		expect(bad.map(rel), 'Action defined without permissions interrupter included').toHaveLength(0);
+	});
 });
 
 // ─── Repositories ──────────────────────────────────────────────────────────────
