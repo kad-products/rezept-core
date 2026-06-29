@@ -129,6 +129,28 @@ describe('pages', () => {
 		expect(bad.map(rel), 'Direct db/models import not allowed in pages; use repositories').toHaveLength(0);
 	});
 
+	it('all page routes files export a named document-type map, not a bare array', () => {
+		const allowedKeys = new Set(['app', 'admin', 'noJS']);
+		const routeFiles = files.filter(p => p.endsWith('routes.ts'));
+		const bad: string[] = [];
+		for (const p of routeFiles) {
+			const content = read(p);
+			const relPath = rel(p);
+			if (!/^export default \{/m.test(content)) {
+				bad.push(`${relPath} — must use export default { docType: [...] }, not a bare array or single handler`);
+				continue;
+			}
+			// Top-level keys of the export default object are at exactly one tab of indentation
+			const keys = [...content.matchAll(/^\t(\w+):/gm)].map(m => m[1]);
+			for (const key of keys) {
+				if (!allowedKeys.has(key)) {
+					bad.push(`${relPath} — invalid document type key '${key}'; must be one of: ${[...allowedKeys].join(', ')}`);
+				}
+			}
+		}
+		expect(bad, 'routes.ts must use export default { docType: [...] } with keys from: app, admin, noJS').toHaveLength(0);
+	});
+
 	it('all route() calls in page routes files use an array of handlers', () => {
 		const routeFiles = files.filter(p => p.endsWith('routes.ts'));
 		// Explicit opt-in exceptions for truly public routes — add new public routes here.
