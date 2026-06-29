@@ -3,4 +3,5 @@ git add worker-configuration.d.ts  # Stage the generated file as-is
 pnpm docs:generate
 git add src/actions/generated.md
 git add src/api/generated.md
+git add src/pages/generated.md
 pnpm lint-staged --allow-empty

@@ -128,6 +128,72 @@ describe('pages', () => {
 		const bad = files.filter(p => /from ['"]@\/(db|models)['"]/.test(read(p)));
 		expect(bad.map(rel), 'Direct db/models import not allowed in pages; use repositories').toHaveLength(0);
 	});
+
+	it('all page routes files export a named document-type map, not a bare array', () => {
+		const allowedKeys = new Set(['app', 'admin', 'noJS']);
+		const routeFiles = files.filter(p => p.endsWith('routes.ts'));
+		const bad: string[] = [];
+		for (const p of routeFiles) {
+			const content = read(p);
+			const relPath = rel(p);
+			if (!/^export default \{/m.test(content)) {
+				bad.push(`${relPath} — must use export default { docType: [...] }, not a bare array or single handler`);
+				continue;
+			}
+			// Top-level keys of the export default object are at exactly one tab of indentation
+			const keys = [...content.matchAll(/^\t(\w+):/gm)].map(m => m[1]);
+			for (const key of keys) {
+				if (!allowedKeys.has(key)) {
+					bad.push(`${relPath} — invalid document type key '${key}'; must be one of: ${[...allowedKeys].join(', ')}`);
+				}
+			}
+		}
+		expect(bad, 'routes.ts must use export default { docType: [...] } with keys from: app, admin, noJS').toHaveLength(0);
+	});
+
+	it('all route() calls in page routes files use an array of handlers', () => {
+		const routeFiles = files.filter(p => p.endsWith('routes.ts'));
+		// Explicit opt-in exceptions for truly public routes — add new public routes here.
+		const allowedExceptions: Record<string, Record<string, { auth?: boolean; perms?: boolean }>> = {
+			'pages/recipes/routes.ts': {
+				'/': { auth: true },
+				'/:recipeId': { auth: true },
+				'/:recipeId/print': { auth: true },
+			},
+			'pages/seasons/routes.ts': {
+				'/': { auth: true },
+				'/:seasonId': { auth: true },
+			},
+			'pages/auth/routes.ts': {
+				'/login': { auth: true },
+				'/logout': { auth: true, perms: true },
+			},
+		};
+		const bad: string[] = [];
+		for (const p of routeFiles) {
+			const content = read(p);
+			const relPath = rel(p);
+			const fileExceptions = allowedExceptions[relPath] ?? {};
+
+			[...content.matchAll(/\broute\((['"][^'"]*['"]),(?!\s*\[)/g)].forEach(m => {
+				const ex = fileExceptions[m[1].slice(1, -1)] ?? {};
+				if (!ex.auth || !ex.perms) {
+					bad.push(`${relPath}: route(${m[1]}) — missing handler array`);
+				}
+			});
+
+			[...content.matchAll(/\broute\((['"][^'"]*['"]),\s*\[([\s\S]*?)\]/g)].forEach(m => {
+				const ex = fileExceptions[m[1].slice(1, -1)] ?? {};
+				if (!m[2].includes('requireAuthentication') && !ex.auth) {
+					bad.push(`${relPath}: route(${m[1]}) — missing requireAuthentication`);
+				}
+				if (!m[2].includes('requirePermissions(') && !ex.perms) {
+					bad.push(`${relPath}: route(${m[1]}) — missing requirePermissions`);
+				}
+			});
+		}
+		expect(bad, 'All route() calls must include requireAuthentication and requirePermissions').toHaveLength(0);
+	});
 });
 
 // ─── Components ───────────────────────────────────────────────────────────────
@@ -269,6 +335,25 @@ describe('middleware', () => {
 	it('every middleware file has a default export', () => {
 		const bad = files.filter(p => !/\bexport default\b/.test(read(p)));
 		expect(bad.map(rel), 'Middleware files must use default export').toHaveLength(0);
+	});
+});
+
+// ─── Worker ───────────────────────────────────────────────────────────────────
+
+describe('worker', () => {
+	it('only route() calls are for root and NotFound', () => {
+		const content = read(join(SRC, 'worker.tsx'));
+		const routes = [...content.matchAll(/\broute\('([^']+)'/g)].map(m => m[1]);
+		expect(routes.sort(), 'Unexpected route() calls in worker.tsx — use prefix() for all other routes').toEqual(['*', '/']);
+	});
+
+	it('all page imports come from routes files except root and NotFound', () => {
+		const content = read(join(SRC, 'worker.tsx'));
+		const allowedExceptions = ['root', 'not-found'];
+		const bad = [...content.matchAll(/from ['"]@\/pages\/([^'"]+)['"]/g)]
+			.map(m => m[1])
+			.filter(p => !p.endsWith('/routes') && !allowedExceptions.includes(p));
+		expect(bad, 'Page imports in worker.tsx must come from */routes files').toHaveLength(0);
 	});
 });
 
