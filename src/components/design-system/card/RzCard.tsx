@@ -1,5 +1,5 @@
-import { RzLink } from '@/components/design-system';
 import type { RzLink as RzLinkType } from '@/types';
+import RzLink from '../link/RzLink';
 
 export default function RzCard({
 	title,
