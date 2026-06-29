@@ -5,6 +5,9 @@ type RoleEntry = PermissionRole | '*';
 
 // biome-ignore lint/nursery/useExplicitType: This is a constant and a data source/inference source for other types so we can't type this without causing problems in those
 const permissions = {
+	placeholder: {
+		public: ['*'],
+	},
 	admin: {
 		read: ['ADMIN'],
 	},

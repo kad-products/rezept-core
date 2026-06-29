@@ -12,7 +12,7 @@ type Story = StoryObj<typeof RzCard>;
 export const Default: Story = {
 	args: {
 		title: 'Summer Pasta',
-		actions: [{ href: '#', label: 'View', requiredPermission: 'seasons:read' }],
+		actions: [{ href: '#', label: 'View', requiredPermission: 'placeholder:public' }],
 	},
 };
 
@@ -20,6 +20,6 @@ export const WithBody: Story = {
 	args: {
 		title: 'Summer Pasta',
 		body: 'A light and fresh pasta dish with seasonal vegetables.',
-		actions: [{ href: '#', label: 'View', requiredPermission: 'seasons:read' }],
+		actions: [{ href: '#', label: 'View', requiredPermission: 'placeholder:public' }],
 	},
 };

@@ -3,17 +3,18 @@ import RzLink from '../link/RzLink';
 
 export default function RzLeftNav({
 	navItems,
+	userPermissions,
 }: {
-	navItems: (RzLinkType & { permCheck?: (p: Permission[]) => boolean })[];
+	navItems: RzLinkType[];
+	userPermissions: Permission[];
 }): React.ReactNode {
 	return (
 		<nav className="rz-left-nav">
 			<ul>
 				{navItems.map(item => {
-					const { permCheck, ...other } = item;
 					return (
 						<li key={item.href}>
-							<RzLink key={other.href} {...other} />
+							<RzLink permissions={userPermissions} key={item.href} {...item} />
 						</li>
 					);
 				})}

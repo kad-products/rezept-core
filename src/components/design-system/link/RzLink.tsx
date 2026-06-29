@@ -8,7 +8,7 @@ export default function RzLink({
 }: {
 	permissions?: Permission[];
 } & RzLinkType): React.ReactNode {
-	if (requiredPermission && !permissions?.includes(requiredPermission)) {
+	if (!permissions?.includes(requiredPermission)) {
 		return null;
 	}
 	return <a {...other}>{label}</a>;
