@@ -55,7 +55,7 @@ export const navItems: Record<string, NavItem[]> = {
 		},
 	],
 	main: [
-		{ key: 'home', label: 'Home', href: '/', icon: HomeIcon, requiredPermission: 'placeholder:public' },
+		{ key: 'home', label: 'Home', href: '/', icon: HomeIcon, requiredPermission: '__controls:read' },
 		{
 			key: 'seasons',
 			label: 'Seasons',
