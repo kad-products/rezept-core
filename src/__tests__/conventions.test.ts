@@ -272,6 +272,25 @@ describe('middleware', () => {
 	});
 });
 
+// ─── Worker ───────────────────────────────────────────────────────────────────
+
+describe('worker', () => {
+	it('only route() calls are for root and NotFound', () => {
+		const content = read(join(SRC, 'worker.tsx'));
+		const routes = [...content.matchAll(/\broute\('([^']+)'/g)].map(m => m[1]);
+		expect(routes.sort(), 'Unexpected route() calls in worker.tsx — use prefix() for all other routes').toEqual(['*', '/']);
+	});
+
+	it('all page imports come from routes files except root and NotFound', () => {
+		const content = read(join(SRC, 'worker.tsx'));
+		const allowedExceptions = ['root', 'not-found'];
+		const bad = [...content.matchAll(/from ['"]@\/pages\/([^'"]+)['"]/g)]
+			.map(m => m[1])
+			.filter(p => !p.endsWith('/routes') && !allowedExceptions.includes(p));
+		expect(bad, 'Page imports in worker.tsx must come from */routes files').toHaveLength(0);
+	});
+});
+
 // ─── Barrel exports ───────────────────────────────────────────────────────────
 
 describe('barrel exports', () => {
