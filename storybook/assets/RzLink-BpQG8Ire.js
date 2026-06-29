@@ -1,0 +1,1 @@
+import{j as r}from"./jsx-runtime-u17CrQMm.js";function o({label:e,requiredPermission:s,permissions:i,...n}){return i?.includes(s)?r.jsx("a",{...n,children:e}):null}o.__docgenInfo={description:"",methods:[],displayName:"RzLink",props:{permissions:{required:!1,tsType:{name:"Array",elements:[{name:"Permission"}],raw:"Permission[]"},description:""}}};export{o as R};
