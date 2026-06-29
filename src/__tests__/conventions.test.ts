@@ -128,6 +128,50 @@ describe('pages', () => {
 		const bad = files.filter(p => /from ['"]@\/(db|models)['"]/.test(read(p)));
 		expect(bad.map(rel), 'Direct db/models import not allowed in pages; use repositories').toHaveLength(0);
 	});
+
+	it('all route() calls in page routes files use an array of handlers', () => {
+		const routeFiles = files.filter(p => p.endsWith('routes.ts'));
+		// Explicit opt-in exceptions for truly public routes — add new public routes here.
+		const allowedExceptions: Record<string, Record<string, { auth?: boolean; perms?: boolean }>> = {
+			'pages/recipes/routes.ts': {
+				'/': { auth: true },
+				'/:recipeId': { auth: true },
+				'/:recipeId/print': { auth: true },
+			},
+			'pages/seasons/routes.ts': {
+				'/': { auth: true },
+				'/:seasonId': { auth: true },
+			},
+			'pages/auth/routes.ts': {
+				'/login': { auth: true },
+				'/logout': { auth: true, perms: true },
+			},
+		};
+		const bad: string[] = [];
+		for (const p of routeFiles) {
+			const content = read(p);
+			const relPath = rel(p);
+			const fileExceptions = allowedExceptions[relPath] ?? {};
+
+			[...content.matchAll(/\broute\((['"][^'"]*['"]),(?!\s*\[)/g)].forEach(m => {
+				const ex = fileExceptions[m[1].slice(1, -1)] ?? {};
+				if (!ex.auth || !ex.perms) {
+					bad.push(`${relPath}: route(${m[1]}) — missing handler array`);
+				}
+			});
+
+			[...content.matchAll(/\broute\((['"][^'"]*['"]),\s*\[([\s\S]*?)\]/g)].forEach(m => {
+				const ex = fileExceptions[m[1].slice(1, -1)] ?? {};
+				if (!m[2].includes('requireAuthentication') && !ex.auth) {
+					bad.push(`${relPath}: route(${m[1]}) — missing requireAuthentication`);
+				}
+				if (!m[2].includes('requirePermissions(') && !ex.perms) {
+					bad.push(`${relPath}: route(${m[1]}) — missing requirePermissions`);
+				}
+			});
+		}
+		expect(bad, 'All route() calls must include requireAuthentication and requirePermissions').toHaveLength(0);
+	});
 });
 
 // ─── Components ───────────────────────────────────────────────────────────────
