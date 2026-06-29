@@ -9,6 +9,7 @@ test('renders basic left nav with single item', async ({ mount }) => {
 				{
 					href: '/foo/bar',
 					label: 'My label',
+					requiredPermission: 'seasons:read',
 				},
 			]}
 		/>,

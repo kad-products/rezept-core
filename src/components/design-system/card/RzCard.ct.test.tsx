@@ -6,8 +6,8 @@ test('renders title and actions', async ({ mount }) => {
 		<RzCard
 			title="Pasta Carbonara"
 			actions={[
-				{ href: '/recipes/1', label: 'View' },
-				{ href: '/recipes/1/favorite', label: 'Favorite' },
+				{ href: '/recipes/1', label: 'View', requiredPermission: 'seasons:read' },
+				{ href: '/recipes/1/favorite', label: 'Favorite', requiredPermission: 'seasons:read' },
 			]}
 		/>,
 	);
@@ -19,7 +19,7 @@ test('renders title, body, and actions', async ({ mount }) => {
 		<RzCard
 			title="Pasta Carbonara"
 			body="A classic Roman pasta dish with eggs, cheese, and guanciale."
-			actions={[{ href: '/recipes/1', label: 'View' }]}
+			actions={[{ href: '/recipes/1', label: 'View', requiredPermission: 'seasons:read' }]}
 		/>,
 	);
 	await expect(component).toHaveScreenshot();
@@ -35,9 +35,9 @@ test('renders multiple actions', async ({ mount }) => {
 		<RzCard
 			title="Pasta Carbonara"
 			actions={[
-				{ href: '/recipes/1', label: 'View' },
-				{ href: '/recipes/1/edit', label: 'Edit' },
-				{ href: '/recipes/1/favorite', label: 'Favorite' },
+				{ href: '/recipes/1', label: 'View', requiredPermission: 'seasons:read' },
+				{ href: '/recipes/1/edit', label: 'Edit', requiredPermission: 'seasons:read' },
+				{ href: '/recipes/1/favorite', label: 'Favorite', requiredPermission: 'seasons:read' },
 			]}
 		/>,
 	);

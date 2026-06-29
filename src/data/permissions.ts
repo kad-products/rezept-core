@@ -9,6 +9,7 @@ const permissions = {
 		read: ['ADMIN'],
 	},
 	'api-keys': {
+		copy: ['BASIC', 'ADMIN'],
 		create: ['BASIC', 'ADMIN'],
 		read: ['BASIC', 'ADMIN'],
 		update: ['BASIC', 'ADMIN'],
@@ -40,6 +41,7 @@ const permissions = {
 		delete: ['ADMIN', 'BASIC'],
 		scrape: ['ADMIN', 'BASIC'],
 		upload: ['ADMIN', 'BASIC'],
+		favorite: ['ADMIN', 'BASIC'],
 	},
 	seasons: {
 		create: ['ADMIN'],

@@ -43,6 +43,7 @@ export const WithEditAction: Story = {
 						type: 'link',
 						hrefProp: 'editUrl',
 						label: 'Edit',
+						requiredPermission: 'seasons:update',
 					},
 				],
 			},

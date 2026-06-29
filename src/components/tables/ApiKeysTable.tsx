@@ -22,6 +22,7 @@ export default function ApiKeysTable({ apiKeys }: { apiKeys: ApiKeyDBRead[] }): 
 					type: 'button',
 					handler: clipboardCopy,
 					label: <CopyIcon />,
+					requiredPermission: 'api-keys:copy',
 				},
 			],
 		},

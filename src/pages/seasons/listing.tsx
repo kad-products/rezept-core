@@ -20,6 +20,7 @@ export default async function Pages__seasons__listing({ ctx }: RequestInfo): Pro
 									{
 										href: `/seasons/${s.id}`,
 										label: `View`,
+										requiredPermission: 'seasons:read',
 									},
 								]}
 							/>

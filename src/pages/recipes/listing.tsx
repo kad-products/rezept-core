@@ -31,10 +31,12 @@ export default async function Pages__recipes__listing({ ctx }: RequestInfo): Pro
 								{
 									href: `/recipes/${r.id}`,
 									label: `View`,
+									requiredPermission: 'recipes:read',
 								},
 								{
 									href: `/recipes/${r.id}/favorite`,
 									label: `Favorite`,
+									requiredPermission: 'recipes:favorite',
 								},
 							]}
 						/>

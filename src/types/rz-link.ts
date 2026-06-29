@@ -4,5 +4,5 @@ import type { Permission } from '@/types';
 export type RzLink = {
 	href: string;
 	label: JSX.Element | string;
-	requiredPermission?: Permission;
+	requiredPermission: Permission;
 } & React.ComponentPropsWithoutRef<'a'>;

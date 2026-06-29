@@ -8,7 +8,11 @@ const columns: RzTableColumn[] = [
 	{ key: 'username', label: 'Username' },
 	{ key: 'role', label: 'Role' },
 	{ key: 'createdAt', label: 'Created' },
-	{ key: 'actions', label: '', actions: [{ type: 'link', hrefProp: 'editUrl', label: 'Edit' }] },
+	{
+		key: 'actions',
+		label: '',
+		actions: [{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'users:update' }],
+	},
 ];
 
 export default async function Pages__admin__users({ ctx }: RequestInfo): Promise<React.JSX.Element> {
