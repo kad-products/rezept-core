@@ -1,3 +1,24 @@
+## [1.48.0](https://github.com/kad-products/rezept-core/compare/v1.47.0...v1.48.0) (2026-06-29)
+
+### Features
+
+* initial RzPopMenu setup ([d38776f](https://github.com/kad-products/rezept-core/commit/d38776f60a125a8e2d70c927aa85083fc5ee8691))
+* left nav fix for permCheck spread problem ([177c776](https://github.com/kad-products/rezept-core/commit/177c776cde5cfcce2818c544029f290ad2780fd0))
+* links require permissions ([9d7f443](https://github.com/kad-products/rezept-core/commit/9d7f443a7fb1a54f073b4d7a712f943948148967))
+* make rztable action into actions array ([396abd4](https://github.com/kad-products/rezept-core/commit/396abd4e07e6fc20f0a0cadb50fd4600bd32cf21))
+* move links to RzLink component for consistency ([52efaf2](https://github.com/kad-products/rezept-core/commit/52efaf27fab8819fea33ea81b3f602fca0da2bd1))
+
+### Bug Fixes
+
+* all design system components use RzLink ([2f239b0](https://github.com/kad-products/rezept-core/commit/2f239b0ef0e5f629719b161fd016ead24cd99d83))
+* better name for catchall permission ([ebd5193](https://github.com/kad-products/rezept-core/commit/ebd5193226c98abb646f44beb193accef4296a28))
+* define usage of table action type of button ([96fc30a](https://github.com/kad-products/rezept-core/commit/96fc30a34d658b2d2626d356ab64fb3b066ba66b))
+* import ds from local folders ([ffb9f91](https://github.com/kad-products/rezept-core/commit/ffb9f91ccae920e5bb50cd1213afeb2df09790b9))
+* remove extraneous types ([e527311](https://github.com/kad-products/rezept-core/commit/e527311c7ddd373e468188741748cb239c3f19ba))
+* remove in-page-nav in favor of pop menu ([c762e4c](https://github.com/kad-products/rezept-core/commit/c762e4c2cb808b2c9aa03dbf05fb6c7f98b17599))
+* remove permCheck and standardize on requiredPermission for links ([a2f4a18](https://github.com/kad-products/rezept-core/commit/a2f4a18c209d42be78abe602a98af8aa88e6f441))
+* scrapes actions in the table ([5c2aabc](https://github.com/kad-products/rezept-core/commit/5c2aabc8734470fa157e828a518f84b5305e873a))
+
 ## [1.47.0](https://github.com/kad-products/rezept-core/compare/v1.46.0...v1.47.0) (2026-06-10)
 
 ### Features
