@@ -189,6 +189,65 @@ describe('api', () => {
 		const bad = files.filter(p => read(p).includes("'use server'"));
 		expect(bad.map(rel), "'use server' not allowed in API handlers").toHaveLength(0);
 	});
+
+	it('all non-default exports are _-prefixed private methods', () => {
+		const invalidExports: string[] = [];
+		files.forEach(f => {
+			const fileContents = read(f);
+			const relPath = rel(f);
+			const nonDefaultExportLines = [...fileContents.matchAll(/^export(?! default).+$/gm)].map(match => match[0]);
+			nonDefaultExportLines.forEach(exportLine => {
+				if (!exportLine.startsWith('export async function _')) {
+					invalidExports.push(`${relPath}:${exportLine}`);
+				}
+			});
+		});
+		expect(invalidExports, 'Invalid exports from APIs').toHaveLength(0);
+	});
+
+	it('all default exports from APIs are a map of HTTP method handlers paired with chains that include auth/perms', () => {
+		const allowedVerbs = ['post', 'get'];
+		// true in this map means "yes this has an exception"
+		const allowedExceptions: Record<string, Record<string, Record<string, boolean>>> = {
+			'api/images.ts': {
+				get: {
+					auth: true,
+					perms: true,
+				},
+			},
+		};
+		const disallowedVerbs: string[] = [];
+		const missingAuth: string[] = [];
+		const missingPerms: string[] = [];
+		files.forEach(f => {
+			const fileContents = read(f);
+			const relPath = rel(f);
+			const exportedFunctionNames = [...fileContents.matchAll(/^export default \{[\s\S]*?\}/gm)].map(match => match[0]);
+			const fileExceptions = allowedExceptions[relPath] || {};
+			exportedFunctionNames.forEach(funcBlock => {
+				const methods = funcBlock.split('\n').slice(1, -1);
+				methods.forEach(method => {
+					const [verb, handlerArray] = method.trim().split(/:(.*)/s);
+					if (!allowedVerbs.includes(verb)) {
+						disallowedVerbs.push(`${relPath}:${verb}:${handlerArray}`);
+					}
+					if (!handlerArray.includes('requireAuthentication')) {
+						if (!fileExceptions[verb].auth) {
+							missingAuth.push(`${relPath}:${verb}:${handlerArray}`);
+						}
+					}
+					if (!handlerArray.includes('requirePermissions')) {
+						if (!fileExceptions[verb].perms) {
+							missingPerms.push(`${relPath}:${verb}:${handlerArray}`);
+						}
+					}
+				});
+			});
+		});
+		expect(disallowedVerbs, 'APIs with invalid verbs in default export').toHaveLength(0);
+		expect(missingAuth, 'APIs with missing auth interrupter').toHaveLength(0);
+		expect(missingPerms, 'APIs with missing perms interrupter').toHaveLength(0);
+	});
 });
 
 // ─── Steps ────────────────────────────────────────────────────────────────────
