@@ -34,6 +34,10 @@ describe('requirePermissions', () => {
 		expect(result).toBeUndefined();
 	});
 
+	it('throws RzAccessError 500 if there is a perms check that has no indicated perms', async () => {
+		expect(() => requirePermissions()).toThrow(RzAccessError);
+	});
+
 	it('throws RzAccessError 403 when user is missing all required permissions', async () => {
 		mockRequestInfo.ctx.permissions = [];
 
