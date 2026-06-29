@@ -6,8 +6,7 @@ import { sessions } from '@/durable-objects';
 import { createCredential, createUser } from '@/repositories';
 import { usersSchemas } from '@/schemas';
 import type { ActionState } from '@/types';
-import { errorResponse, successResponse } from './utils';
-import { getWebAuthnConfig } from './webauthn';
+import { errorResponse, getWebAuthnConfig, successResponse } from './utils';
 
 // No serverAction() wrapper — these functions have no meaningful interruptors. See src/actions/readme.md.
 

@@ -10,8 +10,7 @@ import { trackLoginAttempt } from '@/analytics';
 import { sessions } from '@/durable-objects';
 import { getCredentialById, getUserById, updateCredentialCounter } from '@/repositories';
 import type { ActionState, CredentialDBRead } from '@/types';
-import { errorResponse, successResponse } from './utils';
-import { getWebAuthnConfig } from './webauthn';
+import { errorResponse, getWebAuthnConfig, successResponse } from './utils';
 
 // No serverAction() wrapper — these functions have no meaningful interruptors. See src/actions/readme.md.
 
