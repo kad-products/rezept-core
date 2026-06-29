@@ -1,3 +1,9 @@
+## [1.48.1](https://github.com/kad-products/rezept-core/compare/v1.48.0...v1.48.1) (2026-06-29)
+
+### Bug Fixes
+
+* page permissions check in place and convention to keep it that way ([eb5cadb](https://github.com/kad-products/rezept-core/commit/eb5cadbbafc785868e2e89987926dbe0d43993ca))
+
 ## [1.48.0](https://github.com/kad-products/rezept-core/compare/v1.47.0...v1.48.0) (2026-06-29)
 
 ### Features

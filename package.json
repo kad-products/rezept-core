@@ -1,6 +1,6 @@
 {
 	"name": "@kad-products/rezept-core",
-	"version": "1.48.0",
+	"version": "1.48.1",
 	"description": "Seasonal ingredient and recipes made easy.",
 	"main": "src/worker.tsx",
 	"type": "module",
