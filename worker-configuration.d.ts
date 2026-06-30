@@ -16,7 +16,7 @@ interface __BaseEnv_Env {
 	SESSION_SECRET_KEY: string;
 	SESSION_DURABLE_OBJECT: DurableObjectNamespace<import("./src/worker").SessionDurableObject>;
 	RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW: Workflow<Parameters<import("./src/worker").RecipeScrapeCoverImageRetryWorkflow['run']>[0]['payload']>;
-	RECIPE_RAW_INGREDIENTS_TO_INGREDIENTS_WORKFLOW?: Workflow<Parameters<import("./src/worker").RecipeRawIngredientsToIngredientsWorkflow['run']>[0]['payload']>;
+	RECIPE_RAW_INGREDIENTS_TO_INGREDIENTS_WORKFLOW: Workflow<Parameters<import("./src/worker").RecipeRawIngredientsToIngredientsWorkflow['run']>[0]['payload']>;
 }
 declare namespace Cloudflare {
 	interface GlobalProps {
