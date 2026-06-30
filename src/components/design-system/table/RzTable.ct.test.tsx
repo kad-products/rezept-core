@@ -13,12 +13,12 @@ const data = [
 ];
 
 test('renders column headers and rows', async ({ mount }) => {
-	const component = await mount(<RzTable columns={columns} data={data} />);
+	const component = await mount(<RzTable userPermissions={['__controls:read']} columns={columns} data={data} />);
 	await expect(component).toHaveScreenshot();
 });
 
 test('renders empty state with no rows', async ({ mount }) => {
-	const component = await mount(<RzTable columns={columns} data={[]} />);
+	const component = await mount(<RzTable userPermissions={['__controls:read']} columns={columns} data={[]} />);
 	await expect(component).toHaveScreenshot();
 });
 
@@ -31,6 +31,6 @@ test('renders custom cell via render function', async ({ mount }) => {
 			render: val => val.toUpperCase(),
 		},
 	];
-	const component = await mount(<RzTable columns={columnsWithRender} data={data} />);
+	const component = await mount(<RzTable userPermissions={['__controls:read']} columns={columnsWithRender} data={data} />);
 	await expect(component).toHaveScreenshot();
 });

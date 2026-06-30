@@ -3,6 +3,20 @@ import db from '@/db';
 import { recipeIngredients } from '@/models';
 import type { RecipeIngredientDBRead, RecipeIngredientWriteInput, RzLogger } from '@/types';
 
+export async function getRecipeIngredientsByRecipeSectionId(
+	recipeSectionId: string,
+	logger: RzLogger,
+): Promise<RecipeIngredientDBRead[]> {
+	logger.debug(`Fetching all recipe ingredients for section ${recipeSectionId}`);
+
+	const results = await db
+		.select()
+		.from(recipeIngredients)
+		.where(and(eq(recipeIngredients.recipeSectionId, recipeSectionId), isNull(recipeIngredients.deletedAt)));
+	logger.debug(`Fetched ${results.length} recipe ingredients`);
+	return results;
+}
+
 export async function updateRecipeIngredients(
 	recipeSectionId: string,
 	ingredientsData: RecipeIngredientWriteInput[],

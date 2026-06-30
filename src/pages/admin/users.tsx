@@ -21,7 +21,7 @@ export default async function Pages__admin__users({ ctx }: RequestInfo): Promise
 
 	return (
 		<AdminLayout pageTitle="Users">
-			<RzTable columns={columns} data={rows} />
+			<RzTable userPermissions={ctx.permissions || []} columns={columns} data={rows} />
 		</AdminLayout>
 	);
 }

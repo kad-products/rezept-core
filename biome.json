@@ -47,7 +47,8 @@
 			"!playwright-report",
 			"!test-results",
 			"!playwright/.cache",
-			"!storybook-static"
+			"!storybook-static",
+			"!tests"
 		]
 	},
 	"overrides": [

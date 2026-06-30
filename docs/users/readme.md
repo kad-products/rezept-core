@@ -5,6 +5,7 @@ Welcome to Rezept, a personal recipe management app for collecting, organizing, 
 ## Contents
 
 - [Account & Login](auth.md) — creating an account, signing in, managing devices
+- [API Keys](api-key.md) — using Rezept from scripts and other tools
 
 _More sections coming soon: managing recipes, seasons, and more._
 

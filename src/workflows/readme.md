@@ -4,9 +4,9 @@ Code within this directory defines background processing workflows that run outs
 
 ## How it works
 
-Each workflow is a class extending `WorkflowEntrypoint` from `cloudflare:workers`. A workflow is triggered by a `POST /api/workflows/:workflow-name` request, which calls `env.<workflow-name>.create(params)`. CF Workflows executes the `run()` method, automatically persisting state across steps so that failures mid-workflow don't restart from the beginning.
+Each workflow is a class extending `WorkflowEntrypoint` from `cloudflare:workers`. A workflow is triggered by a `POST /api/workflows/:workflow-name` request, which calls `env.<workflow-name>.create(params)`. The CF Workflows runtime executes the `run()` method, automatically persisting state across steps so that failures mid-workflow don't restart from the beginning.
 
-Steps are the unit of execution and retry. Each step runs in isolation — if a step fails, CF retries it independently without re-running steps that already succeeded.
+Workflows are passed a `step` object that can `.do()` something or `.sleep()` for an amount of time.  Those steps (not our `src/steps/*` data pipelines) are the unit of execution and retry. Each step runs in isolation — if a step fails, CF retries it independently without re-running steps that already succeeded.
 
 For workflows that need to process many records in parallel, a parent workflow spawns child workflows — one per record. Each child gets its own CPU budget.
 
@@ -82,6 +82,16 @@ export class ScrapeReprocessWorkflow extends WorkflowEntrypoint<Env, Params> {
 ```
 
 Use `logger.child({ task: 'step-name' })` to scope logs to a specific step, or pass `logger` directly to steps and repositories as with request handlers.
+
+## Development
+
+Once the workflow API is wired up for a new workflow calling that API via curl works reasonably well:
+
+```sh
+curl -X POST http://rezept.localhost:5173/api/workflows/recipe-raw-ingredients-to-ingredients \
+  -H "Authorization: Bearer rz_std_<redaced>" \
+  -H "Content-Type: application/json"
+```
 
 ## Testing
 

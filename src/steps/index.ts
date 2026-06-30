@@ -1,6 +1,7 @@
 export * from './fetch-and-store-cover-image';
 export * from './initialize-scrape';
 export * from './parse-body-json';
+export * from './parse-raw-ingredients';
 export * from './save-recipe';
 export * from './save-recipe-ingredients';
 export * from './save-recipe-instructions';

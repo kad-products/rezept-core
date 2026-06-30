@@ -1,8 +1,14 @@
 'use client';
 import { RzTable } from '@/components/design-system';
-import type { RecipeUploadDBRead, RzTableColumn } from '@/types';
+import type { Permission, RecipeUploadDBRead, RzTableColumn } from '@/types';
 
-export default function RecipeUploadsTable({ recipeUploads }: { recipeUploads: RecipeUploadDBRead[] }): React.ReactNode {
+export default function RecipeUploadsTable({
+	recipeUploads,
+	userPermissions,
+}: {
+	recipeUploads: RecipeUploadDBRead[];
+	userPermissions: Permission[];
+}): React.ReactNode {
 	const rows = recipeUploads.map(u => ({ ...u, editUrl: `/recipes/uploads/${u.id}` }));
 	const recipeUploadColumns: RzTableColumn[] = [
 		{ label: 'ID', key: 'id' },
@@ -18,5 +24,5 @@ export default function RecipeUploadsTable({ recipeUploads }: { recipeUploads: R
 		},
 	];
 
-	return <RzTable columns={recipeUploadColumns} data={rows} rowIndex="id" />;
+	return <RzTable columns={recipeUploadColumns} userPermissions={userPermissions} data={rows} rowIndex="id" />;
 }

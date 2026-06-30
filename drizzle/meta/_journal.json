@@ -169,6 +169,13 @@
 			"when": 1780075221751,
 			"tag": "0023_tough_clea",
 			"breakpoints": true
+		},
+		{
+			"idx": 24,
+			"version": "6",
+			"when": 1782824966226,
+			"tag": "0024_magenta_tony_stark",
+			"breakpoints": true
 		}
 	]
 }

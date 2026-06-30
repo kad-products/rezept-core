@@ -3,7 +3,7 @@ import db from '@/db';
 import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { updateRecipeIngredients } from '../recipe-ingredients';
+import { getRecipeIngredientsByRecipeSectionId, updateRecipeIngredients } from '../recipe-ingredients';
 import { updateRecipeSections } from '../recipe-sections';
 import { createRecipe } from '../recipes';
 
@@ -20,6 +20,58 @@ describe('recipe-ingredients repository', () => {
 		const recipe = await createRecipe({ authorId: testUserId, title: 'Test Recipe' }, testUserId, logger);
 		const [section] = await updateRecipeSections(recipe.id, [{ title: 'Main', order: 1 }], testUserId, logger);
 		testSectionId = section.id;
+	});
+
+	describe('getRecipeIngredientsByRecipeSectionId', () => {
+		it('returns empty array when no ingredients exist for the section', async () => {
+			const result = await getRecipeIngredientsByRecipeSectionId(testSectionId, logger);
+			expect(result).toEqual([]);
+		});
+
+		it('returns ingredients for the specified section', async () => {
+			await updateRecipeIngredients(
+				testSectionId,
+				[
+					{ order: 1, raw: 'flour' },
+					{ order: 2, raw: 'salt' },
+				],
+				testUserId,
+				logger,
+			);
+
+			const result = await getRecipeIngredientsByRecipeSectionId(testSectionId, logger);
+			expect(result).toHaveLength(2);
+		});
+
+		it('returns ingredients with correct shape', async () => {
+			await updateRecipeIngredients(testSectionId, [{ order: 1, raw: '2 cups flour' }], testUserId, logger);
+
+			const result = await getRecipeIngredientsByRecipeSectionId(testSectionId, logger);
+			expect(result[0]).toMatchObject({
+				recipeSectionId: testSectionId,
+				raw: '2 cups flour',
+				order: 1,
+			});
+			expect(result[0].id).toBeDefined();
+		});
+
+		it('does not return soft-deleted ingredients', async () => {
+			await updateRecipeIngredients(testSectionId, [{ order: 1, raw: 'flour' }], testUserId, logger);
+			// soft-delete all ingredients for the section by passing an empty list
+			await updateRecipeIngredients(testSectionId, [], testUserId, logger);
+
+			const result = await getRecipeIngredientsByRecipeSectionId(testSectionId, logger);
+			expect(result).toHaveLength(0);
+		});
+
+		it('does not return ingredients from other sections', async () => {
+			const otherRecipe = await createRecipe({ authorId: testUserId, title: 'Other Recipe' }, testUserId, logger);
+			const [otherSection] = await updateRecipeSections(otherRecipe.id, [{ title: 'Other', order: 1 }], testUserId, logger);
+			await updateRecipeIngredients(otherSection.id, [{ order: 1, raw: 'other ingredient' }], testUserId, logger);
+
+			const result = await getRecipeIngredientsByRecipeSectionId(testSectionId, logger);
+			expect(result).toHaveLength(0);
+		});
 	});
 
 	describe('updateRecipeIngredients', () => {

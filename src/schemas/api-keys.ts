@@ -10,7 +10,7 @@ const formSchema = z.object({
 	userId: requiredUuid,
 	name: z.string(),
 	permissions: z.array(z.enum(permissionValues)).min(1, 'At least one permission is required'),
-	revokeAt: z.string().datetime().optional(),
+	revokeAt: z.string().date(),
 });
 
 export const apiKeysSchemas = {
