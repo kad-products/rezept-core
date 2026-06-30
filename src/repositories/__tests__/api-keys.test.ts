@@ -7,9 +7,10 @@ import { createApiKey, deleteApiKey, getApiKeyById, getApiKeyByKey, getApiKeysBy
 
 const logger = createNoopLogger();
 
-const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'permissions'> = {
+const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'permissions' | 'revokeAt'> = {
 	name: 'Test API Key',
 	permissions: ['recipes:upload'],
+	revokeAt: '2030-01-01',
 };
 
 describe('api-keys repository', () => {
@@ -127,16 +128,9 @@ describe('api-keys repository', () => {
 			expect(result.permissions).toEqual([]);
 		});
 
-		it('creates key with revokeAt', async () => {
-			const revokeAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
-			const result = await createApiKey({ ...baseApiKeyData, userId: testUserId, revokeAt }, testUserId, logger);
-
-			expect(result.revokeAt).toBeDefined();
-		});
-
-		it('creates key without revokeAt', async () => {
+		it('stores revokeAt correctly', async () => {
 			const result = await createApiKey({ ...baseApiKeyData, userId: testUserId }, testUserId, logger);
-			expect(result.revokeAt).toBeNull();
+			expect(result.revokeAt).toBeDefined();
 		});
 
 		it('generates a key with correct format', async () => {

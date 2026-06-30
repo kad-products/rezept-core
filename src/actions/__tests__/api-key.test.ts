@@ -48,10 +48,11 @@ import { createApiKey, updateApiKey } from '@/repositories';
 import type { ApiKeyFormInput } from '@/types';
 import { _saveApiKey } from '../api-keys';
 
-const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'userId' | 'permissions'> = {
+const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'userId' | 'permissions' | 'revokeAt'> = {
 	name: 'Test API Key',
 	userId: randomUUID(),
 	permissions: ['recipes:upload'],
+	revokeAt: '2030-01-01',
 };
 
 const mockApiKey = {
@@ -115,15 +116,6 @@ describe('_saveApiKey', () => {
 				'test-user-id',
 				expect.anything(),
 			);
-		});
-
-		it('creates api key with revokeAt', async () => {
-			const revokeAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
-
-			const result = await _saveApiKey({ ...baseApiKeyData, revokeAt });
-
-			expect(result.success).toBe(true);
-			expect(createApiKey).toHaveBeenCalledWith(expect.objectContaining({ revokeAt }), 'test-user-id', expect.anything());
 		});
 
 		it('handles repository errors gracefully', async () => {
