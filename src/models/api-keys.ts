@@ -14,7 +14,7 @@ export const apiKeys = sqliteTable(
 			.references(() => users.id, { onDelete: 'cascade' }),
 		name: text().notNull(),
 		permissions: text('permissions', { mode: 'json' }).$type<string[]>().notNull().default([]),
-		revokeAt: text(),
+		revokeAt: text().notNull(),
 		apiKey: text()
 			.notNull()
 			.$defaultFn(() => `rz_std_${crypto.randomBytes(32).toString('hex')}`),
