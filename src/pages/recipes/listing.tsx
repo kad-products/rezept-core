@@ -14,6 +14,7 @@ export default async function Pages__recipes__listing({ ctx }: RequestInfo): Pro
 					return (
 						<RzCard
 							key={r.id}
+							userPermissions={ctx.permissions || []}
 							title={r.title}
 							body={
 								<div>

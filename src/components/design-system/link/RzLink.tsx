@@ -6,7 +6,7 @@ export default function RzLink({
 	permissions,
 	...other
 }: {
-	permissions?: Permission[];
+	permissions: Permission[];
 } & RzLinkType): React.ReactNode {
 	if (!permissions?.includes(requiredPermission)) {
 		return null;

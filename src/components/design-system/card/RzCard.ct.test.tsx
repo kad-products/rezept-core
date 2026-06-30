@@ -4,6 +4,7 @@ import RzCard from './RzCard';
 test('renders title and actions', async ({ mount }) => {
 	const component = await mount(
 		<RzCard
+			userPermissions={['__controls:read']}
 			title="Pasta Carbonara"
 			actions={[
 				{ href: '/recipes/1', label: 'View', requiredPermission: '__controls:read' },
@@ -17,6 +18,7 @@ test('renders title and actions', async ({ mount }) => {
 test('renders title, body, and actions', async ({ mount }) => {
 	const component = await mount(
 		<RzCard
+			userPermissions={['__controls:read']}
 			title="Pasta Carbonara"
 			body="A classic Roman pasta dish with eggs, cheese, and guanciale."
 			actions={[{ href: '/recipes/1', label: 'View', requiredPermission: '__controls:read' }]}
@@ -26,13 +28,14 @@ test('renders title, body, and actions', async ({ mount }) => {
 });
 
 test('renders with no body when omitted', async ({ mount }) => {
-	const component = await mount(<RzCard title="Untitled Recipe" actions={[]} />);
+	const component = await mount(<RzCard userPermissions={[]} title="Untitled Recipe" actions={[]} />);
 	await expect(component).toHaveScreenshot();
 });
 
 test('renders multiple actions', async ({ mount }) => {
 	const component = await mount(
 		<RzCard
+			userPermissions={['__controls:read']}
 			title="Pasta Carbonara"
 			actions={[
 				{ href: '/recipes/1', label: 'View', requiredPermission: '__controls:read' },

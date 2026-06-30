@@ -1,8 +1,14 @@
 'use client';
 import { RzTable } from '@/components/design-system';
-import type { RecipeScrapeDBRead, RzTableColumn } from '@/types';
+import type { Permission, RecipeScrapeDBRead, RzTableColumn } from '@/types';
 
-export default function RecipeScrapesTable({ recipeScrapes }: { recipeScrapes: RecipeScrapeDBRead[] }): React.ReactNode {
+export default function RecipeScrapesTable({
+	recipeScrapes,
+	userPermissions,
+}: {
+	recipeScrapes: RecipeScrapeDBRead[];
+	userPermissions: Permission[];
+}): React.ReactNode {
 	const rows = recipeScrapes.map(u => ({ ...u, editUrl: `/recipes/scrapes/${u.id}` }));
 	const recipeUploadColumns: RzTableColumn[] = [
 		{ label: 'ID', key: 'id' },
@@ -18,5 +24,5 @@ export default function RecipeScrapesTable({ recipeScrapes }: { recipeScrapes: R
 		},
 	];
 
-	return <RzTable columns={recipeUploadColumns} data={rows} rowIndex="id" />;
+	return <RzTable columns={recipeUploadColumns} data={rows} userPermissions={userPermissions} rowIndex="id" />;
 }

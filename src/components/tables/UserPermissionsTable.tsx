@@ -1,7 +1,13 @@
 import { RzTable } from '@/components/design-system';
-import type { RzTableColumn } from '@/types';
+import type { Permission, RzTableColumn } from '@/types';
 
-export default function UserPermissionsTable({ permissionsList }: { permissionsList: string[] }): React.ReactNode {
+export default function UserPermissionsTable({
+	permissionsList,
+	userPermissions,
+}: {
+	permissionsList: string[];
+	userPermissions: Permission[];
+}): React.ReactNode {
 	const permissionEntities = new Set(permissionsList.map(permissionString => permissionString.split(':')[0]));
 	const permissionsData = [...permissionEntities].map(entity => {
 		const entityPermissions = permissionsList
@@ -20,5 +26,7 @@ export default function UserPermissionsTable({ permissionsList }: { permissionsL
 		{ label: 'Permissions', key: 'permissions' },
 	];
 
-	return <RzTable columns={permissionsColumns} data={permissionsData} rowIndex="permissionsKey" />;
+	return (
+		<RzTable userPermissions={userPermissions} columns={permissionsColumns} data={permissionsData} rowIndex="permissionsKey" />
+	);
 }

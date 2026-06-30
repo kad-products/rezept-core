@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../../../../tests/e2e-fixtures';
 
 test('renders seasons listing page', async ({ page }) => {
 	await page.goto('/seasons');

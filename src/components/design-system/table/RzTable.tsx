@@ -1,15 +1,17 @@
 'use client';
-import type { RzTableColumn } from '@/types';
+import type { Permission, RzTableColumn } from '@/types';
 import RzLink from '../link/RzLink';
 
 export default function RzTable<T extends Record<string, unknown>>({
 	columns,
 	data,
 	rowIndex = 'id',
+	userPermissions,
 }: {
 	columns: RzTableColumn[];
 	data: T[];
 	rowIndex?: keyof T;
+	userPermissions: Permission[];
 }): React.ReactNode {
 	return (
 		<table className="rz-table">
@@ -32,7 +34,8 @@ export default function RzTable<T extends Record<string, unknown>>({
 												if (a.type === 'link') {
 													const hrefProp = a.hrefProp || 'link';
 													const href = String(d[hrefProp]);
-													return <RzLink key={href} href={href} {...a} />;
+													console.log('in here', userPermissions);
+													return <RzLink permissions={userPermissions} key={href} href={href} {...a} />;
 												} else {
 													return (
 														<button key={String(a.handler)} type="button" onClick={(): void => a.handler?.(String(d[c.key]), d)}>
