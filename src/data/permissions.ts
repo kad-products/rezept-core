@@ -58,6 +58,10 @@ const permissions = {
 		read: ['ADMIN'],
 		update: ['ADMIN'],
 	},
+	workflows: {
+		read: ['ADMIN'],
+		run: ['ADMIN'],
+	},
 } as const satisfies Record<string, Record<string, RoleEntry[]>>;
 
 export default permissions;

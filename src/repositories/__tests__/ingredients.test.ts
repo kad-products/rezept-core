@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { createIngredient, getIngredients } from '../ingredients';
+import { createIngredient, getIngredients, saveIngredients } from '../ingredients';
 
 const logger = createNoopLogger();
 
@@ -85,6 +85,82 @@ describe('ingredients repository', () => {
 			await createIngredient({ name: 'Tomato' }, testUserId, logger);
 
 			await expect(createIngredient({ name: 'Tomato' }, testUserId, logger)).rejects.toThrow();
+		});
+	});
+
+	describe('saveIngredients', () => {
+		it('returns empty array when passed empty list', async () => {
+			const result = await saveIngredients([], testUserId, logger);
+			expect(result).toEqual([]);
+		});
+
+		it('creates new ingredients when none exist', async () => {
+			const result = await saveIngredients(['Tomato', 'Onion'], testUserId, logger);
+			expect(result).toHaveLength(2);
+			expect(result.map(i => i.name)).toEqual(expect.arrayContaining(['Tomato', 'Onion']));
+		});
+
+		it('sets createdBy to userId for new ingredients', async () => {
+			const result = await saveIngredients(['Tomato'], testUserId, logger);
+			expect(result[0].createdBy).toBe(testUserId);
+		});
+
+		it('returns ingredients with ids', async () => {
+			const result = await saveIngredients(['Garlic'], testUserId, logger);
+			expect(result[0].id).toBeDefined();
+		});
+
+		it('updates an existing ingredient when matched by name', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await saveIngredients(['Tomato'], testUserId, logger);
+
+			expect(result).toHaveLength(1);
+			expect(result[0].id).toBe(created.id);
+		});
+
+		it('sets updatedBy when updating an existing ingredient', async () => {
+			await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await saveIngredients(['Tomato'], testUserId, logger);
+
+			expect(result[0].updatedBy).toBe(testUserId);
+		});
+
+		it('sets updatedAt when updating an existing ingredient', async () => {
+			await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await saveIngredients(['Tomato'], testUserId, logger);
+
+			expect(result[0].updatedAt).not.toBeNull();
+		});
+
+		it('returns a mix of newly created and updated ingredients', async () => {
+			await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await saveIngredients(['Tomato', 'Onion'], testUserId, logger);
+
+			expect(result).toHaveLength(2);
+			expect(result.map(i => i.name)).toEqual(expect.arrayContaining(['Tomato', 'Onion']));
+		});
+
+		it('does not modify ingredients not in the input list', async () => {
+			const unrelated = await createIngredient({ name: 'Garlic' }, testUserId, logger);
+
+			await saveIngredients(['Tomato'], testUserId, logger);
+
+			const allIngredients = await getIngredients(logger);
+			const garlic = allIngredients.find(i => i.id === unrelated.id);
+			expect(garlic?.updatedAt).toBeNull();
+		});
+
+		it('preserves input order in the returned array', async () => {
+			const result = await saveIngredients(['Zucchini', 'Aubergine', 'Pepper'], testUserId, logger);
+			expect(result.map(i => i.name)).toEqual(['Zucchini', 'Aubergine', 'Pepper']);
+		});
+
+		it('throws when the same name appears more than once in the input', async () => {
+			await expect(saveIngredients(['Tomato', 'Tomato'], testUserId, logger)).rejects.toThrow();
 		});
 	});
 });
