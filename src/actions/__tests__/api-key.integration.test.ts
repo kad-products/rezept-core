@@ -27,10 +27,11 @@ vi.mock('rwsdk/worker', () => ({
 
 import { _saveApiKey } from '../api-keys';
 
-const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'userId' | 'permissions'> = {
+const baseApiKeyData: Pick<ApiKeyFormInput, 'name' | 'userId' | 'permissions' | 'revokeAt'> = {
 	name: 'Test API Key',
 	userId: 'test-user-id',
 	permissions: ['recipes:upload'],
+	revokeAt: '2030-01-01',
 };
 
 describe('saveApiKey integration', () => {
@@ -91,7 +92,7 @@ describe('saveApiKey integration', () => {
 		});
 
 		it('creates api key with revokeAt', async () => {
-			const revokeAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
+			const revokeAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId, revokeAt });
 
 			expect(result.success).toBe(true);
@@ -100,18 +101,6 @@ describe('saveApiKey integration', () => {
 			if (result.data?.id) {
 				const apiKey = await getApiKeyById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(apiKey.revokeAt).toBeDefined();
-			}
-		});
-
-		it('creates api key without revokeAt', async () => {
-			const result = await _saveApiKey({ ...baseApiKeyData, userId: testUserId });
-
-			expect(result.success).toBe(true);
-			expect(result.data?.id).toBeDefined();
-
-			if (result.data?.id) {
-				const apiKey = await getApiKeyById(result.data.id, mockRequestInfo.ctx.logger);
-				expect(apiKey.revokeAt).toBeNull();
 			}
 		});
 
