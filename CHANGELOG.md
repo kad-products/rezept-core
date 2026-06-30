@@ -1,3 +1,18 @@
+## [1.49.0](https://github.com/kad-products/rezept-core/compare/v1.48.1...v1.49.0) (2026-06-30)
+
+### Features
+
+* add date input to form components ([c30311c](https://github.com/kad-products/rezept-core/commit/c30311c47770ab25e620d84286433da7e56e55e0))
+* get edit api key page working ([861610d](https://github.com/kad-products/rezept-core/commit/861610df2454983fb56466cf17d0b32eba83ac1c))
+* initial workflow api and recipe ingredient parsing workflow ([883635c](https://github.com/kad-products/rezept-core/commit/883635c21a89b94197b70408698ecab949478b7c))
+
+### Bug Fixes
+
+* api key revokeAt should be required ([49c8bd3](https://github.com/kad-products/rezept-core/commit/49c8bd39609e8daba78cd83a3c24e8ac9a35145d))
+* hydration mismatch errors on form dev tools ([e3586ee](https://github.com/kad-products/rezept-core/commit/e3586eea700ac1167e946d78903a31174d5a03d1))
+* pass perms all over the place ([637f1db](https://github.com/kad-products/rezept-core/commit/637f1db8bbe158dd38171345809706ef415a9086))
+* upgrade to latest wrangler and add script to manage bindings ([1414fd9](https://github.com/kad-products/rezept-core/commit/1414fd9923c15a8d478e95fc637639121e554283))
+
 ## [1.48.1](https://github.com/kad-products/rezept-core/compare/v1.48.0...v1.48.1) (2026-06-29)
 
 ### Bug Fixes
