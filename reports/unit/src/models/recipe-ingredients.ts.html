@@ -132,14 +132,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -150,7 +150,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -159,14 +159,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">308x</span>
+<span class="cline-any cline-yes">323x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">308x</span>
+<span class="cline-any cline-yes">323x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -201,11 +201,11 @@ export const recipeIngredients = sqliteTable(
 			.$defaultFn(() =&gt; crypto.randomUUID()),
 		recipeSectionId: text()
 			.notNull()
-			.references(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >r</span>ecipeSections.id, {</span> onDelete: 'cascade' }),
+			.<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >r</span>ecipeSections.id, {</span> onDelete: 'cascade' }),
 		raw: text(),
-		ingredientId: text().references(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >i</span>ngredients.id)</span>,
+		ingredientId: text().<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >i</span>ngredients.id)</span>,
 		quantity: real(), // nullable for "to taste"
-		unitId: text().references(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >i</span>ngredientUnits.id)</span>,
+		unitId: text().<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >i</span>ngredientUnits.id)</span>,
 		preparation: text(), // chopped, diced, etc.
 		modifier: text(), // optional, substitute, etc.
 		order: integer().notNull(),
@@ -214,11 +214,11 @@ export const recipeIngredients = sqliteTable(
 			.$defaultFn(() =&gt; new Date().toISOString()),
 		createdBy: text()
 			.notNull()
-			.references(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >u</span>sers.id)</span>,
+			.<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >u</span>sers.id)</span>,
 		updatedAt: text(),
-		updatedBy: text().references(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >u</span>sers.id)</span>,
+		updatedBy: text().<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >u</span>sers.id)</span>,
 		deletedAt: text(),
-		deletedBy: text().references(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >u</span>sers.id)</span>,
+		deletedBy: text().<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >u</span>sers.id)</span>,
 	},
 	table =&gt; [
 		index('recipe_ingredients_section_id_idx').on(table.recipeSectionId),
@@ -253,7 +253,7 @@ export const recipeIngredientsRelations = relations(recipeIngredients, ({ one })
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-29T20:50:14.898Z
+                at 2026-06-30T21:39:37.550Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
