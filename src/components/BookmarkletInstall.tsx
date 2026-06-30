@@ -57,6 +57,7 @@ export default function BookmarkletInstall({
 				name: `recipe-scraper-auto-create-${Date.now()}`,
 				userId: userId ?? '',
 				permissions: [SCRAPE_PERMISSION],
+				revokeAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
 			});
 			if (result?.success && result.data) {
 				setSelectedKey(result.data as unknown as ApiKeyDBRead);
