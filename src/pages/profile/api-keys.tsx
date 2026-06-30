@@ -14,10 +14,10 @@ export default async function Pages__profile__api_keys({ ctx }: RequestInfo): Pr
 		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav="profile">
 			<h2>API Keys</h2>
 			<Suspense fallback={<div>Loading API keys...</div>}>
-				<ApiKeysTable apiKeys={apiKeys} />
+				<ApiKeysTable apiKeys={apiKeys} userPermissions={ctx.permissions || []} />
 			</Suspense>
 			<RzLink
-				permissions={ctx.permissions}
+				permissions={ctx.permissions || []}
 				requiredPermission="api-keys:create"
 				label="New API Key"
 				href="/profile/api-keys/new"

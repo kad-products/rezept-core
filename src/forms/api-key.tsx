@@ -56,6 +56,9 @@ export default function ApiKeyForm({
 			>
 				{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				<form.AppField name="name">{(field): React.ReactNode => <field.TextInput label="Name" required />}</form.AppField>
+				<form.AppField name="revokeAt">
+					{(field): React.ReactNode => <field.DateInput label="Revoke At" required />}
+				</form.AppField>
 				<form.AppField name="permissions">
 					{(field): React.ReactNode => <field.CheckboxGroup label="Permissions" required options={permissionsOptions} />}
 				</form.AppField>

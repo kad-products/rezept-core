@@ -13,6 +13,7 @@ export default {
 		route('/', [requireAuthentication, requirePermissions('profile:read'), Pages__profile__root]),
 		route('/api-keys', [requireAuthentication, requirePermissions('profile:read'), Pages__profile__api_keys]),
 		route('/api-keys/new', [requireAuthentication, requirePermissions('api-keys:read'), Pages__api_keys__edit]),
+		route('/api-keys/:apiKeyId', [requireAuthentication, requirePermissions('api-keys:update'), Pages__api_keys__edit]),
 		route('/passkeys', [requireAuthentication, requirePermissions('profile:read'), Pages__profile__passkeys]),
 		route('/permissions', [requireAuthentication, requirePermissions('profile:read'), Pages__profile__permissions]),
 		route('/permissions/override', [
