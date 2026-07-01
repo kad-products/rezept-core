@@ -1,4 +1,4 @@
-import { ArchiveIcon, ColorWheelIcon, EnterIcon, ExitIcon, HomeIcon, PersonIcon } from '@radix-ui/react-icons';
+import { ArchiveIcon, ColorWheelIcon, CookieIcon, EnterIcon, ExitIcon, HomeIcon, PersonIcon } from '@radix-ui/react-icons';
 import type { NavItem, Permission } from '@/types';
 
 export const navItems: Record<string, NavItem[]> = {
@@ -84,6 +84,33 @@ export const navItems: Record<string, NavItem[]> = {
 			icon: EnterIcon,
 			requiredPermission: 'auth:login',
 			basePage: 'auth',
+		},
+		{
+			key: 'logout',
+			label: 'Logout',
+			href: '/auth/logout',
+			icon: ExitIcon,
+			requiredPermission: 'auth:logout',
+			basePage: 'auth',
+		},
+	],
+	admin: [
+		{ key: 'admin-home', label: 'Admin Home', href: '/admin', icon: HomeIcon, requiredPermission: 'admin:read' },
+		{
+			key: 'users',
+			label: 'Users',
+			href: '/admin/users',
+			icon: PersonIcon,
+			requiredPermission: 'users:read',
+			basePage: 'users',
+		},
+		{
+			key: 'ingredients',
+			label: 'Ingredients',
+			href: '/admin/ingredients',
+			icon: CookieIcon,
+			requiredPermission: 'ingredients:read',
+			basePage: 'ingredients',
 		},
 		{
 			key: 'logout',
