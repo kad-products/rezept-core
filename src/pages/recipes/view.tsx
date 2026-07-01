@@ -12,7 +12,7 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 			<Suspense fallback={<div>Loading recipe...</div>}>
 				<h3>{recipe.title}</h3>
 				<RzPopMenu
-					permissions={ctx.permissions}
+					userPermissions={ctx.permissions}
 					items={[
 						{
 							requiredPermission: 'recipes:update',

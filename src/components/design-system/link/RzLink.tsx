@@ -3,12 +3,12 @@ import type { Permission, RzLink as RzLinkType } from '@/types';
 export default function RzLink({
 	label,
 	requiredPermission,
-	permissions,
+	userPermissions,
 	...other
 }: {
-	permissions: Permission[];
+	userPermissions: Permission[];
 } & RzLinkType): React.ReactNode {
-	if (!permissions?.includes(requiredPermission)) {
+	if (!userPermissions?.includes(requiredPermission)) {
 		return null;
 	}
 	return <a {...other}>{label}</a>;

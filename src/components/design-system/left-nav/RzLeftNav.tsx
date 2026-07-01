@@ -14,7 +14,7 @@ export default function RzLeftNav({
 				{navItems.map(item => {
 					return (
 						<li key={item.href}>
-							<RzLink permissions={userPermissions} key={item.href} {...item} />
+							<RzLink userPermissions={userPermissions} key={item.href} {...item} />
 						</li>
 					);
 				})}

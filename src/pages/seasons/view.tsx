@@ -12,7 +12,7 @@ export default async function Pages__seasons__view({ ctx, params }: RequestInfo)
 			<Suspense fallback={<div>Loading season...</div>}>
 				<h3>{season.name}</h3>
 				<RzPopMenu
-					permissions={ctx.permissions}
+					userPermissions={ctx.permissions}
 					items={[
 						{
 							requiredPermission: 'seasons:update',

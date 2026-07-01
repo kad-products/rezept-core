@@ -9,7 +9,7 @@ export default async function Pages__seasons__listing({ ctx }: RequestInfo): Pro
 	return (
 		<AppLayout currentBasePage="seasons" pageTitle="Seasons" ctx={ctx}>
 			<Suspense fallback={<div>Loading seasons...</div>}>
-				<RzLink permissions={ctx.permissions} requiredPermission="seasons:create" label="New Season" href="/seasons/new" />
+				<RzLink userPermissions={ctx.permissions} requiredPermission="seasons:create" label="New Season" href="/seasons/new" />
 				<div className="seasons-listing">
 					{seasons.map(s => {
 						return (
