@@ -1,3 +1,9 @@
+## [1.50.3](https://github.com/kad-products/rezept-core/compare/v1.50.2...v1.50.3) (2026-07-01)
+
+### Bug Fixes
+
+* use userPermissions for prop name ([87e226a](https://github.com/kad-products/rezept-core/commit/87e226a52a1ca47756e9a530f1f2970f6012574e))
+
 ## [1.50.2](https://github.com/kad-products/rezept-core/compare/v1.50.1...v1.50.2) (2026-07-01)
 
 ### Bug Fixes
