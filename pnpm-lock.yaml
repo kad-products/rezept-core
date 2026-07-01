@@ -15,9 +15,6 @@ importers:
 
   .:
     dependencies:
-      '@cloudflare/vite-plugin':
-        specifier: 1.42.3
-        version: 1.42.3(vite@8.0.16(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.6.1)(less@4.6.4)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(workerd@1.20260625.1)(wrangler@4.105.0(@cloudflare/workers-types@4.20260629.1))
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
@@ -30,21 +27,12 @@ importers:
       '@simplewebauthn/server':
         specifier: ^13.2.2
         version: 13.3.1
-      '@tanstack/react-devtools':
-        specifier: ^0.10.0
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.11(patch_hash=bee5d4639c6aae21ac6b25f5650393444e95351e81b145888caec22a0654ca39))
       '@tanstack/react-form':
         specifier: ^1.28.0
         version: 1.33.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@tanstack/react-form-devtools':
-        specifier: ^0.2.13
-        version: 0.2.29(@types/react@19.2.16)(csstype@3.2.3)(react@19.2.7)(solid-js@1.9.11(patch_hash=bee5d4639c6aae21ac6b25f5650393444e95351e81b145888caec22a0654ca39))
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
-      conventional-changelog-conventionalcommits:
-        specifier: ^9.1.0
-        version: 9.3.1
       drizzle-orm:
         specifier: ^0.45.1
         version: 0.45.2(@cloudflare/workers-types@4.20260629.1)(@libsql/client@0.17.3)(@types/better-sqlite3@7.6.13)(kysely@0.28.17)
@@ -76,6 +64,9 @@ importers:
       '@biomejs/biome':
         specifier: ^2.3.13
         version: 2.4.16
+      '@cloudflare/vite-plugin':
+        specifier: 1.42.3
+        version: 1.42.3(vite@8.0.16(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.6.1)(less@4.6.4)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(workerd@1.20260625.1)(wrangler@4.105.0(@cloudflare/workers-types@4.20260629.1))
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.16.20
         version: 0.16.20(@cloudflare/workers-types@4.20260629.1)(@vitest/runner@4.1.8)(@vitest/snapshot@4.1.8)(vitest@4.1.8)
@@ -118,6 +109,12 @@ importers:
       '@storybook/react-vite':
         specifier: ^10.4.1
         version: 10.4.2(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(rollup@4.54.0)(storybook@10.4.2(@testing-library/dom@10.4.1)(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(typescript@6.0.3)(vite@8.0.16(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.6.1)(less@4.6.4)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))(webpack@5.104.1(esbuild@0.28.1)(lightningcss@1.32.0))
+      '@tanstack/react-devtools':
+        specifier: ^0.10.0
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.11(patch_hash=bee5d4639c6aae21ac6b25f5650393444e95351e81b145888caec22a0654ca39))
+      '@tanstack/react-form-devtools':
+        specifier: ^0.2.13
+        version: 0.2.29(@types/react@19.2.16)(csstype@3.2.3)(react@19.2.7)(solid-js@1.9.11(patch_hash=bee5d4639c6aae21ac6b25f5650393444e95351e81b145888caec22a0654ca39))
       '@types/better-sqlite3':
         specifier: ^7.6.13
         version: 7.6.13
@@ -145,6 +142,9 @@ importers:
       change-case:
         specifier: ^5.4.4
         version: 5.4.4
+      conventional-changelog-conventionalcommits:
+        specifier: ^9.1.0
+        version: 9.3.1
       drizzle-kit:
         specifier: ^0.31.8
         version: 0.31.10
