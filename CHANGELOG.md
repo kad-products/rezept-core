@@ -1,3 +1,9 @@
+## [1.50.1](https://github.com/kad-products/rezept-core/compare/v1.50.0...v1.50.1) (2026-07-01)
+
+### Bug Fixes
+
+* ctx.perms are always valued ([4866b9d](https://github.com/kad-products/rezept-core/commit/4866b9d713a854477ded94bdab4735886a80bc74))
+
 ## [1.50.0](https://github.com/kad-products/rezept-core/compare/v1.49.0...v1.50.0) (2026-07-01)
 
 ### Features
