@@ -151,6 +151,31 @@ describe('pages', () => {
 		expect(bad, 'routes.ts must use export default { docType: [...] } with keys from: app, admin, noJS').toHaveLength(0);
 	});
 
+	it('all page component files export a default function named after their path', () => {
+		// Rule: Pages__<path> where directories become __ and hyphens become _
+		// e.g. src/pages/admin/users/not-found.tsx → Pages__admin__users__not_found
+		const pageFiles = files.filter(p => p.endsWith('.tsx'));
+		const bad: string[] = [];
+		for (const p of pageFiles) {
+			const relPath = rel(p); // e.g. "pages/admin/users/not-found.tsx"
+			const pathPart = relPath.replace(/^pages\//, '').replace(/\.tsx$/, '');
+			const expectedName = `Pages__${pathPart.replace(/-/g, '_').replace(/\//g, '__')}`;
+			const content = read(p);
+			const match = content.match(/^export default (?:async )?function (\w+)/m);
+			if (!match) {
+				bad.push(`${relPath} — no "export default [async] function <name>" found`);
+				continue;
+			}
+			if (match[1] !== expectedName) {
+				bad.push(`${relPath} — function is named "${match[1]}", expected "${expectedName}"`);
+			}
+		}
+		expect(
+			bad,
+			`Page component function names must follow Pages__<path> convention (directories → __, hyphens → _)`,
+		).toStrictEqual([]);
+	});
+
 	it('all route() calls in page routes files use an array of handlers', () => {
 		const routeFiles = files.filter(p => p.endsWith('routes.ts'));
 		// Explicit opt-in exceptions for truly public routes — add new public routes here.
@@ -167,6 +192,9 @@ describe('pages', () => {
 			'pages/auth/routes.ts': {
 				'/login': { auth: true },
 				'/logout': { auth: true, perms: true },
+			},
+			'pages/admin/routes.ts': {
+				'*': { auth: true, perms: true },
 			},
 		};
 		const bad: string[] = [];
@@ -192,7 +220,7 @@ describe('pages', () => {
 				}
 			});
 		}
-		expect(bad, 'All route() calls must include requireAuthentication and requirePermissions').toHaveLength(0);
+		expect(bad, 'All route() calls must include requireAuthentication and requirePermissions').toStrictEqual([]);
 	});
 });
 
