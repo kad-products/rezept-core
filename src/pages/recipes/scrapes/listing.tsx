@@ -10,12 +10,12 @@ export default async function Pages__recipes__scrapes__listing({ ctx }: RequestI
 	return (
 		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			<RzLink
-				permissions={ctx.permissions || []}
+				permissions={ctx.permissions}
 				requiredPermission="profile:read"
 				label="Setup / View Bookmarklet"
 				href="/profile/scrape-bookmarklet"
 			/>
-			<RecipeScrapesTable recipeScrapes={recipeScrapes} userPermissions={ctx.permissions || []} />
+			<RecipeScrapesTable recipeScrapes={recipeScrapes} userPermissions={ctx.permissions} />
 		</AppLayout>
 	);
 }

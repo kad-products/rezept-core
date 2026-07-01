@@ -5,7 +5,7 @@ import type { Permission, RzLink as RzLinkType } from '@/types';
 import RzLink from '../link/RzLink';
 import styleClasses from './rz-pop-menu.module.css';
 
-export default function RzPopMenu({ items, permissions }: { items: RzLinkType[]; permissions?: Permission[] }): React.ReactNode {
+export default function RzPopMenu({ items, permissions }: { items: RzLinkType[]; permissions: Permission[] }): React.ReactNode {
 	const permittedItems = items.filter(i => {
 		if (i.requiredPermission && !permissions?.includes(i.requiredPermission)) {
 			return false;
@@ -30,7 +30,7 @@ export default function RzPopMenu({ items, permissions }: { items: RzLinkType[];
 					{permittedItems.map(i => {
 						return (
 							<DropdownMenu.Item key={i.href} className="rz-pop-menu-item" asChild>
-								<RzLink permissions={permissions || []} {...i} />
+								<RzLink permissions={permissions} {...i} />
 							</DropdownMenu.Item>
 						);
 					})}

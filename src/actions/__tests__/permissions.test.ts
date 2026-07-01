@@ -194,15 +194,6 @@ describe('_clearPermissionsOverride', () => {
 		expect(result.data).toEqual(['recipes:read', 'recipes:create']);
 	});
 
-	it('returns empty array when ctx.permissions is undefined', async () => {
-		(mockRequestInfo.ctx as any).permissions = undefined;
-
-		const result = await _clearPermissionsOverride();
-
-		expect(result.success).toBe(true);
-		expect(result.data).toEqual([]);
-	});
-
 	it('returns 400 when currentSessionData is null', async () => {
 		mockSessions.load.mockResolvedValue(null);
 

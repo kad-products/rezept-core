@@ -12,7 +12,7 @@ export default async function Pages__profile__override_permissions({ ctx }: Requ
 		<AppLayout currentBasePage="profile" pageTitle="Override Permissions" ctx={ctx} leftNav="profile">
 			<h2>Current Permissions</h2>
 			{permissionOverrideEnabled ? <p>Permissions override enabled</p> : <p>No permissions override</p>}
-			<PermissionsOverrideForm currentPermissions={ctx.permissions || []} />
+			<PermissionsOverrideForm currentPermissions={ctx.permissions} />
 		</AppLayout>
 	);
 }

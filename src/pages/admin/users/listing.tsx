@@ -21,7 +21,7 @@ export default async function Pages__admin__users__listing({ ctx }: RequestInfo)
 
 	return (
 		<AdminLayout ctx={ctx} currentBasePage="users" pageTitle="Users">
-			<RzTable userPermissions={ctx.permissions || []} columns={columns} data={rows} />
+			<RzTable userPermissions={ctx.permissions} columns={columns} data={rows} />
 		</AdminLayout>
 	);
 }

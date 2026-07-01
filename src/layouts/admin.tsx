@@ -15,7 +15,7 @@ export default function AdminLayout({
 	pageTitle: string;
 	ctx: DefaultAppContext;
 }): React.ReactNode {
-	const userPerms = ctx.permissions || [];
+	const userPerms = ctx.permissions;
 
 	const mainNavItems = getNavItems('admin', userPerms);
 
