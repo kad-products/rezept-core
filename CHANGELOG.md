@@ -1,3 +1,9 @@
+## [1.50.2](https://github.com/kad-products/rezept-core/compare/v1.50.1...v1.50.2) (2026-07-01)
+
+### Bug Fixes
+
+* require checks for admins too ([957313a](https://github.com/kad-products/rezept-core/commit/957313a5b4b773384919e5ca7963784e200c6b65))
+
 ## [1.50.1](https://github.com/kad-products/rezept-core/compare/v1.50.0...v1.50.1) (2026-07-01)
 
 ### Bug Fixes
