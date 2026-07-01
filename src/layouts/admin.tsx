@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { StrictMode } from 'react';
 import type { DefaultAppContext } from 'rwsdk/worker';
 import { getNavItems } from '@/data/navigation';
-import type { NavItem } from '@/types';
 
 export default function AdminLayout({
 	children,
