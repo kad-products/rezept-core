@@ -6,7 +6,7 @@ import AppLayout from '@/layouts/app';
 import { getApiKeyById } from '@/repositories';
 import type { ApiKeyDBRead } from '@/types';
 
-export default async function Pages__api_keys__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
+export default async function Pages__profile__edit_api_key({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const apiKeyId = params.apiKeyId;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in route chain
 	const userId = ctx.user!.id;

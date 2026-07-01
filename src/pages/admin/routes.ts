@@ -1,13 +1,24 @@
 import { route } from 'rwsdk/router';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import Pages__admin__editUser from './edit-user';
 import Pages__admin__index from './index';
-import Pages__admin__users from './users';
+import Pages__admin__ingredients__edit from './ingredients/edit';
+import Pages__admin__ingredients__listing from './ingredients/listing';
+import AdminNotFound from './not-found';
+import Pages__admin__users__edit from './users/edit';
+import Pages__admin__users__listing from './users/listing';
 
 export default {
 	admin: [
 		route('/', [requireAuthentication, requirePermissions('admin:read'), Pages__admin__index]),
-		route('/users', [requireAuthentication, requirePermissions('users:read'), Pages__admin__users]),
-		route('/users/:userId/edit', [requireAuthentication, requirePermissions('users:update'), Pages__admin__editUser]),
+		route('/ingredients', [requireAuthentication, requirePermissions('ingredients:read'), Pages__admin__ingredients__listing]),
+		route('/ingredients/new', [requireAuthentication, requirePermissions('ingredients:create'), Pages__admin__ingredients__edit]),
+		route('/ingredients/:ingredientId/edit', [
+			requireAuthentication,
+			requirePermissions('ingredients:update'),
+			Pages__admin__ingredients__edit,
+		]),
+		route('/users', [requireAuthentication, requirePermissions('users:read'), Pages__admin__users__listing]),
+		route('/users/:userId/edit', [requireAuthentication, requirePermissions('users:update'), Pages__admin__users__edit]),
+		route('*', AdminNotFound),
 	],
 };

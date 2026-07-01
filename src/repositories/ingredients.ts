@@ -1,7 +1,27 @@
-import { eq, inArray, isNull, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { ingredients } from '@/models';
 import type { IngredientDBRead, IngredientFormInput, RzLogger } from '@/types';
+import { validateUuid } from './utils';
+
+export async function getIngredientById(ingredientId: string, logger: RzLogger): Promise<IngredientDBRead> {
+	if (!validateUuid(ingredientId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientId, 'Ingredient']);
+	}
+
+	logger.debug(`Fetching ingredient ${ingredientId}`);
+	const results = await db
+		.select()
+		.from(ingredients)
+		.where(and(eq(ingredients.id, ingredientId), isNull(ingredients.deletedAt)));
+
+	if (results.length !== 1) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [results.length, 1, 'Ingredient']);
+	}
+
+	return results[0];
+}
 
 export async function getIngredients(logger: RzLogger): Promise<IngredientDBRead[]> {
 	logger.debug('Fetching all ingredients');
@@ -23,6 +43,27 @@ export async function createIngredient(
 
 	logger.info(`Created ingredient ${newIngredient.id}`);
 	return newIngredient;
+}
+
+export async function updateIngredient(
+	ingredientId: string,
+	ingredient: IngredientFormInput,
+	userId: string,
+	logger: RzLogger,
+): Promise<IngredientDBRead> {
+	if (!validateUuid(ingredientId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientId, 'Ingredient']);
+	}
+
+	logger.debug(`Updating ingredient ${ingredientId}`);
+	const [updatedIngredient] = await db
+		.update(ingredients)
+		.set({ ...ingredient, updatedBy: userId, updatedAt: sql`(datetime('now', 'localtime'))` })
+		.where(eq(ingredients.id, ingredientId))
+		.returning();
+
+	logger.info(`Updated ingredient ${updatedIngredient.id}`);
+	return updatedIngredient;
 }
 
 export async function saveIngredients(

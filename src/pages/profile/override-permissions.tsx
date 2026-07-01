@@ -2,7 +2,7 @@ import type { RequestInfo } from 'rwsdk/worker';
 import PermissionsOverrideForm from '@/forms/permissions-override';
 import AppLayout from '@/layouts/app';
 
-export default async function Pages__permissions__override({ ctx }: RequestInfo): Promise<React.JSX.Element> {
+export default async function Pages__profile__override_permissions({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	let permissionOverrideEnabled = false;
 	if (ctx.session?.permissionsOverride) {
 		permissionOverrideEnabled = true;

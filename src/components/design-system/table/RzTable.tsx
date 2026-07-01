@@ -34,7 +34,6 @@ export default function RzTable<T extends Record<string, unknown>>({
 												if (a.type === 'link') {
 													const hrefProp = a.hrefProp || 'link';
 													const href = String(d[hrefProp]);
-													console.log('in here', userPermissions);
 													return <RzLink permissions={userPermissions} key={href} href={href} {...a} />;
 												} else {
 													return (

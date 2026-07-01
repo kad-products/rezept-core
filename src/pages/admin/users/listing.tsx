@@ -15,12 +15,12 @@ const columns: RzTableColumn[] = [
 	},
 ];
 
-export default async function Pages__admin__users({ ctx }: RequestInfo): Promise<React.JSX.Element> {
+export default async function Pages__admin__users__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const users = await getUsers(ctx.logger);
 	const rows = users.map(u => ({ ...u, editUrl: `/admin/users/${u.id}/edit` }));
 
 	return (
-		<AdminLayout pageTitle="Users">
+		<AdminLayout ctx={ctx} currentBasePage="users" pageTitle="Users">
 			<RzTable userPermissions={ctx.permissions || []} columns={columns} data={rows} />
 		</AdminLayout>
 	);
