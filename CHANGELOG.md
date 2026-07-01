@@ -1,3 +1,10 @@
+## [1.50.0](https://github.com/kad-products/rezept-core/compare/v1.49.0...v1.50.0) (2026-07-01)
+
+### Features
+
+* initial admin page for managing ingredients ([aafedac](https://github.com/kad-products/rezept-core/commit/aafedacc6b5dd9087d51f519ac84b7960d797a0e))
+* slightly more real admin nav ([fb03830](https://github.com/kad-products/rezept-core/commit/fb03830a8af246a8083a462d7d4f2cd9496c74ef))
+
 ## [1.49.0](https://github.com/kad-products/rezept-core/compare/v1.48.1...v1.49.0) (2026-06-30)
 
 ### Features
