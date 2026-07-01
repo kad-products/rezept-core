@@ -1,6 +1,6 @@
 resource "github_repository" "repo" {
   name                   = "rezept-core"
-  description            = "Initial core RSC app using RedwoodSDK"
+  description            = "Seasonal ingredient and recipes made easy."
   delete_branch_on_merge = true
   allow_auto_merge       = true
   has_discussions        = true
