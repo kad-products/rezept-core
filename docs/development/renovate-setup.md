@@ -38,13 +38,14 @@ Go to [GitHub → Settings → Personal access tokens → Fine-grained tokens](h
 - **Repository access:** Only `kad-products/rezept-core`
 - **Repository permissions:**
 
-  | Permission    | Access                        |
-  | ------------- | ----------------------------- |
-  | Contents      | Read and write                |
-  | Issues        | Read and write                |
-  | Metadata      | Read (required, auto-granted) |
-  | Pull requests | Read and write                |
-  | Workflows     | Read and write                |
+  | Permission      | Access                        | Reason / Details                         |
+  | --------------- | ----------------------------- | ---------------------------------------- |
+  | Commit Statuses | Read and write                | Necessary to check on existing PRs       |
+  | Contents        | Read and write                | To write code                            |
+  | Issues          | Read and write                | Dependency dashboard updates             |
+  | Metadata        | Read (required, auto-granted) | Always included                          |
+  | Pull requests   | Read and write                | To manage PRs for renovate               |
+  | Workflows       | Read and write                | Allow renovate to update action versions |
 
   > `Workflows` is required because Renovate will open PRs that update files in `.github/workflows/` when GitHub Actions versions change.
 

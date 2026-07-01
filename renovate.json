@@ -46,6 +46,14 @@
 			"matchPackageNames": ["rwsdk"],
 			"groupName": "RedwoodSDK",
 			"automerge": false
+		},
+		{
+			"description": "Group Playwright npm packages and Docker image together and automerge. The container image in playwright-ct.yaml and npm packages are updated in the same PR, so a passing CI check confirms they're in sync.",
+			"matchPackageNames": ["@playwright/test", "@playwright/experimental-ct-react", "mcr.microsoft.com/playwright"],
+			"groupName": "Playwright",
+			"automerge": true,
+			"automergeType": "pr",
+			"platformAutomerge": true
 		}
 	]
 }
