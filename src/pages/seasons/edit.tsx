@@ -32,7 +32,7 @@ export default async function Pages__seasons__edit({ ctx, params }: RequestInfo)
 				<h3>{seasonId ? `Edit ${season.name}` : 'New Season'}</h3>
 				{seasonId && (
 					<RzPopMenu
-						permissions={ctx.permissions}
+						userPermissions={ctx.permissions}
 						items={[
 							{
 								requiredPermission: 'seasons:read',

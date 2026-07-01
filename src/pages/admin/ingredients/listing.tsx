@@ -22,7 +22,7 @@ export default async function Pages__admin__ingredients__listing({ ctx }: Reques
 	return (
 		<AdminLayout ctx={ctx} currentBasePage="ingredients" pageTitle="Ingredients">
 			<RzLink
-				permissions={ctx.permissions}
+				userPermissions={ctx.permissions}
 				requiredPermission="ingredients:create"
 				label="New Ingredient"
 				href="/admin/ingredients/new"

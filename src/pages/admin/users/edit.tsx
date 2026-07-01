@@ -10,7 +10,7 @@ export default async function Pages__admin__users__edit({ ctx, params }: Request
 	return (
 		<AdminLayout ctx={ctx} currentBasePage="users" pageTitle={`Edit ${user.username}`}>
 			<RzPopMenu
-				permissions={ctx.permissions}
+				userPermissions={ctx.permissions}
 				items={[
 					{
 						requiredPermission: 'users:read',

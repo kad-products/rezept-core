@@ -17,7 +17,7 @@ export default async function Pages__admin__ingredients__edit({ ctx, params }: R
 	return (
 		<AdminLayout ctx={ctx} currentBasePage="ingredients" pageTitle={pageTitle}>
 			<RzPopMenu
-				permissions={ctx.permissions}
+				userPermissions={ctx.permissions}
 				items={[
 					{
 						requiredPermission: 'ingredients:read',

@@ -25,7 +25,7 @@ export default async function Pages__profile__edit_api_key({ ctx, params }: Requ
 				<h3>{apiKey?.id ? `Edit ${apiKey.name}` : 'New API Key'}</h3>
 				{apiKey?.id && (
 					<RzPopMenu
-						permissions={ctx.permissions}
+						userPermissions={ctx.permissions}
 						items={[
 							{
 								requiredPermission: 'api-keys:read',

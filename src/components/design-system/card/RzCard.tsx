@@ -18,7 +18,7 @@ export default function RzCard({
 			{body && <div className="rz-card-body">{body}</div>}
 			<div className="rz-card-actions">
 				{actions.map(a => {
-					return <RzLink key={a.href} permissions={userPermissions} {...a} />;
+					return <RzLink key={a.href} userPermissions={userPermissions} {...a} />;
 				})}
 			</div>
 		</div>

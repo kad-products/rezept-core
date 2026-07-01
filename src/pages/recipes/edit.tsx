@@ -19,7 +19,7 @@ export default async function Pages__recipes__edit({ ctx, params }: RequestInfo)
 				<h3>{recipe?.title || 'New Recipe'}</h3>
 				{recipe && (
 					<RzPopMenu
-						permissions={ctx.permissions}
+						userPermissions={ctx.permissions}
 						items={[
 							{
 								requiredPermission: 'recipes:read',

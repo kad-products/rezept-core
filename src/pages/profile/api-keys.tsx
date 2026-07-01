@@ -17,7 +17,7 @@ export default async function Pages__profile__api_keys({ ctx }: RequestInfo): Pr
 				<ApiKeysTable apiKeys={apiKeys} userPermissions={ctx.permissions} />
 			</Suspense>
 			<RzLink
-				permissions={ctx.permissions}
+				userPermissions={ctx.permissions}
 				requiredPermission="api-keys:create"
 				label="New API Key"
 				href="/profile/api-keys/new"

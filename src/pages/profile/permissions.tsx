@@ -10,7 +10,7 @@ export default async function Pages__profile__permissions({ ctx }: RequestInfo):
 			{ctx.session?.permissionsOverride && <p>Override active</p>}
 			<UserPermissionsTable userPermissions={ctx.permissions} permissionsList={ctx.permissions} />
 			<RzLink
-				permissions={ctx.permissions}
+				userPermissions={ctx.permissions}
 				requiredPermission="permissions:override"
 				label="Override Permissions"
 				href="/profile/permissions/override"
