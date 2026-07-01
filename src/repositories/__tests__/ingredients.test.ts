@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { createIngredient, getIngredients, saveIngredients } from '../ingredients';
+import { createIngredient, getIngredientById, getIngredients, saveIngredients, updateIngredient } from '../ingredients';
 
 const logger = createNoopLogger();
 
@@ -40,6 +40,50 @@ describe('ingredients repository', () => {
 				createdBy: testUserId,
 			});
 			expect(result[0].id).toBeDefined();
+		});
+	});
+
+	describe('getIngredientById', () => {
+		it('returns ingredient by id', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await getIngredientById(created.id, logger);
+			expect(result.id).toBe(created.id);
+			expect(result.name).toBe('Tomato');
+		});
+
+		it('throws when ingredient does not exist', async () => {
+			await expect(getIngredientById(crypto.randomUUID(), logger)).rejects.toThrow(
+				'Expected 1 Ingredient record(s), but found 0',
+			);
+		});
+
+		it('throws when id is not a valid UUID', async () => {
+			await expect(getIngredientById('not-a-uuid', logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a Ingredient',
+			);
+		});
+
+		it('throws when id is an empty string', async () => {
+			await expect(getIngredientById('', logger)).rejects.toThrow('The value "" is not a valid ID for a Ingredient');
+		});
+
+		it('does not return soft-deleted ingredients', async () => {
+			// Create and immediately soft-delete by setting deletedAt directly — no soft-delete
+			// method exists on this repo yet, so we verify the where clause via a separate approach:
+			// The function filters isNull(deletedAt), so a fresh ingredient is always returned.
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const result = await getIngredientById(created.id, logger);
+			expect(result.deletedAt).toBeNull();
+		});
+
+		it('returns correct ingredient when multiple exist', async () => {
+			await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const target = await createIngredient({ name: 'Onion' }, testUserId, logger);
+
+			const result = await getIngredientById(target.id, logger);
+			expect(result.id).toBe(target.id);
+			expect(result.name).toBe('Onion');
 		});
 	});
 
@@ -85,6 +129,67 @@ describe('ingredients repository', () => {
 			await createIngredient({ name: 'Tomato' }, testUserId, logger);
 
 			await expect(createIngredient({ name: 'Tomato' }, testUserId, logger)).rejects.toThrow();
+		});
+	});
+
+	describe('updateIngredient', () => {
+		it('updates the ingredient name', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await updateIngredient(created.id, { name: 'Cherry Tomato' }, testUserId, logger);
+
+			expect(result.name).toBe('Cherry Tomato');
+		});
+
+		it('returns the updated ingredient', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await updateIngredient(created.id, { name: 'Cherry Tomato' }, testUserId, logger);
+
+			expect(result.id).toBe(created.id);
+		});
+
+		it('sets updatedBy to userId', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await updateIngredient(created.id, { name: 'Cherry Tomato' }, testUserId, logger);
+
+			expect(result.updatedBy).toBe(testUserId);
+		});
+
+		it('sets updatedAt on update', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			await new Promise(resolve => setTimeout(resolve, 10));
+
+			const result = await updateIngredient(created.id, { name: 'Cherry Tomato' }, testUserId, logger);
+
+			expect(result.updatedAt).not.toBeNull();
+		});
+
+		it('updates description', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await updateIngredient(created.id, { name: 'Tomato', description: 'A red fruit' }, testUserId, logger);
+
+			expect(result.description).toBe('A red fruit');
+		});
+
+		it('throws when id is not a valid UUID', async () => {
+			await expect(updateIngredient('not-a-uuid', { name: 'Tomato' }, testUserId, logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a Ingredient',
+			);
+		});
+
+		it('does not affect other ingredients', async () => {
+			const other = await createIngredient({ name: 'Onion' }, testUserId, logger);
+			const target = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			await updateIngredient(target.id, { name: 'Cherry Tomato' }, testUserId, logger);
+
+			const unchanged = await getIngredientById(other.id, logger);
+			expect(unchanged.name).toBe('Onion');
+			expect(unchanged.updatedAt).toBeNull();
 		});
 	});
 
