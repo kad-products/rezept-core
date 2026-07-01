@@ -23,4 +23,5 @@ jobs:
           RENOVATE_ONBOARDING: "false"
           RENOVATE_GIT_AUTHOR: "Renovate Bot <renovate[bot]@users.noreply.github.com>"
           RENOVATE_CI: true
+          LOG_LEVEL: debug
           CI: "true"
