@@ -1,48 +1,60 @@
 {
 	"name": "@kad-products/rezept-core",
 	"version": "1.50.0",
-	"description": "Seasonal ingredient and recipes made easy.",
-	"main": "src/worker.tsx",
-	"type": "module",
-	"keywords": [],
-	"author": "",
-	"license": "MIT",
 	"private": true,
+	"description": "Seasonal ingredient and recipes made easy.",
+	"keywords": [],
+	"license": "MIT",
+	"author": "",
+	"type": "module",
+	"main": "src/worker.tsx",
 	"scripts": {
-		"build": "vite build",
-		"dev": "npm run clean:vite && vite dev",
-		"dev:init": "rw-scripts dev-init",
-		"preview": "vite preview",
-		"worker:run": "rw-scripts worker-run",
-		"clean": "npm run clean:vite",
-		"clean:vite": "rm -rf ./node_modules/.vite",
-		"release": "rw-scripts ensure-deploy-env && npm run clean && vite build --mode $CLOUDFLARE_ENV && wrangler d1 migrations apply REZEPT_CORE --remote --env $CLOUDFLARE_ENV && wrangler deploy --env $CLOUDFLARE_ENV",
-		"generate": "rw-scripts ensure-env && wrangler types --include-runtime false && tsx scripts/fix-env-types.ts",
 		"biome:check": "biome check",
 		"biome:fix": "biome check --write .",
-		"type-check": "tsc",
-		"prepare": "husky",
-		"db:seed": "tsx scripts/seeding/main.ts",
-		"db:reset-local": "tsx scripts/db-reset.ts",
+		"build": "vite build",
+		"clean": "npm run clean:vite",
+		"clean:vite": "rm -rf ./node_modules/.vite",
 		"db:load": "tsx scripts/db-load.ts",
-		"db:migrate:new": "drizzle-kit generate",
 		"db:migrate:dev": "wrangler d1 migrations apply REZEPT_CORE --local",
+		"db:migrate:new": "drizzle-kit generate",
 		"db:migrate:prod": "wrangler d1 migrations apply rezept_core --remote",
+		"db:reset-local": "tsx scripts/db-reset.ts",
+		"db:seed": "tsx scripts/seeding/main.ts",
+		"dev": "npm run clean:vite && vite dev",
+		"dev:init": "rw-scripts dev-init",
 		"docs:generate": "tsx scripts/docs/main.ts",
-		"test": "vitest",
-		"test:ui": "vitest --ui",
-		"test:run": "vitest run --coverage",
-		"storybook:dev": "storybook dev -p 6006",
-		"storybook:build": "storybook build",
+		"erd:generate": "drizzle-mermaid-generator --dialect sqlite --schema ./src/models/index.ts --relational > docs/data/current-erd.mmd",
+		"erd:render": "npx -p @mermaid-js/mermaid-cli mmdc -i docs/data/current-erd.mmd -o docs/data/current-erd.png -t forest -w 3000 -H 2000",
+		"generate": "rw-scripts ensure-env && wrangler types --include-runtime false && tsx scripts/fix-env-types.ts",
 		"playwright-ct:run": "playwright test -c playwright-ct.config.ts",
-		"playwright-ct:update": "playwright test -c playwright-ct.config.ts --update-snapshots",
 		"playwright-ct:ui": "playwright test -c playwright-ct.config.ts --ui",
+		"playwright-ct:update": "playwright test -c playwright-ct.config.ts --update-snapshots",
 		"playwright-e2e:run": "playwright test -c playwright.config.ts",
 		"playwright-e2e:ui": "playwright test -c playwright.config.ts --ui",
+		"prepare": "husky",
+		"preview": "vite preview",
+		"release": "rw-scripts ensure-deploy-env && npm run clean && vite build --mode $CLOUDFLARE_ENV && wrangler d1 migrations apply REZEPT_CORE --remote --env $CLOUDFLARE_ENV && wrangler deploy --env $CLOUDFLARE_ENV",
+		"storybook:build": "storybook build",
+		"storybook:dev": "storybook dev -p 6006",
+		"test": "vitest",
+		"test:run": "vitest run --coverage",
+		"test:ui": "vitest --ui",
 		"test:workers": "vitest --config vitest.workers.config.ts",
 		"test:workers:run": "vitest run --config vitest.workers.config.ts",
-		"erd:generate": "drizzle-mermaid-generator --dialect sqlite --schema ./src/models/index.ts --relational > docs/data/current-erd.mmd",
-		"erd:render": "npx -p @mermaid-js/mermaid-cli mmdc -i docs/data/current-erd.mmd -o docs/data/current-erd.png -t forest -w 3000 -H 2000"
+		"type-check": "tsc",
+		"worker:run": "rw-scripts worker-run"
+	},
+	"lint-staged": {
+		"*": [
+			"biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
+		],
+		"package.json": [
+			"prettier --write"
+		],
+		"*.{css,less}": [
+			"prettier --write"
+		],
+		"worker-configuration.d.ts": []
 	},
 	"dependencies": {
 		"@radix-ui/colors": "^3.0.0",
@@ -62,11 +74,8 @@
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
-		"conventional-changelog-conventionalcommits": "^9.1.0",
-		"@tanstack/react-devtools": "^0.10.0",
-		"@tanstack/react-form-devtools": "^0.2.13",
-		"@cloudflare/vite-plugin": "1.42.3",
 		"@biomejs/biome": "^2.3.13",
+		"@cloudflare/vite-plugin": "1.42.3",
 		"@cloudflare/vitest-pool-workers": "^0.16.20",
 		"@cloudflare/workers-types": "^4.20260629.1",
 		"@commitlint/cli": "^21.0.0",
@@ -81,6 +90,8 @@
 		"@semantic-release/release-notes-generator": "^14.1.0",
 		"@storybook/react": "^10.4.1",
 		"@storybook/react-vite": "^10.4.1",
+		"@tanstack/react-devtools": "^0.10.0",
+		"@tanstack/react-form-devtools": "^0.2.13",
 		"@types/better-sqlite3": "^7.6.13",
 		"@types/node": "~26.0.1",
 		"@types/papaparse": "^5.5.2",
@@ -90,6 +101,7 @@
 		"@vitest/ui": "^4.1.5",
 		"chalk-template": "^1.1.2",
 		"change-case": "^5.4.4",
+		"conventional-changelog-conventionalcommits": "^9.1.0",
 		"drizzle-kit": "^0.31.8",
 		"drizzle-mermaid-generator": "^0.0.5",
 		"drizzle-seed": "^0.3.1",
@@ -97,6 +109,8 @@
 		"less": "^4.3.0",
 		"lint-staged": "^17.0.0",
 		"papaparse": "^5.5.3",
+		"prettier": "^3.8.2",
+		"prettier-plugin-packagejson": "^3.0.2",
 		"rollup-plugin-visualizer": "^7.0.1",
 		"rwsdk-community": "^0.1.2",
 		"storybook": "^10.4.1",
@@ -105,12 +119,6 @@
 		"vite": "8.0.16",
 		"vitest": "^4.1.5",
 		"wrangler": "4.105.0"
-	},
-	"lint-staged": {
-		"*": [
-			"biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
-		],
-		"worker-configuration.d.ts": []
 	},
 	"packageManager": "pnpm@11.5.1"
 }
