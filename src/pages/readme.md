@@ -61,7 +61,7 @@ prefix('/recipes', recipeRoutes),
 
 ## Naming
 
-Components are named `Pages__<section>__<pagename>` where both parts are lowercase. Multi-word section names use underscores: `Pages__api_keys__edit`.
+Components are named `Pages__<section>__<pagename>` such that the name essentially maps to the directory path and filename of the page file with directories being represented by double underscores (`__`) and hyphens being changed to single underscores.  So `src/pages/not-found.tsx` should be `Pages__not_found` and `src/pages/admin/users/edit.tsx` should be `Pages__admin__users__edit`.
 
 ## Accessing context and params
 
