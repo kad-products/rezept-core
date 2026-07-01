@@ -7,7 +7,7 @@ import type { UserDBRead } from './users';
 export interface AppContext {
 	user?: UserDBRead | undefined;
 	session?: Session | null;
-	permissions?: Permission[];
+	permissions: Permission[];
 	logger: RzLogger;
 	apiKey?: ApiKeyDBRead;
 }

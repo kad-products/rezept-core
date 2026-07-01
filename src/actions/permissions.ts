@@ -71,7 +71,7 @@ export async function _clearPermissionsOverride(): Promise<ActionState<Permissio
 		await sessions.save(response.headers, restSessionData);
 		requestInfo.ctx.logger.info('Permissions override cleared', { userId });
 
-		return successResponse<Permission[]>(ctx.permissions || [], 200);
+		return successResponse<Permission[]>(ctx.permissions, 200);
 	} catch (error) {
 		requestInfo.ctx.logger.error('Failed to clear permissions override', { error });
 		return errorResponse<Permission[]>(error, 400, 'Failed to clear permissions override');

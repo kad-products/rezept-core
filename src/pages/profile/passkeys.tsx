@@ -13,7 +13,7 @@ export default async function Pages__profile__passkeys({ ctx }: RequestInfo): Pr
 		<AppLayout currentBasePage="profile" pageTitle="Profile" ctx={ctx} leftNav="profile">
 			<h2>Passkeys / WebAuthn Credentials</h2>
 			<Suspense fallback={<div>Loading credentials...</div>}>
-				<UserCredentialsTable userPermissions={ctx.permissions || []} credentials={credentials} />
+				<UserCredentialsTable userPermissions={ctx.permissions} credentials={credentials} />
 			</Suspense>
 		</AppLayout>
 	);

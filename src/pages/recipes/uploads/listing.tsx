@@ -10,12 +10,12 @@ export default async function Pages__recipes__uploads__listing({ ctx }: RequestI
 	return (
 		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			<RzLink
-				permissions={ctx.permissions || []}
+				permissions={ctx.permissions}
 				requiredPermission="recipes:upload"
 				label="Upload Recipe"
 				href="/recipes/uploads/new"
 			/>
-			<RecipeUploadTable recipeUploads={recipeUploads} userPermissions={ctx.permissions || []} />
+			<RecipeUploadTable recipeUploads={recipeUploads} userPermissions={ctx.permissions} />
 		</AppLayout>
 	);
 }

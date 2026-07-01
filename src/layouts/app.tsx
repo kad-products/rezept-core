@@ -19,7 +19,7 @@ export default function AppLayout({
 	ctx: DefaultAppContext;
 	leftNav?: 'recipes' | 'profile';
 }): React.ReactNode {
-	const userPerms = ctx.permissions || [];
+	const userPerms = ctx.permissions;
 
 	const mainNavItems = getNavItems('main', userPerms);
 	let leftNavItems: NavItem[] = [];
