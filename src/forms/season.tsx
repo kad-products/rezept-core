@@ -58,14 +58,14 @@ export default function SeasonForm({
 					{(field): React.ReactNode => <field.TextareaInput label="Description" required />}
 				</form.AppField>
 				<form.AppField name="country">
-					{(field): React.ReactNode => <field.Select label="Country" options={countryOptions} required />}
+					{(field): React.ReactNode => <field.SelectInput label="Country" options={countryOptions} required />}
 				</form.AppField>
 				<form.AppField name="region">{(field): React.ReactNode => <field.TextInput label="Region" required />}</form.AppField>
 				<form.AppField name="startMonth">
-					{(field): React.ReactNode => <field.Select<number> label="Start Month" options={monthOptions} required />}
+					{(field): React.ReactNode => <field.SelectInput<number> label="Start Month" options={monthOptions} required />}
 				</form.AppField>
 				<form.AppField name="endMonth">
-					{(field): React.ReactNode => <field.Select<number> label="End Month" options={monthOptions} required />}
+					{(field): React.ReactNode => <field.SelectInput<number> label="End Month" options={monthOptions} required />}
 				</form.AppField>
 				<form.AppField name="notes">{(field): React.ReactNode => <field.TextareaInput label="Notes" />}</form.AppField>
 				<form.AppField name="ingredients">

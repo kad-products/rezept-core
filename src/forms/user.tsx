@@ -39,7 +39,7 @@ export default function UserForm({ user }: { user: UserDBRead }): React.ReactNod
 			{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 			<form.AppField name="username">{(field): React.ReactNode => <field.TextInput label="Username" required />}</form.AppField>
 			<form.AppField name="role">
-				{(field): React.ReactNode => <field.Select label="Role" options={roleOptions} required />}
+				{(field): React.ReactNode => <field.SelectInput label="Role" options={roleOptions} required />}
 			</form.AppField>
 			{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 			{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}

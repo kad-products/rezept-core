@@ -95,3 +95,20 @@ export function NumberInput({ label, required = false }: { label: string; requir
 		</FieldComponent>
 	);
 }
+
+export function SelectInput<T = string>({
+	label,
+	required = false,
+	options,
+}: {
+	label: string;
+	required?: boolean;
+	options: Array<{ value: T; label: string }>;
+}): React.ReactNode {
+	const field = useFieldContext<string>();
+	return (
+		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta}>
+			<RzFormInput.RzSelect value={field.state.value} onChange={field.handleChange} options={options} />
+		</FieldComponent>
+	);
+}

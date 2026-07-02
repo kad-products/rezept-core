@@ -137,7 +137,7 @@ export default function RecipeForm({
 
 															<form.AppField name={`sections[${i}].ingredients[${ingIdx}].ingredientId`}>
 																{(field): React.ReactNode => (
-																	<field.Select
+																	<field.SelectInput
 																		label="Ingredient"
 																		required
 																		options={[
