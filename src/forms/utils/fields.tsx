@@ -67,3 +67,17 @@ export function TextInput({ label, required = false }: { label: string; required
 		</FieldComponent>
 	);
 }
+
+export function TextareaInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
+	const field = useFieldContext<string>();
+	return (
+		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta}>
+			<RzFormInput.RzTextarea
+				name={field.name}
+				value={field.state.value}
+				onBlur={field.handleBlur}
+				onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+			/>
+		</FieldComponent>
+	);
+}

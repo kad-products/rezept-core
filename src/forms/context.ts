@@ -1,7 +1,7 @@
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 
-import { CheckboxGroup, NumberInput, Select, Submit, TextareaInput } from './inputs';
-import { DateInput, TextInput } from './utils/fields';
+import { CheckboxGroup, NumberInput, Select, Submit } from './inputs';
+import { DateInput, TextareaInput, TextInput } from './utils/fields';
 
 export const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
 
