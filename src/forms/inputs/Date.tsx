@@ -1,5 +1,6 @@
 'use client';
 import { Form } from 'radix-ui';
+import { RzFormInput } from '@/components/design-system';
 import { useFieldContext } from '../context';
 
 export function DateInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
@@ -20,13 +21,11 @@ export function DateInput({ label, required = false }: { label: string; required
 				</div>
 			)}
 			<Form.Control asChild>
-				<input
-					id={field.name}
-					type="date"
+				<RzFormInput.DateInput
 					name={field.name}
-					value={field.state.value ?? undefined}
-					onBlur={field.handleBlur}
-					onChange={(e: React.ChangeEvent<HTMLInputElement>): void => field.handleChange(e.target.value)}
+					value={field.state.value}
+					handleBlur={field.handleBlur}
+					handleChange={field.handleChange}
 				/>
 			</Form.Control>
 		</Form.Field>
