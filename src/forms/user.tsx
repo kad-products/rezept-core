@@ -45,7 +45,7 @@ export default function UserForm({ user }: { user: UserDBRead }): React.ReactNod
 			{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 			{formState?.success && <p className="success">User saved.</p>}
 			<form.AppForm>
-				<form.Submit label="Save User" />
+				<form.SubmitButton label="Save User" />
 			</form.AppForm>
 		</Form.Root>
 	);

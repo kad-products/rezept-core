@@ -67,7 +67,7 @@ export default function ApiKeyForm({
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 				{formState?.success && <p className="success">API Key saved!</p>}
 				<form.AppForm>
-					<form.Submit label={buttonText} />
+					<form.SubmitButton label={buttonText} />
 				</form.AppForm>
 			</Form.Root>
 			<FormDevtools />

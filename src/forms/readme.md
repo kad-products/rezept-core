@@ -49,7 +49,7 @@ export default function RecipeForm({ recipe }: { recipe?: Recipe }) {
             <form.AppField name="title">{field => <field.TextInput label="Title" />}</form.AppField>
             {formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
             <form.AppForm>
-                <form.Submit label="Save Recipe" />
+                <form.SubmitButton label="Save Recipe" />
             </form.AppForm>
         </form>
     );

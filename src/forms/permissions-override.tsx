@@ -61,7 +61,7 @@ export default function PermissionsOverrideForm({ currentPermissions }: { curren
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 				{formState?.success && <p className="success">Permissions override saved!</p>}
 				<form.AppForm>
-					<form.Submit label="Save Permissions Override" />
+					<form.SubmitButton label="Save Permissions Override" />
 					<button type="submit" onClick={(): Promise<void> => form.handleSubmit({ submitAction: 'reset' })}>
 						Clear Permissions Override
 					</button>

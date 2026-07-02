@@ -40,7 +40,7 @@ export default function IngredientForm({ ingredient }: { ingredient: IngredientD
 			{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 			{formState?.success && <p className="success">Ingredient saved.</p>}
 			<form.AppForm>
-				<form.Submit label="Save Ingredient" />
+				<form.SubmitButton label="Save Ingredient" />
 			</form.AppForm>
 		</Form.Root>
 	);
