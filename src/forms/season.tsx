@@ -25,6 +25,7 @@ export default function SeasonForm({
 	const schema = seasonsSchemas.form;
 
 	const form = useAppForm({
+		formId: 'season',
 		defaultValues: season
 			? {
 					...season,

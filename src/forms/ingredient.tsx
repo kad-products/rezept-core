@@ -10,6 +10,7 @@ export default function IngredientForm({ ingredient }: { ingredient: IngredientD
 	const [formState, setFormState] = useState<ActionState<IngredientDBRead>>();
 
 	const form = useAppForm({
+		formId: 'ingredient',
 		defaultValues: {
 			id: ingredient.id,
 			name: ingredient.name,

@@ -23,6 +23,7 @@ export default function ApiKeyForm({
 	};
 
 	const form = useAppForm({
+		formId: 'api-key',
 		defaultValues: (apiKey ? apiKey : newApiKeyDefaults) as ApiKeyFormInput,
 		validators: {
 			onBlur: apiKeysSchemas.form,

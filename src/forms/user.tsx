@@ -13,6 +13,7 @@ export default function UserForm({ user }: { user: UserDBRead }): React.ReactNod
 	const [formState, setFormState] = useState<ActionState<UserDBRead>>();
 
 	const form = useAppForm({
+		formId: 'user',
 		defaultValues: {
 			id: user.id,
 			username: user.username,
