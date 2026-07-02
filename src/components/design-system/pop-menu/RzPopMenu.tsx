@@ -34,9 +34,10 @@ export default function RzPopMenu({
 			<DropdownMenu.Portal>
 				<DropdownMenu.Content className="rz-pop-menu-content">
 					{permittedItems.map(i => {
+						const { key, ...rest } = i;
 						return (
 							<DropdownMenu.Item key={i.href} className="rz-pop-menu-item" asChild>
-								<RzLink userPermissions={userPermissions} {...i} />
+								<RzLink userPermissions={userPermissions} {...rest} />
 							</DropdownMenu.Item>
 						);
 					})}
