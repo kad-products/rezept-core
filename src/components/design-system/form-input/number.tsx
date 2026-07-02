@@ -1,4 +1,4 @@
-export function RzText({
+export function RzNumber({
 	name,
 	value,
 	onBlur,
@@ -9,5 +9,5 @@ export function RzText({
 	onBlur: React.FocusEventHandler<HTMLInputElement>;
 	onChange: React.ChangeEventHandler<HTMLInputElement>;
 }): React.ReactNode {
-	return <input id={name} type="text" name={name} value={value} onBlur={onBlur} onChange={onChange} />;
+	return <input id={name} type="number" name={name} value={value} onBlur={onBlur} onChange={onChange} />;
 }
