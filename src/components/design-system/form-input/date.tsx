@@ -1,22 +1,13 @@
-export function DateInput({
+export function RzDate({
 	name,
 	value,
-	handleBlur,
-	handleChange,
+	onBlur,
+	onChange,
 }: {
 	name: string;
 	value: string;
-	handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-	handleChange: (value: string) => void;
+	onBlur: React.FocusEventHandler<HTMLInputElement>;
+	onChange: React.ChangeEventHandler<HTMLInputElement>;
 }): React.ReactNode {
-	return (
-		<input
-			id={name}
-			type="date"
-			name={name}
-			value={value}
-			onBlur={handleBlur}
-			onChange={(e: React.ChangeEvent<HTMLInputElement>): void => handleChange(e.target.value)}
-		/>
-	);
+	return <input id={name} type="date" name={name} value={value} onBlur={onBlur} onChange={onChange} />;
 }
