@@ -5,8 +5,8 @@ import { saveApiKey } from '@/actions/api-keys';
 import permissions from '@/data/permissions';
 import { apiKeysSchemas } from '@/schemas';
 import type { ActionState, ApiKeyDBRead, ApiKeyFormInput } from '@/types';
-import { useAppForm } from './context';
-import { FormDevtools } from './FormDevtools';
+import { useAppForm } from './setup/context';
+import { FormDevtools } from './setup/FormDevtools';
 
 export default function ApiKeyForm({
 	apiKey,
@@ -61,7 +61,7 @@ export default function ApiKeyForm({
 					{(field): React.ReactNode => <field.DateInput label="Revoke At" required />}
 				</form.AppField>
 				<form.AppField name="permissions">
-					{(field): React.ReactNode => <field.CheckboxGroup label="Permissions" required options={permissionsOptions} />}
+					{(field): React.ReactNode => <field.CheckboxGroupInput label="Permissions" required options={permissionsOptions} />}
 				</form.AppField>
 				{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}

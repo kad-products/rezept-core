@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { saveSeason } from '@/actions/seasons';
 import { seasonsSchemas } from '@/schemas';
 import type { ActionState, SeasonalIngredientWithRelations, SeasonDBRead, SeasonFormInput } from '@/types';
-import { useAppForm } from './context';
-import { FormDevtools } from './FormDevtools';
+import { useAppForm } from './setup/context';
+import { FormDevtools } from './setup/FormDevtools';
 
 export default function SeasonForm({
 	season,
@@ -69,7 +69,7 @@ export default function SeasonForm({
 				</form.AppField>
 				<form.AppField name="notes">{(field): React.ReactNode => <field.TextareaInput label="Notes" />}</form.AppField>
 				<form.AppField name="ingredients">
-					{(field): React.ReactNode => <field.CheckboxGroup label="Ingredients" required options={ingredientOptions} />}
+					{(field): React.ReactNode => <field.CheckboxGroupInput label="Ingredients" required options={ingredientOptions} />}
 				</form.AppField>
 				{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}

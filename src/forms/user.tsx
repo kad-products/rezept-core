@@ -5,7 +5,7 @@ import { saveUser } from '@/actions/users';
 import { userRoles } from '@/data/roles';
 import { usersSchemas } from '@/schemas';
 import type { ActionState, UserAdminEditInput, UserDBRead } from '@/types';
-import { useAppForm } from './context';
+import { useAppForm } from './setup/context';
 
 const roleOptions = userRoles.map(r => ({ value: r, label: r[0] + r.slice(1).toLowerCase() }));
 

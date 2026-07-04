@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { saveIngredient } from '@/actions/ingredients';
 import { ingredientsSchemas } from '@/schemas';
 import type { ActionState, IngredientDBRead, IngredientFormInput } from '@/types';
-import { useAppForm } from './context';
+import { useAppForm } from './setup/context';
 
 export default function IngredientForm({ ingredient }: { ingredient: IngredientDBRead }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<IngredientDBRead>>();

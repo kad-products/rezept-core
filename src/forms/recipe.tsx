@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { saveRecipe } from '@/actions/recipes';
 import { recipesSchemas } from '@/schemas';
 import type { ActionState, IngredientDBRead, RecipeFormInput, RecipeWithSections } from '@/types';
-import { useAppForm } from './context';
-import { FormDevtools } from './FormDevtools';
+import { useAppForm } from './setup/context';
+import { FormDevtools } from './setup/FormDevtools';
 
 export default function RecipeForm({
 	recipe,

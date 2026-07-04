@@ -1,5 +1,5 @@
 import { RzButton } from '@/components/design-system';
-import { useFormContext } from '../context';
+import { useFormContext } from './context';
 
 export function SubmitButton({ label }: { label: string }): React.ReactNode {
 	const form = useFormContext();
