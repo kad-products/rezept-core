@@ -1,0 +1,19 @@
+import{i as e}from"./preload-helper-CT_b8DTk.js";import{t}from"./jsx-runtime-DqZldVDK.js";import{A as n,D as r,a as i,c as a,i as o,l as s,n as c,o as l,r as u,s as d,t as f,u as p}from"./dist-CjETaYOh.js";import{n as m,t as h}from"./dist-CdonmI8K.js";var g,_,v,y,b,x,S,C,w=e((()=>{g=`_rz-select-trigger_1dsdo_1`,_=`_rz-select-icon_1dsdo_25`,v=`_rz-select-content_1dsdo_29`,y=`_rz-select-viewport_1dsdo_38`,b=`_rz-select-item_1dsdo_42`,x=`_rz-select-separator_1dsdo_64`,S=`_rz-select-item-indicator_1dsdo_70`,C={"rz-select-trigger":`_rz-select-trigger_1dsdo_1`,rzSelectTrigger:g,"rz-select-icon":`_rz-select-icon_1dsdo_25`,rzSelectIcon:_,"rz-select-content":`_rz-select-content_1dsdo_29`,rzSelectContent:v,"rz-select-viewport":`_rz-select-viewport_1dsdo_38`,rzSelectViewport:y,"rz-select-item":`_rz-select-item_1dsdo_42`,rzSelectItem:b,"rz-select-separator":`_rz-select-separator_1dsdo_64`,rzSelectSeparator:x,"rz-select-item-indicator":`_rz-select-item-indicator_1dsdo_70`,rzSelectItemIndicator:S}}));function T({value:e,onChange:t,options:n,...f}){return(0,E.jsxs)(c,{...f,onValueChange:t,value:e,children:[(0,E.jsxs)(a,{className:C.rzSelectTrigger,children:[(0,E.jsx)(s,{placeholder:`Select an option`}),(0,E.jsx)(o,{className:C.rzSelectIcon,children:(0,E.jsx)(r,{})})]}),(0,E.jsx)(u,{className:C.rzSelectContent,children:(0,E.jsx)(p,{className:C.rzSelectViewport,children:n.map(e=>(0,E.jsxs)(i,{value:e.value,className:C.rzSelectItem,children:[(0,E.jsx)(d,{children:e.label}),(0,E.jsx)(l,{className:C.rzSelectItemIndicator})]},e.value))})})]})}var E,D=e((()=>{n(),f(),w(),E=t(),T.__docgenInfo={description:``,methods:[],displayName:`RzSelect`,props:{value:{required:!0,tsType:{name:`string`},description:``},onChange:{required:!0,tsType:{name:`signature`,type:`function`,raw:`(value: string) => void`,signature:{arguments:[{type:{name:`string`},name:`value`}],return:{name:`void`}}},description:``},options:{required:!0,tsType:{name:`Array`,elements:[{name:`signature`,type:`object`,raw:`{ value: T; label: string }`,signature:{properties:[{key:`value`,value:{name:`T`,required:!0}},{key:`label`,value:{name:`string`,required:!0}}]}}],raw:`Array<{ value: T; label: string }>`},description:``}}}})),O,k,A,j,M,N,P;e((()=>{m(),D(),O={component:T,parameters:{layout:`centered`}},k=[{value:`spring`,label:`Spring`},{value:`summer`,label:`Summer`},{value:`autumn`,label:`Autumn`},{value:`winter`,label:`Winter`}],A=[{value:`tomato`,label:`Tomato`},{value:`courgette`,label:`Courgette`},{value:`aubergine`,label:`Aubergine`},{value:`fennel`,label:`Fennel`},{value:`asparagus`,label:`Asparagus`},{value:`pea`,label:`Pea`},{value:`broad-bean`,label:`Broad Bean`},{value:`artichoke`,label:`Globe Artichoke`},{value:`beetroot`,label:`Beetroot`},{value:`spinach`,label:`Spinach`},{value:`kale`,label:`Kale`},{value:`leek`,label:`Leek`}],j={args:{value:``,onChange:h(),options:k}},M={args:{value:`summer`,onChange:h(),options:k}},N={args:{value:``,onChange:h(),options:A}},j.parameters={...j.parameters,docs:{...j.parameters?.docs,source:{originalSource:`{
+  args: {
+    value: '',
+    onChange: fn(),
+    options: seasonOptions
+  }
+}`,...j.parameters?.docs?.source}}},M.parameters={...M.parameters,docs:{...M.parameters?.docs,source:{originalSource:`{
+  args: {
+    value: 'summer',
+    onChange: fn(),
+    options: seasonOptions
+  }
+}`,...M.parameters?.docs?.source}}},N.parameters={...N.parameters,docs:{...N.parameters?.docs,source:{originalSource:`{
+  args: {
+    value: '',
+    onChange: fn(),
+    options: ingredientOptions
+  }
+}`,...N.parameters?.docs?.source}}},P=[`Unselected`,`WithSelection`,`ManyOptions`]}))();export{N as ManyOptions,j as Unselected,M as WithSelection,P as __namedExportsOrder,O as default};
