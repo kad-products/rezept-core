@@ -1,3 +1,18 @@
+## [1.52.0](https://github.com/kad-products/rezept-core/compare/v1.51.0...v1.52.0) (2026-07-04)
+
+### Features
+
+* move button into design system and consume for forms ([6ba1deb](https://github.com/kad-products/rezept-core/commit/6ba1debe8b9b2a1a7a2bcf12656c4d8a4371e029))
+* move checkbox group to design system ([bffb4cd](https://github.com/kad-products/rezept-core/commit/bffb4cd635c741648ea198cd0030132d195e7c6e))
+* move number input into design system ([0b38561](https://github.com/kad-products/rezept-core/commit/0b3856140d1f4c942fcbeac6782a792acb310108))
+* move select into design system ([537926b](https://github.com/kad-products/rezept-core/commit/537926b08fba7bc725bd77936b3a0c1e15c4e9ea))
+* move text input into tanstack wrapper ([93c009d](https://github.com/kad-products/rezept-core/commit/93c009dbac345302f296fd9ba41f6e5d7ec3f16c))
+* move textarea to design system ([3d01ffd](https://github.com/kad-products/rezept-core/commit/3d01ffdf4356b17ccc3b7534379dbe447d6872d0))
+
+### Bug Fixes
+
+* provide formId for existing forms ([b8188bb](https://github.com/kad-products/rezept-core/commit/b8188bb2e9fb9c4187e0714c9e72c4f1514cf3f6))
+
 ## [1.51.0](https://github.com/kad-products/rezept-core/compare/v1.50.3...v1.51.0) (2026-07-02)
 
 ### Features
