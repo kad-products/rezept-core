@@ -1,5 +1,6 @@
 import type { Permission, RzLink as RzLinkType } from '@/types';
 import RzLink from '../link/RzLink';
+import styleClasses from './rz-left-nav.module.css';
 
 export default function RzLeftNav({
 	navItems,
@@ -9,7 +10,7 @@ export default function RzLeftNav({
 	userPermissions: Permission[];
 }): React.ReactNode {
 	return (
-		<nav className="rz-left-nav">
+		<nav className={styleClasses.rzLeftNav}>
 			<ul>
 				{navItems.map(item => {
 					return (

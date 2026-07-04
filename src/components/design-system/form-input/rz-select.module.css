@@ -1,9 +1,5 @@
-@import "@radix-ui/colors/black-alpha.css";
-@import "@radix-ui/colors/mauve.css";
-@import "@radix-ui/colors/violet.css";
-
 .rz-select-trigger {
-	all: unset; // button reset
+	all: unset; /* button reset */
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -26,7 +22,6 @@
 		color: var(--violet-9);
 	}
 }
-
 .rz-select-icon {
 	color: Var(--violet-11);
 }
@@ -66,13 +61,6 @@
 	}
 }
 
-.rz-select-label {
-	padding: 0 25px;
-	font-size: 12px;
-	line-height: 25px;
-	color: var(--mauve-11);
-}
-
 .rz-select-separator {
 	height: 1px;
 	background-color: var(--violet-6);
@@ -86,14 +74,4 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-}
-
-.rz-select-scroll-button {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 25px;
-	background-color: white;
-	color: var(--violet-11);
-	cursor: default;
 }

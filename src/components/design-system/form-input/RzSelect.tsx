@@ -1,6 +1,7 @@
 'use client';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { Select as RadixSelect } from 'radix-ui';
+import styleClasses from './rz-select.module.css';
 
 export function RzSelect<T = string>({
 	value,
@@ -14,22 +15,22 @@ export function RzSelect<T = string>({
 } & React.ComponentPropsWithoutRef<typeof RadixSelect.Root>): React.ReactNode {
 	return (
 		<RadixSelect.Root {...props} onValueChange={onChange} value={value as unknown as string}>
-			<RadixSelect.Trigger className="rz-select-trigger">
+			<RadixSelect.Trigger className={styleClasses.rzSelectTrigger}>
 				<RadixSelect.Value placeholder="Select an option" />
-				<RadixSelect.Icon className="rz-select-icon">
+				<RadixSelect.Icon className={styleClasses.rzSelectIcon}>
 					<ChevronDownIcon />
 				</RadixSelect.Icon>
 			</RadixSelect.Trigger>
-			<RadixSelect.Content className="rz-select-content">
-				<RadixSelect.Viewport className="rz-select-viewport">
+			<RadixSelect.Content className={styleClasses.rzSelectContent}>
+				<RadixSelect.Viewport className={styleClasses.rzSelectViewport}>
 					{options.map(option => (
 						<RadixSelect.Item
 							key={option.value as unknown as string}
 							value={option.value as unknown as string}
-							className="rz-select-item"
+							className={styleClasses.rzSelectItem}
 						>
 							<RadixSelect.ItemText>{option.label}</RadixSelect.ItemText>
-							<RadixSelect.ItemIndicator className="rz-select-item-indicator" />
+							<RadixSelect.ItemIndicator className={styleClasses.rzSelectItemIndicator} />
 						</RadixSelect.Item>
 					))}
 				</RadixSelect.Viewport>

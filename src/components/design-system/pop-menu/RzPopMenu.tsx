@@ -26,17 +26,17 @@ export default function RzPopMenu({
 	return (
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger className={styleClasses.rzPopMenu} asChild>
-				<button type="button" className="rz-icon-button" aria-label="Menu Label">
+				<button type="button" aria-label="Menu Label">
 					<HamburgerMenuIcon />
 				</button>
 			</DropdownMenu.Trigger>
 
 			<DropdownMenu.Portal>
-				<DropdownMenu.Content className="rz-pop-menu-content">
+				<DropdownMenu.Content>
 					{permittedItems.map(i => {
 						const { key, ...rest } = i;
 						return (
-							<DropdownMenu.Item key={i.href} className="rz-pop-menu-item" asChild>
+							<DropdownMenu.Item key={i.href} asChild>
 								<RzLink userPermissions={userPermissions} {...rest} />
 							</DropdownMenu.Item>
 						);
