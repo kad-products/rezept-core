@@ -1,3 +1,10 @@
+## [1.51.0](https://github.com/kad-products/rezept-core/compare/v1.50.3...v1.51.0) (2026-07-02)
+
+### Features
+
+* move date input into design system ([9c84126](https://github.com/kad-products/rezept-core/commit/9c841262828eeb95bb6d905a0a794ce7d71e9076))
+* move date input into tanstack wrapper ([86fbca2](https://github.com/kad-products/rezept-core/commit/86fbca235b2857219fb93270e866b060b77eb02c))
+
 ## [1.50.3](https://github.com/kad-products/rezept-core/compare/v1.50.2...v1.50.3) (2026-07-01)
 
 ### Bug Fixes
