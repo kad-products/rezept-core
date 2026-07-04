@@ -3,6 +3,9 @@ import RzButton from './RzButton';
 
 const meta: Meta<typeof RzButton> = {
 	component: RzButton,
+	parameters: {
+		layout: 'centered',
+	},
 };
 
 export default meta;
@@ -12,12 +15,20 @@ type Story = StoryObj<typeof RzButton>;
 export const Default: Story = {
 	args: {
 		isSubmitting: false,
-		label: 'Submit',
+		label: 'Save Recipe',
 	},
 };
 
-export const WithBody: Story = {
+export const Submitting: Story = {
 	args: {
-		label: 'Longer button text to test how the button handles wrapping and overflow in different layouts.',
+		isSubmitting: true,
+		label: 'Save Recipe',
+	},
+};
+
+export const LongLabel: Story = {
+	args: {
+		isSubmitting: false,
+		label: 'Save changes to this recipe and update all related seasonal ingredients',
 	},
 };
