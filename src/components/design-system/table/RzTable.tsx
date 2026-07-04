@@ -1,6 +1,7 @@
 'use client';
 import type { Permission, RzTableColumn } from '@/types';
 import RzLink from '../link/RzLink';
+import styleClasses from './rz-table.module.css';
 
 export default function RzTable<T extends Record<string, unknown>>({
 	columns,
@@ -14,7 +15,7 @@ export default function RzTable<T extends Record<string, unknown>>({
 	userPermissions: Permission[];
 }): React.ReactNode {
 	return (
-		<table className="rz-table">
+		<table className={styleClasses.rzTable}>
 			<thead>
 				<tr>
 					{columns.map(c => {
@@ -29,7 +30,7 @@ export default function RzTable<T extends Record<string, unknown>>({
 							{columns.map(c => {
 								if (c.actions) {
 									return (
-										<td key={c.key}>
+										<td key={c.key} className={styleClasses.rzTableActions}>
 											{c.actions.map(a => {
 												if (a.type === 'link') {
 													const hrefProp = a.hrefProp || 'link';

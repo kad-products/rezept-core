@@ -1,5 +1,6 @@
 import type { Permission, RzLink as RzLinkType } from '@/types';
 import RzLink from '../link/RzLink';
+import styleClasses from './rz-card.module.css';
 
 export default function RzCard({
 	title,
@@ -13,10 +14,10 @@ export default function RzCard({
 	userPermissions: Permission[];
 }): React.ReactNode {
 	return (
-		<div className="rz-card">
-			<div className="rz-card-title">{title}</div>
-			{body && <div className="rz-card-body">{body}</div>}
-			<div className="rz-card-actions">
+		<div className={styleClasses.rzCard}>
+			<div className={styleClasses.rzCardTitle}>{title}</div>
+			{body && <div className={styleClasses.rzCardBody}>{body}</div>}
+			<div className={styleClasses.rzCardActions}>
 				{actions.map(a => {
 					return <RzLink key={a.href} userPermissions={userPermissions} {...a} />;
 				})}

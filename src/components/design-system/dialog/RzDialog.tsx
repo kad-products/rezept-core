@@ -1,6 +1,7 @@
 'use client';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { Dialog } from 'radix-ui';
+import styleClasses from './rz-dialog.module.css';
 
 export default function RzDialog({
 	trigger,
@@ -17,13 +18,13 @@ export default function RzDialog({
 		<Dialog.Root>
 			<Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
 			<Dialog.Portal>
-				<Dialog.Overlay className="rz-dialog-overlay" />
-				<Dialog.Content className="rz-dialog-content">
-					<Dialog.Title className="rz-dialog-title">{title}</Dialog.Title>
-					{description && <Dialog.Description className="rz-dialog-description">{description}</Dialog.Description>}
+				<Dialog.Overlay className={styleClasses.rzDialogOverlay} />
+				<Dialog.Content className={styleClasses.rzDialogContent}>
+					<Dialog.Title className={styleClasses.rzDialogTitle}>{title}</Dialog.Title>
+					{description && <Dialog.Description className={styleClasses.rzDialogDescription}>{description}</Dialog.Description>}
 					{children}
 					<Dialog.Close asChild>
-						<button type="button" className="rz-dialog-close" aria-label="Close">
+						<button type="button" className={styleClasses.rzDialogClose} aria-label="Close">
 							<Cross2Icon />
 						</button>
 					</Dialog.Close>
