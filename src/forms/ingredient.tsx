@@ -4,12 +4,13 @@ import { useState } from 'react';
 import { saveIngredient } from '@/actions/ingredients';
 import { ingredientsSchemas } from '@/schemas';
 import type { ActionState, IngredientDBRead, IngredientFormInput } from '@/types';
-import { useAppForm } from './context';
+import { useAppForm } from './setup/context';
 
 export default function IngredientForm({ ingredient }: { ingredient: IngredientDBRead }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<IngredientDBRead>>();
 
 	const form = useAppForm({
+		formId: 'ingredient',
 		defaultValues: {
 			id: ingredient.id,
 			name: ingredient.name,
@@ -39,7 +40,7 @@ export default function IngredientForm({ ingredient }: { ingredient: IngredientD
 			{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 			{formState?.success && <p className="success">Ingredient saved.</p>}
 			<form.AppForm>
-				<form.Submit label="Save Ingredient" />
+				<form.SubmitButton label="Save Ingredient" />
 			</form.AppForm>
 		</Form.Root>
 	);

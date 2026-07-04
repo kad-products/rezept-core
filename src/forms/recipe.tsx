@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { saveRecipe } from '@/actions/recipes';
 import { recipesSchemas } from '@/schemas';
 import type { ActionState, IngredientDBRead, RecipeFormInput, RecipeWithSections } from '@/types';
-import { useAppForm } from './context';
-import { FormDevtools } from './FormDevtools';
+import { useAppForm } from './setup/context';
+import { FormDevtools } from './setup/FormDevtools';
 
 export default function RecipeForm({
 	recipe,
@@ -137,7 +137,7 @@ export default function RecipeForm({
 
 															<form.AppField name={`sections[${i}].ingredients[${ingIdx}].ingredientId`}>
 																{(field): React.ReactNode => (
-																	<field.Select
+																	<field.SelectInput
 																		label="Ingredient"
 																		required
 																		options={[
@@ -204,7 +204,7 @@ export default function RecipeForm({
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 				{formState?.success && <p className="success">Recipe saved!</p>}
 				<form.AppForm>
-					<form.Submit label={buttonText} />
+					<form.SubmitButton label={buttonText} />
 				</form.AppForm>
 			</Form.Root>
 			<FormDevtools />{' '}

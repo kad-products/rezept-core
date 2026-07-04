@@ -5,13 +5,14 @@ import { clearPermissionsOverride, savePermissionsOverride } from '@/actions/per
 import permissions from '@/data/permissions';
 import { permissionsOverrideSchemas } from '@/schemas';
 import type { ActionState, Permission } from '@/types';
-import { useAppForm } from './context';
-import { FormDevtools } from './FormDevtools';
+import { useAppForm } from './setup/context';
+import { FormDevtools } from './setup/FormDevtools';
 
 export default function PermissionsOverrideForm({ currentPermissions }: { currentPermissions: Permission[] }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<Permission[]>>();
 
 	const form = useAppForm({
+		formId: 'permissions-override',
 		defaultValues: { permissions: currentPermissions },
 		validators: {
 			onBlur: permissionsOverrideSchemas.form,
@@ -54,13 +55,13 @@ export default function PermissionsOverrideForm({ currentPermissions }: { curren
 			>
 				{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				<form.AppField name="permissions">
-					{(field): React.ReactNode => <field.CheckboxGroup label="Permissions" required options={permissionsOptions} />}
+					{(field): React.ReactNode => <field.CheckboxGroupInput label="Permissions" required options={permissionsOptions} />}
 				</form.AppField>
 				{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
 				{formState?.success && <p className="success">Permissions override saved!</p>}
 				<form.AppForm>
-					<form.Submit label="Save Permissions Override" />
+					<form.SubmitButton label="Save Permissions Override" />
 					<button type="submit" onClick={(): Promise<void> => form.handleSubmit({ submitAction: 'reset' })}>
 						Clear Permissions Override
 					</button>
