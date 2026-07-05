@@ -1,7 +1,5 @@
 import { RzStepError } from '@/classes';
-import type { JsonLdPayload, ParsedRecipeScrape, ParsedRecipeScrapeImage, RzLogger } from '@/types';
-
-type JsonLdNode = Record<string, unknown>;
+import type { JsonLdPayload, ParsedRecipeScrape, ParsedRecipeScrapeImage, RecipeScrapeJsonLdNode, RzLogger } from '@/types';
 
 export async function transformScrapeToRecipe(parsedBody: JsonLdPayload, logger: RzLogger): Promise<ParsedRecipeScrape> {
 	try {
@@ -70,15 +68,15 @@ function unescapeHtml(str: string): string {
 		.replace(/&gt;/g, '>');
 }
 
-function isRecipeNode(node: JsonLdNode): boolean {
+function isRecipeNode(node: RecipeScrapeJsonLdNode): boolean {
 	const type = node['@type'];
 	return Array.isArray(type) ? type.includes('Recipe') : type === 'Recipe';
 }
 
-function findRecipeNode(jsonld: unknown[]): JsonLdNode | null {
+function findRecipeNode(jsonld: unknown[]): RecipeScrapeJsonLdNode | null {
 	for (const item of jsonld) {
 		if (!item || typeof item !== 'object') continue;
-		const node = item as JsonLdNode;
+		const node = item as RecipeScrapeJsonLdNode;
 
 		// Handle @graph wrapper
 		if (Array.isArray(node['@graph'])) {
@@ -128,7 +126,7 @@ function parseInstructions(raw: unknown): { stepNumber: number; instruction: str
 
 		// HowToStep objects
 		if (item && typeof item === 'object') {
-			const node = item as JsonLdNode;
+			const node = item as RecipeScrapeJsonLdNode;
 			const text = typeof node.text === 'string' ? node.text.trim() : null;
 			if (text) return [{ stepNumber: i + 1, instruction: text }];
 		}
@@ -157,7 +155,7 @@ function parseImageField(raw: unknown): ParsedRecipeScrapeImage | undefined {
 
 	// ImageObject
 	if (raw && typeof raw === 'object') {
-		const obj = raw as JsonLdNode;
+		const obj = raw as RecipeScrapeJsonLdNode;
 		const url = typeof obj.url === 'string' ? obj.url : undefined;
 		if (!url) return undefined;
 		return {

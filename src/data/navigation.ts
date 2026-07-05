@@ -113,6 +113,14 @@ export const navItems: Record<string, NavItem[]> = {
 			basePage: 'ingredients',
 		},
 		{
+			key: 'scrapes',
+			label: 'Scrapes',
+			href: '/admin/recipes/scrapes',
+			icon: ArchiveIcon,
+			requiredPermission: 'recipes:read',
+			basePage: 'recipes',
+		},
+		{
 			key: 'logout',
 			label: 'Logout',
 			href: '/auth/logout',

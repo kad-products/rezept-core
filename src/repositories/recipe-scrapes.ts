@@ -34,6 +34,13 @@ export async function createRecipeScrape(
 	return result;
 }
 
+export async function getRecipeScrapes(logger: RzLogger): Promise<RecipeScrapeDBRead[]> {
+	logger.debug(`Fetching all recipe scrapes`);
+	const results = await db.select().from(recipeScrapes).where(isNull(recipeScrapes.deletedAt));
+	logger.debug(`Fetched ${results.length} recipe scrapes`);
+	return results;
+}
+
 export async function getRecipeScrapesByUserId(userId: string, logger: RzLogger): Promise<RecipeScrapeDBRead[]> {
 	logger.debug(`Fetching recipe scrapes for user ${userId}`);
 	const results = await db

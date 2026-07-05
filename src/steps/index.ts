@@ -1,3 +1,4 @@
+export * from './enrich-scrape-with-full-obj';
 export * from './fetch-and-store-cover-image';
 export * from './initialize-scrape';
 export * from './parse-body-json';
