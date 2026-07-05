@@ -2,11 +2,11 @@ import type { RequestInfo } from 'rwsdk/worker';
 import { RzLink } from '@/components/design-system';
 import RecipeScrapesTable from '@/components/tables/RecipeScrapesTable';
 import AppLayout from '@/layouts/app';
-import { getRecipeScrapes } from '@/repositories';
+import { getRecipeScrapesByUserId } from '@/repositories';
 
 export default async function Pages__recipes__scrapes__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const userId = ctx.user?.id;
-	const recipeScrapes = userId ? await getRecipeScrapes(userId, ctx.logger) : [];
+	const recipeScrapes = userId ? await getRecipeScrapesByUserId(userId, ctx.logger) : [];
 	return (
 		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			<RzLink

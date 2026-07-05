@@ -17,3 +17,14 @@ export type RecipeScrapeStatus =
 	| 'COMPLETED'
 	| 'FAILED';
 export type RecipeScrapeDBRead = typeof recipeScrapes.$inferSelect;
+
+export type RecipeScrapeJsonLdNode = Record<string, unknown>;
+
+export type RecipeScrapeSource = {
+	url: string;
+	jsonld: RecipeScrapeJsonLdNode[];
+};
+
+export type RecipeScrapeDBReadEnriched = {
+	source: RecipeScrapeSource | undefined;
+} & RecipeScrapeDBRead;
