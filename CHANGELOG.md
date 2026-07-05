@@ -1,3 +1,15 @@
+## [1.53.0](https://github.com/kad-products/rezept-core/compare/v1.52.0...v1.53.0) (2026-07-04)
+
+### Features
+
+* move all existing design system styles to css modules ([3350383](https://github.com/kad-products/rezept-core/commit/3350383465cadd4b3c19d4a0068bde419f3eabc1))
+* move card styles to design system module ([09f64e2](https://github.com/kad-products/rezept-core/commit/09f64e2f41280705b0b083774f9e2bfeebee7031))
+
+### Bug Fixes
+
+* put some admin style back in ([3f5c516](https://github.com/kad-products/rezept-core/commit/3f5c516ec288b11e699db86dcc2664355f09b09c))
+* remove testing font-size declaration ([2cdb217](https://github.com/kad-products/rezept-core/commit/2cdb21741643e4ab1bf9ccb2738323a348426abe))
+
 ## [1.52.0](https://github.com/kad-products/rezept-core/compare/v1.51.0...v1.52.0) (2026-07-04)
 
 ### Features
