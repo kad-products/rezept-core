@@ -117,7 +117,7 @@ function parseInstructions(raw: unknown): { stepNumber: number; instruction: str
 	}
 
 	if (!Array.isArray(raw)) {
-		throw new Error(`Unexpected structure or data type for instructions: ${JSON.stringify(raw)}`);
+		throw new Error(`Instructions data is not an array: ${JSON.stringify(raw)}`);
 	}
 
 	return raw.flatMap((item, i) => {
