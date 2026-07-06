@@ -1,7 +1,7 @@
 import { RzStepError } from '@/classes';
-import type { JsonLdPayload } from '@/types';
+import type { RecipeScrapeSource } from '@/types';
 
-export async function parseBodyJson(request: Request): Promise<JsonLdPayload> {
+export async function parseBodyJson(request: Request): Promise<RecipeScrapeSource> {
 	let body: unknown;
 	try {
 		body = await request.json();
@@ -9,5 +9,5 @@ export async function parseBodyJson(request: Request): Promise<JsonLdPayload> {
 		throw new RzStepError(400, 'Invalid JSON body', 'Request body could not be parsed as JSON');
 	}
 
-	return body as JsonLdPayload;
+	return body as RecipeScrapeSource;
 }

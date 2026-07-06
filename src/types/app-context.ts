@@ -1,4 +1,4 @@
-import type { RzLogger } from '@/logger';
+import type { RzLogger } from '@/types';
 import type { ApiKeyDBRead } from './api-keys';
 import type { Permission } from './permissions';
 import type { Session } from './sessions';

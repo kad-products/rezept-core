@@ -1,35 +1,10 @@
 'use client';
+import { dump } from 'js-yaml';
 import { get } from 'object-path';
 import { useState } from 'react';
-import type { Permission, RecipeScrapeDBReadEnriched, RecipeScrapeJsonLdNode, RecipeScrapeSource, RzTableColumn } from '@/types';
+import type { Permission, RecipeScrapeDBReadEnriched, RecipeScrapeSource, RzTableColumn } from '@/types';
+import { findRecipeNode } from '@/utils';
 import { RzTable } from './design-system';
-
-function isRecipeNode(node: RecipeScrapeJsonLdNode): boolean {
-	const type = node['@type'];
-	return Array.isArray(type) ? type.includes('Recipe') : type === 'Recipe';
-}
-
-function findRecipeNode(jsonld: unknown[]): RecipeScrapeJsonLdNode | null {
-	for (const item of jsonld) {
-		if (!item || typeof item !== 'object') continue;
-		const node = item as RecipeScrapeJsonLdNode;
-
-		// Handle @graph wrapper
-		if (Array.isArray(node['@graph'])) {
-			const found = findRecipeNode(node['@graph'] as unknown[]);
-			if (found) return found;
-		}
-
-		// Handle nested arrays (as sent by the bookmarklet)
-		if (Array.isArray(item)) {
-			const found = findRecipeNode(item as unknown[]);
-			if (found) return found;
-		}
-
-		if (isRecipeNode(node)) return node;
-	}
-	return null;
-}
 
 export default function ScrapesExplorer({
 	userPermissions,
@@ -45,10 +20,10 @@ export default function ScrapesExplorer({
 			label: 'Source URL',
 			render: (_: string, row: Record<string, unknown>): string => (row?.source as RecipeScrapeSource)?.url || '',
 		},
-		{ key: 'searchedPath', label: 'Searched Path' },
+		{ key: 'searchedPath', label: 'Searched Path', render: (val: string): React.ReactNode => <pre>{val}</pre> },
 		{
 			key: 'actions',
-			label: '',
+			label: 'Actions',
 			actions: [{ type: 'link', hrefProp: 'viewUrl', label: 'View', requiredPermission: 'recipes:read' }],
 		},
 	];
@@ -61,15 +36,13 @@ export default function ScrapesExplorer({
 		return {
 			...s,
 			recipeNode,
-			searchedPath: viewPath && recipeNode ? JSON.stringify(get(recipeNode, viewPath || '')) : '',
+			searchedPath: viewPath && recipeNode ? dump(get(recipeNode, viewPath || '')) : '',
 		};
 	});
 
 	const handleChange = (path: string): void => {
 		setViewPath(path);
 	};
-
-	console.log(withPath[0].recipeNode);
 
 	return (
 		<>

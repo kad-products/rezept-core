@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { RzStepError } from '@/classes';
 import { createNoopLogger } from '@/logger';
 import { transformScrapeToRecipe } from '@/steps';
-import type { JsonLdPayload } from '@/types';
+import type { RecipeScrapeSource } from '@/types';
 
 const logger = createNoopLogger();
 
@@ -20,7 +20,7 @@ const baseRecipe = {
 	cookTime: 'PT1H',
 };
 
-function payload(recipe: Record<string, unknown>): JsonLdPayload {
+function payload(recipe: Record<string, unknown>): RecipeScrapeSource {
 	return { url: 'https://example.com/recipe', jsonld: [recipe] };
 }
 
@@ -46,12 +46,10 @@ describe('transformScrapeToRecipe', () => {
 	});
 
 	it('finds a recipe node inside an @graph wrapper', async () => {
-		const graphPayload: JsonLdPayload = {
-			url: 'https://example.com/recipe',
-			jsonld: [{ '@graph': [baseRecipe] }],
-		};
-
-		const result = await transformScrapeToRecipe(graphPayload, logger);
+		const result = await transformScrapeToRecipe(
+			{ url: 'https://example.com/recipe', jsonld: [{ '@graph': [baseRecipe] }] },
+			logger,
+		);
 
 		expect(result.title).toBe('Test Recipe');
 	});
@@ -125,7 +123,7 @@ describe('transformScrapeToRecipe', () => {
 	});
 
 	it('throws RzStepError 400 when no Recipe node is found in the payload', async () => {
-		const noRecipePayload: JsonLdPayload = {
+		const noRecipePayload: RecipeScrapeSource = {
 			url: 'https://example.com',
 			jsonld: [{ '@type': 'WebPage', name: 'Not a recipe' }],
 		};

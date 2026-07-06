@@ -1,16 +1,7 @@
 import type { WorkflowEvent } from 'cloudflare:workers';
 import { env } from 'cloudflare:workers';
 import chalk from 'chalk-template';
-
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
-
-export interface RzLogger {
-	debug(message: string, meta?: Record<string, unknown>): void;
-	info(message: string, meta?: Record<string, unknown>): void;
-	warn(message: string, meta?: Record<string, unknown>): void;
-	error(message: string, meta?: Record<string, unknown>): void;
-	child(bindings: Record<string, unknown>, levelOverride?: LogLevel): RzLogger;
-}
+import type { LogLevel, RzLogger } from './types/rz-logger';
 
 const LEVEL_ORDER: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
 
