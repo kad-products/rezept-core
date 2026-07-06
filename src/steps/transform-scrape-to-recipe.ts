@@ -1,14 +1,12 @@
 import { RzStepError } from '@/classes';
-import type { JsonLdPayload, ParsedRecipeScrape, ParsedRecipeScrapeImage, RecipeScrapeJsonLdNode, RzLogger } from '@/types';
+import type { ParsedRecipeScrape, ParsedRecipeScrapeImage, RecipeScrapeJsonLdNode, RzLogger } from '@/types';
 
-export async function transformScrapeToRecipe(parsedBody: JsonLdPayload, logger: RzLogger): Promise<ParsedRecipeScrape> {
+export async function transformScrapeToRecipe(
+	recipe: RecipeScrapeJsonLdNode,
+	sourceUrl: string,
+	logger: RzLogger,
+): Promise<ParsedRecipeScrape> {
 	try {
-		const recipe = findRecipeNode(parsedBody.jsonld);
-
-		if (!recipe) {
-			throw new Error('No Recipe schema found in payload');
-		}
-
 		const title = typeof recipe.name === 'string' ? unescapeHtml(recipe.name).trim() : null;
 		if (!title) {
 			throw new Error('Recipe has no name');
@@ -35,7 +33,7 @@ export async function transformScrapeToRecipe(parsedBody: JsonLdPayload, logger:
 		const result = {
 			title,
 			description,
-			source: parsedBody.url,
+			source: sourceUrl,
 			servings: parseServings(recipe.recipeYield),
 			prepTime: typeof recipe.prepTime === 'string' ? parseDuration(recipe.prepTime) : undefined,
 			cookTime: typeof recipe.cookTime === 'string' ? parseDuration(recipe.cookTime) : undefined,
@@ -66,33 +64,6 @@ function unescapeHtml(str: string): string {
 		.replace(/&quot;/g, '"')
 		.replace(/&lt;/g, '<')
 		.replace(/&gt;/g, '>');
-}
-
-function isRecipeNode(node: RecipeScrapeJsonLdNode): boolean {
-	const type = node['@type'];
-	return Array.isArray(type) ? type.includes('Recipe') : type === 'Recipe';
-}
-
-function findRecipeNode(jsonld: unknown[]): RecipeScrapeJsonLdNode | null {
-	for (const item of jsonld) {
-		if (!item || typeof item !== 'object') continue;
-		const node = item as RecipeScrapeJsonLdNode;
-
-		// Handle @graph wrapper
-		if (Array.isArray(node['@graph'])) {
-			const found = findRecipeNode(node['@graph'] as unknown[]);
-			if (found) return found;
-		}
-
-		// Handle nested arrays (as sent by the bookmarklet)
-		if (Array.isArray(item)) {
-			const found = findRecipeNode(item as unknown[]);
-			if (found) return found;
-		}
-
-		if (isRecipeNode(node)) return node;
-	}
-	return null;
 }
 
 // Parses ISO 8601 duration strings like PT15M, PT1H30M to minutes

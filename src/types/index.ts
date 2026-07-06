@@ -7,7 +7,6 @@ export * from './image-types';
 export * from './images';
 export * from './ingredient-units';
 export * from './ingredients';
-export * from './json-ld-payload';
 export * from './nav-item';
 export * from './permissions';
 export * from './recipe-ingredients';

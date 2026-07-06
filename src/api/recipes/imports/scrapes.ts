@@ -13,6 +13,7 @@ import {
 	saveRecipeIngredients,
 	saveRecipeInstructions,
 	saveRecipeSections,
+	scrapeExtractRecipeNode,
 	transformScrapeToRecipe,
 	validateAsRecipe,
 } from '@/steps';
@@ -38,7 +39,9 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		sourceDomain = parsedBodyJson.url ? new URL(parsedBodyJson.url).hostname : 'unknown';
 		recipeScrape = await initializeScrape(parsedBodyJson, userId, ctx.logger);
 
-		const transformedRecipe = await transformScrapeToRecipe(parsedBodyJson, ctx.logger);
+		const recipeNode = scrapeExtractRecipeNode(parsedBodyJson.jsonld, ctx.logger);
+
+		const transformedRecipe = await transformScrapeToRecipe(recipeNode, parsedBodyJson.url, ctx.logger);
 		await updateRecipeScrapeStatus(recipeScrape.id, 'TRANSFORMED', null, userId, ctx.logger);
 
 		// Non-fatal: image fetch failure logs and returns null rather than failing the scrape

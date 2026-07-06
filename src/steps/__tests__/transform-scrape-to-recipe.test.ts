@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { RzStepError } from '@/classes';
 import { createNoopLogger } from '@/logger';
 import { transformScrapeToRecipe } from '@/steps';
-import type { JsonLdPayload } from '@/types';
 
 const logger = createNoopLogger();
+const sourceUrl = 'https://example.com/recipe';
 
 const baseRecipe = {
 	'@type': 'Recipe',
@@ -20,13 +20,9 @@ const baseRecipe = {
 	cookTime: 'PT1H',
 };
 
-function payload(recipe: Record<string, unknown>): JsonLdPayload {
-	return { url: 'https://example.com/recipe', jsonld: [recipe] };
-}
-
 describe('transformScrapeToRecipe', () => {
-	it('transforms a complete recipe payload', async () => {
-		const result = await transformScrapeToRecipe(payload(baseRecipe), logger);
+	it('transforms a complete recipe node', async () => {
+		const result = await transformScrapeToRecipe(baseRecipe, sourceUrl, logger);
 
 		expect(result.title).toBe('Test Recipe');
 		expect(result.description).toBe('A tasty recipe');
@@ -45,26 +41,10 @@ describe('transformScrapeToRecipe', () => {
 		]);
 	});
 
-	it('finds a recipe node inside an @graph wrapper', async () => {
-		const graphPayload: JsonLdPayload = {
-			url: 'https://example.com/recipe',
-			jsonld: [{ '@graph': [baseRecipe] }],
-		};
-
-		const result = await transformScrapeToRecipe(graphPayload, logger);
-
-		expect(result.title).toBe('Test Recipe');
-	});
-
-	it('accepts @type as an array containing Recipe', async () => {
-		const result = await transformScrapeToRecipe(payload({ ...baseRecipe, '@type': ['Recipe', 'Thing'] }), logger);
-
-		expect(result.title).toBe('Test Recipe');
-	});
-
 	it('handles instructions as a plain string', async () => {
 		const result = await transformScrapeToRecipe(
-			payload({ ...baseRecipe, recipeInstructions: 'Combine all ingredients and bake.' }),
+			{ ...baseRecipe, recipeInstructions: 'Combine all ingredients and bake.' },
+			sourceUrl,
 			logger,
 		);
 
@@ -73,7 +53,8 @@ describe('transformScrapeToRecipe', () => {
 
 	it('handles instructions as an array of strings', async () => {
 		const result = await transformScrapeToRecipe(
-			payload({ ...baseRecipe, recipeInstructions: ['Preheat oven.', 'Mix ingredients.', 'Bake 30 minutes.'] }),
+			{ ...baseRecipe, recipeInstructions: ['Preheat oven.', 'Mix ingredients.', 'Bake 30 minutes.'] },
+			sourceUrl,
 			logger,
 		);
 
@@ -86,21 +67,22 @@ describe('transformScrapeToRecipe', () => {
 
 	it('returns empty ingredients when recipeIngredient is absent', async () => {
 		const { recipeIngredient: _, ...noIngredients } = baseRecipe;
-		const result = await transformScrapeToRecipe(payload(noIngredients), logger);
+		const result = await transformScrapeToRecipe(noIngredients, sourceUrl, logger);
 
 		expect(result.sections[0].ingredients).toEqual([]);
 	});
 
 	it('returns empty instructions when recipeInstructions is absent', async () => {
 		const { recipeInstructions: _, ...noInstructions } = baseRecipe;
-		const result = await transformScrapeToRecipe(payload(noInstructions), logger);
+		const result = await transformScrapeToRecipe(noInstructions, sourceUrl, logger);
 
 		expect(result.sections[0].instructions).toEqual([]);
 	});
 
 	it('unescapes HTML entities in the title', async () => {
 		const result = await transformScrapeToRecipe(
-			payload({ ...baseRecipe, name: 'Mom&#39;s &amp; Dad&#39;s Favorite &quot;Special&quot;' }),
+			{ ...baseRecipe, name: 'Mom&#39;s &amp; Dad&#39;s Favorite &quot;Special&quot;' },
+			sourceUrl,
 			logger,
 		);
 
@@ -113,45 +95,36 @@ describe('transformScrapeToRecipe', () => {
 		['PT1H30M', 90],
 		['PT2H15M', 135],
 	])('parses ISO 8601 duration %s as %d minutes', async (duration, expected) => {
-		const result = await transformScrapeToRecipe(payload({ ...baseRecipe, prepTime: duration }), logger);
+		const result = await transformScrapeToRecipe({ ...baseRecipe, prepTime: duration }, sourceUrl, logger);
 
 		expect(result.prepTime).toBe(expected);
 	});
 
 	it('parses servings from a string with trailing text', async () => {
-		const result = await transformScrapeToRecipe(payload({ ...baseRecipe, recipeYield: '6 servings' }), logger);
+		const result = await transformScrapeToRecipe({ ...baseRecipe, recipeYield: '6 servings' }, sourceUrl, logger);
 
 		expect(result.servings).toBe(6);
-	});
-
-	it('throws RzStepError 400 when no Recipe node is found in the payload', async () => {
-		const noRecipePayload: JsonLdPayload = {
-			url: 'https://example.com',
-			jsonld: [{ '@type': 'WebPage', name: 'Not a recipe' }],
-		};
-
-		await expect(transformScrapeToRecipe(noRecipePayload, logger)).rejects.toThrow(RzStepError);
-		await expect(transformScrapeToRecipe(noRecipePayload, logger)).rejects.toMatchObject({ code: 400 });
 	});
 
 	it('throws RzStepError 400 when the recipe node has no name', async () => {
 		const { name: _, ...noName } = baseRecipe;
 
-		await expect(transformScrapeToRecipe(payload(noName), logger)).rejects.toThrow(RzStepError);
-		await expect(transformScrapeToRecipe(payload(noName), logger)).rejects.toMatchObject({ code: 400 });
+		await expect(transformScrapeToRecipe(noName, sourceUrl, logger)).rejects.toThrow(RzStepError);
+		await expect(transformScrapeToRecipe(noName, sourceUrl, logger)).rejects.toMatchObject({ code: 400 });
 	});
 
 	it('throws RzStepError 400 when the recipe name is not a string', async () => {
-		await expect(transformScrapeToRecipe(payload({ ...baseRecipe, name: 42 }), logger)).rejects.toThrow(RzStepError);
+		await expect(transformScrapeToRecipe({ ...baseRecipe, name: 42 }, sourceUrl, logger)).rejects.toThrow(RzStepError);
 	});
 
 	describe('cover image extraction', () => {
 		it('extracts image from an ImageObject', async () => {
 			const result = await transformScrapeToRecipe(
-				payload({
+				{
 					...baseRecipe,
 					image: { '@type': 'ImageObject', url: 'https://example.com/photo.jpg', width: 1500, height: 1125 },
-				}),
+				},
+				sourceUrl,
 				logger,
 			);
 
@@ -159,20 +132,21 @@ describe('transformScrapeToRecipe', () => {
 		});
 
 		it('extracts image from a plain string URL', async () => {
-			const result = await transformScrapeToRecipe(payload({ ...baseRecipe, image: 'https://example.com/photo.jpg' }), logger);
+			const result = await transformScrapeToRecipe({ ...baseRecipe, image: 'https://example.com/photo.jpg' }, sourceUrl, logger);
 
 			expect(result.coverImage).toEqual({ url: 'https://example.com/photo.jpg' });
 		});
 
 		it('extracts image from an array, using the first element', async () => {
 			const result = await transformScrapeToRecipe(
-				payload({
+				{
 					...baseRecipe,
 					image: [
 						{ '@type': 'ImageObject', url: 'https://example.com/first.jpg', width: 1500, height: 1125 },
 						{ '@type': 'ImageObject', url: 'https://example.com/second.jpg', width: 400, height: 300 },
 					],
-				}),
+				},
+				sourceUrl,
 				logger,
 			);
 
@@ -181,7 +155,8 @@ describe('transformScrapeToRecipe', () => {
 
 		it('extracts image from an ImageObject missing width/height', async () => {
 			const result = await transformScrapeToRecipe(
-				payload({ ...baseRecipe, image: { '@type': 'ImageObject', url: 'https://example.com/photo.jpg' } }),
+				{ ...baseRecipe, image: { '@type': 'ImageObject', url: 'https://example.com/photo.jpg' } },
+				sourceUrl,
 				logger,
 			);
 
@@ -189,13 +164,14 @@ describe('transformScrapeToRecipe', () => {
 		});
 
 		it('returns undefined coverImage when image field is absent', async () => {
-			const result = await transformScrapeToRecipe(payload(baseRecipe), logger);
+			const result = await transformScrapeToRecipe(baseRecipe, sourceUrl, logger);
 			expect(result.coverImage).toBeUndefined();
 		});
 
 		it('returns undefined coverImage when ImageObject has no url', async () => {
 			const result = await transformScrapeToRecipe(
-				payload({ ...baseRecipe, image: { '@type': 'ImageObject', thumbnailUrl: 'https://example.com/thumb.jpg' } }),
+				{ ...baseRecipe, image: { '@type': 'ImageObject', thumbnailUrl: 'https://example.com/thumb.jpg' } },
+				sourceUrl,
 				logger,
 			);
 
@@ -203,7 +179,7 @@ describe('transformScrapeToRecipe', () => {
 		});
 
 		it('returns undefined coverImage when image array is empty', async () => {
-			const result = await transformScrapeToRecipe(payload({ ...baseRecipe, image: [] }), logger);
+			const result = await transformScrapeToRecipe({ ...baseRecipe, image: [] }, sourceUrl, logger);
 			expect(result.coverImage).toBeUndefined();
 		});
 	});

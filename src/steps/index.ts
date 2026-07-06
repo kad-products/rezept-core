@@ -7,5 +7,6 @@ export * from './save-recipe';
 export * from './save-recipe-ingredients';
 export * from './save-recipe-instructions';
 export * from './save-recipe-sections';
+export * from './scrape-extract-recipe-node';
 export * from './transform-scrape-to-recipe';
 export * from './validate-as-recipe';
