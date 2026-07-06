@@ -1,3 +1,10 @@
+## [1.55.0](https://github.com/kad-products/rezept-core/compare/v1.54.0...v1.55.0) (2026-07-06)
+
+### Features
+
+* show scrape on view link ([1535fa8](https://github.com/kad-products/rezept-core/commit/1535fa8078a68b755835d662e6d08249cc80ff20))
+* streamline recipe scrape extraction ([f459b7c](https://github.com/kad-products/rezept-core/commit/f459b7c18d07188f7805b03e990c88c14f05eac8))
+
 ## [1.54.0](https://github.com/kad-products/rezept-core/compare/v1.53.0...v1.54.0) (2026-07-05)
 
 ### Features
