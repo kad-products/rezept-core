@@ -1,4 +1,4 @@
-import type { RzLogger } from './logger';
+import type { RzLogger } from '@/types';
 
 export function createReactLogger(): RzLogger {
 	const noop = (): void => {};

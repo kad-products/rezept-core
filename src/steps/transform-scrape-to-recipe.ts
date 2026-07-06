@@ -1,11 +1,14 @@
 import { RzStepError } from '@/classes';
-import type { ParsedRecipeScrape, ParsedRecipeScrapeImage, RecipeScrapeJsonLdNode, RzLogger } from '@/types';
+import type { ParsedRecipeScrape, ParsedRecipeScrapeImage, RecipeScrapeJsonLdNode, RecipeScrapeSource, RzLogger } from '@/types';
+import { findRecipeNode } from '@/utils';
 
-export async function transformScrapeToRecipe(
-	recipe: RecipeScrapeJsonLdNode,
-	sourceUrl: string,
-	logger: RzLogger,
-): Promise<ParsedRecipeScrape> {
+export async function transformScrapeToRecipe(source: RecipeScrapeSource, logger: RzLogger): Promise<ParsedRecipeScrape> {
+	const recipe = findRecipeNode(source.jsonld);
+	if (!recipe) {
+		throw new RzStepError(400, 'No Recipe schema found in payload', 'No recipe found in payload');
+	}
+	logger.info('Found recipe');
+
 	try {
 		const title = typeof recipe.name === 'string' ? unescapeHtml(recipe.name).trim() : null;
 		if (!title) {
@@ -33,7 +36,7 @@ export async function transformScrapeToRecipe(
 		const result = {
 			title,
 			description,
-			source: sourceUrl,
+			source: source.url,
 			servings: parseServings(recipe.recipeYield),
 			prepTime: typeof recipe.prepTime === 'string' ? parseDuration(recipe.prepTime) : undefined,
 			cookTime: typeof recipe.cookTime === 'string' ? parseDuration(recipe.cookTime) : undefined,

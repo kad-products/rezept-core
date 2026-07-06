@@ -1,9 +1,9 @@
 'use client';
+import { dump } from 'js-yaml';
 import { get } from 'object-path';
 import { useState } from 'react';
-import { createReactLogger } from '@/logger-react';
-import { scrapeExtractRecipeNode } from '@/steps';
 import type { Permission, RecipeScrapeDBReadEnriched, RecipeScrapeSource, RzTableColumn } from '@/types';
+import { findRecipeNode } from '@/utils';
 import { RzTable } from './design-system';
 
 export default function ScrapesExplorer({
@@ -13,7 +13,6 @@ export default function ScrapesExplorer({
 	userPermissions: Permission[];
 	scrapes: RecipeScrapeDBReadEnriched[];
 }): React.ReactNode {
-	const logger = createReactLogger();
 	const [viewPath, setViewPath] = useState<string | undefined>(undefined);
 	const columns: RzTableColumn[] = [
 		{
@@ -21,10 +20,10 @@ export default function ScrapesExplorer({
 			label: 'Source URL',
 			render: (_: string, row: Record<string, unknown>): string => (row?.source as RecipeScrapeSource)?.url || '',
 		},
-		{ key: 'searchedPath', label: 'Searched Path' },
+		{ key: 'searchedPath', label: 'Searched Path', render: (val: string): React.ReactNode => <pre>{val}</pre> },
 		{
 			key: 'actions',
-			label: '',
+			label: 'Actions',
 			actions: [{ type: 'link', hrefProp: 'viewUrl', label: 'View', requiredPermission: 'recipes:read' }],
 		},
 	];
@@ -33,11 +32,11 @@ export default function ScrapesExplorer({
 
 	const withPath = scrapes.map(s => {
 		const source = s.source as RecipeScrapeSource;
-		const recipeNode = scrapeExtractRecipeNode(source.jsonld, logger);
+		const recipeNode = findRecipeNode(source.jsonld);
 		return {
 			...s,
 			recipeNode,
-			searchedPath: viewPath && recipeNode ? JSON.stringify(get(recipeNode, viewPath || '')) : '',
+			searchedPath: viewPath && recipeNode ? dump(get(recipeNode, viewPath || '')) : '',
 		};
 	});
 
