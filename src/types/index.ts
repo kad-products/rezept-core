@@ -1,4 +1,3 @@
-export type { LogLevel, RzLogger } from '@/logger';
 export * from './action-state';
 export * from './api-keys';
 export * from './app-context';
@@ -17,6 +16,7 @@ export * from './recipe-sections';
 export * from './recipe-uploads';
 export * from './recipes';
 export * from './rz-link';
+export * from './rz-logger';
 export * from './rz-table';
 export * from './seasonal-ingredients';
 export * from './seasons';
