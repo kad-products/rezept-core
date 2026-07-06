@@ -1,0 +1,23 @@
+{
+	"description": "@graph wrapper — common with Yoast SEO and similar WordPress plugins",
+	"jsonld": [
+		{
+			"@context": "https://schema.org",
+			"@graph": [
+				{
+					"@type": "WebPage",
+					"@id": "https://example.com/banana-bread/",
+					"name": "Classic Banana Bread Recipe"
+				},
+				{
+					"@type": "Recipe",
+					"@id": "https://example.com/banana-bread/#recipe",
+					"name": "Classic Banana Bread",
+					"recipeIngredient": ["3 ripe bananas"],
+					"recipeInstructions": [{ "@type": "HowToStep", "text": "Mash bananas." }]
+				}
+			]
+		}
+	],
+	"expectedName": "Classic Banana Bread"
+}
