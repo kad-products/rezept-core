@@ -20,7 +20,7 @@ describe('recipes repository', () => {
 
 	describe('getRecipes', () => {
 		it('returns empty array when no recipes exist', async () => {
-			const result = await getRecipes(logger);
+			const result = await getRecipes(10, 0, logger);
 			expect(result).toEqual([]);
 		});
 
@@ -29,14 +29,14 @@ describe('recipes repository', () => {
 			await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
 			await createRecipe({ ...baseRecipeData, title: 'Recipe 3' }, testUserId, logger);
 
-			const result = await getRecipes(logger);
+			const result = await getRecipes(10, 0, logger);
 			expect(result).toHaveLength(3);
 		});
 
 		it('returns recipes with correct shape', async () => {
 			await createRecipe(baseRecipeData, testUserId, logger);
 
-			const result = await getRecipes(logger);
+			const result = await getRecipes(10, 0, logger);
 			expect(result[0]).toMatchObject({
 				title: 'Test Recipe',
 				authorId: testUserId,
@@ -166,7 +166,7 @@ describe('recipes repository', () => {
 			const created = await createRecipe(baseRecipeData, testUserId, logger);
 			await deleteRecipe(created.id, testUserId, logger);
 
-			const result = await getRecipes(logger);
+			const result = await getRecipes(10, 0, logger);
 			expect(result).toHaveLength(0);
 		});
 

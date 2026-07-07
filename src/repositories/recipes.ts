@@ -5,9 +5,9 @@ import { recipeCookingMethods, recipeIngredients, recipeInstructions, recipeSect
 import type { RecipeDBRead, RecipeWithSections, RecipeWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
-export async function getRecipes(logger: RzLogger): Promise<RecipeDBRead[]> {
+export async function getRecipes(limit: number, offset: number, logger: RzLogger): Promise<RecipeDBRead[]> {
 	logger.debug('Fetching all recipes');
-	const allRecipes = await db.select().from(recipes).where(isNull(recipes.deletedAt));
+	const allRecipes = await db.select().from(recipes).where(isNull(recipes.deletedAt)).limit(limit).offset(offset);
 	logger.debug(`Fetched ${allRecipes.length} recipes`);
 	return allRecipes;
 }
