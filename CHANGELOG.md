@@ -1,3 +1,25 @@
+## [1.55.0](https://github.com/kad-products/rezept-core/compare/v1.54.0...v1.55.0) (2026-07-06)
+
+### Features
+
+* show scrape on view link ([1535fa8](https://github.com/kad-products/rezept-core/commit/1535fa8078a68b755835d662e6d08249cc80ff20))
+* streamline recipe scrape extraction ([f459b7c](https://github.com/kad-products/rezept-core/commit/f459b7c18d07188f7805b03e990c88c14f05eac8))
+
+## [1.54.0](https://github.com/kad-products/rezept-core/compare/v1.53.0...v1.54.0) (2026-07-05)
+
+### Features
+
+* recipe scrape explorer ([2f10d80](https://github.com/kad-products/rezept-core/commit/2f10d80b1ffa491a2219ab3252f64822ef3307c2))
+* script to start a scrape ([2407483](https://github.com/kad-products/rezept-core/commit/24074839e27a484df356ba2f12445b9c5a034435))
+
+### Bug Fixes
+
+* clearer scrape error message ([74c2288](https://github.com/kad-products/rezept-core/commit/74c22888039b0ae8afb2bbdd55c1acc0054f341d))
+
+### Code Refactoring
+
+* rename scrape method ([7d5c32f](https://github.com/kad-products/rezept-core/commit/7d5c32f5693d857df1b1f4e08abdc2f3bbd12828))
+
 ## [1.53.0](https://github.com/kad-products/rezept-core/compare/v1.52.0...v1.53.0) (2026-07-04)
 
 ### Features
