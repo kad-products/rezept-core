@@ -28,7 +28,7 @@ const recipeInstructionSchema = z.object({
 const recipeCookingMethodSchema = z.object({
 	id: optionalUuid,
 	name: requiredString('Cooking method name', 100),
-	order: coercedInt(1),
+	order: coercedInt(0),
 	instructions: z.array(recipeInstructionSchema).optional(),
 });
 
