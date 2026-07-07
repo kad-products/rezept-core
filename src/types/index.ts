@@ -8,6 +8,7 @@ export * from './ingredient-units';
 export * from './ingredients';
 export * from './nav-item';
 export * from './permissions';
+export * from './recipe-cooking-methods';
 export * from './recipe-ingredients';
 export * from './recipe-instructions';
 export * from './recipe-scrape-attempts';

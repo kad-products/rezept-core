@@ -426,18 +426,19 @@ describe('recipesSchemas.form', () => {
 		});
 	});
 
-	describe('instructions', () => {
-		it('accepts instruction with all fields', () => {
+	describe('cooking methods', () => {
+		it('accepts a cooking method with instructions', () => {
 			const validData = {
 				authorId: randomUUID(),
 				title: 'Test',
 				sections: [
 					{
 						order: 0,
-						instructions: [
+						cookingMethods: [
 							{
-								stepNumber: 1,
-								instruction: 'Heat the oil in a large pan',
+								name: 'Standard',
+								order: 1,
+								instructions: [{ stepNumber: 1, instruction: 'Heat the oil in a large pan' }],
 							},
 						],
 					},
@@ -448,6 +449,81 @@ describe('recipesSchemas.form', () => {
 			expect(result.success).toBe(true);
 		});
 
+		it('accepts a cooking method with id for updates', () => {
+			const validData = {
+				authorId: randomUUID(),
+				title: 'Test',
+				sections: [
+					{
+						order: 0,
+						cookingMethods: [
+							{
+								id: randomUUID(),
+								name: 'Standard',
+								order: 1,
+								instructions: [{ stepNumber: 1, instruction: 'Stir continuously' }],
+							},
+						],
+					},
+				],
+			};
+
+			const result = recipesSchemas.form.safeParse(validData);
+			expect(result.success).toBe(true);
+		});
+
+		it('accepts multiple cooking methods per section', () => {
+			const validData = {
+				authorId: randomUUID(),
+				title: 'Test',
+				sections: [
+					{
+						order: 0,
+						cookingMethods: [
+							{
+								name: 'Stovetop',
+								order: 1,
+								instructions: [{ stepNumber: 1, instruction: 'Cook on the stove.' }],
+							},
+							{
+								name: 'Oven',
+								order: 2,
+								instructions: [{ stepNumber: 1, instruction: 'Bake at 350°F.' }],
+							},
+						],
+					},
+				],
+			};
+
+			const result = recipesSchemas.form.safeParse(validData);
+			expect(result.success).toBe(true);
+			if (result.success) {
+				expect(result.data.sections?.[0].cookingMethods).toHaveLength(2);
+			}
+		});
+
+		it('rejects empty cooking method name', () => {
+			const invalidData = {
+				authorId: randomUUID(),
+				title: 'Test',
+				sections: [{ order: 0, cookingMethods: [{ name: '   ', order: 1 }] }],
+			};
+
+			const result = recipesSchemas.form.safeParse(invalidData);
+			expect(result.success).toBe(false);
+		});
+
+		it('rejects cooking method name longer than 100 characters', () => {
+			const invalidData = {
+				authorId: randomUUID(),
+				title: 'Test',
+				sections: [{ order: 0, cookingMethods: [{ name: 'a'.repeat(101), order: 1 }] }],
+			};
+
+			const result = recipesSchemas.form.safeParse(invalidData);
+			expect(result.success).toBe(false);
+		});
+
 		it('accepts instruction with id for updates', () => {
 			const validData = {
 				authorId: randomUUID(),
@@ -455,11 +531,11 @@ describe('recipesSchemas.form', () => {
 				sections: [
 					{
 						order: 0,
-						instructions: [
+						cookingMethods: [
 							{
-								id: randomUUID(),
-								stepNumber: 1,
-								instruction: 'Stir continuously',
+								name: 'Standard',
+								order: 1,
+								instructions: [{ id: randomUUID(), stepNumber: 1, instruction: 'Stir continuously' }],
 							},
 						],
 					},
@@ -477,10 +553,16 @@ describe('recipesSchemas.form', () => {
 				sections: [
 					{
 						order: 0,
-						instructions: [
-							{ stepNumber: 1, instruction: 'First step' },
-							{ stepNumber: 2, instruction: 'Second step' },
-							{ stepNumber: 3, instruction: 'Third step' },
+						cookingMethods: [
+							{
+								name: 'Standard',
+								order: 1,
+								instructions: [
+									{ stepNumber: 1, instruction: 'First step' },
+									{ stepNumber: 2, instruction: 'Second step' },
+									{ stepNumber: 3, instruction: 'Third step' },
+								],
+							},
 						],
 					},
 				],
@@ -489,10 +571,7 @@ describe('recipesSchemas.form', () => {
 			const result = recipesSchemas.form.safeParse(validData);
 			expect(result.success).toBe(true);
 			if (result.success) {
-				expect(result?.data?.sections?.length).toBe(1);
-				if (result?.data?.sections?.length === 1) {
-					expect(result.data.sections[0].instructions).toHaveLength(3);
-				}
+				expect(result.data.sections?.[0].cookingMethods?.[0].instructions).toHaveLength(3);
 			}
 		});
 
@@ -503,12 +582,7 @@ describe('recipesSchemas.form', () => {
 				sections: [
 					{
 						order: 0,
-						instructions: [
-							{
-								stepNumber: 1,
-								instruction: '   ',
-							},
-						],
+						cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 1, instruction: '   ' }] }],
 					},
 				],
 			};
@@ -524,12 +598,7 @@ describe('recipesSchemas.form', () => {
 				sections: [
 					{
 						order: 0,
-						instructions: [
-							{
-								stepNumber: 1,
-								instruction: 'a'.repeat(2001),
-							},
-						],
+						cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 1, instruction: 'a'.repeat(2001) }] }],
 					},
 				],
 			};
@@ -545,12 +614,7 @@ describe('recipesSchemas.form', () => {
 				sections: [
 					{
 						order: 0,
-						instructions: [
-							{
-								stepNumber: 0,
-								instruction: 'Test',
-							},
-						],
+						cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 0, instruction: 'Test' }] }],
 					},
 				],
 			};
@@ -561,7 +625,7 @@ describe('recipesSchemas.form', () => {
 	});
 
 	describe('complex recipes', () => {
-		it('accepts complete recipe with multiple sections, ingredients, and instructions', () => {
+		it('accepts complete recipe with multiple sections, ingredients, and cooking methods', () => {
 			const validData = {
 				authorId: randomUUID(),
 				title: 'Complete Recipe',
@@ -577,16 +641,28 @@ describe('recipesSchemas.form', () => {
 							{ ingredientId: randomUUID(), quantity: 2, unitId: randomUUID(), order: 0 },
 							{ ingredientId: randomUUID(), quantity: 1, order: 1 },
 						],
-						instructions: [
-							{ stepNumber: 1, instruction: 'Heat the oil' },
-							{ stepNumber: 2, instruction: 'Add ingredients' },
+						cookingMethods: [
+							{
+								name: 'Standard',
+								order: 1,
+								instructions: [
+									{ stepNumber: 1, instruction: 'Heat the oil' },
+									{ stepNumber: 2, instruction: 'Add ingredients' },
+								],
+							},
 						],
 					},
 					{
 						title: 'For the main dish',
 						order: 1,
 						ingredients: [{ ingredientId: randomUUID(), quantity: 500, unitId: randomUUID(), order: 0 }],
-						instructions: [{ stepNumber: 1, instruction: 'Cook the main ingredient' }],
+						cookingMethods: [
+							{
+								name: 'Standard',
+								order: 1,
+								instructions: [{ stepNumber: 1, instruction: 'Cook the main ingredient' }],
+							},
+						],
 					},
 				],
 			};
@@ -597,9 +673,9 @@ describe('recipesSchemas.form', () => {
 				expect(result.data.sections).toHaveLength(2);
 				if (result?.data?.sections?.length === 2) {
 					expect(result.data.sections[0].ingredients).toHaveLength(2);
-					expect(result.data.sections[0].instructions).toHaveLength(2);
+					expect(result.data.sections[0].cookingMethods?.[0].instructions).toHaveLength(2);
 					expect(result.data.sections[1].ingredients).toHaveLength(1);
-					expect(result.data.sections[1].instructions).toHaveLength(1);
+					expect(result.data.sections[1].cookingMethods?.[0].instructions).toHaveLength(1);
 				}
 			}
 		});
@@ -615,7 +691,14 @@ describe('recipesSchemas.form', () => {
 						title: 'Updated Section',
 						order: 0,
 						ingredients: [{ id: randomUUID(), ingredientId: randomUUID(), order: 0 }],
-						instructions: [{ id: randomUUID(), stepNumber: 1, instruction: 'Updated step' }],
+						cookingMethods: [
+							{
+								id: randomUUID(),
+								name: 'Standard',
+								order: 1,
+								instructions: [{ id: randomUUID(), stepNumber: 1, instruction: 'Updated step' }],
+							},
+						],
 					},
 				],
 			};

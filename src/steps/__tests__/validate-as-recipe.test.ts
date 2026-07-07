@@ -13,7 +13,7 @@ const validScrape: ParsedRecipeScrape = {
 		{
 			order: 0,
 			ingredients: [{ raw: '1 cup flour', order: 0 }],
-			instructions: [{ stepNumber: 1, instruction: 'Mix well and bake' }],
+			cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 1, instruction: 'Mix well and bake' }] }],
 		},
 	],
 };

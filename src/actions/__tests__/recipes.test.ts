@@ -10,7 +10,7 @@ vi.mock('@/steps', () => ({
 	saveRecipe: vi.fn(),
 	saveRecipeSections: vi.fn(),
 	saveRecipeIngredients: vi.fn(),
-	saveRecipeInstructions: vi.fn(),
+	saveRecipeCookingMethods: vi.fn(),
 }));
 
 // Mock env
@@ -48,7 +48,7 @@ vi.mock('rwsdk/worker', () => ({
 import { randomUUID } from 'node:crypto';
 import { RzStepError } from '@/classes';
 import { requireAuthentication } from '@/interrupters';
-import { saveRecipe, saveRecipeIngredients, saveRecipeInstructions, saveRecipeSections } from '@/steps';
+import { saveRecipe, saveRecipeCookingMethods, saveRecipeIngredients, saveRecipeSections } from '@/steps';
 import { _saveRecipe } from '../recipes';
 
 describe('_saveRecipe', () => {
@@ -71,17 +71,7 @@ describe('_saveRecipe', () => {
 			})) as any;
 		});
 
-		vi.mocked(saveRecipeInstructions).mockImplementation(async (_recipeId, instructionsData) => {
-			const result: Record<string, any[]> = {};
-			for (const { sectionId, instructions } of instructionsData) {
-				result[sectionId] = (instructions as any[]).map((inst, i) => ({
-					...inst,
-					id: inst.id || `mock-instruction-${i}`,
-					recipeSectionId: sectionId,
-				}));
-			}
-			return result;
-		});
+		vi.mocked(saveRecipeCookingMethods).mockResolvedValue(undefined);
 
 		vi.mocked(saveRecipeIngredients).mockImplementation(async (_recipeId, ingredientsData) => {
 			const result: Record<string, any[]> = {};
@@ -238,8 +228,8 @@ describe('_saveRecipe', () => {
 				authorId: randomUUID(),
 				title: 'Recipe with Sections',
 				sections: [
-					{ title: 'Main', order: 0, ingredients: [], instructions: [] },
-					{ title: 'Sauce', order: 1, ingredients: [], instructions: [] },
+					{ title: 'Main', order: 0, ingredients: [], cookingMethods: [] },
+					{ title: 'Sauce', order: 1, ingredients: [], cookingMethods: [] },
 				],
 			};
 
@@ -263,7 +253,7 @@ describe('_saveRecipe', () => {
 			const data = {
 				authorId: randomUUID(),
 				title: 'Recipe with Sections',
-				sections: [{ title: 'Main', order: 0, ingredients: [], instructions: [] }],
+				sections: [{ title: 'Main', order: 0, ingredients: [], cookingMethods: [] }],
 			};
 
 			const result = await _saveRecipe(data);
@@ -284,7 +274,7 @@ describe('_saveRecipe', () => {
 						title: 'Main',
 						order: 0,
 						ingredients: [{ ingredientId, quantity: 2, unitId: randomUUID(), order: 0 }],
-						instructions: [{ stepNumber: 1, instruction: 'Mix ingredients' }],
+						cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 1, instruction: 'Mix ingredients' }] }],
 					},
 				],
 			};
@@ -294,17 +284,17 @@ describe('_saveRecipe', () => {
 			expect(result.success).toBe(true);
 			expect(saveRecipe).toHaveBeenCalledTimes(1);
 			expect(saveRecipeSections).toHaveBeenCalledTimes(1);
-			expect(saveRecipeInstructions).toHaveBeenCalledTimes(1);
+			expect(saveRecipeCookingMethods).toHaveBeenCalledTimes(1);
 			expect(saveRecipeIngredients).toHaveBeenCalledTimes(1);
 			expect(result.data?.sections?.[0].ingredients).toHaveLength(1);
-			expect(result.data?.sections?.[0].instructions).toHaveLength(1);
+			expect(result.data?.sections?.[0].cookingMethods?.[0]?.instructions).toHaveLength(1);
 		});
 
 		it('validates section order', async () => {
 			const data = {
 				authorId: randomUUID(),
 				title: 'Test',
-				sections: [{ order: -1, ingredients: [], instructions: [] }],
+				sections: [{ order: -1, ingredients: [], cookingMethods: [] }],
 			};
 
 			const result = await _saveRecipe(data);
@@ -321,7 +311,7 @@ describe('_saveRecipe', () => {
 						title: 'Main',
 						order: 0,
 						ingredients: [{ ingredientId: randomUUID(), quantity: -1, order: 0 }],
-						instructions: [],
+						cookingMethods: [],
 					},
 				],
 			};
@@ -339,7 +329,7 @@ describe('_saveRecipe', () => {
 					{
 						order: 0,
 						ingredients: [],
-						instructions: [{ stepNumber: 0, instruction: 'Test' }],
+						cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 0, instruction: 'Test' }] }],
 					},
 				],
 			};
@@ -357,7 +347,7 @@ describe('_saveRecipe', () => {
 					{
 						order: 0,
 						ingredients: [],
-						instructions: [{ stepNumber: 1, instruction: '   ' }],
+						cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 1, instruction: '   ' }] }],
 					},
 				],
 			};
@@ -434,7 +424,7 @@ describe('_saveRecipe', () => {
 			const data = {
 				authorId: randomUUID(),
 				title: 'Test',
-				sections: [{ title: 'Main', order: 0, ingredients: [], instructions: [] }],
+				sections: [{ title: 'Main', order: 0, ingredients: [], cookingMethods: [] }],
 			};
 
 			const result = await _saveRecipe(data);
@@ -455,7 +445,7 @@ describe('_saveRecipe', () => {
 					{
 						order: 0,
 						ingredients: [{ ingredientId: randomUUID(), order: 0, quantity: 1 }],
-						instructions: [],
+						cookingMethods: [],
 					},
 				],
 			};
@@ -474,9 +464,9 @@ describe('_saveRecipe', () => {
 			expect(result.errors?._form?.[0]).toContain('Unexpected failure');
 		});
 
-		it('handles instruction save errors', async () => {
-			vi.mocked(saveRecipeInstructions).mockRejectedValueOnce(
-				new RzStepError(400, 'Failed to save recipe instructions', 'Instruction save failed'),
+		it('handles cooking method save errors', async () => {
+			vi.mocked(saveRecipeCookingMethods).mockRejectedValueOnce(
+				new RzStepError(400, 'Failed to save recipe cooking methods', 'Cooking method save failed'),
 			);
 
 			const data = {
@@ -486,7 +476,7 @@ describe('_saveRecipe', () => {
 					{
 						order: 0,
 						ingredients: [],
-						instructions: [{ stepNumber: 1, instruction: 'Test step' }],
+						cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 1, instruction: 'Test step' }] }],
 					},
 				],
 			};

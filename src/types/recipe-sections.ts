@@ -1,4 +1,5 @@
 import type { recipeSections } from '@/models';
+import type { ParsedRecipeScrapeCookingMethod } from './recipe-cooking-methods';
 
 export type RecipeSectionDBRead = typeof recipeSections.$inferSelect;
 export type RecipeSectionWriteInput = Omit<
@@ -9,5 +10,5 @@ export type RecipeSectionWriteInput = Omit<
 export type ParsedRecipeScrapeSection = {
 	order: number;
 	ingredients: { raw: string; order: number }[];
-	instructions: { stepNumber: number; instruction: string }[];
+	cookingMethods: ParsedRecipeScrapeCookingMethod[];
 };

@@ -1,8 +1,8 @@
 import crypto from 'node:crypto';
 import { relations, sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { recipeCookingMethods } from './recipe-cooking-methods';
 import { recipeIngredients } from './recipe-ingredients';
-import { recipeInstructions } from './recipe-instructions';
 import { recipes } from './recipes';
 import { users } from './users';
 
@@ -41,7 +41,7 @@ export const recipeSectionsRelations = relations(recipeSections, ({ one, many })
 		references: [recipes.id],
 	}),
 	ingredients: many(recipeIngredients),
-	instructions: many(recipeInstructions),
+	cookingMethods: many(recipeCookingMethods),
 	creator: one(users, {
 		fields: [recipeSections.createdBy],
 		references: [users.id],

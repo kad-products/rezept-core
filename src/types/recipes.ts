@@ -3,6 +3,7 @@ import type { recipes } from '@/models';
 import type { recipesSchemas } from '@/schemas';
 import type {
 	ParsedRecipeScrapeSection,
+	RecipeCookingMethodDBRead,
 	RecipeIngredientWithUnit,
 	RecipeInstructionDBRead,
 	RecipeSectionDBRead,
@@ -21,7 +22,11 @@ export type RecipeWithSections = RecipeDBRead & {
 	sections: Array<
 		RecipeSectionDBRead & {
 			ingredients: RecipeIngredientWithUnit[];
-			instructions: RecipeInstructionDBRead[];
+			cookingMethods: Array<
+				RecipeCookingMethodDBRead & {
+					instructions: RecipeInstructionDBRead[];
+				}
+			>;
 		}
 	>;
 };

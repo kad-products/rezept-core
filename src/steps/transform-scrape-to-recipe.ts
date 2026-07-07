@@ -1,5 +1,12 @@
 import { RzStepError } from '@/classes';
-import type { ParsedRecipeScrape, ParsedRecipeScrapeImage, RecipeScrapeJsonLdNode, RecipeScrapeSource, RzLogger } from '@/types';
+import type {
+	ParsedRecipeScrape,
+	ParsedRecipeScrapeCookingMethod,
+	ParsedRecipeScrapeImage,
+	RecipeScrapeJsonLdNode,
+	RecipeScrapeSource,
+	RzLogger,
+} from '@/types';
 import { findRecipeNode } from '@/utils';
 
 export async function transformScrapeToRecipe(source: RecipeScrapeSource, logger: RzLogger): Promise<ParsedRecipeScrape> {
@@ -29,7 +36,7 @@ export async function transformScrapeToRecipe(source: RecipeScrapeSource, logger
 					raw: ing,
 					order: idx,
 				})),
-				instructions: parseInstructions(recipe.recipeInstructions),
+				cookingMethods: parseCookingMethods(recipe.recipeInstructions),
 			},
 		];
 
@@ -107,6 +114,35 @@ function parseInstructions(raw: unknown): { stepNumber: number; instruction: str
 
 		throw new Error(`Unexpected structure or data type for instructions: ${JSON.stringify(raw)}`);
 	});
+}
+
+function parseCookingMethods(raw: unknown): ParsedRecipeScrapeCookingMethod[] {
+	// Not an array — fall back to single Standard method
+	if (!Array.isArray(raw)) {
+		return [{ name: 'Standard', order: 0, instructions: parseInstructions(raw) }];
+	}
+
+	// Empty array — single Standard method with no instructions
+	if (raw.length === 0) {
+		return [{ name: 'Standard', order: 0, instructions: [] }];
+	}
+
+	// Check if items are HowToSection nodes
+	const first = raw[0];
+	if (first && typeof first === 'object' && (first as RecipeScrapeJsonLdNode)['@type'] === 'HowToSection') {
+		return (raw as RecipeScrapeJsonLdNode[]).map((section, i) => {
+			const name = typeof section.name === 'string' ? section.name : `Method ${i + 1}`;
+			const steps = Array.isArray(section.itemListElement) ? section.itemListElement : [];
+			return {
+				name,
+				order: i,
+				instructions: parseInstructions(steps),
+			};
+		});
+	}
+
+	// Plain HowToStep / string array — single Standard method
+	return [{ name: 'Standard', order: 0, instructions: parseInstructions(raw) }];
 }
 
 function parseServings(raw: unknown): number | undefined {

@@ -31,7 +31,7 @@ vi.mock('@/steps', () => ({
 	validateAsRecipe: vi.fn(),
 	saveRecipe: vi.fn(),
 	saveRecipeSections: vi.fn(),
-	saveRecipeInstructions: vi.fn(),
+	saveRecipeCookingMethods: vi.fn(),
 	saveRecipeIngredients: vi.fn(),
 }));
 
@@ -55,8 +55,8 @@ import {
 	initializeScrape,
 	parseBodyJson,
 	saveRecipe,
+	saveRecipeCookingMethods,
 	saveRecipeIngredients,
-	saveRecipeInstructions,
 	saveRecipeSections,
 	transformScrapeToRecipe,
 	validateAsRecipe,
@@ -85,7 +85,7 @@ const mockValidatedRecipe = {
 	authorId: 'user-id',
 	sections: [
 		{
-			instructions: [{ stepNumber: 1, instruction: 'Mix everything' }],
+			cookingMethods: [{ name: 'Standard', order: 1, instructions: [{ stepNumber: 1, instruction: 'Mix everything' }] }],
 			ingredients: [{ raw: 'flour' }],
 		},
 	],
@@ -111,7 +111,7 @@ describe('_postHandler', () => {
 		vi.mocked(validateAsRecipe).mockResolvedValue(mockValidatedRecipe as any);
 		vi.mocked(saveRecipe).mockResolvedValue(mockSavedRecipe as any);
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
-		vi.mocked(saveRecipeInstructions).mockResolvedValue({} as any);
+		vi.mocked(saveRecipeCookingMethods).mockResolvedValue(undefined);
 		vi.mocked(saveRecipeIngredients).mockResolvedValue({} as any);
 		vi.mocked(createRecipeScrapeAttempt).mockResolvedValue(undefined as any);
 		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(mockScrape as any);
@@ -139,8 +139,8 @@ describe('_postHandler', () => {
 			expect(transformScrapeToRecipe).toHaveBeenCalledBefore(validateAsRecipe as any);
 			expect(validateAsRecipe).toHaveBeenCalledBefore(saveRecipe as any);
 			expect(saveRecipe).toHaveBeenCalledBefore(saveRecipeSections as any);
-			expect(saveRecipeSections).toHaveBeenCalledBefore(saveRecipeInstructions as any);
-			expect(saveRecipeInstructions).toHaveBeenCalledBefore(saveRecipeIngredients as any);
+			expect(saveRecipeSections).toHaveBeenCalledBefore(saveRecipeCookingMethods as any);
+			expect(saveRecipeCookingMethods).toHaveBeenCalledBefore(saveRecipeIngredients as any);
 		});
 
 		it('updates scrape status after each successful step', async () => {
@@ -152,7 +152,7 @@ describe('_postHandler', () => {
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith('scrape-id', 'SECTIONS_SAVED', null, 'user-id', expect.anything());
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
 				'scrape-id',
-				'INSTRUCTIONS_SAVED',
+				'COOKING_METHODS_SAVED',
 				null,
 				'user-id',
 				expect.anything(),
@@ -176,11 +176,11 @@ describe('_postHandler', () => {
 			);
 		});
 
-		it('maps instructions and ingredients to their saved section IDs', async () => {
+		it('maps cooking methods and ingredients to their saved section IDs', async () => {
 			await _postHandler({ request: makeRequest(), ctx } as any);
-			expect(saveRecipeInstructions).toHaveBeenCalledWith(
+			expect(saveRecipeCookingMethods).toHaveBeenCalledWith(
 				'recipe-id',
-				[{ sectionId: 'section-id', instructions: mockValidatedRecipe.sections[0].instructions }],
+				[{ sectionId: 'section-id', cookingMethods: mockValidatedRecipe.sections[0].cookingMethods }],
 				'user-id',
 				expect.anything(),
 			);
@@ -308,13 +308,15 @@ describe('_postHandler', () => {
 			expect(response.status).toBe(500);
 		});
 
-		it('marks scrape as FAILED when saveRecipeInstructions fails', async () => {
-			vi.mocked(saveRecipeInstructions).mockRejectedValue(new RzStepError(500, 'Instructions failed', 'Instructions failed'));
+		it('marks scrape as FAILED when saveRecipeCookingMethods fails', async () => {
+			vi.mocked(saveRecipeCookingMethods).mockRejectedValue(
+				new RzStepError(500, 'Cooking methods failed', 'Cooking methods failed'),
+			);
 			const response = await _postHandler({ request: makeRequest(), ctx } as any);
 			expect(updateRecipeScrapeStatus).toHaveBeenCalledWith(
 				'scrape-id',
 				'FAILED',
-				'Instructions failed',
+				'Cooking methods failed',
 				'user-id',
 				expect.anything(),
 			);
@@ -323,7 +325,7 @@ describe('_postHandler', () => {
 				'api',
 				null,
 				'FAILED',
-				'Instructions failed',
+				'Cooking methods failed',
 				'test-version',
 				'user-id',
 				expect.anything(),
@@ -464,7 +466,7 @@ describe('analytics tracking', () => {
 		vi.mocked(validateAsRecipe).mockResolvedValue(mockValidatedRecipe as any);
 		vi.mocked(saveRecipe).mockResolvedValue(mockSavedRecipe as any);
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
-		vi.mocked(saveRecipeInstructions).mockResolvedValue({} as any);
+		vi.mocked(saveRecipeCookingMethods).mockResolvedValue(undefined);
 		vi.mocked(saveRecipeIngredients).mockResolvedValue({} as any);
 		vi.mocked(createRecipeScrapeAttempt).mockResolvedValue(undefined as any);
 		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(mockScrape as any);
@@ -555,7 +557,7 @@ describe('route handler', () => {
 		vi.mocked(validateAsRecipe).mockResolvedValue(mockValidatedRecipe as any);
 		vi.mocked(saveRecipe).mockResolvedValue(mockSavedRecipe as any);
 		vi.mocked(saveRecipeSections).mockResolvedValue(mockSavedSections as any);
-		vi.mocked(saveRecipeInstructions).mockResolvedValue({} as any);
+		vi.mocked(saveRecipeCookingMethods).mockResolvedValue(undefined);
 		vi.mocked(saveRecipeIngredients).mockResolvedValue({} as any);
 		vi.mocked(createRecipeScrapeAttempt).mockResolvedValue(undefined as any);
 		vi.mocked(updateRecipeScrapeStatus).mockResolvedValue(mockScrape as any);

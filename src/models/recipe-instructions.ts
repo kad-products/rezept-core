@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import { relations, sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
-import { recipeSections } from './recipe-sections';
+import { recipeCookingMethods } from './recipe-cooking-methods';
 import { users } from './users';
 
 export const recipeInstructions = sqliteTable(
@@ -10,9 +10,9 @@ export const recipeInstructions = sqliteTable(
 		id: text()
 			.primaryKey()
 			.$defaultFn(() => crypto.randomUUID()),
-		recipeSectionId: text()
+		recipeCookingMethodId: text()
 			.notNull()
-			.references(() => recipeSections.id, { onDelete: 'cascade' }),
+			.references(() => recipeCookingMethods.id, { onDelete: 'cascade' }),
 		stepNumber: integer().notNull(),
 		instruction: text().notNull(),
 		createdAt: text()
@@ -27,18 +27,18 @@ export const recipeInstructions = sqliteTable(
 		deletedBy: text().references(() => users.id),
 	},
 	table => [
-		index('recipe_instructions_section_id_idx').on(table.recipeSectionId),
-		index('recipe_instructions_section_id_step_idx').on(table.recipeSectionId, table.stepNumber),
-		uniqueIndex('recipe_instructions_recipe_section_id_step_number_unique')
-			.on(table.recipeSectionId, table.stepNumber)
+		index('recipe_instructions_cooking_method_id_idx').on(table.recipeCookingMethodId),
+		index('recipe_instructions_cooking_method_id_step_idx').on(table.recipeCookingMethodId, table.stepNumber),
+		uniqueIndex('recipe_instructions_recipe_cooking_method_id_step_number_unique')
+			.on(table.recipeCookingMethodId, table.stepNumber)
 			.where(sql`"deleted_at" IS NULL`),
 	],
 );
 
 export const recipeInstructionsRelations = relations(recipeInstructions, ({ one }) => ({
-	section: one(recipeSections, {
-		fields: [recipeInstructions.recipeSectionId],
-		references: [recipeSections.id],
+	cookingMethod: one(recipeCookingMethods, {
+		fields: [recipeInstructions.recipeCookingMethodId],
+		references: [recipeCookingMethods.id],
 	}),
 	creator: one(users, {
 		fields: [recipeInstructions.createdBy],

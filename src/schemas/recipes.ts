@@ -19,6 +19,19 @@ const ingredientStructuredSchema = z.object({
 
 const recipeIngredientSchema = z.union([ingredientRawSchema, ingredientStructuredSchema]);
 
+const recipeInstructionSchema = z.object({
+	id: optionalUuid,
+	stepNumber: coercedInt(1),
+	instruction: requiredString('Instruction', 2000),
+});
+
+const recipeCookingMethodSchema = z.object({
+	id: optionalUuid,
+	name: requiredString('Cooking method name', 100),
+	order: coercedInt(0),
+	instructions: z.array(recipeInstructionSchema).optional(),
+});
+
 const recipeSectionSchema = z.object({
 	id: optionalUuid, // Present for updates, absent for creates
 	title: z
@@ -28,15 +41,7 @@ const recipeSectionSchema = z.object({
 		.transform(val => val?.trim() || null),
 	order: coercedInt(0),
 	ingredients: z.array(recipeIngredientSchema).optional(),
-	instructions: z
-		.array(
-			z.object({
-				id: optionalUuid,
-				stepNumber: coercedInt(1),
-				instruction: requiredString('Instruction', 2000),
-			}),
-		)
-		.optional(),
+	cookingMethods: z.array(recipeCookingMethodSchema).optional(),
 });
 
 // One flexible schema for forms/actions

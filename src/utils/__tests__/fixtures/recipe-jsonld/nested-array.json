@@ -1,0 +1,22 @@
+{
+	"description": "Nested array — bookmarklet sends each <script type=\"application/ld+json\"> block as its own array",
+	"jsonld": [
+		[
+			{
+				"@context": "https://schema.org",
+				"@type": "WebSite",
+				"name": "Example Food Blog"
+			}
+		],
+		[
+			{
+				"@context": "https://schema.org",
+				"@type": "Recipe",
+				"name": "Classic Banana Bread",
+				"recipeIngredient": ["3 ripe bananas"],
+				"recipeInstructions": [{ "@type": "HowToStep", "text": "Mash bananas." }]
+			}
+		]
+	],
+	"expectedName": "Classic Banana Bread"
+}

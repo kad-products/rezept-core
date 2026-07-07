@@ -39,7 +39,7 @@ describe('transformScrapeToRecipe', () => {
 			{ raw: '2 cups flour', order: 0 },
 			{ raw: '1 cup sugar', order: 1 },
 		]);
-		expect(result.sections[0].instructions).toEqual([
+		expect(result.sections[0].cookingMethods[0].instructions).toEqual([
 			{ stepNumber: 1, instruction: 'Mix flour and sugar' },
 			{ stepNumber: 2, instruction: 'Bake at 350F for 30 minutes' },
 		]);
@@ -66,7 +66,9 @@ describe('transformScrapeToRecipe', () => {
 			logger,
 		);
 
-		expect(result.sections[0].instructions).toEqual([{ stepNumber: 1, instruction: 'Combine all ingredients and bake.' }]);
+		expect(result.sections[0].cookingMethods[0].instructions).toEqual([
+			{ stepNumber: 1, instruction: 'Combine all ingredients and bake.' },
+		]);
 	});
 
 	it('handles instructions as an array of strings', async () => {
@@ -75,10 +77,50 @@ describe('transformScrapeToRecipe', () => {
 			logger,
 		);
 
-		expect(result.sections[0].instructions).toEqual([
+		expect(result.sections[0].cookingMethods[0].instructions).toEqual([
 			{ stepNumber: 1, instruction: 'Preheat oven.' },
 			{ stepNumber: 2, instruction: 'Mix ingredients.' },
 			{ stepNumber: 3, instruction: 'Bake 30 minutes.' },
+		]);
+	});
+
+	it('handles instructions as HowToSection objects, producing one cooking method per section', async () => {
+		const result = await transformScrapeToRecipe(
+			payload({
+				...baseRecipe,
+				recipeInstructions: [
+					{
+						'@type': 'HowToSection',
+						name: 'Prep',
+						itemListElement: [{ '@type': 'HowToStep', text: 'Chop the onion.' }],
+					},
+					{
+						'@type': 'HowToSection',
+						name: 'Cook',
+						itemListElement: [
+							{ '@type': 'HowToStep', text: 'Heat oil in pan.' },
+							{ '@type': 'HowToStep', text: 'Add onion and cook until soft.' },
+						],
+					},
+				],
+			}),
+			logger,
+		);
+
+		expect(result.sections[0].cookingMethods).toEqual([
+			{
+				name: 'Prep',
+				order: 0,
+				instructions: [{ stepNumber: 1, instruction: 'Chop the onion.' }],
+			},
+			{
+				name: 'Cook',
+				order: 1,
+				instructions: [
+					{ stepNumber: 1, instruction: 'Heat oil in pan.' },
+					{ stepNumber: 2, instruction: 'Add onion and cook until soft.' },
+				],
+			},
 		]);
 	});
 
@@ -93,7 +135,7 @@ describe('transformScrapeToRecipe', () => {
 		const { recipeInstructions: _, ...noInstructions } = baseRecipe;
 		const result = await transformScrapeToRecipe(payload(noInstructions), logger);
 
-		expect(result.sections[0].instructions).toEqual([]);
+		expect(result.sections[0].cookingMethods[0].instructions).toEqual([]);
 	});
 
 	it('unescapes HTML entities in the title', async () => {

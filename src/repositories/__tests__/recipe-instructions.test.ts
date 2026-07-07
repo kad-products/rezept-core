@@ -3,6 +3,7 @@ import db from '@/db';
 import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
+import { updateRecipeCookingMethods } from '../recipe-cooking-methods';
 import { updateRecipeInstructions } from '../recipe-instructions';
 import { updateRecipeSections } from '../recipe-sections';
 import { createRecipe } from '../recipes';
@@ -11,7 +12,7 @@ const logger = createNoopLogger();
 
 describe('recipe-instructions repository', () => {
 	let testUserId: string;
-	let testSectionId: string;
+	let testCookingMethodId: string;
 
 	beforeEach(async () => {
 		await resetDb();
@@ -19,18 +20,19 @@ describe('recipe-instructions repository', () => {
 		testUserId = user.id;
 		const recipe = await createRecipe({ authorId: testUserId, title: 'Test Recipe' }, testUserId, logger);
 		const [section] = await updateRecipeSections(recipe.id, [{ title: 'Main', order: 1 }], testUserId, logger);
-		testSectionId = section.id;
+		const [method] = await updateRecipeCookingMethods(section.id, [{ name: 'Standard', order: 1 }], testUserId, logger);
+		testCookingMethodId = method.id;
 	});
 
 	describe('updateRecipeInstructions', () => {
 		it('returns empty array when called with no instructions and none exist', async () => {
-			const result = await updateRecipeInstructions(testSectionId, [], testUserId, logger);
+			const result = await updateRecipeInstructions(testCookingMethodId, [], testUserId, logger);
 			expect(result).toEqual([]);
 		});
 
 		it('inserts new instructions when none exist', async () => {
 			const result = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[
 					{ stepNumber: 1, instruction: 'Preheat oven to 350°F' },
 					{ stepNumber: 2, instruction: 'Mix dry ingredients' },
@@ -42,21 +44,21 @@ describe('recipe-instructions repository', () => {
 			expect(result).toHaveLength(2);
 		});
 
-		it('sets recipeSectionId and createdBy on new instructions', async () => {
+		it('sets recipeCookingMethodId and createdBy on new instructions', async () => {
 			const result = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[{ stepNumber: 1, instruction: 'First step' }],
 				testUserId,
 				logger,
 			);
 
-			expect(result[0].recipeSectionId).toBe(testSectionId);
+			expect(result[0].recipeCookingMethodId).toBe(testCookingMethodId);
 			expect(result[0].createdBy).toBe(testUserId);
 		});
 
 		it('assigns unique ids to new instructions', async () => {
 			const result = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[
 					{ stepNumber: 1, instruction: 'Step 1' },
 					{ stepNumber: 2, instruction: 'Step 2' },
@@ -70,7 +72,7 @@ describe('recipe-instructions repository', () => {
 
 		it('updates existing instructions when id is provided', async () => {
 			const initial = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[{ stepNumber: 1, instruction: 'Original' }],
 				testUserId,
 				logger,
@@ -78,7 +80,7 @@ describe('recipe-instructions repository', () => {
 			const instructionId = initial[0].id;
 
 			const result = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[{ id: instructionId, stepNumber: 1, instruction: 'Updated' }],
 				testUserId,
 				logger,
@@ -91,14 +93,14 @@ describe('recipe-instructions repository', () => {
 
 		it('sets updatedBy on updated instructions', async () => {
 			const initial = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[{ stepNumber: 1, instruction: 'Original' }],
 				testUserId,
 				logger,
 			);
 
 			const result = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[{ id: initial[0].id, stepNumber: 1, instruction: 'Updated' }],
 				testUserId,
 				logger,
@@ -109,7 +111,7 @@ describe('recipe-instructions repository', () => {
 
 		it('deletes instructions not present in the new list', async () => {
 			const initial = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[
 					{ stepNumber: 1, instruction: 'Keep' },
 					{ stepNumber: 2, instruction: 'Remove' },
@@ -120,10 +122,15 @@ describe('recipe-instructions repository', () => {
 
 			const keepId = initial[0].id;
 
-			await updateRecipeInstructions(testSectionId, [{ id: keepId, stepNumber: 1, instruction: 'Keep' }], testUserId, logger);
+			await updateRecipeInstructions(
+				testCookingMethodId,
+				[{ id: keepId, stepNumber: 1, instruction: 'Keep' }],
+				testUserId,
+				logger,
+			);
 
 			const remaining = await db.query.recipeInstructions.findMany({
-				where: (i, { and, eq, isNull }) => and(eq(i.recipeSectionId, testSectionId), isNull(i.deletedAt)),
+				where: (i, { and, eq, isNull }) => and(eq(i.recipeCookingMethodId, testCookingMethodId), isNull(i.deletedAt)),
 			});
 			expect(remaining).toHaveLength(1);
 			expect(remaining[0].id).toBe(keepId);
@@ -131,7 +138,7 @@ describe('recipe-instructions repository', () => {
 
 		it('handles mixed insert, update, and delete', async () => {
 			const initial = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[
 					{ stepNumber: 1, instruction: 'Keep and Update' },
 					{ stepNumber: 2, instruction: 'Delete Me' },
@@ -143,7 +150,7 @@ describe('recipe-instructions repository', () => {
 			const keepId = initial[0].id;
 
 			await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[
 					{ id: keepId, stepNumber: 1, instruction: 'Now Updated' },
 					{ stepNumber: 2, instruction: 'Brand New' },
@@ -153,7 +160,7 @@ describe('recipe-instructions repository', () => {
 			);
 
 			const all = await db.query.recipeInstructions.findMany({
-				where: (i, { and, eq, isNull }) => and(eq(i.recipeSectionId, testSectionId), isNull(i.deletedAt)),
+				where: (i, { and, eq, isNull }) => and(eq(i.recipeCookingMethodId, testCookingMethodId), isNull(i.deletedAt)),
 			});
 			expect(all).toHaveLength(2);
 
@@ -167,11 +174,11 @@ describe('recipe-instructions repository', () => {
 			// Goal:     step 1 = "Start things" (new), step 2 = "Do things", step 3 = "Do more things"
 			//
 			// The concurrent Promise.all() updates attempt to set step1.stepNumber=2 while step2 still
-			// holds stepNumber=2, violating the unique constraint on (recipeSectionId, stepNumber).
+			// holds stepNumber=2, violating the unique constraint on (recipeCookingMethodId, stepNumber).
 			// This test should FAIL until the transactional two-phase update is implemented (see #30).
 
 			const initial = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[
 					{ stepNumber: 1, instruction: 'Do things' },
 					{ stepNumber: 2, instruction: 'Do more things' },
@@ -182,7 +189,7 @@ describe('recipe-instructions repository', () => {
 			const [step1, step2] = initial.sort((a, b) => a.stepNumber - b.stepNumber);
 
 			const result = await updateRecipeInstructions(
-				testSectionId,
+				testCookingMethodId,
 				[
 					{ id: step1.id, stepNumber: 2, instruction: 'Do things' }, // conflicts: step 2 already exists
 					{ id: step2.id, stepNumber: 3, instruction: 'Do more things' },
@@ -199,15 +206,21 @@ describe('recipe-instructions repository', () => {
 			expect(sorted[2].instruction).toBe('Do more things');
 		});
 
-		it('does not affect instructions in other sections', async () => {
+		it('does not affect instructions in other cooking methods', async () => {
 			const recipe = await createRecipe({ authorId: testUserId, title: 'Other Recipe' }, testUserId, logger);
 			const [otherSection] = await updateRecipeSections(recipe.id, [{ title: 'Other', order: 1 }], testUserId, logger);
-			await updateRecipeInstructions(otherSection.id, [{ stepNumber: 1, instruction: 'Other step' }], testUserId, logger);
+			const [otherMethod] = await updateRecipeCookingMethods(
+				otherSection.id,
+				[{ name: 'Standard', order: 1 }],
+				testUserId,
+				logger,
+			);
+			await updateRecipeInstructions(otherMethod.id, [{ stepNumber: 1, instruction: 'Other step' }], testUserId, logger);
 
-			await updateRecipeInstructions(testSectionId, [{ stepNumber: 1, instruction: 'My step' }], testUserId, logger);
+			await updateRecipeInstructions(testCookingMethodId, [{ stepNumber: 1, instruction: 'My step' }], testUserId, logger);
 
 			const otherInstructions = await db.query.recipeInstructions.findMany({
-				where: (i, { and, eq, isNull }) => and(eq(i.recipeSectionId, otherSection.id), isNull(i.deletedAt)),
+				where: (i, { and, eq, isNull }) => and(eq(i.recipeCookingMethodId, otherMethod.id), isNull(i.deletedAt)),
 			});
 			expect(otherInstructions).toHaveLength(1);
 			expect(otherInstructions[0].instruction).toBe('Other step');

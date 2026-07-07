@@ -4,6 +4,7 @@ export * from './image-types';
 export * from './images';
 export * from './ingredient-units';
 export * from './ingredients';
+export * from './recipe-cooking-methods';
 export * from './recipe-ingredients';
 export * from './recipe-instructions';
 export * from './recipe-scrape-attempts';

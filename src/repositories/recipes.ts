@@ -1,7 +1,7 @@
 import { and, asc, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import { recipeIngredients, recipeInstructions, recipeSections, recipes } from '@/models';
+import { recipeCookingMethods, recipeIngredients, recipeInstructions, recipeSections, recipes } from '@/models';
 import type { RecipeDBRead, RecipeWithSections, RecipeWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
@@ -33,9 +33,15 @@ export async function getRecipeById(recipeId: string, logger: RzLogger): Promise
 							unit: true,
 						},
 					},
-					instructions: {
-						where: isNull(recipeInstructions.deletedAt),
-						orderBy: [asc(recipeInstructions.stepNumber)],
+					cookingMethods: {
+						where: isNull(recipeCookingMethods.deletedAt),
+						orderBy: [asc(recipeCookingMethods.order)],
+						with: {
+							instructions: {
+								where: isNull(recipeInstructions.deletedAt),
+								orderBy: [asc(recipeInstructions.stepNumber)],
+							},
+						},
 					},
 				},
 			},

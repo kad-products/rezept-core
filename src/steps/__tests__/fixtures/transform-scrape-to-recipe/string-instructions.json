@@ -1,0 +1,25 @@
+{
+	"description": "Instructions as an array of plain strings",
+	"url": "https://example.com/banana-bread",
+	"jsonld": [
+		{
+			"@context": "https://schema.org",
+			"@type": "Recipe",
+			"name": "Classic Banana Bread",
+			"recipeIngredient": ["3 ripe bananas"],
+			"recipeInstructions": [
+				"Preheat oven to 350°F.",
+				"Mash bananas and mix in butter.",
+				"Pour into loaf pan and bake 65 minutes."
+			]
+		}
+	],
+	"expected": {
+		"title": "Classic Banana Bread",
+		"cookingMethodInstructions": [
+			{ "stepNumber": 1, "instruction": "Preheat oven to 350°F." },
+			{ "stepNumber": 2, "instruction": "Mash bananas and mix in butter." },
+			{ "stepNumber": 3, "instruction": "Pour into loaf pan and bake 65 minutes." }
+		]
+	}
+}

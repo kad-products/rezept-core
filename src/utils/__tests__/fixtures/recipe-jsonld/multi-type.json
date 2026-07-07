@@ -1,0 +1,13 @@
+{
+	"description": "@type as array — some sites emit [\"Recipe\", \"Thing\"] or similar",
+	"jsonld": [
+		{
+			"@context": "https://schema.org",
+			"@type": ["Recipe", "Thing"],
+			"name": "Classic Banana Bread",
+			"recipeIngredient": ["3 ripe bananas"],
+			"recipeInstructions": [{ "@type": "HowToStep", "text": "Mash bananas." }]
+		}
+	],
+	"expectedName": "Classic Banana Bread"
+}

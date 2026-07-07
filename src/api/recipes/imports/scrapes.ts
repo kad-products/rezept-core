@@ -10,13 +10,19 @@ import {
 	initializeScrape,
 	parseBodyJson,
 	saveRecipe,
+	saveRecipeCookingMethods,
 	saveRecipeIngredients,
-	saveRecipeInstructions,
 	saveRecipeSections,
 	transformScrapeToRecipe,
 	validateAsRecipe,
 } from '@/steps';
-import type { ImageDBRead, RecipeIngredientWriteInput, RecipeInstructionWriteInput, RecipeScrapeDBRead } from '@/types';
+import type {
+	ImageDBRead,
+	RecipeCookingMethodWriteInput,
+	RecipeIngredientWriteInput,
+	RecipeInstructionWriteInput,
+	RecipeScrapeDBRead,
+} from '@/types';
 
 export default {
 	post: [requireAuthentication, requirePermissions('recipes:scrape'), _postHandler] as const,
@@ -75,17 +81,19 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		const savedSections = await saveRecipeSections(savedRecipe.id, validatedRecipe.sections, userId, ctx.logger);
 		await updateRecipeScrapeStatus(recipeScrape.id, 'SECTIONS_SAVED', null, userId, ctx.logger);
 
-		const instructionsData = Array.from(
+		const cookingMethodsData = Array.from(
 			validatedRecipe.sections.entries().map(([index, section]) => {
 				const savedSection = savedSections[index];
 				return {
 					sectionId: savedSection.id,
-					instructions: section.instructions as RecipeInstructionWriteInput[],
+					cookingMethods: section.cookingMethods as (RecipeCookingMethodWriteInput & {
+						instructions: RecipeInstructionWriteInput[];
+					})[],
 				};
 			}),
 		);
-		await saveRecipeInstructions(savedRecipe.id, instructionsData, userId, ctx.logger);
-		await updateRecipeScrapeStatus(recipeScrape.id, 'INSTRUCTIONS_SAVED', null, userId, ctx.logger);
+		await saveRecipeCookingMethods(savedRecipe.id, cookingMethodsData, userId, ctx.logger);
+		await updateRecipeScrapeStatus(recipeScrape.id, 'COOKING_METHODS_SAVED', null, userId, ctx.logger);
 
 		const ingredientsData = Array.from(
 			validatedRecipe.sections.entries().map(([index, section]) => {
