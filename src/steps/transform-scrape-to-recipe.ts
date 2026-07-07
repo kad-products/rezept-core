@@ -29,7 +29,13 @@ export async function transformScrapeToRecipe(source: RecipeScrapeSource, logger
 					raw: ing,
 					order: idx,
 				})),
-				instructions: parseInstructions(recipe.recipeInstructions),
+				cookingMethods: [
+					{
+						name: 'Standard',
+						order: 1,
+						instructions: parseInstructions(recipe.recipeInstructions),
+					},
+				],
 			},
 		];
 
