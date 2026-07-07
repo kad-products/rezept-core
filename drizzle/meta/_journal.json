@@ -183,6 +183,13 @@
 			"when": 1783355158097,
 			"tag": "0025_known_talos",
 			"breakpoints": true
+		},
+		{
+			"idx": 26,
+			"version": "6",
+			"when": 1783447194654,
+			"tag": "0026_chubby_vulture",
+			"breakpoints": true
 		}
 	]
 }

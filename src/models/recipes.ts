@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
-import { relations } from 'drizzle-orm';
-import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { relations, sql } from 'drizzle-orm';
+import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { images } from './images';
 import { recipeSections } from './recipe-sections';
 import { users } from './users';
@@ -32,7 +32,10 @@ export const recipes = sqliteTable(
 		deletedAt: text(),
 		deletedBy: text().references(() => users.id),
 	},
-	table => [index('recipes_author_id_idx').on(table.authorId)],
+	table => [
+		index('recipes_author_id_idx').on(table.authorId),
+		uniqueIndex('recipes_source_unique').on(table.source).where(sql`"source" IS NOT NULL`),
+	],
 );
 
 export const recipesRelations = relations(recipes, ({ many, one }) => ({
