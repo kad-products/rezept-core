@@ -12,6 +12,9 @@ export default async function Pages__admin__recipes__scrapes__view({ ctx, params
 		<AdminLayout ctx={ctx} currentBasePage="recipes" pageTitle="Recipes">
 			<div>
 				<pre>{dump(enrichedScrapes[0].source?.jsonld)}</pre>
+				<textarea style={{ width: '100%', height: '60vh' }}>
+					{JSON.stringify(enrichedScrapes[0].source?.jsonld, null, 4)}
+				</textarea>
 			</div>
 		</AdminLayout>
 	);
