@@ -39,7 +39,7 @@ describe('transformScrapeToRecipe', () => {
 			{ raw: '2 cups flour', order: 0 },
 			{ raw: '1 cup sugar', order: 1 },
 		]);
-		expect(result.sections[0].instructions).toEqual([
+		expect(result.sections[0].cookingMethods[0].instructions).toEqual([
 			{ stepNumber: 1, instruction: 'Mix flour and sugar' },
 			{ stepNumber: 2, instruction: 'Bake at 350F for 30 minutes' },
 		]);
@@ -66,7 +66,9 @@ describe('transformScrapeToRecipe', () => {
 			logger,
 		);
 
-		expect(result.sections[0].instructions).toEqual([{ stepNumber: 1, instruction: 'Combine all ingredients and bake.' }]);
+		expect(result.sections[0].cookingMethods[0].instructions).toEqual([
+			{ stepNumber: 1, instruction: 'Combine all ingredients and bake.' },
+		]);
 	});
 
 	it('handles instructions as an array of strings', async () => {
@@ -75,7 +77,7 @@ describe('transformScrapeToRecipe', () => {
 			logger,
 		);
 
-		expect(result.sections[0].instructions).toEqual([
+		expect(result.sections[0].cookingMethods[0].instructions).toEqual([
 			{ stepNumber: 1, instruction: 'Preheat oven.' },
 			{ stepNumber: 2, instruction: 'Mix ingredients.' },
 			{ stepNumber: 3, instruction: 'Bake 30 minutes.' },
@@ -93,7 +95,7 @@ describe('transformScrapeToRecipe', () => {
 		const { recipeInstructions: _, ...noInstructions } = baseRecipe;
 		const result = await transformScrapeToRecipe(payload(noInstructions), logger);
 
-		expect(result.sections[0].instructions).toEqual([]);
+		expect(result.sections[0].cookingMethods[0].instructions).toEqual([]);
 	});
 
 	it('unescapes HTML entities in the title', async () => {

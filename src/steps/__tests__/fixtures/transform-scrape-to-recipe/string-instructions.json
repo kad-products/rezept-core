@@ -16,7 +16,7 @@
 	],
 	"expected": {
 		"title": "Classic Banana Bread",
-		"instructions": [
+		"cookingMethodInstructions": [
 			{ "stepNumber": 1, "instruction": "Preheat oven to 350°F." },
 			{ "stepNumber": 2, "instruction": "Mash bananas and mix in butter." },
 			{ "stepNumber": 3, "instruction": "Pour into loaf pan and bake 65 minutes." }

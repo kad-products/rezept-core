@@ -32,9 +32,11 @@ export default async function Pages__recipes__print({ ctx, params }: RequestInfo
 					</ul>
 					<h3>Instructions</h3>
 					<ol>
-						{s.instructions.map(inst => (
-							<li key={inst.id}>{inst.instruction}</li>
-						))}
+						{s.cookingMethods
+							.flatMap(m => m.instructions)
+							.map(inst => (
+								<li key={inst.id}>{inst.instruction}</li>
+							))}
 					</ol>
 				</Fragment>
 			))}

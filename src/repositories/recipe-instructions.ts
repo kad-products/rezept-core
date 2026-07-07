@@ -5,27 +5,27 @@ import { recipeInstructions } from '@/models';
 import type { RecipeInstructionDBRead, RecipeInstructionWriteInput, RzLogger } from '@/types';
 
 export async function updateRecipeInstructions(
-	recipeSectionId: string,
+	recipeCookingMethodId: string,
 	instructionsData: RecipeInstructionWriteInput[],
 	userId: string,
 	logger: RzLogger,
 ): Promise<RecipeInstructionDBRead[]> {
-	logger.debug(`Updating instructions for section ${recipeSectionId}`);
+	logger.debug(`Updating instructions for cooking method ${recipeCookingMethodId}`);
 
-	// get existing instructions for the section (must happen before batch so we know what to mutate)
+	// get existing instructions for the cooking method (must happen before batch so we know what to mutate)
 	const existingInstructions = await db
 		.select()
 		.from(recipeInstructions)
-		.where(and(eq(recipeInstructions.recipeSectionId, recipeSectionId), isNull(recipeInstructions.deletedAt)));
+		.where(and(eq(recipeInstructions.recipeCookingMethodId, recipeCookingMethodId), isNull(recipeInstructions.deletedAt)));
 
-	logger.debug(`Found ${existingInstructions.length} existing instructions for section ${recipeSectionId}`);
+	logger.debug(`Found ${existingInstructions.length} existing instructions for cooking method ${recipeCookingMethodId}`);
 
 	// soft-delete removed instructions
 	const removedInstructionIds = existingInstructions
 		.map(i => i.id)
 		.filter(id => !instructionsData.some(idData => idData.id === id));
 
-	logger.debug(`Soft-deleting ${removedInstructionIds.length} removed instructions for section ${recipeSectionId}`);
+	logger.debug(`Soft-deleting ${removedInstructionIds.length} removed instructions for cooking method ${recipeCookingMethodId}`);
 
 	// Phase 1: move all existing instructions being updated to temporary negative stepNumbers.
 	// This clears the positive number space so Phase 2 can assign final values without hitting
@@ -71,7 +71,7 @@ export async function updateRecipeInstructions(
 		return db
 			.insert(recipeInstructions)
 			.values({
-				recipeSectionId,
+				recipeCookingMethodId,
 				stepNumber: instData.stepNumber,
 				instruction: instData.instruction,
 				createdBy: userId,
@@ -86,19 +86,21 @@ export async function updateRecipeInstructions(
 	}
 
 	if (deleteCount > 0) {
-		logger.info(`Deleting ${deleteCount} instructions for section ${recipeSectionId}`);
+		logger.info(`Deleting ${deleteCount} instructions for cooking method ${recipeCookingMethodId}`);
 	}
-	logger.debug(`Moving ${phase1Count} existing instructions to temporary stepNumbers for section ${recipeSectionId}`);
+	logger.debug(
+		`Moving ${phase1Count} existing instructions to temporary stepNumbers for cooking method ${recipeCookingMethodId}`,
+	);
 
 	const batchResults = await db.batch(allStatements as [BatchItem<'sqlite'>, ...BatchItem<'sqlite'>[]]);
 
 	if (deleteCount > 0) {
-		logger.info(`Deleted ${deleteCount} instructions for section ${recipeSectionId}`);
+		logger.info(`Deleted ${deleteCount} instructions for cooking method ${recipeCookingMethodId}`);
 	}
 
 	const phase2Start = deleteCount + phase1Count;
 	const savedInstructions = (batchResults.slice(phase2Start) as RecipeInstructionDBRead[][]).flat();
 
-	logger.info(`Updated ${savedInstructions.length} instructions for section ${recipeSectionId}`);
+	logger.info(`Updated ${savedInstructions.length} instructions for cooking method ${recipeCookingMethodId}`);
 	return savedInstructions;
 }

@@ -13,7 +13,7 @@ interface TransformFixture {
 		title?: string;
 		servings?: number;
 		ingredients?: { raw: string; order: number }[];
-		instructions?: { stepNumber: number; instruction: string }[];
+		cookingMethodInstructions?: { stepNumber: number; instruction: string }[];
 	};
 }
 
@@ -37,8 +37,8 @@ describe('transformScrapeToRecipe — real-world payload fixtures', () => {
 		if (fixture.expected.ingredients !== undefined) {
 			expect(result.sections[0].ingredients, label).toEqual(fixture.expected.ingredients);
 		}
-		if (fixture.expected.instructions !== undefined) {
-			expect(result.sections[0].instructions, label).toEqual(fixture.expected.instructions);
+		if (fixture.expected.cookingMethodInstructions !== undefined) {
+			expect(result.sections[0].cookingMethods[0].instructions, label).toEqual(fixture.expected.cookingMethodInstructions);
 		}
 	});
 });

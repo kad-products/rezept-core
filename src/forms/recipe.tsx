@@ -80,17 +80,17 @@ export default function RecipeForm({
 									</form.AppField>
 
 									<h4>Instructions</h4>
-									<form.Field name={`sections[${i}].instructions`} mode="array">
+									<form.Field name={`sections[${i}].cookingMethods[0].instructions`} mode="array">
 										{(instructionsField): React.ReactNode => (
 											<div>
 												<ol>
 													{instructionsField.state.value?.map((instruction, instIdx) => (
 														<li key={instruction.id || `new-inst-${instIdx}`}>
-															<form.AppField name={`sections[${i}].instructions[${instIdx}].stepNumber`}>
+															<form.AppField name={`sections[${i}].cookingMethods[0].instructions[${instIdx}].stepNumber`}>
 																{(field): React.ReactNode => <field.NumberInput label="Step Number" />}
 															</form.AppField>
 
-															<form.AppField name={`sections[${i}].instructions[${instIdx}].instruction`}>
+															<form.AppField name={`sections[${i}].cookingMethods[0].instructions[${instIdx}].instruction`}>
 																{(field): React.ReactNode => <field.TextareaInput label="Instruction" />}
 															</form.AppField>
 
@@ -191,7 +191,7 @@ export default function RecipeForm({
 										title: '',
 										order: sectionsField.state.value ? sectionsField.state.value.length : 0,
 										ingredients: [],
-										instructions: [],
+										cookingMethods: [{ name: 'Standard', order: 1, instructions: [] }],
 									})
 								}
 							>

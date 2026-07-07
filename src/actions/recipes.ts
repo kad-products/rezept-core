@@ -3,9 +3,10 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { RzStepError } from '@/classes';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { recipesSchemas } from '@/schemas';
-import { saveRecipeIngredients, saveRecipeInstructions, saveRecipeSections, saveRecipe as saveRecipeStep } from '@/steps';
+import { saveRecipeCookingMethods, saveRecipeIngredients, saveRecipeSections, saveRecipe as saveRecipeStep } from '@/steps';
 import type {
 	ActionState,
+	RecipeCookingMethodWriteInput,
 	RecipeFormInput,
 	RecipeIngredientWriteInput,
 	RecipeInstructionWriteInput,
@@ -43,11 +44,13 @@ export async function _saveRecipe(formData: RecipeFormInput): Promise<ActionStat
 			logger,
 		);
 
-		const instructionsData = savedSections.map((savedSection, index) => ({
+		const cookingMethodsData = savedSections.map((savedSection, index) => ({
 			sectionId: savedSection.id,
-			instructions: (parsed.data.sections?.[index]?.instructions ?? []) as RecipeInstructionWriteInput[],
+			cookingMethods: (parsed.data.sections?.[index]?.cookingMethods ?? []) as (RecipeCookingMethodWriteInput & {
+				instructions: RecipeInstructionWriteInput[];
+			})[],
 		}));
-		const savedInstructions = await saveRecipeInstructions(recipe.id, instructionsData, userId, logger);
+		await saveRecipeCookingMethods(recipe.id, cookingMethodsData, userId, logger);
 
 		const ingredientsData = savedSections.map((savedSection, index) => ({
 			sectionId: savedSection.id,
@@ -58,9 +61,9 @@ export async function _saveRecipe(formData: RecipeFormInput): Promise<ActionStat
 		return successResponse<RecipeFormInput>(
 			{
 				...recipe,
-				sections: savedSections.map(s => ({
+				sections: savedSections.map((s, index) => ({
 					...s,
-					instructions: savedInstructions[s.id],
+					cookingMethods: parsed.data.sections?.[index]?.cookingMethods ?? [],
 					ingredients: savedIngredients[s.id],
 				})),
 			} as unknown as RecipeFormInput,

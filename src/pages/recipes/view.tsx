@@ -39,9 +39,11 @@ export default async function Pages__recipes__view({ ctx, params }: RequestInfo)
 						{recipe.sections.length > 1 && <h3>{s.title}</h3>}
 						<h4>Instructions</h4>
 						<ol>
-							{s.instructions.map(inst => (
-								<li key={inst.id}>{inst.instruction}</li>
-							))}
+							{s.cookingMethods
+								.flatMap(m => m.instructions)
+								.map(inst => (
+									<li key={inst.id}>{inst.instruction}</li>
+								))}
 						</ol>
 						<h4>Ingredients</h4>
 						<ul>

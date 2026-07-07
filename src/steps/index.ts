@@ -4,6 +4,7 @@ export * from './initialize-scrape';
 export * from './parse-body-json';
 export * from './parse-raw-ingredients';
 export * from './save-recipe';
+export * from './save-recipe-cooking-methods';
 export * from './save-recipe-ingredients';
 export * from './save-recipe-instructions';
 export * from './save-recipe-sections';
