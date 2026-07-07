@@ -1,0 +1,328 @@
+{
+	"description": "Papas Rellenas",
+	"url": "https://foreignfork.com/papas-rellenas/",
+	"jsonld": [
+		{
+			"@context": "https://schema.org",
+			"@graph": [
+				{
+					"@type": "Article",
+					"@id": "https://foreignfork.com/papas-rellenas/#article",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/papas-rellenas/"
+					},
+					"author": {
+						"name": "Alexandria Drzazgowski",
+						"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c"
+					},
+					"headline": "Papas Rellenas from Cuba",
+					"datePublished": "2020-05-27T09:00:00+00:00",
+					"dateModified": "2020-08-07T03:42:46+00:00",
+					"wordCount": 1019,
+					"commentCount": 2,
+					"publisher": {
+						"@id": "https://foreignfork.com/#organization"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/papas-rellenas/#primaryimage"
+					},
+					"thumbnailUrl": "https://foreignfork.com/wp-content/uploads/2020/05/papas-rellenas-scaled.jpg",
+					"keywords": ["Cuba"],
+					"articleSection": ["Appetizer", "Caribbean", "Street Food"],
+					"inLanguage": "en-US",
+					"potentialAction": [
+						{
+							"@type": "CommentAction",
+							"name": "Comment",
+							"target": ["https://foreignfork.com/papas-rellenas/#respond"]
+						}
+					]
+				},
+				{
+					"@type": "WebPage",
+					"@id": "https://foreignfork.com/papas-rellenas/",
+					"url": "https://foreignfork.com/papas-rellenas/",
+					"name": "Papas Rellenas from Cuba - The Foreign Fork",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/#website"
+					},
+					"primaryImageOfPage": {
+						"@id": "https://foreignfork.com/papas-rellenas/#primaryimage"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/papas-rellenas/#primaryimage"
+					},
+					"thumbnailUrl": "https://foreignfork.com/wp-content/uploads/2020/05/papas-rellenas-scaled.jpg",
+					"datePublished": "2020-05-27T09:00:00+00:00",
+					"dateModified": "2020-08-07T03:42:46+00:00",
+					"description": "Papas Rellenas are stuffed mashed potato balls filled with picadillo & then fried. They're crispy on the outside, creamy on the inside, and absolute heaven.",
+					"breadcrumb": {
+						"@id": "https://foreignfork.com/papas-rellenas/#breadcrumb"
+					},
+					"inLanguage": "en-US",
+					"potentialAction": [
+						{
+							"@type": "ReadAction",
+							"target": ["https://foreignfork.com/papas-rellenas/"]
+						}
+					]
+				},
+				{
+					"@type": "ImageObject",
+					"inLanguage": "en-US",
+					"@id": "https://foreignfork.com/papas-rellenas/#primaryimage",
+					"url": "https://foreignfork.com/wp-content/uploads/2020/05/papas-rellenas-scaled.jpg",
+					"contentUrl": "https://foreignfork.com/wp-content/uploads/2020/05/papas-rellenas-scaled.jpg",
+					"width": 1707,
+					"height": 2560,
+					"caption": "Plate of Papas Rellenas"
+				},
+				{
+					"@type": "BreadcrumbList",
+					"@id": "https://foreignfork.com/papas-rellenas/#breadcrumb",
+					"itemListElement": [
+						{
+							"@type": "ListItem",
+							"position": 1,
+							"name": "Home",
+							"item": "https://foreignfork.com/"
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"name": "Caribbean",
+							"item": "https://foreignfork.com/category/caribbean-recipes/"
+						},
+						{
+							"@type": "ListItem",
+							"position": 3,
+							"name": "Papas Rellenas from Cuba"
+						}
+					]
+				},
+				{
+					"@type": "WebSite",
+					"@id": "https://foreignfork.com/#website",
+					"url": "https://foreignfork.com/",
+					"name": "The Foreign Fork",
+					"description": "Learning to Cook One Country at a Time",
+					"publisher": {
+						"@id": "https://foreignfork.com/#organization"
+					},
+					"potentialAction": [
+						{
+							"@type": "SearchAction",
+							"target": {
+								"@type": "EntryPoint",
+								"urlTemplate": "https://foreignfork.com/?s={search_term_string}"
+							},
+							"query-input": {
+								"@type": "PropertyValueSpecification",
+								"valueRequired": true,
+								"valueName": "search_term_string"
+							}
+						}
+					],
+					"inLanguage": "en-US"
+				},
+				{
+					"@type": "Organization",
+					"@id": "https://foreignfork.com/#organization",
+					"name": "The Foreign Fork",
+					"url": "https://foreignfork.com/",
+					"logo": {
+						"@type": "ImageObject",
+						"inLanguage": "en-US",
+						"@id": "https://foreignfork.com/#/schema/logo/image/",
+						"url": "https://foreignfork.com/wp-content/uploads/2020/08/300x300jpg.jpg",
+						"contentUrl": "https://foreignfork.com/wp-content/uploads/2020/08/300x300jpg.jpg",
+						"width": 300,
+						"height": 300,
+						"caption": "The Foreign Fork"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/#/schema/logo/image/"
+					},
+					"sameAs": [
+						"https://www.facebook.com/theforeignfork/",
+						"https://www.instagram.com/theforeignfork/",
+						"https://www.pinterest.com/theforeignfork/",
+						"https://www.youtube.com/channel/UCMmCgcQSRJay8ftINQeh33g"
+					]
+				},
+				{
+					"@type": "Person",
+					"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c",
+					"name": "Alexandria Drzazgowski",
+					"sameAs": ["https://foreignfork.com/about/"]
+				},
+				{
+					"@type": "Recipe",
+					"name": "Papas Rellenas",
+					"author": {
+						"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c"
+					},
+					"description": "Papas Rellenas are stuffed mashed potato balls, popular in Cuba and many other countries. They are filled with picadillo, a beef filling, and then fried. They are crispy on the outside, creamy on the inside, and absolute heaven.",
+					"datePublished": "2020-05-27T09:00:00+00:00",
+					"image": [
+						"https://foreignfork.com/wp-content/uploads/2020/05/papas-rellenas-scaled.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/05/papas-rellenas-500x500.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/05/papas-rellenas-500x375.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/05/papas-rellenas-480x270.jpg"
+					],
+					"recipeYield": ["22", "22 Papas Rellenas"],
+					"prepTime": "PT35M",
+					"cookTime": "PT5M",
+					"totalTime": "PT40M",
+					"recipeIngredient": [
+						"2 lb russet potatoes (peeled and chopped into eighths)",
+						"Water",
+						"¼ cup milk",
+						"1 tsp chopped garlic",
+						"¼ tsp salt",
+						"Fresh Ground Black Pepper to Taste",
+						"½  recipe for Cuban Picadillo",
+						"1 cup breadcrumbs",
+						"2  eggs",
+						"Sunflower oil or Vegetable Oil for Frying"
+					],
+					"recipeInstructions": [
+						{
+							"@type": "HowToSection",
+							"name": "Stovetop Potatoes Method",
+							"itemListElement": [
+								{
+									"@type": "HowToStep",
+									"text": "Place the potatoes in a large pot. Fill with enough water to cover the potatoes. Cover with a lid and bring the water to a boil. Allow to boil until the potatoes are easily pierced by a fork, about 15 minutes.",
+									"name": "Place the potatoes in a large pot. Fill with enough water to cover the potatoes. Cover with a lid and bring the water to a boil. Allow to boil until the potatoes are easily pierced by a fork, about 15 minutes.",
+									"url": "https://foreignfork.com/papas-rellenas/#wprm-recipe-5298-step-0-0"
+								}
+							]
+						},
+						{
+							"@type": "HowToSection",
+							"name": "Instant Pot Potatoes Method",
+							"itemListElement": [
+								{
+									"@type": "HowToStep",
+									"text": "Place 2 cups of water and your chopped potatoes into your Instant Pot and secure the lid. Turn the pressure to HIGH and cook for 6 minutes. When the cooking cycle is complete, perform a Quick Release",
+									"name": "Place 2 cups of water and your chopped potatoes into your Instant Pot and secure the lid. Turn the pressure to HIGH and cook for 6 minutes. When the cooking cycle is complete, perform a Quick Release",
+									"url": "https://foreignfork.com/papas-rellenas/#wprm-recipe-5298-step-1-0"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "When the potatoes are tender, drain the water. Use a potato masher to mash the potatoes. Add the milk, garlic, salt and pepper. Use the masher to mash until the potatoes are smooth.",
+									"name": "When the potatoes are tender, drain the water. Use a potato masher to mash the potatoes. Add the milk, garlic, salt and pepper. Use the masher to mash until the potatoes are smooth.",
+									"url": "https://foreignfork.com/papas-rellenas/#wprm-recipe-5298-step-1-1"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "In your hand, use about 2 tbsp of mashed potatoes. Form them into your hand, in a bowl shape. Place a spoonful of picadillo in the center of the bowl. Fold the mashed potatoes over, closing the picadillo inside.",
+									"name": "In your hand, use about 2 tbsp of mashed potatoes. Form them into your hand, in a bowl shape. Place a spoonful of picadillo in the center of the bowl. Fold the mashed potatoes over, closing the picadillo inside.",
+									"url": "https://foreignfork.com/papas-rellenas/#wprm-recipe-5298-step-1-2"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "Whisk the egg in a separate bowl. Place the breadcrumbs in a shallow bowl.",
+									"name": "Whisk the egg in a separate bowl. Place the breadcrumbs in a shallow bowl.",
+									"url": "https://foreignfork.com/papas-rellenas/#wprm-recipe-5298-step-1-3"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "Roll each mashed potato ball in the whisked egg. Then roll it in the breadcrumbs.",
+									"name": "Roll each mashed potato ball in the whisked egg. Then roll it in the breadcrumbs.",
+									"url": "https://foreignfork.com/papas-rellenas/#wprm-recipe-5298-step-1-4"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "Heat the oil to about 375 degrees. Place each breaded mashed potato ball in the oil and allow to fry for about 2 minutes on each side until it turns golden brown. Enjoy",
+									"name": "Heat the oil to about 375 degrees. Place each breaded mashed potato ball in the oil and allow to fry for about 2 minutes on each side until it turns golden brown. Enjoy",
+									"url": "https://foreignfork.com/papas-rellenas/#wprm-recipe-5298-step-1-5"
+								}
+							]
+						}
+					],
+					"aggregateRating": {
+						"@type": "AggregateRating",
+						"ratingValue": "5",
+						"ratingCount": "1"
+					},
+					"recipeCategory": ["Appetizer", "Side Dish"],
+					"recipeCuisine": ["Cuban"],
+					"keywords": "Cuban appetizer, Papas rellenas, potato recipes",
+					"nutrition": {
+						"@type": "NutritionInformation",
+						"servingSize": "1 Papa Rellena",
+						"calories": "108 kcal",
+						"carbohydrateContent": "13 g",
+						"proteinContent": "4 g",
+						"fatContent": "4 g",
+						"saturatedFatContent": "1 g",
+						"transFatContent": "1 g",
+						"cholesterolContent": "23 mg",
+						"sodiumContent": "108 mg",
+						"fiberContent": "1 g",
+						"sugarContent": "1 g",
+						"unsaturatedFatContent": "3 g"
+					},
+					"@id": "https://foreignfork.com/papas-rellenas/#recipe",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/papas-rellenas/#article"
+					},
+					"mainEntityOfPage": "https://foreignfork.com/papas-rellenas/"
+				}
+			]
+		}
+	],
+	"expected": {
+		"title": "Papas Rellenas",
+		"ingredients": [
+			{ "raw": "2 lb russet potatoes (peeled and chopped into eighths)", "order": 0 },
+			{ "raw": "Water", "order": 1 },
+			{ "raw": "¼ cup milk", "order": 2 },
+			{ "raw": "1 tsp chopped garlic", "order": 3 },
+			{ "raw": "¼ tsp salt", "order": 4 },
+			{ "raw": "Fresh Ground Black Pepper to Taste", "order": 5 },
+			{ "raw": "½  recipe for Cuban Picadillo", "order": 6 },
+			{ "raw": "1 cup breadcrumbs", "order": 7 },
+			{ "raw": "2  eggs", "order": 8 },
+			{ "raw": "Sunflower oil or Vegetable Oil for Frying", "order": 9 }
+		],
+		"cookingMethods": [
+			{
+				"name": "Stovetop Potatoes Method",
+				"order": 0,
+				"instructions": [
+					{
+						"stepNumber": 1,
+						"instruction": "Place the potatoes in a large pot. Fill with enough water to cover the potatoes. Cover with a lid and bring the water to a boil. Allow to boil until the potatoes are easily pierced by a fork, about 15 minutes."
+					}
+				]
+			},
+			{
+				"name": "Instant Pot Potatoes Method",
+				"order": 1,
+				"instructions": [
+					{
+						"stepNumber": 1,
+						"instruction": "Place 2 cups of water and your chopped potatoes into your Instant Pot and secure the lid. Turn the pressure to HIGH and cook for 6 minutes. When the cooking cycle is complete, perform a Quick Release"
+					},
+					{
+						"stepNumber": 2,
+						"instruction": "When the potatoes are tender, drain the water. Use a potato masher to mash the potatoes. Add the milk, garlic, salt and pepper. Use the masher to mash until the potatoes are smooth."
+					},
+					{
+						"stepNumber": 3,
+						"instruction": "In your hand, use about 2 tbsp of mashed potatoes. Form them into your hand, in a bowl shape. Place a spoonful of picadillo in the center of the bowl. Fold the mashed potatoes over, closing the picadillo inside."
+					},
+					{ "stepNumber": 4, "instruction": "Whisk the egg in a separate bowl. Place the breadcrumbs in a shallow bowl." },
+					{ "stepNumber": 5, "instruction": "Roll each mashed potato ball in the whisked egg. Then roll it in the breadcrumbs." },
+					{
+						"stepNumber": 6,
+						"instruction": "Heat the oil to about 375 degrees. Place each breaded mashed potato ball in the oil and allow to fry for about 2 minutes on each side until it turns golden brown. Enjoy"
+					}
+				]
+			}
+		]
+	}
+}

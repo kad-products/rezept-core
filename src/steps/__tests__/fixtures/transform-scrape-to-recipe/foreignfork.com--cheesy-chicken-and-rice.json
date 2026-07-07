@@ -1,0 +1,290 @@
+{
+	"description": "Actual recipe from a site that failed",
+	"url": "https://foreignfork.com/cheesy-chicken-and-rice/",
+	"jsonld": [
+		{
+			"@context": "https://schema.org",
+			"@graph": [
+				{
+					"@type": "Article",
+					"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#article",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/cheesy-chicken-and-rice/"
+					},
+					"author": {
+						"name": "Alexandria Drzazgowski",
+						"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c"
+					},
+					"headline": "Cheesy Chicken and Rice Recipe",
+					"datePublished": "2020-06-27T09:00:00+00:00",
+					"dateModified": "2020-08-07T02:48:48+00:00",
+					"wordCount": 958,
+					"commentCount": 8,
+					"publisher": {
+						"@id": "https://foreignfork.com/#organization"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#primaryimage"
+					},
+					"thumbnailUrl": "https://foreignfork.com/wp-content/uploads/2020/06/cheesy-chicken-and-rice-2-scaled.jpg",
+					"articleSection": ["Chicken", "Instant Pot", "Rice", "Under 30 Minute Dinner"],
+					"inLanguage": "en-US",
+					"potentialAction": [
+						{
+							"@type": "CommentAction",
+							"name": "Comment",
+							"target": ["https://foreignfork.com/cheesy-chicken-and-rice/#respond"]
+						}
+					]
+				},
+				{
+					"@type": "WebPage",
+					"@id": "https://foreignfork.com/cheesy-chicken-and-rice/",
+					"url": "https://foreignfork.com/cheesy-chicken-and-rice/",
+					"name": "Cheesy Chicken and Rice Recipe - The Foreign Fork",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/#website"
+					},
+					"primaryImageOfPage": {
+						"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#primaryimage"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#primaryimage"
+					},
+					"thumbnailUrl": "https://foreignfork.com/wp-content/uploads/2020/06/cheesy-chicken-and-rice-2-scaled.jpg",
+					"datePublished": "2020-06-27T09:00:00+00:00",
+					"dateModified": "2020-08-07T02:48:48+00:00",
+					"description": "This Cheesy Chicken and Rice, made with cheddar cheese and broccoli, is the perfect dinner that the entire family will love!",
+					"breadcrumb": {
+						"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#breadcrumb"
+					},
+					"inLanguage": "en-US",
+					"potentialAction": [
+						{
+							"@type": "ReadAction",
+							"target": ["https://foreignfork.com/cheesy-chicken-and-rice/"]
+						}
+					]
+				},
+				{
+					"@type": "ImageObject",
+					"inLanguage": "en-US",
+					"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#primaryimage",
+					"url": "https://foreignfork.com/wp-content/uploads/2020/06/cheesy-chicken-and-rice-2-scaled.jpg",
+					"contentUrl": "https://foreignfork.com/wp-content/uploads/2020/06/cheesy-chicken-and-rice-2-scaled.jpg",
+					"width": 1707,
+					"height": 2560,
+					"caption": "Cheesy Chicken and Rice from Overhead"
+				},
+				{
+					"@type": "BreadcrumbList",
+					"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#breadcrumb",
+					"itemListElement": [
+						{
+							"@type": "ListItem",
+							"position": 1,
+							"name": "Home",
+							"item": "https://foreignfork.com/"
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"name": "Instant Pot",
+							"item": "https://foreignfork.com/category/instant-pot/"
+						},
+						{
+							"@type": "ListItem",
+							"position": 3,
+							"name": "Cheesy Chicken and Rice Recipe"
+						}
+					]
+				},
+				{
+					"@type": "WebSite",
+					"@id": "https://foreignfork.com/#website",
+					"url": "https://foreignfork.com/",
+					"name": "The Foreign Fork",
+					"description": "Learning to Cook One Country at a Time",
+					"publisher": {
+						"@id": "https://foreignfork.com/#organization"
+					},
+					"potentialAction": [
+						{
+							"@type": "SearchAction",
+							"target": {
+								"@type": "EntryPoint",
+								"urlTemplate": "https://foreignfork.com/?s={search_term_string}"
+							},
+							"query-input": {
+								"@type": "PropertyValueSpecification",
+								"valueRequired": true,
+								"valueName": "search_term_string"
+							}
+						}
+					],
+					"inLanguage": "en-US"
+				},
+				{
+					"@type": "Organization",
+					"@id": "https://foreignfork.com/#organization",
+					"name": "The Foreign Fork",
+					"url": "https://foreignfork.com/",
+					"logo": {
+						"@type": "ImageObject",
+						"inLanguage": "en-US",
+						"@id": "https://foreignfork.com/#/schema/logo/image/",
+						"url": "https://foreignfork.com/wp-content/uploads/2020/08/300x300jpg.jpg",
+						"contentUrl": "https://foreignfork.com/wp-content/uploads/2020/08/300x300jpg.jpg",
+						"width": 300,
+						"height": 300,
+						"caption": "The Foreign Fork"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/#/schema/logo/image/"
+					},
+					"sameAs": [
+						"https://www.facebook.com/theforeignfork/",
+						"https://www.instagram.com/theforeignfork/",
+						"https://www.pinterest.com/theforeignfork/",
+						"https://www.youtube.com/channel/UCMmCgcQSRJay8ftINQeh33g"
+					]
+				},
+				{
+					"@type": "Person",
+					"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c",
+					"name": "Alexandria Drzazgowski",
+					"sameAs": ["https://foreignfork.com/about/"]
+				},
+				{
+					"@type": "Recipe",
+					"name": "Cheesy Chicken and Rice",
+					"author": {
+						"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c"
+					},
+					"description": "This Cheesy Chicken and Rice is the perfect throw together dinner that the entire family will love. Made with cheddar cheese and broccoli, it’s bound to be a family favorite Instant Pot Dinner!",
+					"datePublished": "2020-06-27T09:00:00+00:00",
+					"image": [
+						"https://foreignfork.com/wp-content/uploads/2020/06/cheesy-chicken-and-rice-2-scaled.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/06/cheesy-chicken-and-rice-2-500x500.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/06/cheesy-chicken-and-rice-2-500x375.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/06/cheesy-chicken-and-rice-2-480x270.jpg"
+					],
+					"recipeYield": ["6", "6 servings"],
+					"prepTime": "PT10M",
+					"cookTime": "PT8M",
+					"totalTime": "PT23M",
+					"recipeIngredient": [
+						"4 cups broccoli (fresh)",
+						"2 cups long grain white rice",
+						"3 cups water",
+						"2 lb chicken thighs",
+						"1/2  of a 10.5 oz cream of chicken soup can",
+						"Salt and pepper to taste",
+						"1/2 tsp garlic powder",
+						"1/2 tsp onion powder",
+						"3 cups shredded cheddar"
+					],
+					"recipeInstructions": [
+						{
+							"@type": "HowToStep",
+							"text": "Open your Instant Pot and pour 1 cup of water into the liner. Insert your steamer basket or trivet, and place the broccoli inside. Put the lid on the Instant Pot and turn it to steam for 2 minutes. When the cook cycle is up, remove the lid and set the broccoli aside.",
+							"name": "Open your Instant Pot and pour 1 cup of water into the liner. Insert your steamer basket or trivet, and place the broccoli inside. Put the lid on the Instant Pot and turn it to steam for 2 minutes. When the cook cycle is up, remove the lid and set the broccoli aside.",
+							"url": "https://foreignfork.com/cheesy-chicken-and-rice/#wprm-recipe-5807-step-0-0"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "In your Instant Pot, add the rice and the water. Cut the chicken thighs into cubes and lay them on top of the water and the rice. Put the lid on the Instant Pot, and cook on high for 8 minutes. When the cooking cycle is complete, perform a Quick Release.",
+							"name": "In your Instant Pot, add the rice and the water. Cut the chicken thighs into cubes and lay them on top of the water and the rice. Put the lid on the Instant Pot, and cook on high for 8 minutes. When the cooking cycle is complete, perform a Quick Release.",
+							"url": "https://foreignfork.com/cheesy-chicken-and-rice/#wprm-recipe-5807-step-0-1"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "Open the lid to the Instant Pot and pour in the chicken soup can, salt and pepper to taste, garlic powder, onion powder, shredded cheddar and broccoli. Add more cream of chicken soup if necessary to meet your desired consistency.",
+							"name": "Open the lid to the Instant Pot and pour in the chicken soup can, salt and pepper to taste, garlic powder, onion powder, shredded cheddar and broccoli. Add more cream of chicken soup if necessary to meet your desired consistency.",
+							"url": "https://foreignfork.com/cheesy-chicken-and-rice/#wprm-recipe-5807-step-0-2"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "Enjoy! Leave a comment on this post letting me know what you thought.",
+							"name": "Enjoy! Leave a comment on this post letting me know what you thought.",
+							"url": "https://foreignfork.com/cheesy-chicken-and-rice/#wprm-recipe-5807-step-0-3"
+						}
+					],
+					"aggregateRating": {
+						"@type": "AggregateRating",
+						"ratingValue": "5",
+						"ratingCount": "1",
+						"reviewCount": "1"
+					},
+					"review": [
+						{
+							"@type": "Review",
+							"reviewRating": {
+								"@type": "Rating",
+								"ratingValue": "5"
+							},
+							"reviewBody": "This was easy and yummy with minimal dishes! Only thing I need to find to make it easier is pre cubed uncooked chicken thighs...lol",
+							"author": {
+								"@type": "Person",
+								"name": "Katie Jo"
+							},
+							"datePublished": "2020-10-13"
+						}
+					],
+					"recipeCategory": ["Main Course"],
+					"recipeCuisine": ["American"],
+					"keywords": "Cheesy Chicken and Rice, Instant Pot Cheesy Rice",
+					"nutrition": {
+						"@type": "NutritionInformation",
+						"servingSize": "1 serving",
+						"calories": "806 kcal",
+						"carbohydrateContent": "55 g",
+						"proteinContent": "45 g",
+						"fatContent": "44 g",
+						"saturatedFatContent": "19 g",
+						"transFatContent": "1 g",
+						"cholesterolContent": "208 mg",
+						"sodiumContent": "497 mg",
+						"fiberContent": "2 g",
+						"sugarContent": "1 g",
+						"unsaturatedFatContent": "22 g"
+					},
+					"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#recipe",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/cheesy-chicken-and-rice/#article"
+					},
+					"mainEntityOfPage": "https://foreignfork.com/cheesy-chicken-and-rice/"
+				}
+			]
+		}
+	],
+	"expected": {
+		"title": "Cheesy Chicken and Rice",
+		"ingredients": [
+			{ "raw": "4 cups broccoli (fresh)", "order": 0 },
+			{ "raw": "2 cups long grain white rice", "order": 1 },
+			{ "raw": "3 cups water", "order": 2 },
+			{ "raw": "2 lb chicken thighs", "order": 3 },
+			{ "raw": "1/2  of a 10.5 oz cream of chicken soup can", "order": 4 },
+			{ "raw": "Salt and pepper to taste", "order": 5 },
+			{ "raw": "1/2 tsp garlic powder", "order": 6 },
+			{ "raw": "1/2 tsp onion powder", "order": 7 },
+			{ "raw": "3 cups shredded cheddar", "order": 8 }
+		],
+		"cookingMethodInstructions": [
+			{
+				"stepNumber": 1,
+				"instruction": "Open your Instant Pot and pour 1 cup of water into the liner. Insert your steamer basket or trivet, and place the broccoli inside. Put the lid on the Instant Pot and turn it to steam for 2 minutes. When the cook cycle is up, remove the lid and set the broccoli aside."
+			},
+			{
+				"stepNumber": 2,
+				"instruction": "In your Instant Pot, add the rice and the water. Cut the chicken thighs into cubes and lay them on top of the water and the rice. Put the lid on the Instant Pot, and cook on high for 8 minutes. When the cooking cycle is complete, perform a Quick Release."
+			},
+			{
+				"stepNumber": 3,
+				"instruction": "Open the lid to the Instant Pot and pour in the chicken soup can, salt and pepper to taste, garlic powder, onion powder, shredded cheddar and broccoli. Add more cream of chicken soup if necessary to meet your desired consistency."
+			},
+			{ "stepNumber": 4, "instruction": "Enjoy! Leave a comment on this post letting me know what you thought." }
+		]
+	}
+}

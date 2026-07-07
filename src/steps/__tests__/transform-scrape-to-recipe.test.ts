@@ -84,6 +84,46 @@ describe('transformScrapeToRecipe', () => {
 		]);
 	});
 
+	it('handles instructions as HowToSection objects, producing one cooking method per section', async () => {
+		const result = await transformScrapeToRecipe(
+			payload({
+				...baseRecipe,
+				recipeInstructions: [
+					{
+						'@type': 'HowToSection',
+						name: 'Prep',
+						itemListElement: [{ '@type': 'HowToStep', text: 'Chop the onion.' }],
+					},
+					{
+						'@type': 'HowToSection',
+						name: 'Cook',
+						itemListElement: [
+							{ '@type': 'HowToStep', text: 'Heat oil in pan.' },
+							{ '@type': 'HowToStep', text: 'Add onion and cook until soft.' },
+						],
+					},
+				],
+			}),
+			logger,
+		);
+
+		expect(result.sections[0].cookingMethods).toEqual([
+			{
+				name: 'Prep',
+				order: 0,
+				instructions: [{ stepNumber: 1, instruction: 'Chop the onion.' }],
+			},
+			{
+				name: 'Cook',
+				order: 1,
+				instructions: [
+					{ stepNumber: 1, instruction: 'Heat oil in pan.' },
+					{ stepNumber: 2, instruction: 'Add onion and cook until soft.' },
+				],
+			},
+		]);
+	});
+
 	it('returns empty ingredients when recipeIngredient is absent', async () => {
 		const { recipeIngredient: _, ...noIngredients } = baseRecipe;
 		const result = await transformScrapeToRecipe(payload(noIngredients), logger);
