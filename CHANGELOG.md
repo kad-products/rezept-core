@@ -1,3 +1,9 @@
+## [1.57.0](https://github.com/kad-products/rezept-core/compare/v1.56.0...v1.57.0) (2026-07-07)
+
+### Features
+
+* limit recipe queries to avoid memory issues ([a6bb35d](https://github.com/kad-products/rezept-core/commit/a6bb35dfeac4ee939f65f07dd835d8080c74b59f))
+
 ## [1.56.0](https://github.com/kad-products/rezept-core/compare/v1.55.0...v1.56.0) (2026-07-07)
 
 ### Features
