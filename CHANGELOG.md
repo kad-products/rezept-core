@@ -1,3 +1,16 @@
+## [1.56.0](https://github.com/kad-products/rezept-core/compare/v1.55.0...v1.56.0) (2026-07-07)
+
+### Features
+
+* add data structure for cooking methods ([0968b65](https://github.com/kad-products/rezept-core/commit/0968b65863d88d7772e796cf7489c6fe7d5bf88e))
+* **admin:** method to copy json of scrape object ([18916e8](https://github.com/kad-products/rezept-core/commit/18916e8d9f66a558371aad4e15e4c3fadfe69dd7))
+* enable recipe scraping for multiple method-recipes ([b6c7cf0](https://github.com/kad-products/rezept-core/commit/b6c7cf0d32c790103db1fa46946fab0ab7b10f6b))
+* transform step to flatten methods to instructions ([bfc17e9](https://github.com/kad-products/rezept-core/commit/bfc17e9fcdce8070c61574f6daf423aa18f7df22))
+
+### Bug Fixes
+
+* cooking method order is 0-indexed ([7259d31](https://github.com/kad-products/rezept-core/commit/7259d3171082f6877dd65bca4f5d7c3beee55bca))
+
 ## [1.55.0](https://github.com/kad-products/rezept-core/compare/v1.54.0...v1.55.0) (2026-07-06)
 
 ### Features
