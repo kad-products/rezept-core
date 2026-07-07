@@ -1,3 +1,9 @@
+## [1.58.0](https://github.com/kad-products/rezept-core/compare/v1.57.0...v1.58.0) (2026-07-07)
+
+### Features
+
+* one recipe per source ([e203dee](https://github.com/kad-products/rezept-core/commit/e203dee51872f4f18bdfe4e5308410a2878fa855))
+
 ## [1.57.0](https://github.com/kad-products/rezept-core/compare/v1.56.0...v1.57.0) (2026-07-07)
 
 ### Features
