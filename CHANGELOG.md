@@ -1,3 +1,12 @@
+## [1.60.1](https://github.com/kad-products/rezept-core/compare/v1.60.0...v1.60.1) (2026-07-08)
+
+### Bug Fixes
+
+* check in empty crawl config file ([5c9f209](https://github.com/kad-products/rezept-core/commit/5c9f2091e2c73e6d49fefc04d91d266116b7398a))
+* cleaner crawl config and logic flow ([8eafadf](https://github.com/kad-products/rezept-core/commit/8eafadfa8de1959db9feb093bd41e6ed9b18c726))
+* error passing wasn't working quite right ([cb56b77](https://github.com/kad-products/rezept-core/commit/cb56b7780b2cfc2542a0a018f8950e38e3368f68))
+* types for crawl config lists ([cffd611](https://github.com/kad-products/rezept-core/commit/cffd611c3e7005e22a5932c12b7729a4fdb96c75))
+
 ## [1.60.0](https://github.com/kad-products/rezept-core/compare/v1.59.0...v1.60.0) (2026-07-08)
 
 ### Features
