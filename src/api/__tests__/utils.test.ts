@@ -52,6 +52,14 @@ describe('apiErrorResponse', () => {
 			expect(body).toEqual({ success: false, error: 'Something went wrong' });
 		});
 
+		it('serializes Error cause as name + message in development', async () => {
+			const err = new RzStepError(500, 'Something went wrong', 'DB error', false, new Error('connection refused'));
+			const response = apiErrorResponse(err);
+			const body = (await response.json()) as Record<string, unknown>;
+
+			expect(body.cause).toEqual({ name: 'Error', message: 'connection refused' });
+		});
+
 		it('does not include cause in production even when the error has one', async () => {
 			mockEnv.REZEPT_ENV = 'production';
 			const err = new RzStepError(500, 'Something went wrong', 'DB error', false, new Error('original'));

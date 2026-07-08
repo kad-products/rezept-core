@@ -25,7 +25,7 @@ export async function saveRecipeInstructions(
 				'Failed to save recipe instructions',
 				`Error saving instructions for recipe ${recipeId} cooking method ${entry.cookingMethodId}: ${error}`,
 				false,
-				error instanceof Error ? error.cause : undefined,
+				error,
 			);
 		}
 	}

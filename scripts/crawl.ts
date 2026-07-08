@@ -1,7 +1,17 @@
 import { JSDOM } from 'jsdom';
-import type { RecipeWithSections } from '@/types';
+import { urlDebugList, urlSkipList } from './crawl.config';
 
-const debugURLs: string[] = [];
+type APIResponseSingle = {
+	success: boolean;
+	error?: string;
+	data: Record<string, string>;
+};
+
+type APIResponseArray = {
+	success: boolean;
+	data: Record<string, string>[];
+};
+
 const initialUrl = process.env.REZEPT_CRAWL_URL;
 const apiBase = process.env.REZEPT_API_BASE;
 if (!initialUrl) {
@@ -20,32 +30,34 @@ const inSiteUrls = new Set(
 	anchors
 		.map(anc => anc.href)
 		.filter(url => url.includes(crawlHost))
-		.filter(url => debugURLs.length === 0 || debugURLs.includes(url))
+		.filter(url => urlDebugList.length === 0 || urlDebugList.includes(url))
+		.filter(url => urlSkipList.length === 0 || !urlSkipList.includes(url))
 		.filter(Boolean),
 );
 
 for (const url of inSiteUrls) {
-	console.log(`Parsing ${url}`);
+	console.log(`👉 Parsing ${url}`);
 
 	try {
 		const alreadyExists = await checkForExisting(url);
-		console.log(`Existing check ${alreadyExists}`);
 		if (alreadyExists) {
+			console.log(`  ✅  Existing check ${alreadyExists}, skipping`);
 			continue;
 		}
 	} catch (err) {
-		console.log(`Error checking if recipe exists`, err);
+		console.log(`  🚨 Error checking if recipe exists`, err);
 		process.exit(1);
 	}
 
 	try {
 		const recipeDom = await fetchAndParse(url);
-		console.log(`  Recipe DOM is ${recipeDom.serialize().length} characters long`);
 		const jsonLD = getJsonLd(recipeDom);
-		console.log(`  Found ${jsonLD.length} JSON LD items`);
 
 		if (!jsonLD.length || jsonLD.length === 0) {
-			console.log(`No JSON data`);
+			console.log(`  Recipe DOM is ${recipeDom.serialize().length} characters long`);
+			console.log(`  Found ${jsonLD.length} JSON LD items`);
+			console.log(`  ⚠️ No JSON data, skipping`);
+			continue;
 		}
 
 		const apiResponse = await fetch(`${apiBase}/api/recipes/imports/scrapes`, {
@@ -56,8 +68,15 @@ for (const url of inSiteUrls) {
 			},
 			body: JSON.stringify({ url, jsonld: jsonLD }),
 		});
-		const result = await apiResponse.json();
-		console.log(JSON.stringify(result, null, 2));
+		const result: APIResponseSingle = await apiResponse.json();
+		if (result.success) {
+			console.log(`  ✅ Scrape call succeeded (id ${result.data.id}, status ${result.data.status}) `);
+		} else if (result?.error === 'No recipe found in payload') {
+			console.log(`  ⚠️ No recipe found in payload`);
+		} else {
+			console.log(`  🚨 Scrape failed:\n${console.log(JSON.stringify(result, null, 2))}`);
+			process.exit(1);
+		}
 	} catch (err) {
 		console.log(err);
 		process.exit(1);
@@ -79,11 +98,6 @@ async function fetchAndParse(url: string): Promise<JSDOM> {
 	}
 }
 
-type SearchResult = {
-	success: boolean;
-	data: RecipeWithSections[];
-};
-
 async function checkForExisting(url: string): Promise<boolean> {
 	const searchResponse = await fetch(`${apiBase}/api/recipes/search`, {
 		method: 'POST',
@@ -94,7 +108,7 @@ async function checkForExisting(url: string): Promise<boolean> {
 		body: JSON.stringify({ source: url }),
 	});
 
-	const result: SearchResult = await searchResponse.json();
+	const result: APIResponseArray = await searchResponse.json();
 	if (result.success) {
 		const { data: recipes } = result;
 		return recipes.length === 1;

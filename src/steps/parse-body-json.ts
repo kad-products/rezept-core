@@ -6,13 +6,7 @@ export async function parseBodyJson(request: Request): Promise<RecipeScrapeSourc
 	try {
 		body = await request.json();
 	} catch (err) {
-		throw new RzStepError(
-			400,
-			'Invalid JSON body',
-			'Request body could not be parsed as JSON',
-			false,
-			err instanceof Error ? err.cause : undefined,
-		);
+		throw new RzStepError(400, 'Invalid JSON body', 'Request body could not be parsed as JSON', false, err);
 	}
 
 	return body as RecipeScrapeSource;

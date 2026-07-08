@@ -21,12 +21,6 @@ export async function validateAsRecipe(
 	} catch (err) {
 		if (err instanceof RzStepError) throw err;
 		logger.warn(`Unexpected error validating recipe payload: ${err}`);
-		throw new RzStepError(
-			400,
-			'Failed to validate recipe',
-			`Unexpected error validating recipe payload: ${err}`,
-			false,
-			err instanceof Error ? err.cause : undefined,
-		);
+		throw new RzStepError(400, 'Failed to validate recipe', `Unexpected error validating recipe payload: ${err}`, false, err);
 	}
 }

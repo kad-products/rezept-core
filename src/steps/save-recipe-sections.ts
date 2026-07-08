@@ -19,7 +19,7 @@ export async function saveRecipeSections(
 			'Failed to save recipe sections',
 			`Error saving sections for recipe ${recipeId}: ${error}`,
 			false,
-			error instanceof Error ? error.cause : undefined,
+			error,
 		);
 	}
 	return sections;
