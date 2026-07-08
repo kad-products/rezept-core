@@ -1,3 +1,9 @@
+## [1.60.0](https://github.com/kad-products/rezept-core/compare/v1.59.0...v1.60.0) (2026-07-08)
+
+### Features
+
+* pass error cause through to non-prod API responses ([992f8b3](https://github.com/kad-products/rezept-core/commit/992f8b3258b4b7b8557c3013f4db9214c9ea5111))
+
 ## [1.59.0](https://github.com/kad-products/rezept-core/compare/v1.58.0...v1.59.0) (2026-07-08)
 
 ### Features
