@@ -29,7 +29,7 @@ export class RecipeRawIngredientsToIngredientsWorkflow extends WorkflowEntrypoin
 					recipes.push(recipe);
 				} else {
 					logger.info(`Fetching all recipes`);
-					recipes = await getRecipes(100, 0, logger);
+					recipes = await getRecipes({}, 100, 0, logger);
 				}
 
 				logger.info(`Found ${recipes.length} recipes`);
