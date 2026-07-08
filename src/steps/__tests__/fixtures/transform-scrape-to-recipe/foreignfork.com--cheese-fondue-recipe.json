@@ -1,0 +1,372 @@
+{
+	"description": "How to Make Cheese Fondue",
+	"url": "https://foreignfork.com/cheese-fondue-recipe/",
+	"jsonld": [
+		{
+			"@context": "https://schema.org",
+			"@graph": [
+				{
+					"@type": "Article",
+					"@id": "https://foreignfork.com/cheese-fondue-recipe/#article",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/cheese-fondue-recipe/"
+					},
+					"author": {
+						"name": "Alexandria Drzazgowski",
+						"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c"
+					},
+					"headline": "How to Make Cheese Fondue",
+					"datePublished": "2020-10-16T09:00:00+00:00",
+					"wordCount": 2153,
+					"commentCount": 1,
+					"publisher": {
+						"@id": "https://foreignfork.com/#organization"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/cheese-fondue-recipe/#primaryimage"
+					},
+					"thumbnailUrl": "https://foreignfork.com/wp-content/uploads/2020/02/cheese-fondue-3-scaled.jpg",
+					"keywords": ["Switzerland"],
+					"articleSection": ["Appetizer", "Europe", "Fall Recipes", "Valentine's Day", "Winter Recipes"],
+					"inLanguage": "en-US",
+					"potentialAction": [
+						{
+							"@type": "CommentAction",
+							"name": "Comment",
+							"target": ["https://foreignfork.com/cheese-fondue-recipe/#respond"]
+						}
+					]
+				},
+				{
+					"@type": "WebPage",
+					"@id": "https://foreignfork.com/cheese-fondue-recipe/",
+					"url": "https://foreignfork.com/cheese-fondue-recipe/",
+					"name": "How to Make Cheese Fondue - The Foreign Fork",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/#website"
+					},
+					"primaryImageOfPage": {
+						"@id": "https://foreignfork.com/cheese-fondue-recipe/#primaryimage"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/cheese-fondue-recipe/#primaryimage"
+					},
+					"thumbnailUrl": "https://foreignfork.com/wp-content/uploads/2020/02/cheese-fondue-3-scaled.jpg",
+					"datePublished": "2020-10-16T09:00:00+00:00",
+					"description": "This cheese fondue recipe is the perfect date night activity! Make this recipe with white wine, Swiss cheese and shallots.",
+					"breadcrumb": {
+						"@id": "https://foreignfork.com/cheese-fondue-recipe/#breadcrumb"
+					},
+					"inLanguage": "en-US",
+					"potentialAction": [
+						{
+							"@type": "ReadAction",
+							"target": ["https://foreignfork.com/cheese-fondue-recipe/"]
+						}
+					]
+				},
+				{
+					"@type": "ImageObject",
+					"inLanguage": "en-US",
+					"@id": "https://foreignfork.com/cheese-fondue-recipe/#primaryimage",
+					"url": "https://foreignfork.com/wp-content/uploads/2020/02/cheese-fondue-3-scaled.jpg",
+					"contentUrl": "https://foreignfork.com/wp-content/uploads/2020/02/cheese-fondue-3-scaled.jpg",
+					"width": 1707,
+					"height": 2560,
+					"caption": "Cheese fondue dipping"
+				},
+				{
+					"@type": "BreadcrumbList",
+					"@id": "https://foreignfork.com/cheese-fondue-recipe/#breadcrumb",
+					"itemListElement": [
+						{
+							"@type": "ListItem",
+							"position": 1,
+							"name": "Home",
+							"item": "https://foreignfork.com/"
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"name": "Appetizer",
+							"item": "https://foreignfork.com/category/appetizer/"
+						},
+						{
+							"@type": "ListItem",
+							"position": 3,
+							"name": "How to Make Cheese Fondue"
+						}
+					]
+				},
+				{
+					"@type": "WebSite",
+					"@id": "https://foreignfork.com/#website",
+					"url": "https://foreignfork.com/",
+					"name": "The Foreign Fork",
+					"description": "Learning to Cook One Country at a Time",
+					"publisher": {
+						"@id": "https://foreignfork.com/#organization"
+					},
+					"potentialAction": [
+						{
+							"@type": "SearchAction",
+							"target": {
+								"@type": "EntryPoint",
+								"urlTemplate": "https://foreignfork.com/?s={search_term_string}"
+							},
+							"query-input": {
+								"@type": "PropertyValueSpecification",
+								"valueRequired": true,
+								"valueName": "search_term_string"
+							}
+						}
+					],
+					"inLanguage": "en-US"
+				},
+				{
+					"@type": "Organization",
+					"@id": "https://foreignfork.com/#organization",
+					"name": "The Foreign Fork",
+					"url": "https://foreignfork.com/",
+					"logo": {
+						"@type": "ImageObject",
+						"inLanguage": "en-US",
+						"@id": "https://foreignfork.com/#/schema/logo/image/",
+						"url": "https://foreignfork.com/wp-content/uploads/2020/08/300x300jpg.jpg",
+						"contentUrl": "https://foreignfork.com/wp-content/uploads/2020/08/300x300jpg.jpg",
+						"width": 300,
+						"height": 300,
+						"caption": "The Foreign Fork"
+					},
+					"image": {
+						"@id": "https://foreignfork.com/#/schema/logo/image/"
+					},
+					"sameAs": [
+						"https://www.facebook.com/theforeignfork/",
+						"https://www.instagram.com/theforeignfork/",
+						"https://www.pinterest.com/theforeignfork/",
+						"https://www.youtube.com/channel/UCMmCgcQSRJay8ftINQeh33g"
+					]
+				},
+				{
+					"@type": "Person",
+					"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c",
+					"name": "Alexandria Drzazgowski",
+					"sameAs": ["https://foreignfork.com/about/"]
+				},
+				{
+					"@type": "Recipe",
+					"name": "Cheese Fondue Recipe",
+					"author": {
+						"@id": "https://foreignfork.com/#/schema/person/545df8e79a43a848057748effaee350c"
+					},
+					"description": "This cheese fondue recipe is the perfect date night activity! And it&#039;s just in time for Valentine&#039;s Day! Make this recipe with white wine, Swiss cheese and shallots, and prepare for an incredible date night with your hunny!",
+					"datePublished": "2020-10-16T09:00:00+00:00",
+					"image": [
+						"https://foreignfork.com/wp-content/uploads/2020/02/cheese-fondue-3-scaled.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/02/cheese-fondue-3-500x500.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/02/cheese-fondue-3-500x375.jpg",
+						"https://foreignfork.com/wp-content/uploads/2020/02/cheese-fondue-3-480x270.jpg"
+					],
+					"recipeYield": ["4", "4 servings"],
+					"prepTime": "PT10M",
+					"cookTime": "PT10M",
+					"totalTime": "PT20M",
+					"recipeIngredient": [
+						"8 oz swiss cheese (I use guiggesburg domestic swiss)",
+						"4 oz gruyere",
+						"2 tbsp cornstarch",
+						"2  shallots (finely chopped)",
+						"1 tsp chopped Garlic",
+						"¾ cup White wine (I used pinot grigio)",
+						"1 tsp ground mustard",
+						"⅓ tsp salt",
+						"Bread for dipping"
+					],
+					"recipeInstructions": [
+						{
+							"@type": "HowToStep",
+							"text": "Grate the Swiss cheese on the largest setting of your cheese grater. Grate the Gruyere cheese on the medium setting of your cheese grater.",
+							"name": "Grate the Swiss cheese on the largest setting of your cheese grater. Grate the Gruyere cheese on the medium setting of your cheese grater.",
+							"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-0-0"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "Combine the cheeses in a large bowl, and add 2 tbsp of cornstarch to the cheese. Mix to combine, ensuring that all cheese is coated in cornstarch.",
+							"name": "Combine the cheeses in a large bowl, and add 2 tbsp of cornstarch to the cheese. Mix to combine, ensuring that all cheese is coated in cornstarch.",
+							"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-0-1"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "Heat a fondue pot or a nonstick pot on medium heat. Add the garlic and the shallots and cook until fragrant, or about five minutes.",
+							"name": "Heat a fondue pot or a nonstick pot on medium heat. Add the garlic and the shallots and cook until fragrant, or about five minutes.",
+							"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-0-2"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "Once the shallots are cooked, add the white wine into the pot and turn the heat to high. Bring the wine to a boil.",
+							"name": "Once the shallots are cooked, add the white wine into the pot and turn the heat to high. Bring the wine to a boil.",
+							"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-0-3"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "Once the wine is boiling, turn the heat to low. Divide the cheese into quarters. Add one quarter into the wine, and stir on a low heat until the cheese melts completely. Then add the next quarter and repeat. Repeat these steps until all the cheese is melted.",
+							"name": "Once the wine is boiling, turn the heat to low. Divide the cheese into quarters. Add one quarter into the wine, and stir on a low heat until the cheese melts completely. Then add the next quarter and repeat. Repeat these steps until all the cheese is melted.",
+							"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-0-4"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "Add the salt and ground mustard into the cheese, and mix one last time. Use bread to dip into the cheese. Enjoy!",
+							"name": "Add the salt and ground mustard into the cheese, and mix one last time. Use bread to dip into the cheese. Enjoy!",
+							"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-0-5"
+						},
+						{
+							"@type": "HowToStep",
+							"text": "Leave a comment on this recipe letting me know what you think.",
+							"name": "Leave a comment on this recipe letting me know what you think.",
+							"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-0-6"
+						},
+						{
+							"@type": "HowToSection",
+							"name": "Instant Pot Instructions",
+							"itemListElement": [
+								{
+									"@type": "HowToStep",
+									"text": "Grate the Swiss cheese on the largest setting of your cheese grater. Grate the Gruyere cheese on the medium setting of your cheese grater.",
+									"name": "Grate the Swiss cheese on the largest setting of your cheese grater. Grate the Gruyere cheese on the medium setting of your cheese grater.",
+									"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-1-0"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "Combine the cheeses in a large bowl, and add 2 tbsp of cornstarch to the cheese. Mix to combine, ensuring that all cheese is coated in cornstarch.",
+									"name": "Combine the cheeses in a large bowl, and add 2 tbsp of cornstarch to the cheese. Mix to combine, ensuring that all cheese is coated in cornstarch.",
+									"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-1-1"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "Turn the Instant Pot to Saute. Add the olive oil until warmed. Then add garlic and the shallots and cook until fragrant, or about five minutes.",
+									"name": "Turn the Instant Pot to Saute. Add the olive oil until warmed. Then add garlic and the shallots and cook until fragrant, or about five minutes.",
+									"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-1-2"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "Once the shallots are cooked, add the white wine into the pot. Bring the wine to a boil.",
+									"name": "Once the shallots are cooked, add the white wine into the pot. Bring the wine to a boil.",
+									"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-1-3"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "Once the wine is boiling, turn the pot to KEEP WARM. Divide the cheese into quarters. Add one quarter into the wine, and stir on a low heat until the cheese melts completely. Then add the next quarter and repeat. Repeat these steps until all the cheese is melted.",
+									"name": "Once the wine is boiling, turn the pot to KEEP WARM. Divide the cheese into quarters. Add one quarter into the wine, and stir on a low heat until the cheese melts completely. Then add the next quarter and repeat. Repeat these steps until all the cheese is melted.",
+									"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-1-4"
+								},
+								{
+									"@type": "HowToStep",
+									"text": "Add the salt and ground mustard into the cheese, and mix one last time. Use bread to dip into the cheese. Enjoy!",
+									"name": "Add the salt and ground mustard into the cheese, and mix one last time. Use bread to dip into the cheese. Enjoy!",
+									"url": "https://foreignfork.com/cheese-fondue-recipe/#wprm-recipe-3289-step-1-5"
+								}
+							]
+						}
+					],
+					"aggregateRating": {
+						"@type": "AggregateRating",
+						"ratingValue": "5",
+						"ratingCount": "2"
+					},
+					"recipeCategory": ["Appetizer", "Main Course"],
+					"recipeCuisine": ["Swiss"],
+					"keywords": "appetizer, appetizer recipes, cheese fondue, fondue",
+					"nutrition": {
+						"@type": "NutritionInformation",
+						"servingSize": "1 serving",
+						"calories": "397 kcal",
+						"carbohydrateContent": "10 g",
+						"proteinContent": "24 g",
+						"fatContent": "25 g",
+						"saturatedFatContent": "15 g",
+						"cholesterolContent": "83 mg",
+						"sodiumContent": "402 mg",
+						"fiberContent": "1 g",
+						"sugarContent": "2 g",
+						"unsaturatedFatContent": "8 g"
+					},
+					"@id": "https://foreignfork.com/cheese-fondue-recipe/#recipe",
+					"isPartOf": {
+						"@id": "https://foreignfork.com/cheese-fondue-recipe/#article"
+					},
+					"mainEntityOfPage": "https://foreignfork.com/cheese-fondue-recipe/"
+				}
+			]
+		}
+	],
+	"expected": {
+		"title": "Cheese Fondue Recipe",
+		"cookingMethods": [
+			{
+				"name": "Standard",
+				"order": 0,
+				"instructions": [
+					{
+						"stepNumber": 1,
+						"instruction": "Grate the Swiss cheese on the largest setting of your cheese grater. Grate the Gruyere cheese on the medium setting of your cheese grater."
+					},
+					{
+						"stepNumber": 2,
+						"instruction": "Combine the cheeses in a large bowl, and add 2 tbsp of cornstarch to the cheese. Mix to combine, ensuring that all cheese is coated in cornstarch."
+					},
+					{
+						"stepNumber": 3,
+						"instruction": "Heat a fondue pot or a nonstick pot on medium heat. Add the garlic and the shallots and cook until fragrant, or about five minutes."
+					},
+					{
+						"stepNumber": 4,
+						"instruction": "Once the shallots are cooked, add the white wine into the pot and turn the heat to high. Bring the wine to a boil."
+					},
+					{
+						"stepNumber": 5,
+						"instruction": "Once the wine is boiling, turn the heat to low. Divide the cheese into quarters. Add one quarter into the wine, and stir on a low heat until the cheese melts completely. Then add the next quarter and repeat. Repeat these steps until all the cheese is melted."
+					},
+					{
+						"stepNumber": 6,
+						"instruction": "Add the salt and ground mustard into the cheese, and mix one last time. Use bread to dip into the cheese. Enjoy!"
+					},
+					{
+						"stepNumber": 7,
+						"instruction": "Leave a comment on this recipe letting me know what you think."
+					}
+				]
+			},
+			{
+				"name": "Instant Pot Instructions",
+				"order": 1,
+				"instructions": [
+					{
+						"stepNumber": 1,
+						"instruction": "Grate the Swiss cheese on the largest setting of your cheese grater. Grate the Gruyere cheese on the medium setting of your cheese grater."
+					},
+					{
+						"stepNumber": 2,
+						"instruction": "Combine the cheeses in a large bowl, and add 2 tbsp of cornstarch to the cheese. Mix to combine, ensuring that all cheese is coated in cornstarch."
+					},
+					{
+						"stepNumber": 3,
+						"instruction": "Turn the Instant Pot to Saute. Add the olive oil until warmed. Then add garlic and the shallots and cook until fragrant, or about five minutes."
+					},
+					{
+						"stepNumber": 4,
+						"instruction": "Once the shallots are cooked, add the white wine into the pot. Bring the wine to a boil."
+					},
+					{
+						"stepNumber": 5,
+						"instruction": "Once the wine is boiling, turn the pot to KEEP WARM. Divide the cheese into quarters. Add one quarter into the wine, and stir on a low heat until the cheese melts completely. Then add the next quarter and repeat. Repeat these steps until all the cheese is melted."
+					},
+					{
+						"stepNumber": 6,
+						"instruction": "Add the salt and ground mustard into the cheese, and mix one last time. Use bread to dip into the cheese. Enjoy!"
+					}
+				]
+			}
+		]
+	}
+}

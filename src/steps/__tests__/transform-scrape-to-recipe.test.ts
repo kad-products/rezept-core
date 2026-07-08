@@ -84,6 +84,56 @@ describe('transformScrapeToRecipe', () => {
 		]);
 	});
 
+	it('handles mixed HowToStep and HowToSection items, collecting flat steps into Standard and each section as its own method', async () => {
+		const result = await transformScrapeToRecipe(
+			payload({
+				...baseRecipe,
+				recipeInstructions: [
+					{ '@type': 'HowToStep', text: 'Preheat the oven.' },
+					{ '@type': 'HowToStep', text: 'Grease a baking pan.' },
+					{
+						'@type': 'HowToSection',
+						name: 'Stovetop',
+						itemListElement: [{ '@type': 'HowToStep', text: 'Heat on medium.' }],
+					},
+					{
+						'@type': 'HowToSection',
+						name: 'Oven',
+						itemListElement: [
+							{ '@type': 'HowToStep', text: 'Bake at 350F.' },
+							{ '@type': 'HowToStep', text: 'Cool for 10 minutes.' },
+						],
+					},
+				],
+			}),
+			logger,
+		);
+
+		expect(result.sections[0].cookingMethods).toEqual([
+			{
+				name: 'Standard',
+				order: 0,
+				instructions: [
+					{ stepNumber: 1, instruction: 'Preheat the oven.' },
+					{ stepNumber: 2, instruction: 'Grease a baking pan.' },
+				],
+			},
+			{
+				name: 'Stovetop',
+				order: 1,
+				instructions: [{ stepNumber: 1, instruction: 'Heat on medium.' }],
+			},
+			{
+				name: 'Oven',
+				order: 2,
+				instructions: [
+					{ stepNumber: 1, instruction: 'Bake at 350F.' },
+					{ stepNumber: 2, instruction: 'Cool for 10 minutes.' },
+				],
+			},
+		]);
+	});
+
 	it('handles instructions as HowToSection objects, producing one cooking method per section', async () => {
 		const result = await transformScrapeToRecipe(
 			payload({
