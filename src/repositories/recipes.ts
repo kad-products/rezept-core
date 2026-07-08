@@ -1,13 +1,31 @@
-import { and, asc, eq, isNull, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray, isNull, like, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { recipeCookingMethods, recipeIngredients, recipeInstructions, recipeSections, recipes } from '@/models';
-import type { RecipeDBRead, RecipeWithSections, RecipeWriteInput, RzLogger } from '@/types';
+import type { RecipeDBRead, RecipeFilters, RecipeWithSections, RecipeWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
-export async function getRecipes(limit: number, offset: number, logger: RzLogger): Promise<RecipeDBRead[]> {
+export async function getRecipes(
+	filters: RecipeFilters,
+	limit: number,
+	offset: number,
+	logger: RzLogger,
+): Promise<RecipeDBRead[]> {
 	logger.debug('Fetching all recipes');
-	const allRecipes = await db.select().from(recipes).where(isNull(recipes.deletedAt)).limit(limit).offset(offset);
+	const allRecipes = await db
+		.select()
+		.from(recipes)
+		.where(
+			and(
+				and(
+					filters.source ? like(recipes.source, `%${filters.source}%`) : undefined,
+					filters.id ? inArray(recipes.id, filters.id) : undefined,
+				),
+				isNull(recipes.deletedAt),
+			),
+		)
+		.limit(limit)
+		.offset(offset);
 	logger.debug(`Fetched ${allRecipes.length} recipes`);
 	return allRecipes;
 }
