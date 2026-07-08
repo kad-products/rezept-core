@@ -60,6 +60,20 @@ describe('apiErrorResponse', () => {
 			expect(body.cause).toEqual({ name: 'Error', message: 'connection refused' });
 		});
 
+		it('recursively serializes nested error causes', async () => {
+			const rootCause = new Error('UNIQUE constraint failed: recipes.source');
+			const wrappedCause = new Error('Failed query: insert into ...', { cause: rootCause });
+			const err = new RzStepError(500, 'Something went wrong', 'DB error', false, wrappedCause);
+			const response = apiErrorResponse(err);
+			const body = (await response.json()) as Record<string, unknown>;
+
+			expect(body.cause).toEqual({
+				name: 'Error',
+				message: 'Failed query: insert into ...',
+				cause: { name: 'Error', message: 'UNIQUE constraint failed: recipes.source' },
+			});
+		});
+
 		it('does not include cause in production even when the error has one', async () => {
 			mockEnv.REZEPT_ENV = 'production';
 			const err = new RzStepError(500, 'Something went wrong', 'DB error', false, new Error('original'));

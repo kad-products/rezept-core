@@ -222,6 +222,27 @@ describe('recipes repository', () => {
 	});
 
 	describe('createRecipe', () => {
+		it('throws on duplicate source with a cause chain including the constraint name', async () => {
+			await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe' }, testUserId, logger);
+
+			const err = await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe' }, testUserId, logger).catch(
+				e => e,
+			);
+
+			expect(err).toBeInstanceOf(Error);
+			// Walk the cause chain until we find the SQLite constraint message
+			let cause: unknown = err;
+			let found = false;
+			while (cause instanceof Error) {
+				if (cause.message.includes('UNIQUE constraint failed')) {
+					found = true;
+					break;
+				}
+				cause = cause.cause;
+			}
+			expect(found, `Expected "UNIQUE constraint failed" somewhere in the cause chain. Full error: ${err}`).toBe(true);
+		});
+
 		it('creates a recipe with required fields', async () => {
 			const result = await createRecipe(baseRecipeData, testUserId, logger);
 
