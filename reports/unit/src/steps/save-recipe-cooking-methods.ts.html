@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -93,7 +93,9 @@
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -103,19 +105,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,28 +131,30 @@
 import { updateRecipeCookingMethods, updateRecipeInstructions } from '@/repositories';
 import type { RecipeSectionCookingMethodsInput, RzLogger } from '@/types';
 &nbsp;
-export async function <span class="fstat-no" title="function not covered" >saveRecipeCookingMethods(</span>
+export async function saveRecipeCookingMethods(
 	recipeId: string,
 	sectionsData: RecipeSectionCookingMethodsInput[],
 	userId: string,
 	logger: RzLogger,
 ): Promise&lt;void&gt; {
-<span class="cstat-no" title="statement not covered" >	for (const section of sectionsData) {</span>
-<span class="cstat-no" title="statement not covered" >		try {</span>
-			const methodsOnly = <span class="cstat-no" title="statement not covered" >section.cookingMethods.<span class="fstat-no" title="function not covered" >map(m</span> =&gt; (<span class="cstat-no" title="statement not covered" >{ id: m.id, name: m.name, order: m.order }))</span>;</span>
-			const savedMethods = <span class="cstat-no" title="statement not covered" >await updateRecipeCookingMethods(section.sectionId, methodsOnly, userId, logger);</span>
+	for (const section of sectionsData) {
+		try {
+			const methodsOnly = section.cookingMethods.map(m =&gt; ({ id: m.id, name: m.name, order: m.order }));
+			const savedMethods = await updateRecipeCookingMethods(section.sectionId, methodsOnly, userId, logger);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0; i</span> &lt; savedMethods.length; i++) {</span>
-<span class="cstat-no" title="statement not covered" >				await updateRecipeInstructions(savedMethods[i].id, section.cookingMethods[i].instructions, userId, logger);</span>
+			for (let i = 0; i &lt; savedMethods.length; i++) {
+				await updateRecipeInstructions(savedMethods[i].id, section.cookingMethods[i].instructions, userId, logger);
 			}
 &nbsp;
-<span class="cstat-no" title="statement not covered" >			logger.info(`Saved cooking methods for recipe ${recipeId} section ${section.sectionId}`);</span>
+			logger.info(`Saved cooking methods for recipe ${recipeId} section ${section.sectionId}`);
 		} catch (error) {
-<span class="cstat-no" title="statement not covered" >			logger.warn(`Error saving cooking methods for recipe ${recipeId} section ${section.sectionId}: ${error}`);</span>
-<span class="cstat-no" title="statement not covered" >			throw new RzStepError(</span>
+			logger.warn(`Error saving cooking methods for recipe ${recipeId} section ${section.sectionId}: ${error}`);
+			throw new RzStepError(
 				400,
 				'Failed to save recipe cooking methods',
 				`Error saving cooking methods for recipe ${recipeId} section ${section.sectionId}: ${error}`,
+				false,
+				error instanceof Error ? error.cause : undefined,
 			);
 		}
 	}
@@ -160,7 +166,7 @@ export async function <span class="fstat-no" title="function not covered" >saveR
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-08T03:07:09.733Z
+                at 2026-07-08T13:10:37.316Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

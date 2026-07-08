@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -109,18 +109,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,22 +136,22 @@ type R2Structure =
 	  }
 	| undefined;
 &nbsp;
-export async function <span class="fstat-no" title="function not covered" >enrichScrapeWithFullObj(</span>
+export async function enrichScrapeWithFullObj(
 	scrapes: RecipeScrapeDBRead[],
 	logger: RzLogger,
 ): Promise&lt;RecipeScrapeDBReadEnriched[]&gt; {
-<span class="cstat-no" title="statement not covered" >	return await Promise.all(</span>
-		scrapes.map(<span class="fstat-no" title="function not covered" >async s</span>crape =&gt; {
-<span class="cstat-no" title="statement not covered" >			try {</span>
-				const object = <span class="cstat-no" title="statement not covered" >await env.REZEPT_RECIPE_SCRAPES.get(scrape.id);</span>
-				const source: R2Structure = <span class="cstat-no" title="statement not covered" >await object?.json();</span>
-<span class="cstat-no" title="statement not covered" >				if (!source) {</span>
-<span class="cstat-no" title="statement not covered" >					throw new RzStepError(400, 'No source R2 object found', `R2 object ${scrape.id} is either not found or stored empty`);</span>
+	return await Promise.all(
+		scrapes.map(async scrape =&gt; {
+			try {
+				const object = await env.REZEPT_RECIPE_SCRAPES.get(scrape.id);
+				const source: R2Structure = await object?.json();
+				if (!source) {
+					throw new RzStepError(400, 'No source R2 object found', `R2 object ${scrape.id} is either not found or stored empty`);
 				}
-<span class="cstat-no" title="statement not covered" >				return { ...scrape, source };</span>
+				return { ...scrape, source };
 			} catch (deleteErr) {
-<span class="cstat-no" title="statement not covered" >				logger.warn(`Failed to clean up R2 object ${scrape.id}: ${deleteErr}`);</span>
-<span class="cstat-no" title="statement not covered" >				return { ...scrape, source: undefined };</span>
+				logger.warn(`Failed to clean up R2 object ${scrape.id}: ${deleteErr}`);
+				return { ...scrape, source: undefined };
 			}
 		}),
 	);
@@ -163,7 +163,7 @@ export async function <span class="fstat-no" title="function not covered" >enric
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-08T03:07:09.733Z
+                at 2026-07-08T13:10:37.316Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
