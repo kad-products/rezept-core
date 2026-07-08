@@ -81,37 +81,34 @@ describe('recipes repository', () => {
 		});
 
 		describe('source filter', () => {
-			it('returns recipes matching an exact source', async () => {
-				await createRecipe({ ...baseRecipeData, title: 'Match', source: 'https://example.com/recipe' }, testUserId, logger);
-				await createRecipe({ ...baseRecipeData, title: 'No match', source: 'https://other.com/recipe' }, testUserId, logger);
+			it('returns the recipe matching the exact normalized source', async () => {
+				await createRecipe({ ...baseRecipeData, title: 'Match', source: 'example.com/recipe' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'No match', source: 'other.com/recipe' }, testUserId, logger);
 
-				const result = await getRecipes({ source: 'https://example.com/recipe' }, 10, 0, logger);
+				const result = await getRecipes({ source: 'example.com/recipe' }, 10, 0, logger);
 				expect(result).toHaveLength(1);
 				expect(result[0].title).toBe('Match');
 			});
 
-			it('matches recipes whose source contains the filter string', async () => {
-				await createRecipe({ ...baseRecipeData, title: 'Match 1', source: 'https://example.com/recipe-1' }, testUserId, logger);
-				await createRecipe({ ...baseRecipeData, title: 'Match 2', source: 'https://example.com/recipe-2' }, testUserId, logger);
-				await createRecipe({ ...baseRecipeData, title: 'No match', source: 'https://other.com/recipe' }, testUserId, logger);
+			it('returns empty array when source does not exactly match', async () => {
+				await createRecipe({ ...baseRecipeData, source: 'example.com/recipe' }, testUserId, logger);
 
 				const result = await getRecipes({ source: 'example.com' }, 10, 0, logger);
-				expect(result).toHaveLength(2);
-				expect(result.map(r => r.title)).toEqual(expect.arrayContaining(['Match 1', 'Match 2']));
+				expect(result).toEqual([]);
 			});
 
 			it('returns empty array when source does not match', async () => {
-				await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, source: 'example.com/recipe' }, testUserId, logger);
 
-				const result = await getRecipes({ source: 'https://notfound.com/recipe' }, 10, 0, logger);
+				const result = await getRecipes({ source: 'notfound.com/recipe' }, 10, 0, logger);
 				expect(result).toEqual([]);
 			});
 
 			it('does not return deleted recipes matching source', async () => {
-				const r = await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe' }, testUserId, logger);
+				const r = await createRecipe({ ...baseRecipeData, source: 'example.com/recipe' }, testUserId, logger);
 				await deleteRecipe(r.id, testUserId, logger);
 
-				const result = await getRecipes({ source: 'https://example.com/recipe' }, 10, 0, logger);
+				const result = await getRecipes({ source: 'example.com/recipe' }, 10, 0, logger);
 				expect(result).toEqual([]);
 			});
 		});
@@ -153,37 +150,29 @@ describe('recipes repository', () => {
 		});
 
 		describe('source and id filters combined', () => {
-			it('returns only recipes matching both source and id (AND logic)', async () => {
+			it('returns only the recipe matching both exact source and id (AND logic)', async () => {
 				const r1 = await createRecipe(
-					{ ...baseRecipeData, title: 'Source match, id match', source: 'https://example.com/recipe' },
+					{ ...baseRecipeData, title: 'Source match, id match', source: 'example.com/recipe' },
 					testUserId,
 					logger,
 				);
-				const r2 = await createRecipe(
-					{ ...baseRecipeData, title: 'Source match, id no match', source: 'https://example.com/other' },
-					testUserId,
-					logger,
-				);
+				await createRecipe({ ...baseRecipeData, title: 'Id match only', source: 'other.com/recipe' }, testUserId, logger);
 				await createRecipe({ ...baseRecipeData, title: 'Neither' }, testUserId, logger);
 
-				const result = await getRecipes({ source: 'example.com', id: [r1.id, r2.id] }, 10, 0, logger);
-				expect(result).toHaveLength(2);
-				expect(result.map(r => r.id)).toEqual(expect.arrayContaining([r1.id, r2.id]));
+				const result = await getRecipes({ source: 'example.com/recipe', id: [r1.id] }, 10, 0, logger);
+				expect(result).toHaveLength(1);
+				expect(result[0].id).toBe(r1.id);
 			});
 
 			it('excludes recipes matching source but not id', async () => {
 				const r1 = await createRecipe(
-					{ ...baseRecipeData, title: 'In id list', source: 'https://example.com/recipe' },
+					{ ...baseRecipeData, title: 'In id list', source: 'example.com/recipe' },
 					testUserId,
 					logger,
 				);
-				await createRecipe(
-					{ ...baseRecipeData, title: 'Not in id list', source: 'https://example.com/other' },
-					testUserId,
-					logger,
-				);
+				await createRecipe({ ...baseRecipeData, title: 'Not in id list', source: 'example.com/other' }, testUserId, logger);
 
-				const result = await getRecipes({ source: 'example.com', id: [r1.id] }, 10, 0, logger);
+				const result = await getRecipes({ source: 'example.com/recipe', id: [r1.id] }, 10, 0, logger);
 				expect(result).toHaveLength(1);
 				expect(result[0].id).toBe(r1.id);
 			});
@@ -222,12 +211,30 @@ describe('recipes repository', () => {
 	});
 
 	describe('createRecipe', () => {
-		it('throws on duplicate source with a cause chain including the constraint name', async () => {
-			await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe' }, testUserId, logger);
+		it('normalizes source by stripping protocol and trailing slash', async () => {
+			const result = await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe/' }, testUserId, logger);
+			expect(result.source).toBe('example.com/recipe');
+		});
 
-			const err = await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe' }, testUserId, logger).catch(
-				e => e,
-			);
+		it('handles http protocol', async () => {
+			const result = await createRecipe({ ...baseRecipeData, source: 'http://example.com/recipe' }, testUserId, logger);
+			expect(result.source).toBe('example.com/recipe');
+		});
+
+		it('handles source already without protocol', async () => {
+			const result = await createRecipe({ ...baseRecipeData, source: 'example.com/recipe' }, testUserId, logger);
+			expect(result.source).toBe('example.com/recipe');
+		});
+
+		it('handles multiple trailing slashes', async () => {
+			const result = await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe///' }, testUserId, logger);
+			expect(result.source).toBe('example.com/recipe');
+		});
+
+		it('throws on duplicate source with a cause chain including the constraint name', async () => {
+			await createRecipe({ ...baseRecipeData, source: 'example.com/recipe' }, testUserId, logger);
+
+			const err = await createRecipe({ ...baseRecipeData, source: 'example.com/recipe' }, testUserId, logger).catch(e => e);
 
 			expect(err).toBeInstanceOf(Error);
 			// Walk the cause chain until we find the SQLite constraint message
@@ -269,7 +276,7 @@ describe('recipes repository', () => {
 				{
 					...baseRecipeData,
 					description: 'A great recipe',
-					source: 'https://example.com',
+					source: 'example.com',
 					servings: 4,
 					prepTime: 15,
 					cookTime: 30,
@@ -279,7 +286,7 @@ describe('recipes repository', () => {
 			);
 
 			expect(result.description).toBe('A great recipe');
-			expect(result.source).toBe('https://example.com');
+			expect(result.source).toBe('example.com');
 			expect(result.servings).toBe(4);
 			expect(result.prepTime).toBe(15);
 			expect(result.cookTime).toBe(30);
@@ -426,6 +433,18 @@ describe('recipes repository', () => {
 	});
 
 	describe('updateRecipe', () => {
+		it('normalizes source on update', async () => {
+			const created = await createRecipe(baseRecipeData, testUserId, logger);
+
+			const result = await updateRecipe(
+				created.id,
+				{ ...baseRecipeData, source: 'https://example.com/recipe/' },
+				testUserId,
+				logger,
+			);
+			expect(result.source).toBe('example.com/recipe');
+		});
+
 		it('updates recipe fields', async () => {
 			const created = await createRecipe(baseRecipeData, testUserId, logger);
 
