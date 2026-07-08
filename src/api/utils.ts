@@ -26,7 +26,11 @@ export function apiErrorResponse(err: unknown, fallbackMessage: string = 'An err
 
 function serializeCause(cause: unknown): unknown {
 	if (cause instanceof Error) {
-		return { name: cause.name, message: cause.message };
+		return {
+			name: cause.name,
+			message: cause.message,
+			...(cause.cause !== undefined ? { cause: serializeCause(cause.cause) } : {}),
+		};
 	}
 	return cause;
 }
