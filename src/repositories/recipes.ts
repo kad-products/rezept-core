@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, isNull, like, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { recipeCookingMethods, recipeIngredients, recipeInstructions, recipeSections, recipes } from '@/models';
@@ -18,7 +18,7 @@ export async function getRecipes(
 		.where(
 			and(
 				and(
-					filters.source ? like(recipes.source, `%${filters.source}%`) : undefined,
+					filters.source ? eq(recipes.source, filters.source) : undefined,
 					filters.id ? inArray(recipes.id, filters.id) : undefined,
 				),
 				isNull(recipes.deletedAt),
@@ -74,6 +74,11 @@ export async function getRecipeById(recipeId: string, logger: RzLogger): Promise
 	return recipe;
 }
 
+function normalizeSource(source: string | null | undefined): string | null | undefined {
+	if (!source) return source;
+	return source.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+}
+
 export async function createRecipe(recipe: RecipeWriteInput, actingUserId: string, logger: RzLogger): Promise<RecipeDBRead> {
 	logger.debug('Creating recipe');
 
@@ -81,6 +86,7 @@ export async function createRecipe(recipe: RecipeWriteInput, actingUserId: strin
 		.insert(recipes)
 		.values({
 			...recipe,
+			source: normalizeSource(recipe.source),
 			createdBy: actingUserId,
 		})
 		.returning();
@@ -152,6 +158,7 @@ export async function updateRecipe(
 		.update(recipes)
 		.set({
 			...recipeData,
+			source: normalizeSource(recipeData.source),
 			updatedAt: sql`(datetime('now', 'localtime'))`,
 			updatedBy: actingUserId,
 		})
