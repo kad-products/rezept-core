@@ -79,4 +79,16 @@ describe('initializeScrape', () => {
 
 		await expect(initializeScrape({}, userId, logger)).rejects.toMatchObject({ code: 400 });
 	});
+
+	it('throws RzStepError when R2 put throws a non-Error value', async () => {
+		mockScrapesBucket.put.mockRejectedValueOnce('R2 string error');
+
+		await expect(initializeScrape({}, userId, logger)).rejects.toThrow(RzStepError);
+	});
+
+	it('throws RzStepError when createRecipeScrape throws a non-Error value', async () => {
+		vi.mocked(createRecipeScrape).mockRejectedValueOnce('DB string error');
+
+		await expect(initializeScrape({}, userId, logger)).rejects.toThrow(RzStepError);
+	});
 });

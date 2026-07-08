@@ -24,7 +24,7 @@ export default defineConfig({
 				branches: 30,
 				lines: 30, // using this to make sure we don't miss something big or have dead code
 				'src/actions/**': {
-					branches: 84,
+					branches: 92,
 				},
 				'src/api/**': {
 					branches: 100,
@@ -48,7 +48,7 @@ export default defineConfig({
 					branches: 100,
 				},
 				'src/steps/**': {
-					branches: 74,
+					branches: 89,
 				},
 			},
 		},

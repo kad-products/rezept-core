@@ -138,6 +138,24 @@ describe('transformScrapeToRecipe', () => {
 		expect(result.sections[0].cookingMethods[0].instructions).toEqual([]);
 	});
 
+	it('returns Standard method with empty instructions when recipeInstructions is an empty array', async () => {
+		const result = await transformScrapeToRecipe(payload({ ...baseRecipe, recipeInstructions: [] }), logger);
+
+		expect(result.sections[0].cookingMethods).toEqual([{ name: 'Standard', order: 0, instructions: [] }]);
+	});
+
+	it('throws RzStepError 400 when recipeInstructions is a non-array object', async () => {
+		await expect(
+			transformScrapeToRecipe(payload({ ...baseRecipe, recipeInstructions: { type: 'unexpected' } }), logger),
+		).rejects.toMatchObject({ code: 400 });
+	});
+
+	it('throws RzStepError 400 when a HowToStep item has no text field', async () => {
+		await expect(
+			transformScrapeToRecipe(payload({ ...baseRecipe, recipeInstructions: [{ '@type': 'HowToStep' }] }), logger),
+		).rejects.toMatchObject({ code: 400 });
+	});
+
 	it('unescapes HTML entities in the title', async () => {
 		const result = await transformScrapeToRecipe(
 			payload({ ...baseRecipe, name: 'Mom&#39;s &amp; Dad&#39;s Favorite &quot;Special&quot;' }),

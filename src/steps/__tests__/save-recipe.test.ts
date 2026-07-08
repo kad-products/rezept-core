@@ -56,4 +56,10 @@ describe('saveRecipe', () => {
 		await expect(saveRecipe(dataWithId, userId, logger)).rejects.toThrow(RzStepError);
 		await expect(saveRecipe(dataWithId, userId, logger)).rejects.toMatchObject({ code: 400 });
 	});
+
+	it('throws RzStepError when createRecipe throws a non-Error value', async () => {
+		vi.mocked(createRecipe).mockRejectedValueOnce('string error');
+
+		await expect(saveRecipe(baseData, userId, logger)).rejects.toThrow(RzStepError);
+	});
 });

@@ -59,6 +59,8 @@ export async function transformScrapeToRecipe(source: RecipeScrapeSource, logger
 			400,
 			'Could not extract a recipe from the page content',
 			`Error transforming JSON-LD payload to recipe: ${err}`,
+			false,
+			err instanceof Error ? err.cause : undefined,
 		);
 	}
 }

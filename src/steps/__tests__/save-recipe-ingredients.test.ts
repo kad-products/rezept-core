@@ -55,4 +55,11 @@ describe('saveRecipeIngredients', () => {
 		await expect(saveRecipeIngredients(recipeId, ingredientsData, userId, logger)).rejects.toThrow(RzStepError);
 		await expect(saveRecipeIngredients(recipeId, ingredientsData, userId, logger)).rejects.toMatchObject({ code: 400 });
 	});
+
+	it('throws RzStepError when updateRecipeIngredients throws a non-Error value', async () => {
+		vi.mocked(updateRecipeIngredients).mockRejectedValueOnce('string error');
+		const ingredientsData: RecipeSectionIngredientsInput[] = [{ sectionId, ingredients: [] }];
+
+		await expect(saveRecipeIngredients(recipeId, ingredientsData, userId, logger)).rejects.toThrow(RzStepError);
+	});
 });

@@ -13,7 +13,13 @@ export async function saveRecipe(recipeData: RecipeWriteInput, userId: string, l
 		logger.info(`Recipe ${recipe.id} saved`);
 	} catch (error) {
 		logger.warn(`Error saving recipe: ${error}`);
-		throw new RzStepError(400, 'Failed to save recipe', `Error saving recipe: ${error}`);
+		throw new RzStepError(
+			400,
+			'Failed to save recipe',
+			`Error saving recipe: ${error}`,
+			false,
+			error instanceof Error ? error.cause : undefined,
+		);
 	}
 	return recipe;
 }

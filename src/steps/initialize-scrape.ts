@@ -13,7 +13,13 @@ export async function initializeScrape(parsedBody: unknown, userId: string, logg
 		await env.REZEPT_RECIPE_SCRAPES.put(id, stringified);
 	} catch (err) {
 		logger.warn(`Error writing scrape to R2: ${err}`);
-		throw new RzStepError(400, 'Failed to initialize recipe scrape', `Error writing scrape to R2: ${err}`);
+		throw new RzStepError(
+			400,
+			'Failed to initialize recipe scrape',
+			`Error writing scrape to R2: ${err}`,
+			true,
+			err instanceof Error ? err.cause : undefined,
+		);
 	}
 
 	try {
@@ -27,6 +33,12 @@ export async function initializeScrape(parsedBody: unknown, userId: string, logg
 		} catch (deleteErr) {
 			logger.warn(`Failed to clean up R2 object ${id}: ${deleteErr}`);
 		}
-		throw new RzStepError(400, 'Failed to initialize recipe scrape', `Error creating scrape record: ${err}`);
+		throw new RzStepError(
+			400,
+			'Failed to initialize recipe scrape',
+			`Error creating scrape record: ${err}`,
+			true,
+			err instanceof Error ? err.cause : undefined,
+		);
 	}
 }

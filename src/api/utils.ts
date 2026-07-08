@@ -6,8 +6,14 @@ export function apiErrorResponse(err: unknown, fallbackMessage: string = 'An err
 		return Response.json({ success: false, error: err.message }, { status: err.code });
 	}
 	if (err instanceof RzStepError) {
-		const message = env.REZEPT_ENV === 'production' ? err.publicMessage : err.devMessage;
-		return Response.json({ success: false, error: message }, { status: err.code });
+		return Response.json(
+			{
+				success: false,
+				error: env.REZEPT_ENV !== 'production' ? err.devMessage : err.publicMessage,
+				...(env.REZEPT_ENV !== 'production' && err.cause !== undefined ? { cause: err.cause } : {}),
+			},
+			{ status: err.code },
+		);
 	}
 
 	const status = 500;

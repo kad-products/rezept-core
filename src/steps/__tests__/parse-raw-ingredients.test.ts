@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
+import { RzStepError } from '@/classes';
 import { createNoopLogger } from '@/logger';
 import { parseRawIngredients } from '@/steps';
 import type { RecipeIngredientDBRead } from '@/types';
@@ -73,6 +74,10 @@ describe('parseRawIngredients', () => {
 
 		expect(results).toStrictEqual(['onions', 'apples', 'slices of cheese', 'oranges']);
 	});
+	it('throws RzStepError when the input is not iterable', async () => {
+		await expect(parseRawIngredients(null as unknown as RecipeIngredientDBRead[], logger)).rejects.toThrow(RzStepError);
+	});
+
 	it('handles our current list of recipe ingredients', async () => {
 		const recipeIngredients = dbRecipeIngredientsFromStrings([
 			'0.5 cup diced bacon',

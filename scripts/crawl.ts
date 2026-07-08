@@ -1,4 +1,5 @@
 import { JSDOM } from 'jsdom';
+import type { RecipeWithSections } from '@/types';
 
 const debugURLs: string[] = [];
 const initialUrl = process.env.REZEPT_CRAWL_URL;
@@ -27,6 +28,17 @@ for (const url of inSiteUrls) {
 	console.log(`Parsing ${url}`);
 
 	try {
+		const alreadyExists = await checkForExisting(url);
+		console.log(`Existing check ${alreadyExists}`);
+		if (alreadyExists) {
+			continue;
+		}
+	} catch (err) {
+		console.log(`Error checking if recipe exists`, err);
+		process.exit(1);
+	}
+
+	try {
 		const recipeDom = await fetchAndParse(url);
 		console.log(`  Recipe DOM is ${recipeDom.serialize().length} characters long`);
 		const jsonLD = getJsonLd(recipeDom);
@@ -48,6 +60,7 @@ for (const url of inSiteUrls) {
 		console.log(JSON.stringify(result, null, 2));
 	} catch (err) {
 		console.log(err);
+		process.exit(1);
 	}
 
 	await new Promise(r => setTimeout(r, 10000));
@@ -64,6 +77,30 @@ async function fetchAndParse(url: string): Promise<JSDOM> {
 		console.log(response.text());
 		throw err;
 	}
+}
+
+type SearchResult = {
+	success: boolean;
+	data: RecipeWithSections[];
+};
+
+async function checkForExisting(url: string): Promise<boolean> {
+	const searchResponse = await fetch(`${apiBase}/api/recipes/search`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${process.env.REZEPT_API_KEY}`,
+		},
+		body: JSON.stringify({ source: url }),
+	});
+
+	const result: SearchResult = await searchResponse.json();
+	if (result.success) {
+		const { data: recipes } = result;
+		return recipes.length === 1;
+	}
+
+	return false;
 }
 
 function getJsonLd(dom: JSDOM): unknown[] {
