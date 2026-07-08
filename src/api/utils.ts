@@ -10,7 +10,7 @@ export function apiErrorResponse(err: unknown, fallbackMessage: string = 'An err
 			{
 				success: false,
 				error: env.REZEPT_ENV !== 'production' ? err.devMessage : err.publicMessage,
-				...(env.REZEPT_ENV !== 'production' && err.cause !== undefined ? { cause: err.cause } : {}),
+				...(env.REZEPT_ENV !== 'production' && err.cause !== undefined ? { cause: serializeCause(err.cause) } : {}),
 			},
 			{ status: err.code },
 		);
@@ -22,6 +22,13 @@ export function apiErrorResponse(err: unknown, fallbackMessage: string = 'An err
 	}
 	const message = err instanceof Error ? err.message : 'An unexpected error occurred';
 	return Response.json({ success: false, error: message }, { status });
+}
+
+function serializeCause(cause: unknown): unknown {
+	if (cause instanceof Error) {
+		return { name: cause.name, message: cause.message };
+	}
+	return cause;
 }
 
 export function errorResponse(error: string, status: number = 400): Response {

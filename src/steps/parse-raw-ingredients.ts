@@ -34,7 +34,7 @@ export async function parseRawIngredients(rawRecipeIngredients: RecipeIngredient
 			'Error parsing raw ingredients',
 			`Unexpected error in parsing the raw ingredients, see logs for more details: ${err}`,
 			false,
-			err instanceof Error ? err.cause : undefined,
+			err,
 		);
 	}
 }
