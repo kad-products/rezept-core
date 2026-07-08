@@ -1,3 +1,14 @@
+## [1.59.0](https://github.com/kad-products/rezept-core/compare/v1.58.0...v1.59.0) (2026-07-08)
+
+### Features
+
+* crawl script ([25303d1](https://github.com/kad-products/rezept-core/commit/25303d16773f700e293813233693299e51ddf4ab))
+* initial recipes search API ([8136f67](https://github.com/kad-products/rezept-core/commit/8136f67cb634075e46195a49597f55090d996fbe))
+
+### Bug Fixes
+
+* getRecipes signature changed ([07396b2](https://github.com/kad-products/rezept-core/commit/07396b22a8dec07e19d44197a46ccf3432a48df0))
+
 ## [1.58.0](https://github.com/kad-products/rezept-core/compare/v1.57.0...v1.58.0) (2026-07-07)
 
 ### Features
