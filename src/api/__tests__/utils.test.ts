@@ -94,6 +94,27 @@ describe('apiErrorResponse', () => {
 			expect(body).toEqual({ success: false, error: 'Unexpected failure' });
 		});
 
+		it('includes cause chain for unexpected errors in development', async () => {
+			const root = new Error('SQLITE_ERROR: LIKE or GLOB pattern too complex');
+			const wrapper = new Error('Failed query: select ...', { cause: root });
+			const response = apiErrorResponse(wrapper);
+			const body = (await response.json()) as Record<string, unknown>;
+
+			expect(response.status).toBe(500);
+			expect(body.error).toBe('Failed query: select ...');
+			expect(body.cause).toEqual({ name: 'Error', message: 'SQLITE_ERROR: LIKE or GLOB pattern too complex' });
+		});
+
+		it('does not include cause for unexpected errors in production', async () => {
+			mockEnv.REZEPT_ENV = 'production';
+			const root = new Error('SQLITE_ERROR');
+			const wrapper = new Error('Failed query', { cause: root });
+			const response = apiErrorResponse(wrapper, 'Something failed');
+			const body = (await response.json()) as Record<string, unknown>;
+
+			expect(body.cause).toBeUndefined();
+		});
+
 		it('returns 500 with fallback message in production', async () => {
 			mockEnv.REZEPT_ENV = 'production';
 			const response = apiErrorResponse(new Error('Internal details'), 'Something failed');

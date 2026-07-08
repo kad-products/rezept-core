@@ -20,8 +20,17 @@ export function apiErrorResponse(err: unknown, fallbackMessage: string = 'An err
 	if (env.REZEPT_ENV === 'production') {
 		return Response.json({ success: false, error: fallbackMessage }, { status });
 	}
-	const message = err instanceof Error ? err.message : 'An unexpected error occurred';
-	return Response.json({ success: false, error: message }, { status });
+	if (err instanceof Error) {
+		return Response.json(
+			{
+				success: false,
+				error: err.message,
+				...(err.cause !== undefined ? { cause: serializeCause(err.cause) } : {}),
+			},
+			{ status },
+		);
+	}
+	return Response.json({ success: false, error: 'An unexpected error occurred' }, { status });
 }
 
 function serializeCause(cause: unknown): unknown {
