@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { RzStepError } from '@/classes';
 import { createNoopLogger } from '@/logger';
+import { recipesSchemas } from '@/schemas';
 import { validateAsRecipe } from '@/steps';
 import type { ParsedRecipeScrape } from '@/types';
 
@@ -63,5 +64,18 @@ describe('validateAsRecipe', () => {
 
 		await expect(validateAsRecipe(scrape, userId, logger)).rejects.toThrow(RzStepError);
 		await expect(validateAsRecipe(scrape, userId, logger)).rejects.toMatchObject({ code: 400 });
+	});
+
+	it('wraps unexpected non-RzStepError exceptions in RzStepError 400', async () => {
+		const spy = vi.spyOn(recipesSchemas.scrape, 'safeParse').mockImplementationOnce(() => {
+			throw new Error('Schema engine failure');
+		});
+
+		await expect(validateAsRecipe(validScrape, userId, logger)).rejects.toMatchObject({
+			code: 400,
+			publicMessage: 'Failed to validate recipe',
+		});
+
+		spy.mockRestore();
 	});
 });

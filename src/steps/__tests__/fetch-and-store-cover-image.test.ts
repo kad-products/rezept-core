@@ -210,5 +210,52 @@ describe('fetchAndStoreCoverImage', () => {
 			expect(err.retryable).toBe(true);
 			vi.unstubAllGlobals();
 		});
+
+		it('throws RzStepError when fetch throws a non-Error value', async () => {
+			vi.stubGlobal('fetch', vi.fn().mockRejectedValue('network string error'));
+
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
+
+			expect(err).toBeInstanceOf(RzStepError);
+			vi.unstubAllGlobals();
+		});
+
+		it('throws RzStepError when createImage throws a non-Error value', async () => {
+			const buffer = new ArrayBuffer(512);
+			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(makeOkResponse(buffer)));
+			vi.mocked(createImage).mockRejectedValueOnce('DB string error');
+
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
+
+			expect(err).toBeInstanceOf(RzStepError);
+			vi.unstubAllGlobals();
+		});
+
+		it('throws RzStepError when R2 put throws a non-Error value', async () => {
+			const buffer = new ArrayBuffer(512);
+			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(makeOkResponse(buffer)));
+			mockImagesBucket.put.mockRejectedValueOnce('R2 string error');
+
+			const err = await fetchAndStoreCoverImage(baseCoverImage, userId, logger).catch(e => e);
+
+			expect(err).toBeInstanceOf(RzStepError);
+			vi.unstubAllGlobals();
+		});
+	});
+
+	describe('deriveImageName', () => {
+		it('falls back to "image" name and filename when the URL cannot be parsed', async () => {
+			const buffer = new ArrayBuffer(512);
+			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(makeOkResponse(buffer)));
+
+			await fetchAndStoreCoverImage({ url: 'not-a-valid-url' }, userId, logger);
+
+			expect(createImage).toHaveBeenCalledWith(
+				expect.objectContaining({ name: 'image', originalFilename: 'image' }),
+				userId,
+				logger,
+			);
+			vi.unstubAllGlobals();
+		});
 	});
 });

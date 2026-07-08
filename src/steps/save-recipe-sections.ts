@@ -14,7 +14,13 @@ export async function saveRecipeSections(
 		logger.info(`Saved ${sections.length} sections for recipe ${recipeId}`);
 	} catch (error) {
 		logger.warn(`Error saving sections for recipe ${recipeId}: ${error}`);
-		throw new RzStepError(400, 'Failed to save recipe sections', `Error saving sections for recipe ${recipeId}: ${error}`);
+		throw new RzStepError(
+			400,
+			'Failed to save recipe sections',
+			`Error saving sections for recipe ${recipeId}: ${error}`,
+			false,
+			error instanceof Error ? error.cause : undefined,
+		);
 	}
 	return sections;
 }

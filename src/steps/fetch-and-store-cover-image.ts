@@ -22,6 +22,7 @@ export async function fetchAndStoreCoverImage(
 			`Failed to fetch cover image: ${err}`,
 			`Error occurred while fetching cover image from ${coverImage.url}`,
 			true,
+			err instanceof Error ? err.cause : undefined,
 		);
 	}
 
@@ -64,6 +65,7 @@ export async function fetchAndStoreCoverImage(
 			`Failed to process cover image: ${err}`,
 			`Error occurred while creating DB record for cover image from ${coverImage.url}`,
 			true,
+			err instanceof Error ? err.cause : undefined,
 		);
 	}
 
@@ -77,6 +79,7 @@ export async function fetchAndStoreCoverImage(
 			`Failed to store cover image: ${err}`,
 			`Error occurred while storing cover image ${image.id}`,
 			true,
+			err instanceof Error ? err.cause : undefined,
 		);
 	}
 

@@ -32,6 +32,16 @@ describe('apiErrorResponse', () => {
 			expect(body).toEqual({ success: false, error: 'Detailed dev error' });
 		});
 
+		it('includes cause in development when the error has one', async () => {
+			const cause = { code: 'DB_TIMEOUT', detail: 'connection timed out' };
+			const err = new RzStepError(500, 'Something went wrong', 'DB error', false, cause);
+			const response = apiErrorResponse(err);
+			const body = (await response.json()) as Record<string, unknown>;
+
+			expect(response.status).toBe(500);
+			expect(body.cause).toEqual(cause);
+		});
+
 		it('returns publicMessage in production', async () => {
 			mockEnv.REZEPT_ENV = 'production';
 			const err = new RzStepError(400, 'Something went wrong', 'Detailed dev error');
@@ -40,6 +50,15 @@ describe('apiErrorResponse', () => {
 
 			expect(response.status).toBe(400);
 			expect(body).toEqual({ success: false, error: 'Something went wrong' });
+		});
+
+		it('does not include cause in production even when the error has one', async () => {
+			mockEnv.REZEPT_ENV = 'production';
+			const err = new RzStepError(500, 'Something went wrong', 'DB error', false, new Error('original'));
+			const response = apiErrorResponse(err);
+			const body = (await response.json()) as Record<string, unknown>;
+
+			expect(body.cause).toBeUndefined();
 		});
 	});
 

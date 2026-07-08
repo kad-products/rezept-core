@@ -6,8 +6,9 @@ export class RzStepError extends Error {
 		public publicMessage: string,
 		devMessage: string,
 		public retryable: boolean = false,
+		cause?: unknown,
 	) {
-		super(devMessage);
+		super(devMessage, { cause });
 		this.name = 'RzStepError';
 		this.devMessage = devMessage;
 	}

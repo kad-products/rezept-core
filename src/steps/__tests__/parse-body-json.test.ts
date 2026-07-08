@@ -26,4 +26,15 @@ describe('parseBodyJson', () => {
 		await expect(parseBodyJson(request)).rejects.toThrow(RzStepError);
 		await expect(parseBodyJson(request)).rejects.toMatchObject({ code: 400 });
 	});
+
+	it('throws RzStepError 400 when request.json() throws a non-Error value', async () => {
+		const request = {
+			json: async () => {
+				throw 'plain string error';
+			},
+		} as unknown as Request;
+
+		await expect(parseBodyJson(request)).rejects.toThrow(RzStepError);
+		await expect(parseBodyJson(request)).rejects.toMatchObject({ code: 400 });
+	});
 });

@@ -19,6 +19,8 @@ export async function saveRecipeIngredients(
 				400,
 				'Failed to save recipe ingredients',
 				`Error saving ingredients for recipe ${recipeId} section ${section.sectionId}: ${error}`,
+				false,
+				error instanceof Error ? error.cause : undefined,
 			);
 		}
 	}
