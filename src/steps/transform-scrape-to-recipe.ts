@@ -129,22 +129,32 @@ function parseCookingMethods(raw: unknown): ParsedRecipeScrapeCookingMethod[] {
 		return [{ name: 'Standard', order: 0, instructions: [] }];
 	}
 
-	// Check if items are HowToSection nodes
-	const first = raw[0];
-	if (first && typeof first === 'object' && (first as RecipeScrapeJsonLdNode)['@type'] === 'HowToSection') {
-		return (raw as RecipeScrapeJsonLdNode[]).map((section, i) => {
-			const name = typeof section.name === 'string' ? section.name : `Method ${i + 1}`;
-			const steps = Array.isArray(section.itemListElement) ? section.itemListElement : [];
-			return {
-				name,
-				order: i,
-				instructions: parseInstructions(steps),
-			};
-		});
+	const isSection = (item: unknown): item is RecipeScrapeJsonLdNode =>
+		!!item && typeof item === 'object' && (item as RecipeScrapeJsonLdNode)['@type'] === 'HowToSection';
+
+	// If no HowToSection items, all items are plain steps — single Standard method
+	if (!raw.some(isSection)) {
+		return [{ name: 'Standard', order: 0, instructions: parseInstructions(raw) }];
 	}
 
-	// Plain HowToStep / string array — single Standard method
-	return [{ name: 'Standard', order: 0, instructions: parseInstructions(raw) }];
+	// Mixed or all-section array: flat HowToStep items → Standard, each HowToSection → its own method
+	const flatSteps = raw.filter(item => !isSection(item));
+	const sections = raw.filter(isSection);
+
+	const result: ParsedRecipeScrapeCookingMethod[] = [];
+	let order = 0;
+
+	if (flatSteps.length > 0) {
+		result.push({ name: 'Standard', order: order++, instructions: parseInstructions(flatSteps) });
+	}
+
+	for (const section of sections) {
+		const name = typeof section.name === 'string' ? section.name : `Method ${order + 1}`;
+		const steps = Array.isArray(section.itemListElement) ? section.itemListElement : [];
+		result.push({ name, order: order++, instructions: parseInstructions(steps) });
+	}
+
+	return result;
 }
 
 function parseServings(raw: unknown): number | undefined {
