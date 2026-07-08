@@ -47,3 +47,8 @@ export type ParsedRecipeScrape = {
 	coverImage?: ParsedRecipeScrapeImage;
 	sections: ParsedRecipeScrapeSection[];
 };
+
+export type RecipeFilters = {
+	source?: string;
+	id?: string[];
+};

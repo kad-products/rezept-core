@@ -19,30 +19,174 @@ describe('recipes repository', () => {
 	});
 
 	describe('getRecipes', () => {
-		it('returns empty array when no recipes exist', async () => {
-			const result = await getRecipes(10, 0, logger);
-			expect(result).toEqual([]);
-		});
-
-		it('returns all recipes', async () => {
-			await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
-			await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
-			await createRecipe({ ...baseRecipeData, title: 'Recipe 3' }, testUserId, logger);
-
-			const result = await getRecipes(10, 0, logger);
-			expect(result).toHaveLength(3);
-		});
-
-		it('returns recipes with correct shape', async () => {
-			await createRecipe(baseRecipeData, testUserId, logger);
-
-			const result = await getRecipes(10, 0, logger);
-			expect(result[0]).toMatchObject({
-				title: 'Test Recipe',
-				authorId: testUserId,
-				createdBy: testUserId,
+		describe('no filters', () => {
+			it('returns empty array when no recipes exist', async () => {
+				const result = await getRecipes({}, 10, 0, logger);
+				expect(result).toEqual([]);
 			});
-			expect(result[0].id).toBeDefined();
+
+			it('returns all non-deleted recipes', async () => {
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 3' }, testUserId, logger);
+
+				const result = await getRecipes({}, 10, 0, logger);
+				expect(result).toHaveLength(3);
+			});
+
+			it('returns recipes with correct shape', async () => {
+				await createRecipe(baseRecipeData, testUserId, logger);
+
+				const result = await getRecipes({}, 10, 0, logger);
+				expect(result[0]).toMatchObject({
+					title: 'Test Recipe',
+					authorId: testUserId,
+					createdBy: testUserId,
+				});
+				expect(result[0].id).toBeDefined();
+			});
+
+			it('excludes soft-deleted recipes', async () => {
+				const r1 = await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+				await deleteRecipe(r1.id, testUserId, logger);
+
+				const result = await getRecipes({}, 10, 0, logger);
+				expect(result).toHaveLength(1);
+				expect(result[0].title).toBe('Recipe 2');
+			});
+		});
+
+		describe('pagination', () => {
+			it('respects limit', async () => {
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 3' }, testUserId, logger);
+
+				const result = await getRecipes({}, 2, 0, logger);
+				expect(result).toHaveLength(2);
+			});
+
+			it('respects offset', async () => {
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 3' }, testUserId, logger);
+
+				const page1 = await getRecipes({}, 2, 0, logger);
+				const page2 = await getRecipes({}, 2, 2, logger);
+				expect(page1).toHaveLength(2);
+				expect(page2).toHaveLength(1);
+				expect([...page1, ...page2].map(r => r.title)).toEqual(['Recipe 1', 'Recipe 2', 'Recipe 3']);
+			});
+		});
+
+		describe('source filter', () => {
+			it('returns recipes matching an exact source', async () => {
+				await createRecipe({ ...baseRecipeData, title: 'Match', source: 'https://example.com/recipe' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'No match', source: 'https://other.com/recipe' }, testUserId, logger);
+
+				const result = await getRecipes({ source: 'https://example.com/recipe' }, 10, 0, logger);
+				expect(result).toHaveLength(1);
+				expect(result[0].title).toBe('Match');
+			});
+
+			it('matches recipes whose source contains the filter string', async () => {
+				await createRecipe({ ...baseRecipeData, title: 'Match 1', source: 'https://example.com/recipe-1' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Match 2', source: 'https://example.com/recipe-2' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'No match', source: 'https://other.com/recipe' }, testUserId, logger);
+
+				const result = await getRecipes({ source: 'example.com' }, 10, 0, logger);
+				expect(result).toHaveLength(2);
+				expect(result.map(r => r.title)).toEqual(expect.arrayContaining(['Match 1', 'Match 2']));
+			});
+
+			it('returns empty array when source does not match', async () => {
+				await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe' }, testUserId, logger);
+
+				const result = await getRecipes({ source: 'https://notfound.com/recipe' }, 10, 0, logger);
+				expect(result).toEqual([]);
+			});
+
+			it('does not return deleted recipes matching source', async () => {
+				const r = await createRecipe({ ...baseRecipeData, source: 'https://example.com/recipe' }, testUserId, logger);
+				await deleteRecipe(r.id, testUserId, logger);
+
+				const result = await getRecipes({ source: 'https://example.com/recipe' }, 10, 0, logger);
+				expect(result).toEqual([]);
+			});
+		});
+
+		describe('id filter', () => {
+			it('returns recipes matching a single id', async () => {
+				const r1 = await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+
+				const result = await getRecipes({ id: [r1.id] }, 10, 0, logger);
+				expect(result).toHaveLength(1);
+				expect(result[0].id).toBe(r1.id);
+			});
+
+			it('returns recipes matching multiple ids', async () => {
+				const r1 = await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+				const r2 = await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+				await createRecipe({ ...baseRecipeData, title: 'Recipe 3' }, testUserId, logger);
+
+				const result = await getRecipes({ id: [r1.id, r2.id] }, 10, 0, logger);
+				expect(result).toHaveLength(2);
+				expect(result.map(r => r.id)).toEqual(expect.arrayContaining([r1.id, r2.id]));
+			});
+
+			it('returns empty array when no ids match', async () => {
+				await createRecipe(baseRecipeData, testUserId, logger);
+
+				const result = await getRecipes({ id: [crypto.randomUUID()] }, 10, 0, logger);
+				expect(result).toEqual([]);
+			});
+
+			it('does not return deleted recipes matching id', async () => {
+				const r = await createRecipe(baseRecipeData, testUserId, logger);
+				await deleteRecipe(r.id, testUserId, logger);
+
+				const result = await getRecipes({ id: [r.id] }, 10, 0, logger);
+				expect(result).toEqual([]);
+			});
+		});
+
+		describe('source and id filters combined', () => {
+			it('returns only recipes matching both source and id (AND logic)', async () => {
+				const r1 = await createRecipe(
+					{ ...baseRecipeData, title: 'Source match, id match', source: 'https://example.com/recipe' },
+					testUserId,
+					logger,
+				);
+				const r2 = await createRecipe(
+					{ ...baseRecipeData, title: 'Source match, id no match', source: 'https://example.com/other' },
+					testUserId,
+					logger,
+				);
+				await createRecipe({ ...baseRecipeData, title: 'Neither' }, testUserId, logger);
+
+				const result = await getRecipes({ source: 'example.com', id: [r1.id, r2.id] }, 10, 0, logger);
+				expect(result).toHaveLength(2);
+				expect(result.map(r => r.id)).toEqual(expect.arrayContaining([r1.id, r2.id]));
+			});
+
+			it('excludes recipes matching source but not id', async () => {
+				const r1 = await createRecipe(
+					{ ...baseRecipeData, title: 'In id list', source: 'https://example.com/recipe' },
+					testUserId,
+					logger,
+				);
+				await createRecipe(
+					{ ...baseRecipeData, title: 'Not in id list', source: 'https://example.com/other' },
+					testUserId,
+					logger,
+				);
+
+				const result = await getRecipes({ source: 'example.com', id: [r1.id] }, 10, 0, logger);
+				expect(result).toHaveLength(1);
+				expect(result[0].id).toBe(r1.id);
+			});
 		});
 	});
 
@@ -166,7 +310,7 @@ describe('recipes repository', () => {
 			const created = await createRecipe(baseRecipeData, testUserId, logger);
 			await deleteRecipe(created.id, testUserId, logger);
 
-			const result = await getRecipes(10, 0, logger);
+			const result = await getRecipes({}, 10, 0, logger);
 			expect(result).toHaveLength(0);
 		});
 
