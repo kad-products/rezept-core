@@ -1,3 +1,9 @@
+## [1.61.0](https://github.com/kad-products/rezept-core/compare/v1.60.3...v1.61.0) (2026-07-08)
+
+### Features
+
+* clean up recipe source search implementation ([90a7918](https://github.com/kad-products/rezept-core/commit/90a791823bf2435ff96dd6eba82cc3c7f907a255))
+
 ## [1.60.3](https://github.com/kad-products/rezept-core/compare/v1.60.2...v1.60.3) (2026-07-08)
 
 ### Bug Fixes
