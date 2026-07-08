@@ -1,3 +1,9 @@
+## [1.62.0](https://github.com/kad-products/rezept-core/compare/v1.61.0...v1.62.0) (2026-07-08)
+
+### Features
+
+* additional logic to handling scraped instructions and methods ([eb782b3](https://github.com/kad-products/rezept-core/commit/eb782b38d652900fe12bd4ceb99ac968f33459c3))
+
 ## [1.61.0](https://github.com/kad-products/rezept-core/compare/v1.60.3...v1.61.0) (2026-07-08)
 
 ### Features
