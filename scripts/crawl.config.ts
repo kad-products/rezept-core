@@ -1,2 +1,2 @@
-export const urlDebugList = [];
-export const urlSkipList = [];
+export const urlDebugList: string[] = [];
+export const urlSkipList: string[] = [];
