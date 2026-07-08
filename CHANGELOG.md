@@ -1,3 +1,9 @@
+## [1.60.2](https://github.com/kad-products/rezept-core/compare/v1.60.1...v1.60.2) (2026-07-08)
+
+### Bug Fixes
+
+* hopefully really fix the error reporting mechanism in api calls ([d4abd47](https://github.com/kad-products/rezept-core/commit/d4abd47c246e78af963453abd2a62969b719ae8d))
+
 ## [1.60.1](https://github.com/kad-products/rezept-core/compare/v1.60.0...v1.60.1) (2026-07-08)
 
 ### Bug Fixes
