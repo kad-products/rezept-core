@@ -1,5 +1,14 @@
 import { JSDOM } from 'jsdom';
-import { urlDebugList, urlSkipList } from './crawl.config';
+
+let config: Record<string, string[]> = {
+	urlDebugList: [],
+	urlSkipList: [],
+};
+
+config = {
+	...config,
+	...(await loadConfig()),
+};
 
 type APIResponseSingle = {
 	success: boolean;
@@ -30,8 +39,8 @@ const inSiteUrls = new Set(
 	anchors
 		.map(anc => anc.href)
 		.filter(url => url.includes(crawlHost))
-		.filter(url => urlDebugList.length === 0 || urlDebugList.includes(url))
-		.filter(url => urlSkipList.length === 0 || !urlSkipList.includes(url))
+		.filter(url => config.urlDebugList.length === 0 || config.urlDebugList.includes(url))
+		.filter(url => config.urlSkipList.length === 0 || !config.urlSkipList.includes(url))
 		.filter(Boolean),
 );
 
@@ -57,6 +66,7 @@ for (const url of inSiteUrls) {
 			console.log(`  Recipe DOM is ${recipeDom.serialize().length} characters long`);
 			console.log(`  Found ${jsonLD.length} JSON LD items`);
 			console.log(`  ⚠️ No JSON data, skipping`);
+			await new Promise(r => setTimeout(r, 2000));
 			continue;
 		}
 
@@ -71,8 +81,10 @@ for (const url of inSiteUrls) {
 		const result: APIResponseSingle = await apiResponse.json();
 		if (result.success) {
 			console.log(`  ✅ Scrape call succeeded (id ${result.data.id}, status ${result.data.status}) `);
+			await new Promise(r => setTimeout(r, 20000));
 		} else if (result?.error === 'No recipe found in payload') {
 			console.log(`  ⚠️ No recipe found in payload`);
+			await new Promise(r => setTimeout(r, 2000));
 		} else {
 			console.log(`  🚨 Scrape failed:\n${console.log(JSON.stringify(result, null, 2))}`);
 			process.exit(1);
@@ -81,8 +93,6 @@ for (const url of inSiteUrls) {
 		console.log(err);
 		process.exit(1);
 	}
-
-	await new Promise(r => setTimeout(r, 10000));
 }
 
 async function fetchAndParse(url: string): Promise<JSDOM> {
@@ -99,13 +109,14 @@ async function fetchAndParse(url: string): Promise<JSDOM> {
 }
 
 async function checkForExisting(url: string): Promise<boolean> {
+	const parsedURL = new URL(url);
 	const searchResponse = await fetch(`${apiBase}/api/recipes/search`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `Bearer ${process.env.REZEPT_API_KEY}`,
 		},
-		body: JSON.stringify({ source: url }),
+		body: JSON.stringify({ source: `${parsedURL.hostname}${parsedURL.pathname.replace(/\/$/, '')}` }),
 	});
 
 	const result: APIResponseArray = await searchResponse.json();
@@ -113,6 +124,7 @@ async function checkForExisting(url: string): Promise<boolean> {
 		const { data: recipes } = result;
 		return recipes.length === 1;
 	}
+	console.log(`  🚨 Error checking for existing: ${JSON.stringify(result, null, 4)}`);
 
 	return false;
 }
@@ -129,4 +141,13 @@ function getJsonLd(dom: JSDOM): unknown[] {
 			}
 		})
 		.filter(Boolean);
+}
+
+async function loadConfig() {
+	try {
+		const config = await import('./crawl-config.foreignfork');
+		return config;
+	} catch {
+		return undefined;
+	}
 }
