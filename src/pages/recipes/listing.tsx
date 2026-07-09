@@ -1,5 +1,5 @@
 import type { RequestInfo } from 'rwsdk/worker';
-import { RzCard } from '@/components/design-system';
+import { RzCard, RzLink } from '@/components/design-system';
 import AppLayout from '@/layouts/app';
 import { getRecipes } from '@/repositories';
 
@@ -7,7 +7,7 @@ export default async function Pages__recipes__listing({ ctx }: RequestInfo): Pro
 	const recipes = await getRecipes({}, 10, 0, ctx.logger);
 	return (
 		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
-			{ctx.permissions?.includes('recipes:create') && <a href="/recipes/new">New Recipe</a>}
+			<RzLink userPermissions={ctx.permissions} requiredPermission="recipes:create" label="New Recipe" href="/recipes/new" />
 
 			<div className="recipes-listing">
 				{recipes.map(r => {
