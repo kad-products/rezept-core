@@ -1,3 +1,15 @@
+## [1.63.0](https://github.com/kad-products/rezept-core/compare/v1.62.0...v1.63.0) (2026-07-09)
+
+### Features
+
+* adding recipe pagination ([b3f4533](https://github.com/kad-products/rezept-core/commit/b3f4533a31c80ae9f87e07c1c76b900600a9ee13))
+
+### Bug Fixes
+
+* crawl config loading system ([ba9464c](https://github.com/kad-products/rezept-core/commit/ba9464cd67dcb0f4d24533eeda8d5c5cf6b99872))
+* crawl script config loader ([bfbd530](https://github.com/kad-products/rezept-core/commit/bfbd530d0ec03e4c9674a7498c8b766d010608b5))
+* use RzLink instead of inline perms check on link ([46b3be3](https://github.com/kad-products/rezept-core/commit/46b3be33f4bd796c7bcaab25cdb7b8cb26469ed5))
+
 ## [1.62.0](https://github.com/kad-products/rezept-core/compare/v1.61.0...v1.62.0) (2026-07-08)
 
 ### Features
