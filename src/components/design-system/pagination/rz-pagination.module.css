@@ -1,0 +1,21 @@
+.rz-pagination {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.1);
+	a,
+	span {
+		display: block;
+		padding: 1rem;
+		font-size: 1.2rem;
+	}
+	a {
+		text-decoration: none;
+		color: lime;
+		font-weight: bold;
+		transition: 0.2s all;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

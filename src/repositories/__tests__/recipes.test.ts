@@ -3,7 +3,15 @@ import { createNoopLogger } from '@/logger';
 import { createUser, getImageTypeByName } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import { createImage } from '../images';
-import { createRecipe, deleteRecipe, getRecipeById, getRecipes, updateRecipe, updateRecipeCoverImage } from '../recipes';
+import {
+	countRecipes,
+	createRecipe,
+	deleteRecipe,
+	getRecipeById,
+	getRecipes,
+	updateRecipe,
+	updateRecipeCoverImage,
+} from '../recipes';
 
 const logger = createNoopLogger();
 
@@ -176,6 +184,53 @@ describe('recipes repository', () => {
 				expect(result).toHaveLength(1);
 				expect(result[0].id).toBe(r1.id);
 			});
+		});
+	});
+
+	describe('countRecipes', () => {
+		it('returns 0 when no recipes exist', async () => {
+			expect(await countRecipes({}, logger)).toBe(0);
+		});
+
+		it('counts all non-deleted recipes', async () => {
+			await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+			await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+			await createRecipe({ ...baseRecipeData, title: 'Recipe 3' }, testUserId, logger);
+
+			expect(await countRecipes({}, logger)).toBe(3);
+		});
+
+		it('excludes soft-deleted recipes', async () => {
+			const r1 = await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+			await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+			await deleteRecipe(r1.id, testUserId, logger);
+
+			expect(await countRecipes({}, logger)).toBe(1);
+		});
+
+		it('filters by exact source', async () => {
+			await createRecipe({ ...baseRecipeData, source: 'example.com/recipe' }, testUserId, logger);
+			await createRecipe({ ...baseRecipeData, source: 'other.com/recipe' }, testUserId, logger);
+
+			expect(await countRecipes({ source: 'example.com/recipe' }, logger)).toBe(1);
+		});
+
+		it('filters by id', async () => {
+			const r1 = await createRecipe({ ...baseRecipeData, title: 'Recipe 1' }, testUserId, logger);
+			await createRecipe({ ...baseRecipeData, title: 'Recipe 2' }, testUserId, logger);
+
+			expect(await countRecipes({ id: [r1.id] }, logger)).toBe(1);
+		});
+
+		it('returns a count consistent with getRecipes for the same filters', async () => {
+			await createRecipe({ ...baseRecipeData, title: 'Recipe 1', source: 'example.com/one' }, testUserId, logger);
+			await createRecipe({ ...baseRecipeData, title: 'Recipe 2', source: 'example.com/two' }, testUserId, logger);
+			await createRecipe({ ...baseRecipeData, title: 'Recipe 3', source: 'other.com/three' }, testUserId, logger);
+
+			const filters = { source: 'example.com/one' };
+			const [rows, total] = await Promise.all([getRecipes(filters, 10, 0, logger), countRecipes(filters, logger)]);
+
+			expect(rows).toHaveLength(total);
 		});
 	});
 
