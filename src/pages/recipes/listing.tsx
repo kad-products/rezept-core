@@ -1,10 +1,16 @@
 import type { RequestInfo } from 'rwsdk/worker';
-import { RzCard, RzLink } from '@/components/design-system';
+import { RzCard, RzLink, RzPagination } from '@/components/design-system';
 import AppLayout from '@/layouts/app';
-import { getRecipes } from '@/repositories';
+import { countRecipes, getRecipes } from '@/repositories';
 
-export default async function Pages__recipes__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
-	const recipes = await getRecipes({}, 10, 0, ctx.logger);
+export default async function Pages__recipes__listing({ ctx, request }: RequestInfo): Promise<React.JSX.Element> {
+	const url = new URL(request.url);
+	const currentPage = parseInt(url.searchParams.get('page') || '1', 10);
+	const perPage = 12;
+	const [recipes, count] = await Promise.all([
+		await getRecipes({}, perPage, (currentPage - 1) * perPage, ctx.logger),
+		await countRecipes({}, ctx.logger),
+	]);
 	return (
 		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">
 			<RzLink userPermissions={ctx.permissions} requiredPermission="recipes:create" label="New Recipe" href="/recipes/new" />
@@ -44,6 +50,7 @@ export default async function Pages__recipes__listing({ ctx }: RequestInfo): Pro
 					);
 				})}
 			</div>
+			<RzPagination currentPage={currentPage} totalCount={count} perPage={perPage} href="/recipes" />
 		</AppLayout>
 	);
 }
