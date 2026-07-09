@@ -5,10 +5,16 @@ let config: Record<string, string[]> = {
 	urlSkipList: [],
 };
 
-config = {
-	...config,
-	...(await loadConfig()),
-};
+const rawArgs = process.argv.slice(2);
+
+if (rawArgs.length !== 2) {
+	console.log(`No config argument provided, using defaults`);
+} else {
+	config = {
+		...config,
+		...(await loadConfig(rawArgs[1])),
+	};
+}
 
 type APIResponseSingle = {
 	success: boolean;
@@ -143,9 +149,9 @@ function getJsonLd(dom: JSDOM): unknown[] {
 		.filter(Boolean);
 }
 
-async function loadConfig() {
+async function loadConfig(configName: string) {
 	try {
-		const config = await import('./crawl-config.foreignfork');
+		const config = await import(`./crawl-config.${configName}`);
 		return config;
 	} catch {
 		return undefined;
