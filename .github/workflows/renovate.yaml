@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: renovatebot/github-action@v46.1.17
+      - uses: renovatebot/github-action@v46.1.18
         with:
           token: ${{ secrets.REZEPT_CORE_WORKFLOW_AUTOMATION }}
         env:
