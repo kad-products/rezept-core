@@ -2,6 +2,7 @@ export * from './api-keys';
 export * from './credentials';
 export * from './image-types';
 export * from './images';
+export * from './ingredient-seasons';
 export * from './ingredient-units';
 export * from './ingredients';
 export * from './recipe-cooking-methods';
