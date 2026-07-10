@@ -11,13 +11,20 @@ const columns: RzTableColumn[] = [
 	{
 		key: 'actions',
 		label: '',
-		actions: [{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'users:update' }],
+		actions: [
+			{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'ingredients:update' },
+			{ type: 'link', hrefProp: 'seasonsUrl', label: 'Seasons', requiredPermission: 'ingredients:update' },
+		],
 	},
 ];
 
 export default async function Pages__admin__ingredients__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
 	const ingredients = await getIngredients(ctx.logger);
-	const rows = ingredients.map(u => ({ ...u, editUrl: `/admin/ingredients/${u.id}/edit` }));
+	const rows = ingredients.map(u => ({
+		...u,
+		editUrl: `/admin/ingredients/${u.id}/edit`,
+		seasonsUrl: `/admin/ingredients/${u.id}/seasons`,
+	}));
 
 	return (
 		<AdminLayout ctx={ctx} currentBasePage="ingredients" pageTitle="Ingredients">

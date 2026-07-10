@@ -4,6 +4,7 @@ export * from './app-context';
 export * from './credentials';
 export * from './image-types';
 export * from './images';
+export * from './ingredient-seasons';
 export * from './ingredient-units';
 export * from './ingredients';
 export * from './nav-item';

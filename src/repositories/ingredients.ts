@@ -2,25 +2,27 @@ import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { ingredients } from '@/models';
-import type { IngredientDBRead, IngredientFormInput, RzLogger } from '@/types';
+import type { IngredientDBRead, IngredientFormInput, IngredientWithSeasons, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
-export async function getIngredientById(ingredientId: string, logger: RzLogger): Promise<IngredientDBRead> {
+export async function getIngredientById(ingredientId: string, logger: RzLogger): Promise<IngredientWithSeasons> {
 	if (!validateUuid(ingredientId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientId, 'Ingredient']);
 	}
 
 	logger.debug(`Fetching ingredient ${ingredientId}`);
-	const results = await db
-		.select()
-		.from(ingredients)
-		.where(and(eq(ingredients.id, ingredientId), isNull(ingredients.deletedAt)));
+	const ingredient = await db.query.ingredients.findFirst({
+		where: and(eq(ingredients.id, ingredientId), isNull(ingredients.deletedAt)),
+		with: {
+			seasons: true,
+		},
+	});
 
-	if (results.length !== 1) {
-		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [results.length, 1, 'Ingredient']);
+	if (!ingredient) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [0, 1, 'Ingredient']);
 	}
 
-	return results[0];
+	return ingredient;
 }
 
 export async function getIngredients(logger: RzLogger): Promise<IngredientDBRead[]> {
