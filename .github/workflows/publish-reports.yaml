@@ -9,11 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: read
 
     steps:
       - uses: actions/checkout@v7
         with:
-          lfs: true
+          lfs: false
 
       - uses: pnpm/action-setup@v6
 
@@ -28,6 +29,9 @@ jobs:
       - name: Run unit tests with coverage
         run: pnpm test:run
 
+      - name: Stage unit coverage
+        run: mkdir -p _reports/unit && cp -r coverage/. _reports/unit/
+
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
 
@@ -40,14 +44,32 @@ jobs:
       - name: Stage E2E report
         run: mkdir -p _reports/e2e && cp -r playwright-report/. _reports/e2e/
 
-      - name: Run CT tests
-        run: pnpm playwright-ct:run
-
-      - name: Stage reports
+      # CT tests use LFS and already ran on the PR — download that artifact rather
+      # than re-running. The commits/pulls API resolves the release SHA to the PR
+      # it came from, then we find the CT workflow run for that PR's head commit.
+      - name: Find PR head SHA for this release
+        id: find-pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir -p _reports/unit _reports/ct
-          cp -r coverage/. _reports/unit/
-          cp -r playwright-report/. _reports/ct/
+          HEAD_SHA=$(gh api repos/${{ github.repository }}/commits/${{ github.sha }}/pulls \
+            --jq '.[0].head.sha // empty')
+          echo "head_sha=$HEAD_SHA" >> $GITHUB_OUTPUT
+
+      - name: Download CT report from PR run
+        if: steps.find-pr.outputs.head_sha != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUN_ID=$(gh run list \
+            --workflow=playwright-ct.yaml \
+            --json databaseId,headSha \
+            --jq "[.[] | select(.headSha == \"${{ steps.find-pr.outputs.head_sha }}\")] | .[0].databaseId // empty")
+          if [ -n "$RUN_ID" ]; then
+            mkdir -p _reports/ct
+            gh run download "$RUN_ID" --name playwright-report --dir _reports/ct/ 2>/dev/null \
+              || echo "No CT report artifact found (design system may not have changed in this PR)"
+          fi
 
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v4
