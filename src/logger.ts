@@ -1,7 +1,12 @@
 import type { WorkflowEvent } from 'cloudflare:workers';
 import { env } from 'cloudflare:workers';
-import chalk from 'chalk-template';
+import { Chalk } from 'chalk';
+import { makeTaggedTemplate } from 'chalk-template';
 import type { LogLevel, RzLogger } from './types/rz-logger';
+
+// chalk cannot detect color support inside the Worker runtime (no process.stdout),
+// so we force level 1 (16-color ANSI) rather than letting it default to 0 (no color).
+const chalk = makeTaggedTemplate(new Chalk({ level: 1 }));
 
 const LEVEL_ORDER: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
 

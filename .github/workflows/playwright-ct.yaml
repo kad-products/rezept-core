@@ -12,30 +12,48 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.61.1-noble
     steps:
-      - name: Install git-lfs
-        run: apt-get update && apt-get install -y git-lfs
-
+      # Checkout without LFS first so we can detect changed paths before
+      # deciding whether to pull LFS objects.
       - uses: actions/checkout@v7
         with:
-          lfs: true
+          lfs: false
+
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            design_system:
+              - 'src/components/design-system/**'
+
+      - name: Install git-lfs
+        if: steps.changes.outputs.design_system == 'true'
+        run: apt-get update && apt-get install -y git-lfs
+
+      - name: Pull LFS files
+        if: steps.changes.outputs.design_system == 'true'
+        run: git lfs pull
 
       - uses: pnpm/action-setup@v6
+        if: steps.changes.outputs.design_system == 'true'
 
       - uses: actions/setup-node@v6
+        if: steps.changes.outputs.design_system == 'true'
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install dependencies
+        if: steps.changes.outputs.design_system == 'true'
         run: pnpm install
 
       - name: Run Playwright component tests
+        if: steps.changes.outputs.design_system == 'true'
         run: pnpm playwright-ct:run
         env:
           HOME: /root
 
       - uses: actions/upload-artifact@v7
-        if: ${{ !cancelled() }}
+        if: ${{ steps.changes.outputs.design_system == 'true' && !cancelled() }}
         with:
           name: playwright-report
           path: playwright-report/

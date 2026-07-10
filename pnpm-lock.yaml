@@ -15,6 +15,9 @@ importers:
 
   .:
     dependencies:
+      '@jlucaspains/sharp-recipe-parser':
+        specifier: ^1.3.6
+        version: 1.3.6
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
@@ -30,6 +33,9 @@ importers:
       '@tanstack/react-form':
         specifier: ^1.28.0
         version: 1.33.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      chalk:
+        specifier: ^5.6.2
+        version: 5.6.2
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -45,6 +51,9 @@ importers:
       object-path:
         specifier: ^0.11.8
         version: 0.11.8
+      parse-ingredient:
+        specifier: ^2.2.0
+        version: 2.2.0
       radix-ui:
         specifier: ^1.4.3
         version: 1.6.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -1339,6 +1348,9 @@ packages:
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [win32]
+
+  '@jlucaspains/sharp-recipe-parser@1.3.6':
+    resolution: {integrity: sha512-NqI0svYcg/oubFf4GsTkIEaIz9HUqWnhg4sxHVxft5xAikIFYwZXCsjosk2+y1wZgKfrV+14C4mm5q6/wr6BHw==}
 
   '@joshwooding/vite-plugin-react-docgen-typescript@0.7.0':
     resolution: {integrity: sha512-qvsTEwEFefhdirGOPnu9Wp6ChfIwy2dBCRuETU3uE+4cC+PFoxMSiiEhxk4lOluA34eARHA0OxqsEUYDqRMgeQ==}
@@ -4418,6 +4430,9 @@ packages:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
     engines: {node: '>= 0.4'}
 
+  fraction.js@5.3.4:
+    resolution: {integrity: sha512-1X1NTtiJphryn/uLQz3whtY6jK3fTqoE3ohKs0tT+Ujr1W59oopxmoEh7Lu5p6vBaPbgoM0bzveAW4Qi5RyWDQ==}
+
   fs-constants@1.0.0:
     resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
 
@@ -5436,6 +5451,10 @@ packages:
       - validate-npm-package-name
       - which
 
+  numeric-quantity@3.2.2:
+    resolution: {integrity: sha512-qHc6mhIySaoqFYCM+foWY0DYYIT0ick1fI+MB9530gJ8XAPDExwXT8eyl3J+PWLIlZy0MCxSLobBjrggN9Z8EQ==}
+    engines: {node: '>=16'}
+
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -5543,6 +5562,10 @@ packages:
 
   parse-entities@4.0.2:
     resolution: {integrity: sha512-GG2AQYWoLgL877gQIKeRPGO1xF9+eG1ujIb5soS5gPvLQ1y2o8FL90w2QWNdf9I361Mpp7726c+lj3U0qK1uGw==}
+
+  parse-ingredient@2.2.0:
+    resolution: {integrity: sha512-0nC1B3AJxZHAXM4zu/57XlZbaXuK6vpZDQcHpwBALU7KRxw5f1O/Tr0x0Srz3vxpn4+AP0NqCLKqnNdkIx9GVQ==}
+    engines: {node: '>=10'}
 
   parse-json@4.0.0:
     resolution: {integrity: sha512-aOIos8bujGN93/8Ox/jPLh7RwVnPEysynVFE+fQZyg6jKELEHwzgKdLRFHUgXJL6kylijVSBC4BvN9OmsB48Rw==}
@@ -7836,6 +7859,10 @@ snapshots:
 
   '@img/sharp-win32-x64@0.34.5':
     optional: true
+
+  '@jlucaspains/sharp-recipe-parser@1.3.6':
+    dependencies:
+      fraction.js: 5.3.4
 
   '@joshwooding/vite-plugin-react-docgen-typescript@0.7.0(typescript@6.0.3)(vite@8.1.3(@types/node@26.1.0)(esbuild@0.28.1)(jiti@2.6.1)(less@4.6.7)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
     dependencies:
@@ -11044,6 +11071,8 @@ snapshots:
     dependencies:
       is-callable: 1.2.7
 
+  fraction.js@5.3.4: {}
+
   fs-constants@1.0.0: {}
 
   fs-extra@11.3.3:
@@ -12171,6 +12200,8 @@ snapshots:
 
   npm@11.18.0: {}
 
+  numeric-quantity@3.2.2: {}
+
   object-assign@4.1.1: {}
 
   object-path@0.11.8: {}
@@ -12325,6 +12356,10 @@ snapshots:
       is-alphanumerical: 2.0.1
       is-decimal: 2.0.1
       is-hexadecimal: 2.0.1
+
+  parse-ingredient@2.2.0:
+    dependencies:
+      numeric-quantity: 3.2.2
 
   parse-json@4.0.0:
     dependencies:

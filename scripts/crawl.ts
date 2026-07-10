@@ -1,8 +1,17 @@
 import { JSDOM } from 'jsdom';
 
-let config: Record<string, string[]> = {
+type Config = {
+	urlDebugList: string[];
+	urlSkipList: string[];
+	initialUrl?: string;
+	apiBase?: string;
+};
+
+let config: Config = {
 	urlDebugList: [],
 	urlSkipList: [],
+	initialUrl: process.env.REZEPT_CRAWL_URL,
+	apiBase: process.env.REZEPT_API_BASE,
 };
 
 const rawArgs = process.argv.slice(2);
@@ -27,19 +36,17 @@ type APIResponseArray = {
 	data: Record<string, string>[];
 };
 
-const initialUrl = process.env.REZEPT_CRAWL_URL;
-const apiBase = process.env.REZEPT_API_BASE;
-if (!initialUrl) {
+if (!config.initialUrl) {
 	console.log(`No URL provided`);
 	process.exit();
 }
-if (!apiBase) {
+if (!config.apiBase) {
 	console.log(`No API base provided`);
 	process.exit();
 }
-const crawlHost = new URL(initialUrl).hostname;
+const crawlHost = new URL(config.initialUrl).hostname;
 
-const crawledDOM = await fetchAndParse(initialUrl);
+const crawledDOM = await fetchAndParse(config.initialUrl);
 const anchors = [...crawledDOM.window.document.querySelectorAll('a')];
 const inSiteUrls = new Set(
 	anchors
@@ -76,7 +83,7 @@ for (const url of inSiteUrls) {
 			continue;
 		}
 
-		const apiResponse = await fetch(`${apiBase}/api/recipes/imports/scrapes`, {
+		const apiResponse = await fetch(`${config.apiBase}/api/recipes/imports/scrapes`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -116,7 +123,7 @@ async function fetchAndParse(url: string): Promise<JSDOM> {
 
 async function checkForExisting(url: string): Promise<boolean> {
 	const parsedURL = new URL(url);
-	const searchResponse = await fetch(`${apiBase}/api/recipes/search`, {
+	const searchResponse = await fetch(`${config.apiBase}/api/recipes/search`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
