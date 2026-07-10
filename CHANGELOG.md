@@ -1,3 +1,14 @@
+## [1.64.0](https://github.com/kad-products/rezept-core/compare/v1.63.0...v1.64.0) (2026-07-10)
+
+### Features
+
+* add a bunch more rules for raw ingredient parsing ([e2a7b77](https://github.com/kad-products/rezept-core/commit/e2a7b770ecce5ad30dfdc718d56f5268a9c1c0ba))
+* get local logger to be color-coded ([4a40ccb](https://github.com/kad-products/rezept-core/commit/4a40ccba25dec12b104b90a9d084f988a37874a6))
+
+### Bug Fixes
+
+* move more crawl config into ignored files ([c6e81ee](https://github.com/kad-products/rezept-core/commit/c6e81eef014d2bbc3e39d1220b0a09a8892e2a6e))
+
 ## [1.63.0](https://github.com/kad-products/rezept-core/compare/v1.62.0...v1.63.0) (2026-07-09)
 
 ### Features
