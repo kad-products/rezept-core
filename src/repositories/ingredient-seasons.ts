@@ -25,6 +25,10 @@ export async function createIngredientSeason(
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeason.id, 'Ingredient Season']);
 	}
 
+	if (!validateUuid(ingredientSeason.ingredientId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeason.ingredientId, 'Ingredient']);
+	}
+
 	const createdIngredientSeason = await db
 		.insert(ingredientSeasons)
 		.values({

@@ -176,6 +176,28 @@ describe('ingredient seasons repository', () => {
 			expect(result.startMonth).toBe(11);
 			expect(result.endMonth).toBe(2);
 		});
+
+		it('throws InvalidUUID for non-UUID id', async () => {
+			await expect(
+				createIngredientSeason(
+					{ id: 'not-a-uuid', ingredientId: testIngredientId, ...VALID_SEASON, region: 'Oregon' },
+					testUserId,
+					logger,
+				),
+			).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a Ingredient Season');
+		});
+
+		it('throws InvalidUUID for non-UUID ingredient id', async () => {
+			await expect(
+				createIngredientSeason({ ingredientId: 'not-a-uuid', ...VALID_SEASON, region: 'Oregon' }, testUserId, logger),
+			).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a Ingredient');
+		});
+
+		it('throws InvalidUUID for empty string ingredient id', async () => {
+			await expect(
+				createIngredientSeason({ ingredientId: '', ...VALID_SEASON, region: 'Oregon' }, testUserId, logger),
+			).rejects.toThrow('The value "" is not a valid ID for a Ingredient');
+		});
 	});
 
 	describe('updateIngredientSeason', () => {
@@ -265,6 +287,23 @@ describe('ingredient seasons repository', () => {
 			);
 
 			expect(result.region).toBe('Oregon');
+		});
+
+		it('throws InvalidUUID for non-UUID id', async () => {
+			await expect(
+				updateIngredientSeason(
+					'not-a-uuid',
+					{ ingredientId: testIngredientId, ...VALID_SEASON, region: 'Oregon' },
+					testUserId,
+					logger,
+				),
+			).rejects.toThrow('The value "not-a-uuid" is not a valid ID for a Ingredient Season');
+		});
+
+		it('throws InvalidUUID for empty string id', async () => {
+			await expect(
+				updateIngredientSeason('', { ingredientId: testIngredientId, ...VALID_SEASON, region: 'Oregon' }, testUserId, logger),
+			).rejects.toThrow('The value "" is not a valid ID for a Ingredient Season');
 		});
 	});
 
