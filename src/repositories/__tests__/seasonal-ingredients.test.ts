@@ -13,7 +13,7 @@ const logger = createNoopLogger();
 
 const baseSeasonData = {
 	name: 'Spring',
-	country: 'US',
+	country: 'USA',
 	startMonth: 3,
 	endMonth: 5,
 };

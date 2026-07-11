@@ -8,7 +8,7 @@ const logger = createNoopLogger();
 
 const baseSeasonData = {
 	name: 'Spring Season',
-	country: 'US',
+	country: 'USA',
 	startMonth: 3,
 	endMonth: 5,
 };
@@ -43,7 +43,7 @@ describe('seasons repository', () => {
 			const result = await getSeasons(logger);
 			expect(result[0]).toMatchObject({
 				name: 'Spring Season',
-				country: 'US',
+				country: 'USA',
 				startMonth: 3,
 				endMonth: 5,
 				createdBy: testUserId,
@@ -94,7 +94,7 @@ describe('seasons repository', () => {
 
 			expect(result.id).toBeDefined();
 			expect(result.name).toBe('Spring Season');
-			expect(result.country).toBe('US');
+			expect(result.country).toBe('USA');
 			expect(result.startMonth).toBe(3);
 			expect(result.endMonth).toBe(5);
 		});

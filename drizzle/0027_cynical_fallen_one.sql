@@ -33,7 +33,7 @@ SET source =
     END,
     '/'
   )
-WHERE source IS NOT NULL;
+WHERE source IS NOT NULL;--> statement-breakpoint
 
 
 CREATE TABLE `ingredient_seasons` (
