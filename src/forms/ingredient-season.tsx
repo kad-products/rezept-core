@@ -1,52 +1,42 @@
 'use client';
 import { Form } from 'radix-ui';
 import { useState } from 'react';
-import { saveSeason } from '@/actions/seasons';
-import { seasonsSchemas } from '@/schemas';
-import type { ActionState, SeasonalIngredientWithRelations, SeasonDBRead, SeasonFormInput } from '@/types';
+import { saveIngredientSeason } from '@/actions/ingredient-seasons';
+import { ingredientSeasonsSchemas } from '@/schemas';
+import type { ActionState, IngredientSeasonFormInput, IngredientSeasonsDBRead } from '@/types';
 import { useAppForm } from './setup/context';
 import { FormDevtools } from './setup/FormDevtools';
 
-export default function SeasonForm({
-	season,
-	ingredientOptions,
-	seasonalIngredients,
+export default function IngredientSeasonForm({
+	ingredientSeason,
+	ingredientId,
 	countryOptions,
 	monthOptions,
 }: {
-	season?: SeasonDBRead;
-	ingredientOptions: { value: string; label: string }[];
-	seasonalIngredients?: SeasonalIngredientWithRelations[];
+	ingredientSeason?: IngredientSeasonFormInput;
+	ingredientId: string;
 	countryOptions: { value: string; label: string }[];
 	monthOptions: { value: string; label: string }[];
 }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<SeasonDBRead>>();
+	const [formState, setFormState] = useState<ActionState<IngredientSeasonsDBRead>>();
 
-	const defaultSeason: SeasonFormInput = {
-		name: '',
+	const defaultSeason: IngredientSeasonFormInput = {
 		startMonth: '1',
 		endMonth: '12',
 		country: 'USA',
-		ingredients: [],
+		ingredientId,
 	};
 
 	const form = useAppForm({
-		formId: 'season',
-		defaultValues: season
-			? {
-					...season,
-					ingredients: seasonalIngredients?.map(si => si.ingredientId) || [],
-				}
-			: defaultSeason,
+		formId: 'ingredient-season',
+		defaultValues: ingredientSeason ?? defaultSeason,
 		validators: {
-			onBlur: seasonsSchemas.form,
+			onBlur: ingredientSeasonsSchemas.form,
 		},
-		onSubmit: async ({ value: formDataObj }: { value: SeasonFormInput }): Promise<void> => {
-			setFormState(await saveSeason(formDataObj));
+		onSubmit: async ({ value }: { value: IngredientSeasonFormInput }): Promise<void> => {
+			setFormState(await saveIngredientSeason(value));
 		},
 	});
-
-	const buttonText = season ? 'Save Season' : 'Add Season';
 
 	return (
 		<>
@@ -59,10 +49,6 @@ export default function SeasonForm({
 				}}
 			>
 				{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
-				<form.AppField name="name">{(field): React.ReactNode => <field.TextInput label="Name" required />}</form.AppField>
-				<form.AppField name="description">
-					{(field): React.ReactNode => <field.TextareaInput label="Description" required />}
-				</form.AppField>
 				<form.AppField name="country">
 					{(field): React.ReactNode => <field.SelectInput label="Country" options={countryOptions} required />}
 				</form.AppField>
@@ -74,14 +60,11 @@ export default function SeasonForm({
 					{(field): React.ReactNode => <field.SelectInput label="End Month" options={monthOptions} required />}
 				</form.AppField>
 				<form.AppField name="notes">{(field): React.ReactNode => <field.TextareaInput label="Notes" />}</form.AppField>
-				<form.AppField name="ingredients">
-					{(field): React.ReactNode => <field.CheckboxGroupInput label="Ingredients" required options={ingredientOptions} />}
-				</form.AppField>
 				{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
 				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
-				{formState?.success && <p className="success">Season saved!</p>}
+				{formState?.success && <p className="success">Ingredient saved.</p>}
 				<form.AppForm>
-					<form.SubmitButton label={buttonText} />
+					<form.SubmitButton label="Save Ingredient" />
 				</form.AppForm>
 			</Form.Root>
 			<FormDevtools />

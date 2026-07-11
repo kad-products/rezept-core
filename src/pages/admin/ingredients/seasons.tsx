@@ -1,5 +1,8 @@
 import type { RequestInfo } from 'rwsdk/worker';
 import { RzPopMenu, RzTable } from '@/components/design-system';
+import { countryOptions } from '@/data/countries';
+import { monthOptions } from '@/data/months';
+import IngredientSeasonForm from '@/forms/ingredient-season';
 import AdminLayout from '@/layouts/admin';
 import { getIngredientById } from '@/repositories';
 import type { RzTableColumn } from '@/types';
@@ -38,6 +41,18 @@ export default async function Pages__admin__ingredients__seasons({ ctx, params }
 					},
 				]}
 			/>
+			{ingredient.seasons.map(season => {
+				return (
+					<IngredientSeasonForm
+						key={season.id}
+						ingredientId={ingredient.id}
+						countryOptions={countryOptions}
+						monthOptions={monthOptions}
+						ingredientSeason={season}
+					/>
+				);
+			})}
+			<IngredientSeasonForm ingredientId={ingredient.id} countryOptions={countryOptions} monthOptions={monthOptions} />
 			{JSON.stringify(ingredient)}
 			<RzTable userPermissions={ctx.permissions} columns={columns} data={ingredient.seasons} />
 		</AdminLayout>
