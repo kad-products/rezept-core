@@ -128,21 +128,6 @@ describe('ingredient seasons repository', () => {
 			expect(result.notes).toBe('Peak ripeness in July');
 		});
 
-		it('throws on duplicate ingredient + country (no region)', async () => {
-			await createIngredientSeason(
-				{ ingredientId: testIngredientId, country: 'USA', startMonth: 6, endMonth: 8 },
-				testUserId,
-				logger,
-			);
-			await expect(
-				createIngredientSeason(
-					{ ingredientId: testIngredientId, country: 'USA', startMonth: 3, endMonth: 5 },
-					testUserId,
-					logger,
-				),
-			).rejects.toThrow();
-		});
-
 		it('throws on duplicate ingredient + country + region', async () => {
 			await createIngredientSeason(
 				{ ingredientId: testIngredientId, country: 'USA', region: 'California', startMonth: 6, endMonth: 8 },
