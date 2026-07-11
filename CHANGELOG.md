@@ -1,3 +1,15 @@
+## [1.65.0](https://github.com/kad-products/rezept-core/compare/v1.64.0...v1.65.0) (2026-07-11)
+
+### Features
+
+* add admin page for ingredient seasons ([c0de4c8](https://github.com/kad-products/rezept-core/commit/c0de4c83cdba389357be237fdc350fc39fa5581f))
+* add ingredient seasons table and relations ([9f93eb9](https://github.com/kad-products/rezept-core/commit/9f93eb91366d6214f0372b42aa9129e24699b603))
+* initial pass as ingredient seasons ([007176e](https://github.com/kad-products/rezept-core/commit/007176e35d25a3f7e8fe8ce8a90bb3d48a372a26))
+
+### Bug Fixes
+
+* three-digit country codes in tests ([23958b8](https://github.com/kad-products/rezept-core/commit/23958b82ade6c65f4e4c03b0b23f2bc5e5d983ae))
+
 ## [1.64.0](https://github.com/kad-products/rezept-core/compare/v1.63.0...v1.64.0) (2026-07-10)
 
 ### Features
