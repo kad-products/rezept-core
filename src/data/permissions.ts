@@ -74,10 +74,6 @@ export const flattenedPermissions: Array<{ permission: Permission; roles: string
 		})),
 );
 
-type PermissionKey = {
-	[K in keyof typeof permissions]: `${K & string}:${keyof (typeof permissions)[K] & string}`;
-}[keyof typeof permissions];
-
 export const permissionValues = Object.entries(permissions).flatMap(([resource, actions]) =>
 	Object.keys(actions).map(action => `${resource}:${action}`),
-) as [PermissionKey, ...PermissionKey[]];
+) as [Permission, ...Permission[]];
