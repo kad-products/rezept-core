@@ -3,7 +3,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { Select as RadixSelect } from 'radix-ui';
 import styleClasses from './rz-select.module.css';
 
-export function RzSelect<T = string>({
+export function RzSelect({
 	value,
 	onChange,
 	options,
@@ -11,7 +11,7 @@ export function RzSelect<T = string>({
 }: {
 	value: string;
 	onChange: (value: string) => void;
-	options: Array<{ value: T; label: string }>;
+	options: Array<{ value: string; label: string }>;
 } & React.ComponentPropsWithoutRef<typeof RadixSelect.Root>): React.ReactNode {
 	return (
 		<RadixSelect.Root {...props} onValueChange={onChange} value={value as unknown as string}>

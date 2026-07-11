@@ -1,11 +1,10 @@
 import { z } from 'zod';
 import { validCountryCodes } from '@/data/countries';
-import { coercedInt, optionalString, optionalStringMax, requiredString, requiredUuid } from './utils';
+import { coercedInt, optionalString, optionalStringMax, requiredUuid } from './utils';
 
 const formSchema = z.object({
 	id: z.string().uuid('Must be a valid UUID').optional(),
-	name: requiredString('Name'),
-	description: optionalStringMax(500, 'Description'),
+	ingredientId: requiredUuid,
 	country: z
 		.string()
 		.trim()
@@ -15,9 +14,8 @@ const formSchema = z.object({
 	startMonth: coercedInt(1, 12),
 	endMonth: coercedInt(1, 12),
 	notes: optionalStringMax(2000, 'Notes'),
-	ingredients: z.array(requiredUuid).default([]),
 });
 
-export const seasonsSchemas = {
+export const ingredientSeasonsSchemas = {
 	form: formSchema,
 };

@@ -8,7 +8,7 @@ describe('seasonsSchemas.form', () => {
 		const validData = {
 			name: 'Winter Season',
 			description: 'Cold weather vegetables',
-			country: 'US',
+			country: 'USA',
 			region: 'Midwest',
 			startMonth: 11,
 			endMonth: 2,
@@ -22,7 +22,7 @@ describe('seasonsSchemas.form', () => {
 	it('accepts valid season with minimal required fields', () => {
 		const validData = {
 			name: 'Summer',
-			country: 'FR',
+			country: 'FRA',
 			startMonth: 6,
 			endMonth: 8,
 		};
@@ -35,7 +35,7 @@ describe('seasonsSchemas.form', () => {
 		for (let month = 1; month <= 12; month++) {
 			const validData = {
 				name: 'Test Season',
-				country: 'US',
+				country: 'USA',
 				startMonth: month,
 				endMonth: 6,
 			};
@@ -49,7 +49,7 @@ describe('seasonsSchemas.form', () => {
 		for (let month = 1; month <= 12; month++) {
 			const validData = {
 				name: 'Test Season',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: month,
 			};
@@ -62,7 +62,7 @@ describe('seasonsSchemas.form', () => {
 	it('accepts season that wraps around the year', () => {
 		const validData = {
 			name: 'Winter Wrap',
-			country: 'CA',
+			country: 'CAN',
 			startMonth: 11,
 			endMonth: 2,
 		};
@@ -72,7 +72,7 @@ describe('seasonsSchemas.form', () => {
 	});
 
 	it('accepts valid ISO country codes', () => {
-		const validCountries = ['US', 'FR', 'DE', 'JP', 'GB', 'CA', 'AU', 'IT'];
+		const validCountries = ['USA', 'FRA', 'DEU', 'JPN', 'GBR', 'CAN', 'AUS', 'ITA'];
 
 		validCountries.forEach(country => {
 			const validData = {
@@ -90,7 +90,7 @@ describe('seasonsSchemas.form', () => {
 	it('trims whitespace from name', () => {
 		const validData = {
 			name: '  Spring Season  ',
-			country: 'US',
+			country: 'USA',
 			startMonth: 3,
 			endMonth: 5,
 		};
@@ -106,7 +106,7 @@ describe('seasonsSchemas.form', () => {
 		const validData = {
 			name: 'Test',
 			description: '  Test description  ',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 		};
@@ -121,7 +121,7 @@ describe('seasonsSchemas.form', () => {
 	it('trims whitespace from region', () => {
 		const validData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			region: '  Pacific Northwest  ',
 			startMonth: 1,
 			endMonth: 3,
@@ -137,7 +137,7 @@ describe('seasonsSchemas.form', () => {
 	it('trims whitespace from notes', () => {
 		const validData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			notes: '  Test notes  ',
@@ -153,7 +153,7 @@ describe('seasonsSchemas.form', () => {
 	it('converts empty string description to undefined', () => {
 		const validData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			description: '',
@@ -169,7 +169,7 @@ describe('seasonsSchemas.form', () => {
 	it('converts empty string region to undefined', () => {
 		const validData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			region: '',
@@ -185,7 +185,7 @@ describe('seasonsSchemas.form', () => {
 	it('converts empty string notes to undefined', () => {
 		const validData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			notes: '',
@@ -201,7 +201,7 @@ describe('seasonsSchemas.form', () => {
 	it('coerces string months to numbers', () => {
 		const validData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: '3' as any,
 			endMonth: '6' as any,
 		};
@@ -235,7 +235,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects empty name after trim', () => {
 		const invalidData = {
 			name: '   ',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 		};
@@ -248,10 +248,10 @@ describe('seasonsSchemas.form', () => {
 		}
 	});
 
-	it('rejects invalid country code format (not 2 letters)', () => {
+	it('rejects invalid country code format (not 3 letters)', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'USA',
+			country: 'US',
 			startMonth: 1,
 			endMonth: 3,
 		};
@@ -267,7 +267,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects invalid country code (not in ISO list)', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'ZZ',
+			country: 'ZZA',
 			startMonth: 1,
 			endMonth: 3,
 		};
@@ -283,7 +283,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects startMonth less than 1', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 0,
 			endMonth: 3,
 		};
@@ -299,7 +299,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects startMonth greater than 12', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 13,
 			endMonth: 3,
 		};
@@ -315,7 +315,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects endMonth less than 1', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 0,
 		};
@@ -331,7 +331,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects endMonth greater than 12', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 15,
 		};
@@ -347,7 +347,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects decimal month values', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1.5,
 			endMonth: 3,
 		};
@@ -363,7 +363,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects description longer than 500 characters', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			description: 'a'.repeat(501),
@@ -380,7 +380,7 @@ describe('seasonsSchemas.form', () => {
 	it('accepts description exactly 500 characters', () => {
 		const validData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			description: 'a'.repeat(500),
@@ -393,7 +393,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects notes longer than 2000 characters', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			notes: 'a'.repeat(2001),
@@ -410,7 +410,7 @@ describe('seasonsSchemas.form', () => {
 	it('accepts notes exactly 2000 characters', () => {
 		const validData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			notes: 'a'.repeat(2000),
@@ -423,7 +423,7 @@ describe('seasonsSchemas.form', () => {
 	it('accepts valid season with ingredients', () => {
 		const validData = {
 			name: 'Summer',
-			country: 'US',
+			country: 'USA',
 			startMonth: 6,
 			endMonth: 8,
 			ingredients: [randomUUID(), randomUUID(), randomUUID()],
@@ -436,7 +436,7 @@ describe('seasonsSchemas.form', () => {
 	it('accepts empty ingredients array', () => {
 		const validData = {
 			name: 'Fall',
-			country: 'US',
+			country: 'USA',
 			startMonth: 9,
 			endMonth: 11,
 			ingredients: [],
@@ -449,7 +449,7 @@ describe('seasonsSchemas.form', () => {
 	it('defaults to empty array when ingredients not provided', () => {
 		const validData = {
 			name: 'Spring',
-			country: 'US',
+			country: 'USA',
 			startMonth: 3,
 			endMonth: 5,
 		};
@@ -464,7 +464,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects ingredients with invalid UUID', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			ingredients: [randomUUID(), 'not-a-uuid', randomUUID()],
@@ -481,7 +481,7 @@ describe('seasonsSchemas.form', () => {
 	it('rejects non-array ingredients', () => {
 		const invalidData = {
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 			ingredients: 'not-an-array' as any,
@@ -498,7 +498,7 @@ describe('seasonsSchemas.form', () => {
 	it('accepts season without id (create)', () => {
 		const validData = {
 			name: 'Spring',
-			country: 'US',
+			country: 'USA',
 			startMonth: 3,
 			endMonth: 5,
 		};
@@ -515,7 +515,7 @@ describe('seasonsSchemas.form', () => {
 			id: randomUUID(),
 			name: 'Updated Winter',
 			description: 'Updated description',
-			country: 'CA',
+			country: 'CAN',
 			region: 'Quebec',
 			startMonth: 12,
 			endMonth: 2,
@@ -530,7 +530,7 @@ describe('seasonsSchemas.form', () => {
 		const invalidData = {
 			id: 'bad-uuid',
 			name: 'Test',
-			country: 'US',
+			country: 'USA',
 			startMonth: 1,
 			endMonth: 3,
 		};

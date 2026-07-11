@@ -70,7 +70,7 @@ describe('saveSeason', () => {
 		it('creates season with valid data', async () => {
 			const data = {
 				name: 'Spring Season',
-				country: 'US',
+				country: 'USA',
 				startMonth: 3,
 				endMonth: 5,
 			};
@@ -82,7 +82,7 @@ describe('saveSeason', () => {
 			expect(createSeason).toHaveBeenCalledWith(
 				expect.objectContaining({
 					name: 'Spring Season',
-					country: 'US',
+					country: 'USA',
 					startMonth: 3,
 					endMonth: 5,
 				}),
@@ -104,7 +104,7 @@ describe('saveSeason', () => {
 		it('validates country code format', async () => {
 			const data = {
 				name: 'Test',
-				country: 'USA', // Must be 2 letters
+				country: 'US', // Must be 3 letters
 				startMonth: 1,
 				endMonth: 3,
 			};
@@ -132,7 +132,7 @@ describe('saveSeason', () => {
 		it('validates month range minimum', async () => {
 			const data = {
 				name: 'Test',
-				country: 'US',
+				country: 'USA',
 				startMonth: 0, // Too low
 				endMonth: 3,
 			};
@@ -146,7 +146,7 @@ describe('saveSeason', () => {
 		it('validates month range maximum', async () => {
 			const data = {
 				name: 'Test',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 13, // Too high
 			};
@@ -162,7 +162,7 @@ describe('saveSeason', () => {
 			mockEnv.REZEPT_ENV = 'production';
 			const data = {
 				name: 'Test',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 3,
 			};
@@ -177,7 +177,7 @@ describe('saveSeason', () => {
 		it('accepts optional fields', async () => {
 			const data = {
 				name: 'Minimal Season',
-				country: 'CA',
+				country: 'CAN',
 				startMonth: 6,
 				endMonth: 8,
 			};
@@ -190,7 +190,7 @@ describe('saveSeason', () => {
 		it('accepts season with all optional fields', async () => {
 			const data = {
 				name: 'Full Season',
-				country: 'FR',
+				country: 'FRA',
 				region: 'Provence',
 				startMonth: 4,
 				endMonth: 6,
@@ -217,7 +217,7 @@ describe('saveSeason', () => {
 			mockEnv.REZEPT_ENV = 'production';
 			const data = {
 				name: 'Test',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 3,
 			};
@@ -236,7 +236,7 @@ describe('saveSeason', () => {
 			const data = {
 				id: seasonId,
 				name: 'Updated Season',
-				country: 'CA',
+				country: 'CAN',
 				startMonth: 6,
 				endMonth: 8,
 			};
@@ -249,7 +249,7 @@ describe('saveSeason', () => {
 				seasonId,
 				expect.objectContaining({
 					name: 'Updated Season',
-					country: 'CA',
+					country: 'CAN',
 					startMonth: 6,
 					endMonth: 8,
 				}),
@@ -264,7 +264,7 @@ describe('saveSeason', () => {
 			const data = {
 				id: randomUUID(),
 				name: 'Test',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 3,
 			};

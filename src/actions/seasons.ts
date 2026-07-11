@@ -3,7 +3,7 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createSeason, updateSeason } from '@/repositories';
 import { seasonsSchemas } from '@/schemas';
-import type { ActionState, SeasonDBRead, SeasonWriteInput } from '@/types';
+import type { ActionState, SeasonDBRead, SeasonFormInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
 export const saveSeason = serverAction([
@@ -15,7 +15,7 @@ export const saveSeason = serverAction([
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _saveSeason(formData: SeasonWriteInput): Promise<ActionState<SeasonDBRead>> {
+export async function _saveSeason(formData: SeasonFormInput): Promise<ActionState<SeasonDBRead>> {
 	const { ctx } = requestInfo;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;

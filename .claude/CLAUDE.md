@@ -91,8 +91,10 @@ Each `src/` directory has a `readme.md` defining the pattern for that type. Read
 
 ### Testing layers
 - **Schema tests** (`src/schemas/__tests__/`) — 100% coverage required
-- **Unit tests** (`*.test.ts`) — actions/middleware with mocked repositories
-- **Integration tests** (`*.integration.test.ts`) — real in-memory SQLite
+- **Unit tests** (`*.test.ts`) — actions/middleware mock their dependencies; repositories use real libsql in-memory SQLite (not mocked)
+- **Integration tests** (`*.integration.test.ts`) — Cloudflare Workers environment via `vitest-pool-workers` + D1; use this suffix only when the test needs the actual CF runtime
+
+Repository tests belong in `*.test.ts`, not `*.integration.test.ts`. The `.integration.test.ts` suffix means "runs in Cloudflare Workers", not just "uses a real database".
 
 Do **not** add `database` parameters to production functions — use the proxy pattern for testing.
 

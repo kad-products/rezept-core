@@ -15,11 +15,11 @@ export const optionalUuid = z
 
 export const requiredUuid = z.string().uuid('Must be a valid UUID');
 
-export const coercedInt = (min?: number, max?: number): z.ZodNumber => {
-	let schema = z.coerce.number().int();
+export const coercedInt = (min?: number, max?: number) => {
+	let schema = z.number().int();
 	if (min !== undefined) schema = schema.min(min);
 	if (max !== undefined) schema = schema.max(max);
-	return schema as z.ZodNumber;
+	return z.union([z.string(), z.number()]).transform(Number).pipe(schema);
 };
 
 // Handles null and empty string from form inputs before coercing — z.coerce.number() turns both into 0 without this

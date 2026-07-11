@@ -41,7 +41,7 @@ describe('_saveSeason integration', () => {
 		it('creates season and persists to database', async () => {
 			const data = {
 				name: 'Spring Season',
-				country: 'US',
+				country: 'USA',
 				startMonth: 3,
 				endMonth: 5,
 			};
@@ -56,7 +56,7 @@ describe('_saveSeason integration', () => {
 				const season = await getSeasonById(result.data.id, mockRequestInfo.ctx.logger);
 				expect(season).toBeDefined();
 				expect(season?.name).toBe('Spring Season');
-				expect(season?.country).toBe('US');
+				expect(season?.country).toBe('USA');
 				expect(season?.startMonth).toBe(3);
 				expect(season?.endMonth).toBe(5);
 				expect(season?.createdBy).toBe(testUserId);
@@ -84,7 +84,7 @@ describe('_saveSeason integration', () => {
 		it('saves season with all optional fields', async () => {
 			const data = {
 				name: 'Full Season',
-				country: 'FR',
+				country: 'FRA',
 				region: 'Provence',
 				description: 'Spring season',
 				notes: 'Great for lavender',
@@ -108,7 +108,7 @@ describe('_saveSeason integration', () => {
 		it('sets audit fields correctly', async () => {
 			const data = {
 				name: 'Test',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 3,
 			};
@@ -134,7 +134,7 @@ describe('_saveSeason integration', () => {
 
 			const data = {
 				name: 'Test',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 3,
 			};
@@ -152,7 +152,7 @@ describe('_saveSeason integration', () => {
 			// First create a season
 			const createData = {
 				name: 'Original Name',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 3,
 			};
@@ -169,7 +169,7 @@ describe('_saveSeason integration', () => {
 				const updateData = {
 					id: seasonId,
 					name: 'Updated Name',
-					country: 'CA',
+					country: 'CAN',
 					startMonth: 6,
 					endMonth: 8,
 				};
@@ -182,7 +182,7 @@ describe('_saveSeason integration', () => {
 				// Verify the update persisted
 				const season = await getSeasonById(seasonId, mockRequestInfo.ctx.logger);
 				expect(season?.name).toBe('Updated Name');
-				expect(season?.country).toBe('CA');
+				expect(season?.country).toBe('CAN');
 				expect(season?.startMonth).toBe(6);
 				expect(season?.endMonth).toBe(8);
 			}
@@ -192,7 +192,7 @@ describe('_saveSeason integration', () => {
 			// Create
 			const createData = {
 				name: 'Original',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 3,
 			};
@@ -212,7 +212,7 @@ describe('_saveSeason integration', () => {
 				const updateData = {
 					id: seasonId,
 					name: 'Updated',
-					country: 'CA',
+					country: 'CAN',
 					startMonth: 1,
 					endMonth: 3,
 				};
@@ -232,7 +232,7 @@ describe('_saveSeason integration', () => {
 			const createData = {
 				name: 'Original',
 				description: 'Original description',
-				country: 'US',
+				country: 'USA',
 				startMonth: 1,
 				endMonth: 3,
 			};
@@ -249,7 +249,7 @@ describe('_saveSeason integration', () => {
 				const updateData = {
 					id: seasonId,
 					name: 'Updated Name',
-					country: 'US',
+					country: 'USA',
 					startMonth: 1,
 					endMonth: 3,
 				};
@@ -269,7 +269,7 @@ describe('_saveSeason integration', () => {
 			const promises = Array.from({ length: 5 }, (_, i) => {
 				const data = {
 					name: `Season ${i}`,
-					country: 'US',
+					country: 'USA',
 					startMonth: 1,
 					endMonth: 3,
 				};
