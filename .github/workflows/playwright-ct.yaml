@@ -31,7 +31,10 @@ jobs:
 
       - name: Pull LFS files
         if: steps.changes.outputs.design_system == 'true'
-        run: git lfs pull
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git lfs install
+          git lfs pull
 
       - uses: pnpm/action-setup@v6
         if: steps.changes.outputs.design_system == 'true'
