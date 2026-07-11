@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/types/recipe-instructions.ts</title>
+    <title>Code coverage report for src/types/ingredient-seasons.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/types</a> recipe-instructions.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/types</a> ingredient-seasons.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -74,8 +74,7 @@
 <a name='L9'></a><a href='#L9'>9</a>
 <a name='L10'></a><a href='#L10'>10</a>
 <a name='L11'></a><a href='#L11'>11</a>
-<a name='L12'></a><a href='#L12'>12</a>
-<a name='L13'></a><a href='#L13'>13</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L12'></a><a href='#L12'>12</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -86,19 +85,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { recipeInstructions } from '@/models';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { z } from 'zod';
+import type { ingredientSeasons } from '@/models';
+import type { ingredientSeasonsSchemas } from '@/schemas';
 &nbsp;
-export type RecipeInstructionDBRead = typeof recipeInstructions.$inferSelect;
-export type RecipeInstructionWriteInput = Omit&lt;
-	typeof recipeInstructions.$inferInsert,
-	'recipeCookingMethodId' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
+export type IngredientSeasonsDBRead = typeof ingredientSeasons.$inferSelect;
+export type IngredientSeasonWriteInput = Omit&lt;
+	typeof ingredientSeasons.$inferInsert,
+	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 &gt;;
 &nbsp;
-export type RecipeCookingMethodInstructionsInput = {
-	cookingMethodId: string;
-	instructions: RecipeInstructionWriteInput[];
-};
+export type IngredientSeasonFormInput = z.input&lt;typeof ingredientSeasonsSchemas.form&gt;;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
