@@ -14,11 +14,7 @@ export default function UserForm({ user }: { user: UserAdminEditInput }): React.
 
 	const form = useAppForm({
 		formId: 'user',
-		defaultValues: {
-			id: user.id,
-			username: user.username,
-			role: user.role ?? 'BASIC',
-		} as UserAdminEditInput,
+		defaultValues: user,
 		validators: {
 			onBlur: usersSchemas.adminEdit,
 		},
