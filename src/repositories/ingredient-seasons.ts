@@ -1,9 +1,19 @@
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { ingredientSeasons } from '@/models';
 import type { IngredientSeasonsDBRead, IngredientSeasonWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
+
+export async function getIngredientSeasons(ingredientId: string, logger: RzLogger): Promise<IngredientSeasonsDBRead[]> {
+	logger.debug(`Fetching seasons for ingredient ${ingredientId}`);
+	const seasons = await db
+		.select()
+		.from(ingredientSeasons)
+		.where(and(eq(ingredientSeasons.ingredientId, ingredientId), isNull(ingredientSeasons.deletedAt)));
+	logger.debug(`Fetched ${seasons.length} seasons for ingredient ${ingredientId}`);
+	return seasons;
+}
 
 export async function createIngredientSeason(
 	ingredientSeason: IngredientSeasonWriteInput,
@@ -11,6 +21,9 @@ export async function createIngredientSeason(
 	logger: RzLogger,
 ): Promise<IngredientSeasonsDBRead> {
 	logger.debug('Creating ingredient season');
+	if (ingredientSeason.id && !validateUuid(ingredientSeason.id)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeason.id, 'Ingredient Season']);
+	}
 
 	const createdIngredientSeason = await db
 		.insert(ingredientSeasons)
@@ -32,6 +45,9 @@ export async function updateIngredientSeason(
 	logger: RzLogger,
 ): Promise<IngredientSeasonsDBRead> {
 	logger.debug(`Updating ingredient season ${ingredientSeasonId}`);
+	if (!validateUuid(ingredientSeasonId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeasonId, 'Ingredient Season']);
+	}
 
 	const updatedSeasons = await db
 		.update(ingredientSeasons)

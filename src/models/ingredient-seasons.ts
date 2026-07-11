@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { ingredients } from './ingredients';
 import { users } from './users';
@@ -34,7 +34,9 @@ export const ingredientSeasons = sqliteTable(
 		index('ingredient_seasons_country_idx').on(table.country),
 		index('ingredient_seasons_region_idx').on(table.region),
 		index('ingredient_seasons_country_region_idx').on(table.country, table.region),
-		uniqueIndex('ingredient_seasons_ingredient_id_country_region_unique').on(table.ingredientId, table.country, table.region),
+		uniqueIndex('ingredient_seasons_ingredient_id_country_region_unique')
+			.on(table.ingredientId, table.country, table.region)
+			.where(sql`"deleted_at" IS NULL`),
 	],
 );
 
