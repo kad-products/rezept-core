@@ -6,16 +6,12 @@ import { ingredientsSchemas } from '@/schemas';
 import type { ActionState, IngredientDBRead, IngredientFormInput } from '@/types';
 import { useAppForm } from './setup/context';
 
-export default function IngredientForm({ ingredient }: { ingredient: IngredientDBRead }): React.ReactNode {
+export default function IngredientForm({ ingredient }: { ingredient: IngredientFormInput }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<IngredientDBRead>>();
 
 	const form = useAppForm({
 		formId: 'ingredient',
-		defaultValues: {
-			id: ingredient.id,
-			name: ingredient.name,
-			description: ingredient.description,
-		} as IngredientFormInput,
+		defaultValues: ingredient,
 		validators: {
 			onBlur: ingredientsSchemas.form,
 		},
