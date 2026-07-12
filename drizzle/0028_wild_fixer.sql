@@ -16,7 +16,7 @@ CREATE TABLE `__new_users` (
 	FOREIGN KEY (`deleted_by`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-INSERT INTO `__new_users`("id", "username", "role", "created_at", "created_by", "updated_at", "updated_by", "deleted_at", "deleted_by") SELECT "id", "username", "role", "created_at", "created_by", "updated_at", "updated_by", "deleted_at", "deleted_by" FROM `users`;--> statement-breakpoint
+INSERT INTO `__new_users`("id", "username", "role", "created_at", "created_by", "updated_at", "updated_by", "deleted_at", "deleted_by") SELECT "id", "username", COALESCE("role",'BASIC'), "created_at", "created_by", "updated_at", "updated_by", "deleted_at", "deleted_by" FROM `users`;--> statement-breakpoint
 DROP TABLE `users`;--> statement-breakpoint
 ALTER TABLE `__new_users` RENAME TO `users`;--> statement-breakpoint
 PRAGMA foreign_keys=ON;--> statement-breakpoint
