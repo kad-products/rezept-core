@@ -1,3 +1,15 @@
+## [1.65.1](https://github.com/kad-products/rezept-core/compare/v1.65.0...v1.65.1) (2026-07-12)
+
+### Bug Fixes
+
+* align api key form type usage to standard ([dcaca0c](https://github.com/kad-products/rezept-core/commit/dcaca0c736ab063874e21f506477bd32384c449e))
+* align ingredient form to standard types flow ([8abaf6f](https://github.com/kad-products/rezept-core/commit/8abaf6fd55e85f916b1099633f53788e66e72523))
+* align season form types to standard ([8e1dd3d](https://github.com/kad-products/rezept-core/commit/8e1dd3d5461979fd160a3429f431b9bb043a02ef))
+* align user form to standard types pattern ([f942486](https://github.com/kad-products/rezept-core/commit/f9424867c79fd21d5e372e032d530b1fae072c24))
+* simplify types on user form ([0f3263f](https://github.com/kad-products/rezept-core/commit/0f3263f79ee9ef822e4da8ded131b0239c0da003))
+* use the d1-specific FK disable syntax ([36deb31](https://github.com/kad-products/rezept-core/commit/36deb31277e0bccd73a1bf113b9368c8ff9a0dd0))
+* users always have a role valued ([d83c0ce](https://github.com/kad-products/rezept-core/commit/d83c0ceece32b53ec42d09ff9da28f73d4b939fc))
+
 ## [1.65.0](https://github.com/kad-products/rezept-core/compare/v1.64.0...v1.65.0) (2026-07-11)
 
 ### Features
