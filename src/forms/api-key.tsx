@@ -12,19 +12,21 @@ export default function ApiKeyForm({
 	apiKey,
 	currentUserId,
 }: {
-	apiKey?: ApiKeyDBRead;
-	currentUserId: string | undefined;
+	apiKey?: ApiKeyFormInput;
+	currentUserId: string;
 }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<ApiKeyDBRead>>();
 
-	const newApiKeyDefaults = {
+	const newApiKeyDefaults: ApiKeyFormInput = {
 		permissions: [],
+		name: '',
 		userId: currentUserId,
+		revokeAt: '',
 	};
 
 	const form = useAppForm({
 		formId: 'api-key',
-		defaultValues: (apiKey ? apiKey : newApiKeyDefaults) as ApiKeyFormInput,
+		defaultValues: apiKey ? apiKey : newApiKeyDefaults,
 		validators: {
 			onBlur: apiKeysSchemas.form,
 		},

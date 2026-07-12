@@ -9,7 +9,7 @@ export const users = sqliteTable('users', {
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	username: text().notNull().unique(),
-	role: text({ enum: userRoles }).default('BASIC'),
+	role: text({ enum: userRoles }).default('BASIC').notNull(),
 	createdAt: text().notNull().default(sql`(datetime('now', 'localtime'))`),
 	createdBy: text().references((): AnySQLiteColumn => users.id),
 	updatedAt: text(),

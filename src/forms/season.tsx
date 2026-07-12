@@ -14,7 +14,7 @@ export default function SeasonForm({
 	countryOptions,
 	monthOptions,
 }: {
-	season?: SeasonDBRead;
+	season?: SeasonFormInput;
 	ingredientOptions: { value: string; label: string }[];
 	seasonalIngredients?: SeasonalIngredientWithRelations[];
 	countryOptions: { value: string; label: string }[];

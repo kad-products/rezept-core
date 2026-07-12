@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { relations } from 'drizzle-orm';
 import { index, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import type { Permission } from '../types/permissions';
 import { users } from './users';
 
 export const apiKeys = sqliteTable(
@@ -13,7 +14,7 @@ export const apiKeys = sqliteTable(
 			.notNull()
 			.references(() => users.id, { onDelete: 'cascade' }),
 		name: text().notNull(),
-		permissions: text('permissions', { mode: 'json' }).$type<string[]>().notNull().default([]),
+		permissions: text('permissions', { mode: 'json' }).$type<Permission[]>().notNull().default([]),
 		revokeAt: text().notNull(),
 		apiKey: text()
 			.notNull()
