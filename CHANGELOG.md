@@ -1,3 +1,9 @@
+## [1.68.0](https://github.com/kad-products/rezept-core/compare/v1.67.0...v1.68.0) (2026-07-13)
+
+### Features
+
+* verification UX for ingredient seasons ([e938178](https://github.com/kad-products/rezept-core/commit/e93817807f736dfd7b3ebc9f121d2ae8d40ffcc7))
+
 ## [1.67.0](https://github.com/kad-products/rezept-core/compare/v1.66.0...v1.67.0) (2026-07-13)
 
 ### Features
