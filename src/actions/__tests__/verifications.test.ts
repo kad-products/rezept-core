@@ -201,7 +201,7 @@ describe('saveVerification', () => {
 
 		it('accepts null ingredientId (treated as absent)', async () => {
 			// optionalUuid accepts null — schema coerces to undefined, so it's treated as not provided
-			const result = await _saveVerification({ ingredientId: null });
+			await _saveVerification({ ingredientId: null });
 
 			// Neither verifier should be called since both IDs are absent/null
 			expect(verifyIngredient).not.toHaveBeenCalled();

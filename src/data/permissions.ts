@@ -1,4 +1,3 @@
-import { verifications } from '@/models';
 import type { Permission } from '@/types/permissions';
 import type { PermissionRole } from './roles';
 
