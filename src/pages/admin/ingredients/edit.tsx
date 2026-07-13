@@ -30,7 +30,7 @@ export default async function Pages__admin__ingredients__edit({ ctx, params }: R
 						href: `/admin/ingredients/${ingredientId}/seasons`,
 					},
 					{
-						requiredPermission: 'ingredients:update',
+						requiredPermission: 'verifications:read',
 						label: 'Verify',
 						href: `/admin/ingredients/${ingredient.id}/verify`,
 					},

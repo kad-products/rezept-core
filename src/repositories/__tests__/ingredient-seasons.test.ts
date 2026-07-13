@@ -356,7 +356,7 @@ describe('ingredient seasons repository', () => {
 	describe('verifyIngredientSeason', () => {
 		it('returns a verification record and the updated season', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
-			const result = await verifyIngredientSeason(season.id, testUserId, logger);
+			const result = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
 			expect(result.verification).toBeDefined();
 			expect(result.ingredientSeason).toBeDefined();
@@ -364,58 +364,68 @@ describe('ingredient seasons repository', () => {
 
 		it('sets ingredientSeasonId on the verification record', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
-			const { verification } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { verification } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
 			expect(verification.ingredientSeasonId).toBe(season.id);
 		});
 
 		it('sets createdBy on the verification record', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
-			const { verification } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { verification } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
 			expect(verification.createdBy).toBe(testUserId);
 		});
 
-		it('leaves ingredientId null on the verification record', async () => {
+		it('includes parent ingredientId on the verification record', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
-			const { verification } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { verification } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
-			expect(verification.ingredientId).toBeNull();
+			expect(verification.ingredientId).toBe(testIngredientId);
 		});
 
 		it('updates lastVerifiedAt on the season', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
 			expect(season.lastVerifiedAt).toBeNull();
 
-			const { ingredientSeason: updated } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { ingredientSeason: updated } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
 			expect(updated.lastVerifiedAt).not.toBeNull();
 		});
 
 		it('sets lastVerifiedAt to match the verification createdAt', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
-			const { ingredientSeason: updated, verification } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { ingredientSeason: updated, verification } = await verifyIngredientSeason(
+				season.id,
+				testIngredientId,
+				testUserId,
+				logger,
+			);
 
 			expect(updated.lastVerifiedAt).toBe(verification.createdAt);
 		});
 
 		it('sets updatedAt to match the verification createdAt', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
-			const { ingredientSeason: updated, verification } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { ingredientSeason: updated, verification } = await verifyIngredientSeason(
+				season.id,
+				testIngredientId,
+				testUserId,
+				logger,
+			);
 
 			expect(updated.updatedAt).toBe(verification.createdAt);
 		});
 
 		it('sets updatedBy on the season', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
-			const { ingredientSeason: updated } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { ingredientSeason: updated } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
 			expect(updated.updatedBy).toBe(testUserId);
 		});
 
 		it('returns the correct season id', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
-			const { ingredientSeason: updated } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { ingredientSeason: updated } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
 			expect(updated.id).toBe(season.id);
 		});
@@ -428,7 +438,7 @@ describe('ingredient seasons repository', () => {
 			);
 			const target = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
 
-			await verifyIngredientSeason(target.id, testUserId, logger);
+			await verifyIngredientSeason(target.id, testIngredientId, testUserId, logger);
 
 			const seasons = await getIngredientSeasons(testIngredientId, logger);
 			const unchanged = seasons.find(s => s.id === other.id);
@@ -439,8 +449,8 @@ describe('ingredient seasons repository', () => {
 		it('allows multiple verifications for the same season', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
 
-			const { verification: first } = await verifyIngredientSeason(season.id, testUserId, logger);
-			const { verification: second } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { verification: first } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
+			const { verification: second } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
 			expect(first.id).not.toBe(second.id);
 			expect(second.ingredientSeasonId).toBe(season.id);
@@ -449,27 +459,33 @@ describe('ingredient seasons repository', () => {
 		it('updates lastVerifiedAt on re-verification', async () => {
 			const season = await createIngredientSeason({ ingredientId: testIngredientId, ...VALID_SEASON }, testUserId, logger);
 
-			const { ingredientSeason: afterFirst } = await verifyIngredientSeason(season.id, testUserId, logger);
-			const { ingredientSeason: afterSecond } = await verifyIngredientSeason(season.id, testUserId, logger);
+			const { ingredientSeason: afterFirst } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
+			const { ingredientSeason: afterSecond } = await verifyIngredientSeason(season.id, testIngredientId, testUserId, logger);
 
 			expect(afterFirst.lastVerifiedAt).not.toBeNull();
 			expect(afterSecond.lastVerifiedAt).not.toBeNull();
 		});
 
 		it('throws InvalidUUID for a non-UUID id', async () => {
-			await expect(verifyIngredientSeason('not-a-uuid', testUserId, logger)).rejects.toThrow(
+			await expect(verifyIngredientSeason('not-a-uuid', testIngredientId, testUserId, logger)).rejects.toThrow(
 				'The value "not-a-uuid" is not a valid ID for a Ingredient Season',
 			);
 		});
 
+		it('throws InvalidUUID for a non-UUID ingredient id', async () => {
+			await expect(verifyIngredientSeason(testIngredientId, 'not-a-uuid', testUserId, logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a Ingredient',
+			);
+		});
+
 		it('throws InvalidUUID for an empty string id', async () => {
-			await expect(verifyIngredientSeason('', testUserId, logger)).rejects.toThrow(
+			await expect(verifyIngredientSeason('', testIngredientId, testUserId, logger)).rejects.toThrow(
 				'The value "" is not a valid ID for a Ingredient Season',
 			);
 		});
 
 		it('throws when the season does not exist', async () => {
-			await expect(verifyIngredientSeason(randomUUID(), testUserId, logger)).rejects.toThrow();
+			await expect(verifyIngredientSeason(randomUUID(), testIngredientId, testUserId, logger)).rejects.toThrow();
 		});
 	});
 });

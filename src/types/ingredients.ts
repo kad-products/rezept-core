@@ -7,6 +7,6 @@ export type IngredientDBRead = typeof ingredients.$inferSelect;
 export type IngredientFormInput = z.input<typeof ingredientsSchemas.form>;
 
 export type IngredientWithSeasons = IngredientDBRead & {
-	seasons: IngredientSeasonsDBRead[];
+	seasons: (IngredientSeasonsDBRead & { verifications: VerificationsDBRead[] })[];
 	verifications: VerificationsDBRead[];
 };

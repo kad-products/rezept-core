@@ -14,7 +14,11 @@ export async function getIngredientById(ingredientId: string, logger: RzLogger):
 	const ingredient = await db.query.ingredients.findFirst({
 		where: and(eq(ingredients.id, ingredientId), isNull(ingredients.deletedAt)),
 		with: {
-			seasons: true,
+			seasons: {
+				with: {
+					verifications: true,
+				},
+			},
 			verifications: true,
 		},
 	});

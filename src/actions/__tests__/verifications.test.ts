@@ -86,7 +86,7 @@ describe('saveVerification', () => {
 		} as never);
 
 		vi.mocked(verifyIngredientSeason).mockResolvedValue({
-			verification: { ...MOCK_VERIFICATION, ingredientId: null, ingredientSeasonId: VALID_SEASON_ID },
+			verification: { ...MOCK_VERIFICATION, ingredientId: VALID_INGREDIENT_ID, ingredientSeasonId: VALID_SEASON_ID },
 			season: MOCK_SEASON,
 		} as never);
 	});
@@ -116,7 +116,7 @@ describe('saveVerification', () => {
 			const result = await _saveVerification({ ingredientId: VALID_INGREDIENT_ID });
 
 			expect(result.success).toBe(true);
-			expect(result.data).toEqual(MOCK_VERIFICATION);
+			expect(result.data).toEqual({ ...MOCK_VERIFICATION, ingredientId: VALID_INGREDIENT_ID });
 		});
 
 		it('does not call verifyIngredientSeason when ingredientId is provided', async () => {
@@ -127,22 +127,31 @@ describe('saveVerification', () => {
 
 	describe('ingredient season verification', () => {
 		it('creates a season verification when ingredientSeasonId is provided', async () => {
-			const result = await _saveVerification({ ingredientSeasonId: VALID_SEASON_ID });
+			const result = await _saveVerification({ ingredientId: VALID_INGREDIENT_ID, ingredientSeasonId: VALID_SEASON_ID });
 
 			expect(result.success).toBe(true);
 			expect(verifyIngredientSeason).toHaveBeenCalledTimes(1);
-			expect(verifyIngredientSeason).toHaveBeenCalledWith(VALID_SEASON_ID, 'test-user-id', expect.anything());
+			expect(verifyIngredientSeason).toHaveBeenCalledWith(
+				VALID_SEASON_ID,
+				VALID_INGREDIENT_ID,
+				'test-user-id',
+				expect.anything(),
+			);
 		});
 
 		it('returns the verification record on success', async () => {
-			const result = await _saveVerification({ ingredientSeasonId: VALID_SEASON_ID });
+			const result = await _saveVerification({ ingredientId: VALID_INGREDIENT_ID, ingredientSeasonId: VALID_SEASON_ID });
 
 			expect(result.success).toBe(true);
-			expect(result.data).toEqual({ ...MOCK_VERIFICATION, ingredientId: null, ingredientSeasonId: VALID_SEASON_ID });
+			expect(result.data).toEqual({
+				...MOCK_VERIFICATION,
+				ingredientId: VALID_INGREDIENT_ID,
+				ingredientSeasonId: VALID_SEASON_ID,
+			});
 		});
 
 		it('does not call verifyIngredient when ingredientSeasonId is provided', async () => {
-			await _saveVerification({ ingredientSeasonId: VALID_SEASON_ID });
+			await _saveVerification({ ingredientId: VALID_INGREDIENT_ID, ingredientSeasonId: VALID_SEASON_ID });
 			expect(verifyIngredient).not.toHaveBeenCalled();
 		});
 	});
@@ -208,15 +217,15 @@ describe('saveVerification', () => {
 			expect(verifyIngredientSeason).not.toHaveBeenCalled();
 		});
 
-		it('prefers ingredientId over ingredientSeasonId when both are provided', async () => {
+		it('prefers ingredientSeasonId over ingredientId when both are provided', async () => {
 			const result = await _saveVerification({
 				ingredientId: VALID_INGREDIENT_ID,
 				ingredientSeasonId: VALID_SEASON_ID,
 			});
 
 			expect(result.success).toBe(true);
-			expect(verifyIngredient).toHaveBeenCalledTimes(1);
-			expect(verifyIngredientSeason).not.toHaveBeenCalled();
+			expect(verifyIngredientSeason).toHaveBeenCalledTimes(1);
+			expect(verifyIngredient).not.toHaveBeenCalled();
 		});
 	});
 
