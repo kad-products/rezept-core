@@ -3,6 +3,7 @@ import { relations, sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { ingredients } from './ingredients';
 import { users } from './users';
+import { verifications } from './verifications';
 
 export const ingredientSeasons = sqliteTable(
 	'ingredient_seasons',
@@ -18,6 +19,7 @@ export const ingredientSeasons = sqliteTable(
 		startMonth: integer().notNull(), // 1-12
 		endMonth: integer().notNull(), // 1-12
 		notes: text(),
+		lastVerifiedAt: text(),
 		createdAt: text()
 			.notNull()
 			.$defaultFn(() => new Date().toISOString()),
@@ -40,7 +42,7 @@ export const ingredientSeasons = sqliteTable(
 	],
 );
 
-export const ingredientSeasonsRelations = relations(ingredientSeasons, ({ one }) => ({
+export const ingredientSeasonsRelations = relations(ingredientSeasons, ({ one, many }) => ({
 	ingredient: one(ingredients, {
 		fields: [ingredientSeasons.ingredientId],
 		references: [ingredients.id],
@@ -50,4 +52,5 @@ export const ingredientSeasonsRelations = relations(ingredientSeasons, ({ one })
 		references: [users.id],
 		relationName: 'ingredientSeasonCreator',
 	}),
+	verifications: many(verifications),
 }));

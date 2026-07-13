@@ -4,6 +4,7 @@ import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { ingredientSeasons } from './ingredient-seasons';
 import { recipeIngredients } from './recipe-ingredients';
 import { users } from './users';
+import { verifications } from './verifications';
 
 export const ingredients = sqliteTable('ingredients', {
 	id: text()
@@ -11,6 +12,7 @@ export const ingredients = sqliteTable('ingredients', {
 		.$defaultFn(() => crypto.randomUUID()),
 	name: text().notNull().unique(),
 	description: text(),
+	lastVerifiedAt: text(),
 	createdAt: text()
 		.notNull()
 		.$defaultFn(() => new Date().toISOString()),
@@ -31,4 +33,5 @@ export const ingredientsRelations = relations(ingredients, ({ many, one }) => ({
 		references: [users.id],
 		relationName: 'ingredientCreator',
 	}),
+	verifications: many(verifications),
 }));

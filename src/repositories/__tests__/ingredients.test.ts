@@ -1,8 +1,16 @@
+import { randomUUID } from 'node:crypto';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { createNoopLogger } from '@/logger';
 import { createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { createIngredient, getIngredientById, getIngredients, saveIngredients, updateIngredient } from '../ingredients';
+import {
+	createIngredient,
+	getIngredientById,
+	getIngredients,
+	saveIngredients,
+	updateIngredient,
+	verifyIngredient,
+} from '../ingredients';
 
 const logger = createNoopLogger();
 
@@ -266,6 +274,120 @@ describe('ingredients repository', () => {
 
 		it('throws when the same name appears more than once in the input', async () => {
 			await expect(saveIngredients(['Tomato', 'Tomato'], testUserId, logger)).rejects.toThrow();
+		});
+	});
+
+	describe('verifyIngredient', () => {
+		it('returns a verification record and the updated ingredient', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const result = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(result.verification).toBeDefined();
+			expect(result.ingredient).toBeDefined();
+		});
+
+		it('sets ingredientId on the verification record', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const { verification } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(verification.ingredientId).toBe(ingredient.id);
+		});
+
+		it('sets createdBy on the verification record', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const { verification } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(verification.createdBy).toBe(testUserId);
+		});
+
+		it('leaves ingredientSeasonId null on the verification record', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const { verification } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(verification.ingredientSeasonId).toBeNull();
+		});
+
+		it('updates lastVerifiedAt on the ingredient', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			expect(ingredient.lastVerifiedAt).toBeNull();
+
+			const { ingredient: updated } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(updated.lastVerifiedAt).not.toBeNull();
+		});
+
+		it('sets lastVerifiedAt to match the verification createdAt', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const { ingredient: updated, verification } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(updated.lastVerifiedAt).toBe(verification.createdAt);
+		});
+
+		it('sets updatedAt to match the verification createdAt', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const { ingredient: updated, verification } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(updated.updatedAt).toBe(verification.createdAt);
+		});
+
+		it('sets updatedBy on the ingredient', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const { ingredient: updated } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(updated.updatedBy).toBe(testUserId);
+		});
+
+		it('returns the correct ingredient id', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const { ingredient: updated } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(updated.id).toBe(ingredient.id);
+		});
+
+		it('does not update other ingredients', async () => {
+			const target = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const other = await createIngredient({ name: 'Onion' }, testUserId, logger);
+
+			await verifyIngredient(target.id, testUserId, logger);
+
+			const unchanged = await getIngredientById(other.id, logger);
+			expect(unchanged.lastVerifiedAt).toBeNull();
+			expect(unchanged.updatedAt).toBeNull();
+		});
+
+		it('allows multiple verifications for the same ingredient', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const { verification: first } = await verifyIngredient(ingredient.id, testUserId, logger);
+			const { verification: second } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			expect(first.id).not.toBe(second.id);
+			expect(second.ingredientId).toBe(ingredient.id);
+		});
+
+		it('updates lastVerifiedAt on re-verification', async () => {
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const { ingredient: afterFirst } = await verifyIngredient(ingredient.id, testUserId, logger);
+			const { ingredient: afterSecond } = await verifyIngredient(ingredient.id, testUserId, logger);
+
+			// Both should be set; afterSecond's lastVerifiedAt should be >= afterFirst's
+			expect(afterFirst.lastVerifiedAt).not.toBeNull();
+			expect(afterSecond.lastVerifiedAt).not.toBeNull();
+		});
+
+		it('throws InvalidUUID for a non-UUID id', async () => {
+			await expect(verifyIngredient('not-a-uuid', testUserId, logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a Ingredient',
+			);
+		});
+
+		it('throws InvalidUUID for an empty string id', async () => {
+			await expect(verifyIngredient('', testUserId, logger)).rejects.toThrow('The value "" is not a valid ID for a Ingredient');
+		});
+
+		it('throws when the ingredient does not exist', async () => {
+			await expect(verifyIngredient(randomUUID(), testUserId, logger)).rejects.toThrow();
 		});
 	});
 });

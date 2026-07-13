@@ -16,3 +16,4 @@ export * from './recipes';
 export * from './seasonal-ingredients';
 export * from './seasons';
 export * from './users';
+export * from './verifications';

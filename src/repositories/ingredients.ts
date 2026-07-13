@@ -1,8 +1,8 @@
 import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import { ingredients } from '@/models';
-import type { IngredientDBRead, IngredientFormInput, IngredientWithSeasons, RzLogger } from '@/types';
+import { ingredients, verifications } from '@/models';
+import type { IngredientDBRead, IngredientFormInput, IngredientWithSeasons, RzLogger, VerificationsDBRead } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getIngredientById(ingredientId: string, logger: RzLogger): Promise<IngredientWithSeasons> {
@@ -111,4 +111,40 @@ export async function saveIngredients(
 	logger.info(`Saved ${savedIngredients.length} ingredients`);
 
 	return savedIngredients;
+}
+
+export async function verifyIngredient(
+	ingredientId: string,
+	userId: string,
+	logger: RzLogger,
+): Promise<{ ingredient: IngredientDBRead; verification: VerificationsDBRead }> {
+	if (!validateUuid(ingredientId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientId, 'Ingredient']);
+	}
+	logger.debug(`Verifying ingredient ${ingredientId}`);
+
+	const [verificationRecord] = await db
+		.insert(verifications)
+		.values({
+			ingredientId,
+			createdBy: userId,
+		})
+		.returning();
+
+	const [updatedIngredient] = await db
+		.update(ingredients)
+		.set({
+			lastVerifiedAt: verificationRecord.createdAt,
+			updatedAt: verificationRecord.createdAt,
+			updatedBy: userId,
+		})
+		.where(eq(ingredients.id, ingredientId))
+		.returning();
+
+	logger.info(`Marked ingredient ${ingredientId} as verified`);
+
+	return {
+		ingredient: updatedIngredient,
+		verification: verificationRecord,
+	};
 }
