@@ -1,3 +1,4 @@
+import { verifications } from '@/models';
 import type { Permission } from '@/types/permissions';
 import type { PermissionRole } from './roles';
 
@@ -57,6 +58,9 @@ const permissions = {
 	users: {
 		read: ['ADMIN'],
 		update: ['ADMIN'],
+	},
+	verifications: {
+		create: ['ADMIN'],
 	},
 	workflows: {
 		read: ['ADMIN'],
