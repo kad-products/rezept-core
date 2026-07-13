@@ -8,22 +8,24 @@ import { getIngredientById } from '@/repositories';
 import type { RzTableColumn } from '@/types';
 
 const columns: RzTableColumn[] = [
-	{ key: 'name', label: 'Name' },
-	{ key: 'description', label: 'Description' },
-	{ key: 'createdAt', label: 'Created' },
+	{ key: 'country', label: 'Country' },
+	{ key: 'region', label: 'Region' },
+	{ key: 'startMonth', label: 'Start Month' },
+	{ key: 'endMonth', label: 'End Month' },
+	{ key: 'lastVerifiedAt', label: 'Last Verified' },
 	{
 		key: 'actions',
 		label: '',
-		actions: [
-			{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'ingredients:update' },
-			{ type: 'link', hrefProp: 'seasonsUrl', label: 'Seasons', requiredPermission: 'ingredients:update' },
-		],
+		actions: [{ type: 'link', hrefProp: 'verifyUrl', label: 'Verify', requiredPermission: 'verifications:read' }],
 	},
 ];
 
 export default async function Pages__admin__ingredients__seasons({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const ingredient = await getIngredientById(params.ingredientId, ctx.logger);
-
+	const rows = ingredient.seasons.map(s => ({
+		...s,
+		verifyUrl: `/admin/ingredients/${s.ingredientId}/seasons/${s.id}/verify`,
+	}));
 	return (
 		<AdminLayout ctx={ctx} currentBasePage="ingredients" pageTitle={`Seasons for ${ingredient.name}`}>
 			<RzPopMenu
@@ -40,7 +42,7 @@ export default async function Pages__admin__ingredients__seasons({ ctx, params }
 						href: `/admin/ingredients/${ingredient.id}/edit`,
 					},
 					{
-						requiredPermission: 'ingredients:update',
+						requiredPermission: 'verifications:read',
 						label: 'Verify',
 						href: `/admin/ingredients/${ingredient.id}/verify`,
 					},
@@ -57,9 +59,8 @@ export default async function Pages__admin__ingredients__seasons({ ctx, params }
 					/>
 				);
 			})}
+			<RzTable userPermissions={ctx.permissions} columns={columns} data={rows} />
 			<IngredientSeasonForm ingredientId={ingredient.id} countryOptions={countryOptions} monthOptions={monthOptions} />
-			{JSON.stringify(ingredient)}
-			<RzTable userPermissions={ctx.permissions} columns={columns} data={ingredient.seasons} />
 		</AdminLayout>
 	);
 }

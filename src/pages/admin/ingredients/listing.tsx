@@ -15,7 +15,7 @@ const columns: RzTableColumn[] = [
 		actions: [
 			{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'ingredients:update' },
 			{ type: 'link', hrefProp: 'seasonsUrl', label: 'Seasons', requiredPermission: 'ingredients:update' },
-			{ type: 'link', hrefProp: 'verifyUrl', label: 'Verify', requiredPermission: 'ingredients:update' },
+			{ type: 'link', hrefProp: 'verifyUrl', label: 'Verify', requiredPermission: 'verifications:read' },
 		],
 	},
 ];

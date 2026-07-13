@@ -96,17 +96,22 @@ export async function deleteIngredientSeason(
 
 export async function verifyIngredientSeason(
 	ingredientSeasonId: string,
+	ingredientId: string,
 	userId: string,
 	logger: RzLogger,
 ): Promise<{ ingredientSeason: IngredientSeasonsDBRead; verification: VerificationsDBRead }> {
 	if (!validateUuid(ingredientSeasonId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeasonId, 'Ingredient Season']);
 	}
+	if (!validateUuid(ingredientId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientId, 'Ingredient']);
+	}
 	logger.debug(`Verifying ingredient season ${ingredientSeasonId}`);
 
 	const [verificationRecord] = await db
 		.insert(verifications)
 		.values({
+			ingredientId,
 			ingredientSeasonId,
 			createdBy: userId,
 		})

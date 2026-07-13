@@ -60,6 +60,7 @@ const permissions = {
 	},
 	verifications: {
 		create: ['ADMIN'],
+		read: ['ADMIN'],
 	},
 	workflows: {
 		read: ['ADMIN'],

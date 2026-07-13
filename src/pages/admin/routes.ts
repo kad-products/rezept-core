@@ -3,6 +3,7 @@ import { requireAuthentication, requirePermissions } from '@/interrupters';
 import Pages__admin__index from './index';
 import Pages__admin__ingredients__edit from './ingredients/edit';
 import Pages__admin__ingredients__listing from './ingredients/listing';
+import Pages__admin__ingredients__season_verify from './ingredients/season-verify';
 import Pages__admin__ingredients__seasons from './ingredients/seasons';
 import Pages__admin__ingredients__verify from './ingredients/verify';
 import AdminNotFound from './not-found';
@@ -30,6 +31,11 @@ export default {
 			requireAuthentication,
 			requirePermissions('ingredients:update'),
 			Pages__admin__ingredients__verify,
+		]),
+		route('/ingredients/:ingredientId/seasons/:ingredientSeasonId/verify', [
+			requireAuthentication,
+			requirePermissions('ingredients:update'),
+			Pages__admin__ingredients__season_verify,
 		]),
 		route('/recipes/scrapes', [
 			requireAuthentication,

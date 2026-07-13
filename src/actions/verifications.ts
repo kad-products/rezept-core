@@ -39,16 +39,27 @@ export async function _saveVerification(formData: VerificationsFormInput): Promi
 				'Request included ID which indicates updating an existing verification which has not been implemented yet',
 			);
 		} else {
-			if (parsed.data.ingredientId) {
-				const ingredientVerification = await verifyIngredient(parsed.data.ingredientId, userId, requestInfo.ctx.logger);
-				return successResponse<VerificationsDBRead>(ingredientVerification.verification);
-			} else if (parsed.data.ingredientSeasonId) {
+			if (parsed.data.ingredientSeasonId) {
+				if (!parsed.data.ingredientId) {
+					requestInfo.ctx.logger.error(
+						`Ingredient Season ID ${parsed.data.ingredientSeasonId} provided but no Ingredient ID, both must be present for an ingredient season verification`,
+					);
+					return errorResponse<VerificationsDBRead>(
+						`Request to verify season ingredient must also include parent ingredient ID`,
+						400,
+						'Request to verify season ingredient must also include parent ingredient ID',
+					);
+				}
 				const ingredientSeasonVerification = await verifyIngredientSeason(
 					parsed.data.ingredientSeasonId,
+					parsed.data.ingredientId,
 					userId,
 					requestInfo.ctx.logger,
 				);
 				return successResponse<VerificationsDBRead>(ingredientSeasonVerification.verification);
+			} else if (parsed.data.ingredientId) {
+				const ingredientVerification = await verifyIngredient(parsed.data.ingredientId, userId, requestInfo.ctx.logger);
+				return successResponse<VerificationsDBRead>(ingredientVerification.verification);
 			}
 		}
 		requestInfo.ctx.logger.error('Request did not include ingredientId or ingredientSeasonId');
