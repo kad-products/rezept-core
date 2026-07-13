@@ -472,6 +472,12 @@ describe('ingredient seasons repository', () => {
 			);
 		});
 
+		it('throws InvalidUUID for a non-UUID ingredient id', async () => {
+			await expect(verifyIngredientSeason(testIngredientId, 'not-a-uuid', testUserId, logger)).rejects.toThrow(
+				'The value "not-a-uuid" is not a valid ID for a Ingredient',
+			);
+		});
+
 		it('throws InvalidUUID for an empty string id', async () => {
 			await expect(verifyIngredientSeason('', testIngredientId, testUserId, logger)).rejects.toThrow(
 				'The value "" is not a valid ID for a Ingredient Season',
