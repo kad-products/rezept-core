@@ -7,6 +7,7 @@ import type { RzTableColumn } from '@/types';
 const columns: RzTableColumn[] = [
 	{ key: 'name', label: 'Name' },
 	{ key: 'description', label: 'Description' },
+	{ key: 'lastVerifiedAt', label: 'Last Verified' },
 	{ key: 'createdAt', label: 'Created' },
 	{
 		key: 'actions',
@@ -14,6 +15,7 @@ const columns: RzTableColumn[] = [
 		actions: [
 			{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'ingredients:update' },
 			{ type: 'link', hrefProp: 'seasonsUrl', label: 'Seasons', requiredPermission: 'ingredients:update' },
+			{ type: 'link', hrefProp: 'verifyUrl', label: 'Verify', requiredPermission: 'ingredients:update' },
 		],
 	},
 ];
@@ -24,6 +26,7 @@ export default async function Pages__admin__ingredients__listing({ ctx }: Reques
 		...u,
 		editUrl: `/admin/ingredients/${u.id}/edit`,
 		seasonsUrl: `/admin/ingredients/${u.id}/seasons`,
+		verifyUrl: `/admin/ingredients/${u.id}/verify`,
 	}));
 
 	return (

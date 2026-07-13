@@ -39,6 +39,11 @@ export default async function Pages__admin__ingredients__seasons({ ctx, params }
 						label: 'Edit',
 						href: `/admin/ingredients/${ingredient.id}/edit`,
 					},
+					{
+						requiredPermission: 'ingredients:update',
+						label: 'Verify',
+						href: `/admin/ingredients/${ingredient.id}/verify`,
+					},
 				]}
 			/>
 			{ingredient.seasons.map(season => {

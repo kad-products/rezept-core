@@ -29,6 +29,11 @@ export default async function Pages__admin__ingredients__edit({ ctx, params }: R
 						label: 'Seasons',
 						href: `/admin/ingredients/${ingredientId}/seasons`,
 					},
+					{
+						requiredPermission: 'ingredients:update',
+						label: 'Verify',
+						href: `/admin/ingredients/${ingredient.id}/verify`,
+					},
 				]}
 			/>
 			<IngredientForm ingredient={ingredient} />

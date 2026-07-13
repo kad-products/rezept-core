@@ -4,6 +4,7 @@ import Pages__admin__index from './index';
 import Pages__admin__ingredients__edit from './ingredients/edit';
 import Pages__admin__ingredients__listing from './ingredients/listing';
 import Pages__admin__ingredients__seasons from './ingredients/seasons';
+import Pages__admin__ingredients__verify from './ingredients/verify';
 import AdminNotFound from './not-found';
 import Pages__admin__recipes__scrapes__listing from './recipes/scrapes/listing';
 import Pages__admin__recipes__scrapes__view from './recipes/scrapes/view';
@@ -24,6 +25,11 @@ export default {
 			requireAuthentication,
 			requirePermissions('ingredients:update'),
 			Pages__admin__ingredients__seasons,
+		]),
+		route('/ingredients/:ingredientId/verify', [
+			requireAuthentication,
+			requirePermissions('ingredients:update'),
+			Pages__admin__ingredients__verify,
 		]),
 		route('/recipes/scrapes', [
 			requireAuthentication,
