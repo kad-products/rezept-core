@@ -1,3 +1,9 @@
+## [1.69.1](https://github.com/kad-products/rezept-core/compare/v1.69.0...v1.69.1) (2026-07-13)
+
+### Bug Fixes
+
+* just alter the users table rather than drop/create ([2185791](https://github.com/kad-products/rezept-core/commit/2185791c094eb303a7c2cb0c74fb384097e7a3bb))
+
 ## [1.69.0](https://github.com/kad-products/rezept-core/compare/v1.68.0...v1.69.0) (2026-07-13)
 
 ### Features
