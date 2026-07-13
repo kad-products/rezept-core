@@ -1,3 +1,9 @@
+## [1.66.0](https://github.com/kad-products/rezept-core/compare/v1.65.1...v1.66.0) (2026-07-13)
+
+### Features
+
+* add initial model and repo methods for verifications ([47eb44e](https://github.com/kad-products/rezept-core/commit/47eb44efb3d629c340af97442dcb2063c294671c))
+
 ## [1.65.1](https://github.com/kad-products/rezept-core/compare/v1.65.0...v1.65.1) (2026-07-12)
 
 ### Bug Fixes
