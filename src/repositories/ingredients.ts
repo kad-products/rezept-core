@@ -15,6 +15,7 @@ export async function getIngredientById(ingredientId: string, logger: RzLogger):
 		where: and(eq(ingredients.id, ingredientId), isNull(ingredients.deletedAt)),
 		with: {
 			seasons: true,
+			verifications: true,
 		},
 	});
 
