@@ -7,6 +7,7 @@ import type { RzTableColumn } from '@/types';
 const columns: RzTableColumn[] = [
 	{ key: 'name', label: 'Name' },
 	{ key: 'description', label: 'Description' },
+	{ key: 'hasSeasons', label: 'Has Seasons' },
 	{ key: 'lastVerifiedAt', label: 'Last Verified' },
 	{ key: 'createdAt', label: 'Created' },
 	{

@@ -5,6 +5,7 @@ const formSchema = z.object({
 	id: z.string().uuid('Must be a valid UUID').optional(),
 	name: requiredString('Name', 100),
 	description: optionalStringMax(500, 'Description'),
+	hasSeasons: z.boolean().default(true),
 });
 
 export const ingredientsSchemas = {

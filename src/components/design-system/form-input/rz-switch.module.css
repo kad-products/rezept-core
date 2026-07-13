@@ -1,0 +1,31 @@
+.rz-switch-root {
+	width: 42px;
+	height: 25px;
+	background-color: #999999;
+	border-radius: 9999px;
+	position: relative;
+	box-shadow: 0 2px 10px #777777;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	&:focus {
+		box-shadow: 0 0 0 2px black;
+	}
+	&[data-state="checked"] {
+		background-color: lime;
+	}
+}
+
+.rz-switch-thumb {
+	all: unset;
+	display: block;
+	width: 21px;
+	height: 21px;
+	background-color: white;
+	border-radius: 9999px;
+	box-shadow: 0 2px 2px #777777;
+	transition: transform 100ms;
+	transform: translateX(2px);
+	will-change: transform;
+	&[data-state="checked"] {
+		transform: translateX(19px);
+	}
+}

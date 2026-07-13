@@ -91,6 +91,34 @@ function FieldError({
 	);
 }
 
+export function CheckboxGroupInput({
+	label,
+	required = false,
+	options,
+}: {
+	label: string;
+	required?: boolean;
+	options: Array<{ value: string; label: string }>;
+}): React.ReactNode {
+	const field = useFieldContext<string[]>();
+	return (
+		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta} controlGroup>
+			<RzFormInput.RzCheckboxGroup
+				options={options}
+				value={field.state.value}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+					const current = field.state.value ?? [];
+					if (e.target.checked) {
+						field.handleChange([...current, e.target.value]);
+					} else {
+						field.handleChange(current.filter(v => v !== e.target.value));
+					}
+				}}
+			/>
+		</FieldComponent>
+	);
+}
+
 export function DateInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
 	const field = useFieldContext<string>();
 	return (
@@ -100,33 +128,6 @@ export function DateInput({ label, required = false }: { label: string; required
 				value={field.state.value}
 				onBlur={field.handleBlur}
 				onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-			/>
-		</FieldComponent>
-	);
-}
-export function TextInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
-	const field = useFieldContext<string>();
-	return (
-		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta}>
-			<RzFormInput.RzText
-				name={field.name}
-				value={field.state.value}
-				onBlur={field.handleBlur}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-			/>
-		</FieldComponent>
-	);
-}
-
-export function TextareaInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
-	const field = useFieldContext<string>();
-	return (
-		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta}>
-			<RzFormInput.RzTextarea
-				name={field.name}
-				value={field.state.value}
-				onBlur={field.handleBlur}
-				onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
 			/>
 		</FieldComponent>
 	);
@@ -163,29 +164,38 @@ export function SelectInput({
 	);
 }
 
-export function CheckboxGroupInput({
-	label,
-	required = false,
-	options,
-}: {
-	label: string;
-	required?: boolean;
-	options: Array<{ value: string; label: string }>;
-}): React.ReactNode {
-	const field = useFieldContext<string[]>();
+export function SwitchInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
+	const field = useFieldContext<boolean>();
 	return (
-		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta} controlGroup>
-			<RzFormInput.RzCheckboxGroup
-				options={options}
+		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta}>
+			<RzFormInput.RzSwitch checked={field.state.value} onChange={field.handleChange} />
+		</FieldComponent>
+	);
+}
+
+export function TextareaInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
+	const field = useFieldContext<string>();
+	return (
+		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta}>
+			<RzFormInput.RzTextarea
+				name={field.name}
 				value={field.state.value}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-					const current = field.state.value ?? [];
-					if (e.target.checked) {
-						field.handleChange([...current, e.target.value]);
-					} else {
-						field.handleChange(current.filter(v => v !== e.target.value));
-					}
-				}}
+				onBlur={field.handleBlur}
+				onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+			/>
+		</FieldComponent>
+	);
+}
+
+export function TextInput({ label, required = false }: { label: string; required?: boolean }): React.ReactNode {
+	const field = useFieldContext<string>();
+	return (
+		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta}>
+			<RzFormInput.RzText
+				name={field.name}
+				value={field.state.value}
+				onBlur={field.handleBlur}
+				onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
 			/>
 		</FieldComponent>
 	);
