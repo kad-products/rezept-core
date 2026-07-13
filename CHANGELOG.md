@@ -1,3 +1,13 @@
+## [1.69.0](https://github.com/kad-products/rezept-core/compare/v1.68.0...v1.69.0) (2026-07-13)
+
+### Features
+
+* ability to mark an ingredient as no seasons ([3e7bbac](https://github.com/kad-products/rezept-core/commit/3e7bbac8b2fb1aa792a0f5864185853b39bf61ed))
+
+### Bug Fixes
+
+* default hasSeasons to true ([f24ad8c](https://github.com/kad-products/rezept-core/commit/f24ad8c8b33a6454e46a965e9fe453a06e111bad))
+
 ## [1.68.0](https://github.com/kad-products/rezept-core/compare/v1.67.0...v1.68.0) (2026-07-13)
 
 ### Features
