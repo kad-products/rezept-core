@@ -1,0 +1,1 @@
+ALTER TABLE `ingredients` ADD `has_seasons` integer DEFAULT true NOT NULL;

@@ -5,6 +5,7 @@ import { saveIngredient } from '@/actions/ingredients';
 import { ingredientsSchemas } from '@/schemas';
 import type { ActionState, IngredientDBRead, IngredientFormInput } from '@/types';
 import { useAppForm } from './setup/context';
+import { FormDevtools } from './setup/FormDevtools';
 
 export default function IngredientForm({ ingredient }: { ingredient: IngredientFormInput }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<IngredientDBRead>>();
@@ -21,23 +22,29 @@ export default function IngredientForm({ ingredient }: { ingredient: IngredientF
 	});
 
 	return (
-		<Form.Root
-			className="rz-form"
-			onSubmit={(e: React.FormEvent): void => {
-				e.preventDefault();
-				e.stopPropagation();
-				form.handleSubmit();
-			}}
-		>
-			{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
-			<form.AppField name="name">{(field): React.ReactNode => <field.TextInput label="Name" required />}</form.AppField>
-			<form.AppField name="description">{(field): React.ReactNode => <field.TextareaInput label="Description" />}</form.AppField>
-			{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
-			{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
-			{formState?.success && <p className="success">Ingredient saved.</p>}
-			<form.AppForm>
-				<form.SubmitButton label="Save Ingredient" />
-			</form.AppForm>
-		</Form.Root>
+		<>
+			<Form.Root
+				className="rz-form"
+				onSubmit={(e: React.FormEvent): void => {
+					e.preventDefault();
+					e.stopPropagation();
+					form.handleSubmit();
+				}}
+			>
+				{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
+				<form.AppField name="name">{(field): React.ReactNode => <field.TextInput label="Name" required />}</form.AppField>
+				<form.AppField name="description">
+					{(field): React.ReactNode => <field.TextareaInput label="Description" />}
+				</form.AppField>
+				<form.AppField name="hasSeasons">{(field): React.ReactNode => <field.SwitchInput label="Has Seasons" />}</form.AppField>
+				{/* biome-ignore-end lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
+				{formState?.errors?._form && <p className="error">{formState.errors._form[0]}</p>}
+				{formState?.success && <p className="success">Ingredient saved.</p>}
+				<form.AppForm>
+					<form.SubmitButton label="Save Ingredient" />
+				</form.AppForm>
+			</Form.Root>
+			<FormDevtools />
+		</>
 	);
 }
