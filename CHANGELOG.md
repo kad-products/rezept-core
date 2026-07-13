@@ -1,3 +1,15 @@
+## [1.67.0](https://github.com/kad-products/rezept-core/compare/v1.66.0...v1.67.0) (2026-07-13)
+
+### Features
+
+* add permission for verifications ([3d9dd78](https://github.com/kad-products/rezept-core/commit/3d9dd781ebbb586221a6b57d85beec533beca141))
+* include ingredient verifications in returned ingredient ([c45366e](https://github.com/kad-products/rezept-core/commit/c45366e7aff0048a3c49457dd8e0fde1ca3920fd))
+* initial UX for ingredient verification ([12bf094](https://github.com/kad-products/rezept-core/commit/12bf094b084a26d07c7c04b62758b7addf7fedf2))
+
+### Bug Fixes
+
+* pull out hrefProp to avoid react warning ([6288aab](https://github.com/kad-products/rezept-core/commit/6288aab7c70e0c28f3e448fa1b0aa6febc24d8e7))
+
 ## [1.66.0](https://github.com/kad-products/rezept-core/compare/v1.65.1...v1.66.0) (2026-07-13)
 
 ### Features
