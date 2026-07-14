@@ -1,3 +1,9 @@
+## [1.70.0](https://github.com/kad-products/rezept-core/compare/v1.69.1...v1.70.0) (2026-07-14)
+
+### Features
+
+* add growing zones ([4dd460e](https://github.com/kad-products/rezept-core/commit/4dd460e0e81380c8879fc94d033abefab3382a95))
+
 ## [1.69.1](https://github.com/kad-products/rezept-core/compare/v1.69.0...v1.69.1) (2026-07-13)
 
 ### Bug Fixes
