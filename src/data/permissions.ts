@@ -27,6 +27,12 @@ const permissions = {
 	credentials: {
 		read: ['BASIC', 'ADMIN'],
 	},
+	'growing-zones': {
+		read: ['BASIC', 'ADMIN'],
+		create: ['ADMIN'],
+		update: ['ADMIN'],
+		delete: ['ADMIN'],
+	},
 	ingredients: {
 		create: ['ADMIN', 'BASIC'],
 		read: ['*'],

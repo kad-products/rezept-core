@@ -1,5 +1,6 @@
 export * from './api-keys';
 export * from './credentials';
+export * from './growing-zones';
 export * from './image-types';
 export * from './images';
 export * from './ingredient-seasons';
