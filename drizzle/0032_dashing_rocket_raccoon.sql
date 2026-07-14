@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `growing_zones_code_unique` ON `growing_zones` (`code`);

@@ -1,5 +1,7 @@
 import { route } from 'rwsdk/router';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
+import Pages__admin__growing_zones__edit from './growing-zones/edit';
+import Pages__admin__growing_zones__listing from './growing-zones/listing';
 import Pages__admin__index from './index';
 import Pages__admin__ingredients__edit from './ingredients/edit';
 import Pages__admin__ingredients__listing from './ingredients/listing';
@@ -15,6 +17,21 @@ import Pages__admin__users__listing from './users/listing';
 export default {
 	admin: [
 		route('/', [requireAuthentication, requirePermissions('admin:read'), Pages__admin__index]),
+		route('/growing-zones', [
+			requireAuthentication,
+			requirePermissions('growing-zones:read'),
+			Pages__admin__growing_zones__listing,
+		]),
+		route('/growing-zones/new', [
+			requireAuthentication,
+			requirePermissions('growing-zones:create'),
+			Pages__admin__growing_zones__edit,
+		]),
+		route('/growing-zones/:growingZoneId/edit', [
+			requireAuthentication,
+			requirePermissions('growing-zones:update'),
+			Pages__admin__growing_zones__edit,
+		]),
 		route('/ingredients', [requireAuthentication, requirePermissions('ingredients:read'), Pages__admin__ingredients__listing]),
 		route('/ingredients/new', [requireAuthentication, requirePermissions('ingredients:create'), Pages__admin__ingredients__edit]),
 		route('/ingredients/:ingredientId/edit', [

@@ -218,6 +218,20 @@
 			"when": 1783957766349,
 			"tag": "0030_light_iceman",
 			"breakpoints": true
+		},
+		{
+			"idx": 31,
+			"version": "6",
+			"when": 1784001243363,
+			"tag": "0031_supreme_miss_america",
+			"breakpoints": true
+		},
+		{
+			"idx": 32,
+			"version": "6",
+			"when": 1784028307016,
+			"tag": "0032_dashing_rocket_raccoon",
+			"breakpoints": true
 		}
 	]
 }

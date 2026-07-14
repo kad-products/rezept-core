@@ -86,6 +86,14 @@ export const navItems: Record<string, NavItem[]> = {
 			basePage: 'auth',
 		},
 		{
+			key: 'admin',
+			label: 'Admin',
+			href: '/admin',
+			icon: EnterIcon,
+			requiredPermission: 'admin:read',
+			basePage: 'admin',
+		},
+		{
 			key: 'logout',
 			label: 'Logout',
 			href: '/auth/logout',
@@ -111,6 +119,14 @@ export const navItems: Record<string, NavItem[]> = {
 			icon: CookieIcon,
 			requiredPermission: 'ingredients:read',
 			basePage: 'ingredients',
+		},
+		{
+			key: 'growing-zones',
+			label: 'Growing Zones',
+			href: '/admin/growing-zones',
+			icon: CookieIcon,
+			requiredPermission: 'growing-zones:read',
+			basePage: 'growing-zones',
 		},
 		{
 			key: 'scrapes',

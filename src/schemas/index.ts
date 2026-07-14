@@ -1,4 +1,5 @@
 export * from './api-keys';
+export * from './growing-zones';
 export * from './ingredient-seasons';
 export * from './ingredients';
 export * from './permissions-override';
