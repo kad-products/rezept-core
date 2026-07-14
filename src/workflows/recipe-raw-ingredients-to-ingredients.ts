@@ -2,11 +2,11 @@ import type { WorkflowEvent } from 'cloudflare:workers';
 import { WorkflowEntrypoint, type WorkflowStep } from 'cloudflare:workers';
 import { createWorkflowLogger } from '@/logger';
 import {
+	ensureIngredientsByName,
 	getRecipeById,
 	getRecipeIngredientsByRecipeSectionId,
 	getRecipes,
 	getSectionsByRecipeId,
-	saveIngredients,
 } from '@/repositories';
 import { parseRawIngredients } from '@/steps';
 import type { RecipeDBRead, RecipeIngredientDBRead, RecipeSectionDBRead } from '@/types';
@@ -87,9 +87,9 @@ export class RecipeRawIngredientsToIngredientsWorkflow extends WorkflowEntrypoin
 			'Save parsed ingredients to D1 table',
 			{ retries: { limit: 3, delay: '5 seconds', backoff: 'exponential' } },
 			async () => {
-				logger.info('Saving ingredients list to D1');
+				logger.info(`Saving ingredients list of ${parsedIngredients.length} ingredients to D1`);
 
-				const ingredients = await saveIngredients(parsedIngredients, userId, logger);
+				const ingredients = await ensureIngredientsByName(parsedIngredients, userId, logger);
 				logger.info(`Saved ${ingredients.length} ingredients`);
 			},
 		);

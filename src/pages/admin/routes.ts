@@ -5,6 +5,7 @@ import Pages__admin__growing_zones__listing from './growing-zones/listing';
 import Pages__admin__index from './index';
 import Pages__admin__ingredients__edit from './ingredients/edit';
 import Pages__admin__ingredients__listing from './ingredients/listing';
+import Pages__admin__ingredients__load from './ingredients/load';
 import Pages__admin__ingredients__season_verify from './ingredients/season-verify';
 import Pages__admin__ingredients__seasons from './ingredients/seasons';
 import Pages__admin__ingredients__verify from './ingredients/verify';
@@ -34,6 +35,7 @@ export default {
 		]),
 		route('/ingredients', [requireAuthentication, requirePermissions('ingredients:read'), Pages__admin__ingredients__listing]),
 		route('/ingredients/new', [requireAuthentication, requirePermissions('ingredients:create'), Pages__admin__ingredients__edit]),
+		route('/ingredients/load', [requireAuthentication, requirePermissions('ingredients:load'), Pages__admin__ingredients__load]),
 		route('/ingredients/:ingredientId/edit', [
 			requireAuthentication,
 			requirePermissions('ingredients:update'),
