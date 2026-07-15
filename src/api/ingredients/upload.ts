@@ -2,7 +2,9 @@ import { env } from 'cloudflare:workers';
 import type { DefaultAppContext, RequestInfo } from 'rwsdk/worker';
 import { errorResponse, successResponse } from '@/api/utils';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
-import type { IngredientDBRead, IngredientLoadRecord } from '@/types';
+import { ingredientsSchemas } from '@/schemas';
+import { readCsvFromR2Object, saveIngredientLoad } from '@/steps';
+import type { IngredientLoadRecord } from '@/types';
 
 export default {
 	post: [requireAuthentication, requirePermissions('ingredients:load'), _postHandler] as const,
@@ -39,8 +41,13 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 
 	ctx.logger.info('Ingredient file uploaded', { key, size: file.size });
 
-	const ingredientsData: IngredientLoadRecord[] = []; //await readCsvFromR2Object<IngredientLoadRecord>(env.REZEPT_ADMIN_OPERATIONS, key, ctx.logger);
-	const savedIngredients: IngredientDBRead[] = []; //await saveIngredientLoad(ingredientsData, userId, ctx.logger);
+	const ingredientsData = await readCsvFromR2Object<IngredientLoadRecord>(
+		env.REZEPT_ADMIN_OPERATIONS,
+		key,
+		ctx.logger,
+		ingredientsSchemas.loadRecord,
+	);
+	const savedIngredients = await saveIngredientLoad(ingredientsData, userId, ctx.logger);
 
 	return successResponse({ key, recordCount: ingredientsData.length, ingredients: savedIngredients });
 }

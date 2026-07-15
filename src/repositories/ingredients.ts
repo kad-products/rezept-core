@@ -69,8 +69,37 @@ export async function updateIngredient(
 		.where(eq(ingredients.id, ingredientId))
 		.returning();
 
+	if (!updatedIngredient) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [0, 1, 'Ingredient']);
+	}
+
 	logger.info(`Updated ingredient ${updatedIngredient.id}`);
 	return updatedIngredient;
+}
+
+export async function getIngredientsByNames(names: string[], logger: RzLogger): Promise<IngredientDBRead[]> {
+	if (names.length === 0) {
+		return [];
+	}
+
+	logger.debug(`Fetching ingredients by ${names.length} names`);
+
+	const BATCH_SIZE = 100;
+	const results = (
+		await Promise.all(
+			Array.from({ length: Math.ceil(names.length / BATCH_SIZE) }, (_, i) =>
+				db
+					.select()
+					.from(ingredients)
+					.where(
+						and(inArray(ingredients.name, names.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE)), isNull(ingredients.deletedAt)),
+					),
+			),
+		)
+	).flat();
+
+	logger.debug(`Found ${results.length} ingredients by name`);
+	return results;
 }
 
 export async function ensureIngredientsByName(
@@ -135,7 +164,7 @@ export async function ensureIngredientsByName(
 
 		return savedIngredients;
 	} catch (err) {
-		logger.error(`Error saving ingredients: ${err}/${err instanceof Error ? err.cause : err}`);
+		logger.error(`Error saving ingredients: ${err}`);
 		throw err;
 	}
 }

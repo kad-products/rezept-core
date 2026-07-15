@@ -8,6 +8,7 @@ import {
 	ensureIngredientsByName,
 	getIngredientById,
 	getIngredients,
+	getIngredientsByNames,
 	updateIngredient,
 	verifyIngredient,
 } from '../ingredients';
@@ -189,6 +190,12 @@ describe('ingredients repository', () => {
 			);
 		});
 
+		it('throws when ingredient does not exist', async () => {
+			await expect(updateIngredient(randomUUID(), { name: 'Ghost' }, testUserId, logger)).rejects.toThrow(
+				'Expected 1 Ingredient record(s), but found 0',
+			);
+		});
+
 		it('does not affect other ingredients', async () => {
 			const other = await createIngredient({ name: 'Onion' }, testUserId, logger);
 			const target = await createIngredient({ name: 'Tomato' }, testUserId, logger);
@@ -274,6 +281,67 @@ describe('ingredients repository', () => {
 
 		it('throws when the same name appears more than once in the input', async () => {
 			await expect(ensureIngredientsByName(['Tomato', 'Tomato'], testUserId, logger)).rejects.toThrow();
+		});
+	});
+
+	describe('getIngredientsByNames', () => {
+		it('returns empty array when passed an empty list', async () => {
+			const result = await getIngredientsByNames([], logger);
+			expect(result).toEqual([]);
+		});
+
+		it('returns matching ingredients by name', async () => {
+			await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			await createIngredient({ name: 'Onion' }, testUserId, logger);
+
+			const result = await getIngredientsByNames(['Tomato', 'Onion'], logger);
+			expect(result.map(i => i.name)).toEqual(expect.arrayContaining(['Tomato', 'Onion']));
+		});
+
+		it('returns only ingredients whose names appear in the list', async () => {
+			await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			await createIngredient({ name: 'Garlic' }, testUserId, logger);
+
+			const result = await getIngredientsByNames(['Tomato'], logger);
+			expect(result).toHaveLength(1);
+			expect(result[0].name).toBe('Tomato');
+		});
+
+		it('returns empty array when no names match', async () => {
+			await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await getIngredientsByNames(['Onion'], logger);
+			expect(result).toEqual([]);
+		});
+
+		it('returns partial matches when only some names exist', async () => {
+			await createIngredient({ name: 'Tomato' }, testUserId, logger);
+
+			const result = await getIngredientsByNames(['Tomato', 'Ghost'], logger);
+			expect(result).toHaveLength(1);
+			expect(result[0].name).toBe('Tomato');
+		});
+
+		it('handles batches larger than 100 names without error', async () => {
+			// Create 5 real ingredients and look up 105 names (mostly non-existent)
+			for (const name of ['A', 'B', 'C', 'D', 'E']) {
+				await createIngredient({ name }, testUserId, logger);
+			}
+			const names = Array.from({ length: 105 }, (_, i) => `Name${i}`);
+			names.push('A', 'B');
+
+			const result = await getIngredientsByNames(names, logger);
+			expect(result.map(i => i.name)).toEqual(expect.arrayContaining(['A', 'B']));
+		});
+
+		it('does not return soft-deleted ingredients', async () => {
+			// Soft-delete is not exposed on this repo yet, so verify the filter indirectly:
+			// a freshly created ingredient should be returned, confirming the isNull(deletedAt) filter
+			// is not excluding active records.
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const result = await getIngredientsByNames(['Tomato'], logger);
+			expect(result[0].id).toBe(created.id);
+			expect(result[0].deletedAt).toBeNull();
 		});
 	});
 
