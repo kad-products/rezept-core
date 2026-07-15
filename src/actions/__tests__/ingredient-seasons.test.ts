@@ -44,10 +44,10 @@ import { createIngredientSeason, updateIngredientSeason } from '@/repositories';
 import { _saveIngredientSeason } from '../ingredient-seasons';
 
 const VALID_INGREDIENT_ID = randomUUID();
-
+const VALID_GROWING_ZONE_ID = randomUUID();
 const VALID_FORM_DATA = {
 	ingredientId: VALID_INGREDIENT_ID,
-	country: 'USA',
+	growingZoneId: VALID_GROWING_ZONE_ID,
 	startMonth: 6,
 	endMonth: 8,
 } as const;
@@ -77,7 +77,7 @@ describe('saveIngredientSeason', () => {
 			expect(createIngredientSeason).toHaveBeenCalledWith(
 				expect.objectContaining({
 					ingredientId: VALID_INGREDIENT_ID,
-					country: 'USA',
+					growingZoneId: VALID_GROWING_ZONE_ID,
 					startMonth: 6,
 					endMonth: 8,
 				}),
@@ -96,16 +96,6 @@ describe('saveIngredientSeason', () => {
 			expect(result.success).toBe(true);
 			expect(createIngredientSeason).toHaveBeenCalledWith(
 				expect.objectContaining({ startMonth: 6, endMonth: 8 }),
-				'test-user-id',
-				expect.anything(),
-			);
-		});
-
-		it('passes region through to the repository', async () => {
-			await _saveIngredientSeason({ ...VALID_FORM_DATA, region: 'California' });
-
-			expect(createIngredientSeason).toHaveBeenCalledWith(
-				expect.objectContaining({ region: 'California' }),
 				'test-user-id',
 				expect.anything(),
 			);
@@ -136,7 +126,7 @@ describe('saveIngredientSeason', () => {
 			expect(updateIngredientSeason).toHaveBeenCalledTimes(1);
 			expect(updateIngredientSeason).toHaveBeenCalledWith(
 				seasonId,
-				expect.objectContaining({ country: 'USA', startMonth: 6, endMonth: 8 }),
+				expect.objectContaining({ growingZoneId: VALID_GROWING_ZONE_ID, startMonth: 6, endMonth: 8 }),
 				'test-user-id',
 				expect.anything(),
 			);
@@ -166,26 +156,12 @@ describe('saveIngredientSeason', () => {
 			expect(createIngredientSeason).not.toHaveBeenCalled();
 		});
 
-		it('returns error when country is missing', async () => {
-			const { country: _omit, ...data } = VALID_FORM_DATA;
+		it('returns error when growing zone is missing', async () => {
+			const { growingZoneId: _omit, ...data } = VALID_FORM_DATA;
 			const result = await _saveIngredientSeason(data as never);
 
 			expect(result.success).toBe(false);
-			expect(result.errors?.country).toBeDefined();
-		});
-
-		it('returns error when country is the wrong length', async () => {
-			const result = await _saveIngredientSeason({ ...VALID_FORM_DATA, country: 'US' });
-
-			expect(result.success).toBe(false);
-			expect(result.errors?.country).toBeDefined();
-		});
-
-		it('returns error when country is not a recognised code', async () => {
-			const result = await _saveIngredientSeason({ ...VALID_FORM_DATA, country: 'XYZ' });
-
-			expect(result.success).toBe(false);
-			expect(result.errors?.country).toBeDefined();
+			expect(result.errors?.growingZoneId).toBeDefined();
 		});
 
 		it('returns error when startMonth is below 1', async () => {

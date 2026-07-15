@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { relations } from 'drizzle-orm';
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { ingredientSeasons } from './ingredient-seasons';
 import { users } from './users';
 
 export const growingZones = sqliteTable('growing_zones', {
@@ -21,7 +22,8 @@ export const growingZones = sqliteTable('growing_zones', {
 	deletedBy: text().references(() => users.id),
 });
 
-export const growingZonesRelations = relations(growingZones, ({ one }) => ({
+export const growingZonesRelations = relations(growingZones, ({ one, many }) => ({
+	seasons: many(ingredientSeasons),
 	creator: one(users, {
 		fields: [growingZones.createdBy],
 		references: [users.id],

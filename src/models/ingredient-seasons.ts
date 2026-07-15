@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import { relations, sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { growingZones } from './growing-zones';
 import { ingredients } from './ingredients';
 import { users } from './users';
 import { verifications } from './verifications';
@@ -14,8 +15,9 @@ export const ingredientSeasons = sqliteTable(
 		ingredientId: text()
 			.notNull()
 			.references(() => ingredients.id, { onDelete: 'cascade' }),
-		country: text().notNull(),
-		region: text(),
+		growingZoneId: text()
+			.notNull()
+			.references(() => growingZones.id, { onDelete: 'cascade' }),
 		startMonth: integer().notNull(), // 1-12
 		endMonth: integer().notNull(), // 1-12
 		notes: text(),
@@ -33,11 +35,9 @@ export const ingredientSeasons = sqliteTable(
 	},
 	table => [
 		index('ingredient_seasons_ingredient_id_idx').on(table.ingredientId),
-		index('ingredient_seasons_country_idx').on(table.country),
-		index('ingredient_seasons_region_idx').on(table.region),
-		index('ingredient_seasons_country_region_idx').on(table.country, table.region),
-		uniqueIndex('ingredient_seasons_ingredient_id_country_region_unique')
-			.on(table.ingredientId, table.country, table.region)
+		index('ingredient_seasons_growing_zone_id_idx').on(table.growingZoneId),
+		uniqueIndex('ingredient_seasons_ingredient_id_growing_zone_id_unique')
+			.on(table.ingredientId, table.growingZoneId)
 			.where(sql`"deleted_at" IS NULL`),
 	],
 );
@@ -46,6 +46,10 @@ export const ingredientSeasonsRelations = relations(ingredientSeasons, ({ one, m
 	ingredient: one(ingredients, {
 		fields: [ingredientSeasons.ingredientId],
 		references: [ingredients.id],
+	}),
+	growingZone: one(growingZones, {
+		fields: [ingredientSeasons.growingZoneId],
+		references: [growingZones.id],
 	}),
 	creator: one(users, {
 		fields: [ingredientSeasons.createdBy],
