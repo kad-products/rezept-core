@@ -69,53 +69,104 @@ export async function updateIngredient(
 		.where(eq(ingredients.id, ingredientId))
 		.returning();
 
+	if (!updatedIngredient) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [0, 1, 'Ingredient']);
+	}
+
 	logger.info(`Updated ingredient ${updatedIngredient.id}`);
 	return updatedIngredient;
 }
 
-export async function saveIngredients(
-	pendingIngredients: string[],
+export async function getIngredientsByNames(names: string[], logger: RzLogger): Promise<IngredientDBRead[]> {
+	if (names.length === 0) {
+		return [];
+	}
+
+	logger.debug(`Fetching ingredients by ${names.length} names`);
+
+	const BATCH_SIZE = 100;
+	const results = (
+		await Promise.all(
+			Array.from({ length: Math.ceil(names.length / BATCH_SIZE) }, (_, i) =>
+				db
+					.select()
+					.from(ingredients)
+					.where(
+						and(inArray(ingredients.name, names.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE)), isNull(ingredients.deletedAt)),
+					),
+			),
+		)
+	).flat();
+
+	logger.debug(`Found ${results.length} ingredients by name`);
+	return results;
+}
+
+export async function ensureIngredientsByName(
+	ingredientNames: string[],
 	userId: string,
 	logger: RzLogger,
 ): Promise<IngredientDBRead[]> {
-	logger.debug(`Saving ${pendingIngredients.length} ingredients`);
+	logger.debug(`Saving ${ingredientNames.length} ingredients`);
 
-	const existingIngredients = await db.select().from(ingredients).where(inArray(ingredients.name, pendingIngredients));
+	try {
+		const BATCH_SIZE = 100;
+		const existingIngredients = (
+			await Promise.all(
+				Array.from({ length: Math.ceil(ingredientNames.length / BATCH_SIZE) }, (_, i) =>
+					db
+						.select()
+						.from(ingredients)
+						.where(inArray(ingredients.name, ingredientNames.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE))),
+				),
+			)
+		).flat();
 
-	const savedIngredients = await Promise.all(
-		pendingIngredients.map(async ing => {
-			const matchingIngredient = existingIngredients.find(existing => existing.name === ing);
-			if (matchingIngredient) {
-				const [updatedIngredient] = await db
-					.update(ingredients)
-					.set({
-						name: ing,
-						updatedAt: sql`(datetime('now', 'localtime'))`,
-						updatedBy: userId,
-					})
-					.where(eq(ingredients.id, matchingIngredient.id))
-					.returning();
+		logger.debug(`Found ${existingIngredients.length} existing ingredients`);
 
-				logger.info(`Updated ingredient ${updatedIngredient.id}`);
-				return updatedIngredient;
-			} else {
-				const [newIngredient] = await db
-					.insert(ingredients)
-					.values({
-						name: ing,
-						createdBy: userId,
-					})
-					.returning();
+		const savedIngredients = await Promise.all(
+			ingredientNames.map(async ing => {
+				try {
+					const matchingIngredient = existingIngredients.find(existing => existing.name === ing);
+					if (matchingIngredient) {
+						const [updatedIngredient] = await db
+							.update(ingredients)
+							.set({
+								name: ing,
+								updatedAt: sql`(datetime('now', 'localtime'))`,
+								updatedBy: userId,
+							})
+							.where(eq(ingredients.id, matchingIngredient.id))
+							.returning();
 
-				logger.info(`Created ingredient ${newIngredient.id} for string ${ing}`);
-				return newIngredient;
-			}
-		}),
-	);
+						logger.info(`Updated ingredient ${updatedIngredient.id}`);
+						return updatedIngredient;
+					} else {
+						const [newIngredient] = await db
+							.insert(ingredients)
+							.values({
+								name: ing,
+								createdBy: userId,
+							})
+							.returning();
 
-	logger.info(`Saved ${savedIngredients.length} ingredients`);
+						logger.info(`Created ingredient ${newIngredient.id} for string ${ing}`);
+						return newIngredient;
+					}
+				} catch (err) {
+					logger.error(`Error saving ingredient ${ing}: ${err}`);
+					throw err;
+				}
+			}),
+		);
 
-	return savedIngredients;
+		logger.info(`Saved ${savedIngredients.length} ingredients`);
+
+		return savedIngredients;
+	} catch (err) {
+		logger.error(`Error saving ingredients: ${err}`);
+		throw err;
+	}
 }
 
 export async function verifyIngredient(

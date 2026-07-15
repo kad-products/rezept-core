@@ -34,10 +34,11 @@ const permissions = {
 		delete: ['ADMIN'],
 	},
 	ingredients: {
-		create: ['ADMIN', 'BASIC'],
+		create: ['ADMIN'],
+		load: ['ADMIN'],
 		read: ['*'],
-		update: ['ADMIN', 'BASIC'],
-		delete: ['ADMIN', 'BASIC'],
+		update: ['ADMIN'],
+		delete: ['ADMIN'],
 	},
 	permissions: {
 		override: ['ADMIN'],

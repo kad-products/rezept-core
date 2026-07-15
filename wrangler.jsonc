@@ -65,6 +65,10 @@
 		{
 			"binding": "REZEPT_IMAGES",
 			"bucket_name": "rezept-images-local"
+		},
+		{
+			"binding": "REZEPT_ADMIN_OPERATIONS",
+			"bucket_name": "rezept-admin-operations-local"
 		}
 	],
 	"workflows": [
@@ -109,6 +113,10 @@
 				{
 					"binding": "REZEPT_IMAGES",
 					"bucket_name": "rezept-images-integration"
+				},
+				{
+					"binding": "REZEPT_ADMIN_OPERATIONS",
+					"bucket_name": "rezept-admin-operations-integration"
 				}
 			],
 			"analytics_engine_datasets": [

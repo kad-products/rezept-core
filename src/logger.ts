@@ -57,8 +57,17 @@ function write(
 	const entry = { level, message, timestamp: new Date().toISOString(), ...bindings, ...serializedMeta };
 	if (env.REZEPT_ENV === 'development') {
 		const { level, message, timestamp, ...rest } = entry;
-		// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
-		console.log(chalk`{yellow ${timestamp}} {bold ${level.toUpperCase()}} {white ${message}}`);
+		if (level.toUpperCase() === 'WARN') {
+			// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
+			console.log(chalk`{bold ${timestamp}} {yellow ${level.toUpperCase()}} {white ${message}}`);
+		} else if (level.toUpperCase() === 'ERROR') {
+			// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
+			console.log(chalk`{bold ${timestamp}} {red ${level.toUpperCase()}} {white ${message}}`);
+		} else {
+			// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
+			console.log(chalk`{bold ${timestamp}} {white ${level.toUpperCase()}} {white ${message}}`);
+		}
+
 		Object.entries(rest).forEach(([key, value]) => {
 			if (REDACTED_PATTERN.test(key)) {
 				// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger

@@ -1,5 +1,6 @@
 import type { RequestInfo } from 'rwsdk/worker';
-import { RzLink, RzTable } from '@/components/design-system';
+import DownloadCSVButton from '@/components/DownloadCSVButton';
+import { RzPopMenu, RzTable } from '@/components/design-system';
 import AdminLayout from '@/layouts/admin';
 import { getIngredients } from '@/repositories';
 import type { RzTableColumn } from '@/types';
@@ -32,12 +33,22 @@ export default async function Pages__admin__ingredients__listing({ ctx }: Reques
 
 	return (
 		<AdminLayout ctx={ctx} currentBasePage="ingredients" pageTitle="Ingredients">
-			<RzLink
+			<RzPopMenu
 				userPermissions={ctx.permissions}
-				requiredPermission="ingredients:create"
-				label="New Ingredient"
-				href="/admin/ingredients/new"
+				items={[
+					{
+						requiredPermission: 'ingredients:create',
+						label: 'New Ingredient',
+						href: `/admin/ingredients/new`,
+					},
+					{
+						requiredPermission: 'ingredients:load',
+						label: 'Load Ingredients',
+						href: `/admin/ingredients/load`,
+					},
+				]}
 			/>
+			<DownloadCSVButton data={ingredients.map(i => i.name)} />
 			<RzTable userPermissions={ctx.permissions} columns={columns} data={rows} />
 		</AdminLayout>
 	);

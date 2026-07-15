@@ -18,39 +18,64 @@ export async function parseRawIngredients(rawRecipeIngredients: RecipeIngredient
 		logger.debug(`Found ${rawIngredients.length} to have a raw property`);
 
 		// use NLP library for most things
-		const justIngredients: string[] = rawIngredients.flatMap(ing => {
-			const parsed = parseIngredient(ing, 'en');
-			return parsed?.ingredient ? [parsed.ingredient] : [];
-		});
+		let justIngredients: string[] = [];
+		try {
+			justIngredients = rawIngredients.flatMap(ing => {
+				try {
+					const parsed = parseIngredient(ing, 'en');
+					return parsed?.ingredient ? [parsed.ingredient] : [];
+				} catch (err) {
+					logger.error(`Ingredient: ${ing}: ${err}`);
+				}
+				return [];
+			});
+		} catch (err) {
+			logger.error(`Error parsing ingredients: ${err}`);
+		}
+
+		logger.debug(`Found ${justIngredients.length} after parsing`);
 
 		// remove numbers and non-hyphen characters
 		let cleanedIngredients: string[] = justIngredients.map(raw => raw?.replace(/[0-9().,+%]/g, '').trim());
 
+		logger.debug(`After numbers and non-hyphen characters`);
+
 		// strip leading non-alpha leading characters
 		cleanedIngredients = cleanedIngredients.map(ing => ing.replace(/^[^a-zA-Z]+/, '').trim());
+
+		logger.debug(`After stripping leading non-alpha characters`);
 
 		// lowercase everything
 		cleanedIngredients = cleanedIngredients.map(ing => ing.toLowerCase());
 
+		logger.debug(`After lowercasing everything`);
+
 		// strip leading articles
 		cleanedIngredients = cleanedIngredients.map(ing => ing.replace(/^(a|an|the)\s+/, '').trim());
+
+		logger.debug(`After stripping leading articles`);
 
 		// remove measurements
 		const measurementsRegex = new RegExp(`\\b(${measurements.flatMap(m => [m, `${m}s`]).join('|')})\\b`, 'g');
 		cleanedIngredients = cleanedIngredients.map(raw => raw.replaceAll(measurementsRegex, '').trim());
+		logger.debug(`After removing measurements`);
 
 		// remove modifiers
 		const modifiersRegex = new RegExp(`\\b(${modifiers.join('|')})\\b`, 'g');
 		cleanedIngredients = cleanedIngredients.map(raw => raw.replaceAll(modifiersRegex, '').trim());
+		logger.debug(`After removing modifiers`);
 
 		// strip leading connectors left exposed after measurement/modifier removal
 		cleanedIngredients = cleanedIngredients.map(ing => ing.replace(/^(of|or)\s+/, '').trim());
+		logger.debug(`After stripping leading connectors`);
 
 		// back-to-back spaces
 		cleanedIngredients = cleanedIngredients.map(ing => ing.replace(/ {2,}/g, ' '));
+		logger.debug(`After stripping back-to-back spaces`);
 
 		// drop entries that are only a standalone size/unit word with no actual ingredient
 		cleanedIngredients = cleanedIngredients.filter(ing => !DISALLOWED_STANDALONE.has(ing));
+		logger.debug(`After removing entries that are just standalone size and units`);
 
 		return Array.from(new Set(cleanedIngredients.filter(Boolean)));
 	} catch (err) {
