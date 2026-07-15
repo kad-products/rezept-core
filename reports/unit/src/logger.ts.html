@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.88% </span>
+                <span class="strong">82.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>48/54</span>
+                <span class='fraction'>48/58</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">79.54% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>35/40</span>
+                <span class='fraction'>35/44</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">80.76% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>42/48</span>
+                <span class='fraction'>42/52</span>
             </div>
         
             
@@ -180,7 +180,16 @@
 <a name='L115'></a><a href='#L115'>115</a>
 <a name='L116'></a><a href='#L116'>116</a>
 <a name='L117'></a><a href='#L117'>117</a>
-<a name='L118'></a><a href='#L118'>118</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,13 +197,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">53x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">53x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">50x</span>
-<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">53x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">168x</span>
@@ -239,8 +248,17 @@
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -288,8 +306,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">157x</span>
-<span class="cline-any cline-yes">157x</span>
+<span class="cline-any cline-yes">170x</span>
+<span class="cline-any cline-yes">170x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -356,8 +374,17 @@ function write(
 	const entry = { level, message, timestamp: new Date().toISOString(), ...bindings, ...serializedMeta };
 	<span class="missing-if-branch" title="if path not taken" >I</span>if (env.REZEPT_ENV === 'development') {
 		const { level, message, timestamp, ...rest } = <span class="cstat-no" title="statement not covered" >entry;</span>
-		// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
-<span class="cstat-no" title="statement not covered" >		console.log(chalk`{yellow ${timestamp}} {bold ${level.toUpperCase()}} {white ${message}}`);</span>
+<span class="cstat-no" title="statement not covered" >		if (level.toUpperCase() === 'WARN') {</span>
+			// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
+<span class="cstat-no" title="statement not covered" >			console.log(chalk`{bold ${timestamp}} {yellow ${level.toUpperCase()}} {white ${message}}`);</span>
+		} else <span class="cstat-no" title="statement not covered" >if (level.toUpperCase() === 'ERROR') {</span>
+			// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
+<span class="cstat-no" title="statement not covered" >			console.log(chalk`{bold ${timestamp}} {red ${level.toUpperCase()}} {white ${message}}`);</span>
+		} else {
+			// biome-ignore lint/suspicious/noConsole: intentional single console.log point for the logger
+<span class="cstat-no" title="statement not covered" >			console.log(chalk`{bold ${timestamp}} {white ${level.toUpperCase()}} {white ${message}}`);</span>
+		}
+&nbsp;
 <span class="cstat-no" title="statement not covered" >		Object.entries(rest).<span class="fstat-no" title="function not covered" >forEach(([</span>key, value]) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >			if (REDACTED_PATTERN.test(key)) {</span>
 				// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
@@ -421,7 +448,7 @@ export function createNoopLogger(): RzLogger {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-14T13:45:20.367Z
+                at 2026-07-15T04:02:17.956Z
             </div>
         <script src="../prettify.js"></script>
         <script>

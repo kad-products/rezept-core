@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/models/recipe-scrape-attempts.ts</title>
+    <title>Code coverage report for src/steps/save-ingredient-load.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/models</a> recipe-scrape-attempts.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/steps</a> save-ingredient-load.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.77% </span>
+                <span class="strong">97.05% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/9</span>
+                <span class='fraction'>33/34</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">93.75% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/6</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/8</span>
+                <span class='fraction'>29/29</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -110,42 +110,22 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">468x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">468x</span>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -154,56 +134,121 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import crypto from 'node:crypto';
-import { relations } from 'drizzle-orm';
-import { index, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { recipeScrapeStatus, recipeScrapes } from './recipe-scrapes';
-import { users } from './users';
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { RzRepositoryError, RzRepositoryErrorTypes, RzStepError } from '@/classes';
+import { createIngredient, getIngredientsByNames, updateIngredient } from '@/repositories';
+import type { IngredientDBRead, IngredientFormInput, IngredientLoadRecord, RzLogger } from '@/types';
 &nbsp;
-export const recipeScrapeAttemptSource = ['api', 'workflow'] as const;
+export async function saveIngredientLoad(
+	records: IngredientLoadRecord[],
+	userId: string,
+	logger: RzLogger,
+): Promise&lt;IngredientDBRead[]&gt; {
+	logger.debug(`Processing ${records.length} ingredient load records`);
 &nbsp;
-export const recipeScrapeAttempts = sqliteTable(
-	'recipe_scrape_attempts',
-	{
-		id: text()
-			.primaryKey()
-			.$defaultFn(() =&gt; crypto.randomUUID()),
-		recipeScrapeId: text()
-			.notNull()
-			.<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >r</span>ecipeScrapes.id, {</span> onDelete: 'cascade' }),
-		source: text({ enum: recipeScrapeAttemptSource }).notNull().default('api'),
-		workflowInstanceId: text(),
-		status: text({ enum: recipeScrapeStatus }).notNull(),
-		statusText: text(),
-		appVersion: text(),
-		createdAt: text()
-			.notNull()
-			.$defaultFn(() =&gt; new Date().toISOString()),
-		createdBy: text()
-			.notNull()
-			.<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >u</span>sers.id)</span>,
-	},
-	table =&gt; [
-		index('recipe_scrape_attempts_scrape_id_idx').on(table.recipeScrapeId),
-		index('recipe_scrape_attempts_status_idx').on(table.status),
-	],
-);
+	try {
+		const withId = records.filter((r): r is IngredientLoadRecord &amp; { id: string } =&gt; r.id !== undefined);
+		const withoutId = records.filter(r =&gt; r.id === undefined);
 &nbsp;
-export const recipeScrapeAttemptsRelations = relations(recipeScrapeAttempts, ({ one }) =&gt; ({
-	scrape: one(recipeScrapes, {
-		fields: [recipeScrapeAttempts.recipeScrapeId],
-		references: [recipeScrapes.id],
-		relationName: 'recipeScrapeAttemptScrape',
-	}),
-	creator: one(users, {
-		fields: [recipeScrapeAttempts.createdBy],
-		references: [users.id],
-		relationName: 'recipeScrapeAttemptCreator',
-	}),
-}));
+		// Batch lookup existing active ingredients by name for name-based records
+		const names = withoutId.map(r =&gt; r.name);
+		const existingByName = names.length &gt; 0 ? await getIngredientsByNames(names, logger) : [];
+&nbsp;
+		const results = await Promise.all([
+			// Name-based records: lookup by name, then create or update
+			...withoutId.map(async record =&gt; {
+				const existing = existingByName.find(ing =&gt; ing.name === record.name);
+				const payload = buildPayload(record);
+				if (existing) {
+					return updateIngredient(existing.id, payload, userId, logger);
+				}
+				return createIngredient(payload, userId, logger);
+			}),
+			// ID-based records: try update by ID first, fall back to create with that ID
+			...withId.map(async record =&gt; {
+				const payload = buildPayload(record);
+				try {
+					return await updateIngredient(record.id, payload, userId, logger);
+				} catch (err) {
+					if (err instanceof RzRepositoryError &amp;&amp; err.type === RzRepositoryErrorTypes.UnexpectedRecordCount) {
+						return createIngredient({ id: record.id, ...payload }, userId, logger);
+					}
+					throw err;
+				}
+			}),
+		]);
+&nbsp;
+		logger.info(`Saved ${results.length} ingredients from load`);
+		return results;
+	} catch (err) {
+		<span class="missing-if-branch" title="if path not taken" >I</span>if (err instanceof RzStepError) <span class="cstat-no" title="statement not covered" >throw err;</span>
+		logger.warn(`Error saving ingredient load: ${err}`);
+		throw new RzStepError(500, 'Failed to save ingredients', `Error saving ingredient load: ${err}`, false, err);
+	}
+}
+&nbsp;
+function buildPayload(record: IngredientLoadRecord): Omit&lt;IngredientFormInput, 'id'&gt; {
+	const payload: Omit&lt;IngredientFormInput, 'id'&gt; = { name: record.name };
+	if (record.hasSeasons !== undefined) {
+		payload.hasSeasons = record.hasSeasons;
+	}
+	if (record.description !== undefined) {
+		payload.description = record.description || null;
+	}
+	return payload;
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
