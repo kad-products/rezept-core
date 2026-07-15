@@ -1,3 +1,10 @@
+## [1.71.0](https://github.com/kad-products/rezept-core/compare/v1.70.0...v1.71.0) (2026-07-15)
+
+### Features
+
+* initial chunk of work for ingredient load ([a1419fc](https://github.com/kad-products/rezept-core/commit/a1419fc399dc72f083f4ab466dda3bb8577d9a56))
+* more logic for the ingredient load ([d7315bf](https://github.com/kad-products/rezept-core/commit/d7315bfc34f621f1728843890f1c6ae43e57f492))
+
 ## [1.70.0](https://github.com/kad-products/rezept-core/compare/v1.69.1...v1.70.0) (2026-07-14)
 
 ### Features
