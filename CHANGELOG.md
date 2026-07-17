@@ -1,3 +1,19 @@
+## [1.72.0](https://github.com/kad-products/rezept-core/compare/v1.71.0...v1.72.0) (2026-07-17)
+
+### Features
+
+* change ingredient season model to associate with growing zones ([c6a43a4](https://github.com/kad-products/rezept-core/commit/c6a43a46da4de07b9b62167c9c845dd6a0cd1caa))
+* growing zone seasons load ([3716804](https://github.com/kad-products/rezept-core/commit/37168043b6b6dac7886b77b4555a28f0859beee5))
+
+### Bug Fixes
+
+* country and region aren't on ingredient seasons anymore ([04aa07f](https://github.com/kad-products/rezept-core/commit/04aa07f506fbf90f571032ada74407b4be4455e6))
+* empty the ingredient seasons table before moving to growing zones ([bb0cc64](https://github.com/kad-products/rezept-core/commit/bb0cc64baa505adcac8e35760b21982cc791915c))
+* match r2 key api path for admin ops ([10d411e](https://github.com/kad-products/rezept-core/commit/10d411e4002e0915c07e155fdc92c240d98aeae1))
+* more details on log message ([fdd1bdc](https://github.com/kad-products/rezept-core/commit/fdd1bdc607bd3e65549aee20305f6b40b8d72dcd))
+* normalize ingredient name apostrophe usage to right apostrophe only ([4748b57](https://github.com/kad-products/rezept-core/commit/4748b5772a0ba9084318d9954c68bf14ced3e3ef))
+* type props in model order ([d0d665d](https://github.com/kad-products/rezept-core/commit/d0d665df53b64bd1695c82b704489e99262ef4b7))
+
 ## [1.71.0](https://github.com/kad-products/rezept-core/compare/v1.70.0...v1.71.0) (2026-07-15)
 
 ### Features
