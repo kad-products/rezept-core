@@ -7,8 +7,7 @@ import { getGrowingZones, getIngredientById } from '@/repositories';
 import type { RzTableColumn } from '@/types';
 
 const columns: RzTableColumn[] = [
-	{ key: 'country', label: 'Country' },
-	{ key: 'region', label: 'Region' },
+	{ key: 'growingZoneId', label: 'Growing Zone Id' },
 	{ key: 'startMonth', label: 'Start Month' },
 	{ key: 'endMonth', label: 'End Month' },
 	{ key: 'lastVerifiedAt', label: 'Last Verified' },
@@ -49,17 +48,6 @@ export default async function Pages__admin__ingredients__seasons({ ctx, params }
 					},
 				]}
 			/>
-			{ingredient.seasons.map(season => {
-				return (
-					<IngredientSeasonForm
-						key={season.id}
-						ingredientId={ingredient.id}
-						growingZoneOptions={growingZoneOptions}
-						monthOptions={monthOptions}
-						ingredientSeason={season}
-					/>
-				);
-			})}
 			<RzTable userPermissions={ctx.permissions} columns={columns} data={rows} />
 			<IngredientSeasonForm ingredientId={ingredient.id} growingZoneOptions={growingZoneOptions} monthOptions={monthOptions} />
 		</AdminLayout>
