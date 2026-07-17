@@ -171,7 +171,7 @@ describe('ingredient seasons repository', () => {
 				testUserId,
 				logger,
 			);
-			const ids = Array.from({ length: 105 }, (_, i) => randomUUID());
+			const ids: string[] = Array.from({ length: 105 }, () => randomUUID());
 			ids.push(testIngredientId);
 
 			const result = await getIngredientSeasonsByIngredientIds(ids, testGrowingZoneId, logger);

@@ -10,12 +10,12 @@ import { FormDevtools } from './setup/FormDevtools';
 export default function IngredientSeasonForm({
 	ingredientSeason,
 	ingredientId,
-	countryOptions,
+	growingZoneOptions,
 	monthOptions,
 }: {
 	ingredientSeason?: IngredientSeasonFormInput;
 	ingredientId: string;
-	countryOptions: { value: string; label: string }[];
+	growingZoneOptions: { value: string; label: string }[];
 	monthOptions: { value: string; label: string }[];
 }): React.ReactNode {
 	const [formState, setFormState] = useState<ActionState<IngredientSeasonsDBRead>>();
@@ -23,7 +23,7 @@ export default function IngredientSeasonForm({
 	const defaultSeason: IngredientSeasonFormInput = {
 		startMonth: '1',
 		endMonth: '12',
-		country: 'USA',
+		growingZoneId: '',
 		ingredientId,
 	};
 
@@ -49,10 +49,9 @@ export default function IngredientSeasonForm({
 				}}
 			>
 				{/* biome-ignore-start lint/nursery/useExplicitType: TanStack Form field render prop — parameter type is a deep internal generic impractical to annotate */}
-				<form.AppField name="country">
-					{(field): React.ReactNode => <field.SelectInput label="Country" options={countryOptions} required />}
+				<form.AppField name="growingZoneId">
+					{(field): React.ReactNode => <field.SelectInput label="Growing Zone" options={growingZoneOptions} required />}
 				</form.AppField>
-				<form.AppField name="region">{(field): React.ReactNode => <field.TextInput label="Region" required />}</form.AppField>
 				<form.AppField name="startMonth">
 					{(field): React.ReactNode => <field.SelectInput label="Start Month" options={monthOptions} required />}
 				</form.AppField>
