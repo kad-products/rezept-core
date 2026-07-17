@@ -215,7 +215,7 @@ export async function verifyIngredient(
 	};
 }
 
-function normalizeApostrophes(s: string): string {
+export function normalizeApostrophes(s: string): string {
 	// U+0027 straight apostrophe
 	// U+2018 left single quote
 	// U+02BC modifier letter apostrophe

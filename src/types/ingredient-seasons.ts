@@ -8,4 +8,14 @@ export type IngredientSeasonWriteInput = Omit<
 	'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'deletedAt' | 'deletedBy'
 >;
 
+export type IngredientSeasonLoadRecord = {
+	id?: string;
+	ingredientId?: string;
+	ingredientName?: string;
+	startMonth?: number;
+	endMonth?: number;
+	verified?: boolean;
+	notes?: string;
+};
+
 export type IngredientSeasonFormInput = z.input<typeof ingredientSeasonsSchemas.form>;

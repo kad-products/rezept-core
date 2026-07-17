@@ -9,11 +9,38 @@ import {
 	getIngredientById,
 	getIngredients,
 	getIngredientsByNames,
+	normalizeApostrophes,
 	updateIngredient,
 	verifyIngredient,
 } from '../ingredients';
 
 const logger = createNoopLogger();
+
+describe('normalizeApostrophes', () => {
+	it('replaces U+0027 straight apostrophe with U+2019', () => {
+		expect(normalizeApostrophes('za\u0027atar')).toBe('za\u2019atar');
+	});
+
+	it('replaces U+2018 left single quote with U+2019', () => {
+		expect(normalizeApostrophes('za\u2018atar')).toBe('za\u2019atar');
+	});
+
+	it('replaces U+02BC modifier letter apostrophe with U+2019', () => {
+		expect(normalizeApostrophes('za\u02BCatar')).toBe('za\u2019atar');
+	});
+
+	it('leaves U+2019 unchanged', () => {
+		expect(normalizeApostrophes('za\u2019atar')).toBe('za\u2019atar');
+	});
+
+	it('replaces all occurrences in a string', () => {
+		expect(normalizeApostrophes('it\u0027s cook\u0027s')).toBe('it\u2019s cook\u2019s');
+	});
+
+	it('leaves strings with no apostrophe variants unchanged', () => {
+		expect(normalizeApostrophes('tomato')).toBe('tomato');
+	});
+});
 
 describe('ingredients repository', () => {
 	let testUserId: string;

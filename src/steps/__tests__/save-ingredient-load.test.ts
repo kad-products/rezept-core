@@ -6,6 +6,7 @@ vi.mock('@/repositories', () => ({
 	getIngredientsByNames: vi.fn(),
 	createIngredient: vi.fn(),
 	updateIngredient: vi.fn(),
+	normalizeApostrophes: vi.fn(),
 }));
 
 import { createIngredient, getIngredientsByNames, updateIngredient } from '@/repositories';

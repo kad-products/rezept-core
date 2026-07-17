@@ -4,6 +4,7 @@ export * from './initialize-scrape';
 export * from './parse-body-json';
 export * from './parse-raw-ingredients';
 export * from './read-csv-from-r2-object';
+export * from './save-growing-zones-seasons-load';
 export * from './save-ingredient-load';
 export * from './save-recipe';
 export * from './save-recipe-cooking-methods';

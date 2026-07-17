@@ -1,9 +1,42 @@
-import { and, eq, isNull, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { ingredientSeasons, verifications } from '@/models';
 import type { IngredientSeasonsDBRead, IngredientSeasonWriteInput, RzLogger, VerificationsDBRead } from '@/types';
 import { validateUuid } from './utils';
+
+export async function getIngredientSeasonsByIngredientIds(
+	ingredientIds: string[],
+	growingZoneId: string,
+	logger: RzLogger,
+): Promise<IngredientSeasonsDBRead[]> {
+	if (ingredientIds.length === 0) {
+		return [];
+	}
+
+	logger.debug(`Fetching seasons for ${ingredientIds.length} ingredients in growing zone ${growingZoneId}`);
+
+	const BATCH_SIZE = 100;
+	const results = (
+		await Promise.all(
+			Array.from({ length: Math.ceil(ingredientIds.length / BATCH_SIZE) }, (_, i) =>
+				db
+					.select()
+					.from(ingredientSeasons)
+					.where(
+						and(
+							inArray(ingredientSeasons.ingredientId, ingredientIds.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE)),
+							eq(ingredientSeasons.growingZoneId, growingZoneId),
+							isNull(ingredientSeasons.deletedAt),
+						),
+					),
+			),
+		)
+	).flat();
+
+	logger.debug(`Found ${results.length} existing seasons`);
+	return results;
+}
 
 export async function getIngredientSeasons(ingredientId: string, logger: RzLogger): Promise<IngredientSeasonsDBRead[]> {
 	logger.debug(`Fetching seasons for ingredient ${ingredientId}`);

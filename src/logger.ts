@@ -40,7 +40,11 @@ function parseTaskOverrides(overrides: string | undefined): Map<string, LogLevel
 }
 
 function serializeError(err: Error): Record<string, unknown> {
-	return { ...err, message: err.message, stack: err.stack };
+	if (err.cause instanceof Error) {
+		return { ...err, innerCause: serializeError(err.cause), message: err.message, stack: err.stack };
+	} else {
+		return { ...err, message: err.message, stack: err.stack };
+	}
 }
 
 function write(
@@ -73,8 +77,13 @@ function write(
 				// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
 				console.log(chalk`  {cyan ${key}}: {red ${CENSOR}}`);
 			} else {
-				// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
-				console.log(chalk`  {cyan ${key}}: {white ${JSON.stringify(value)}}`);
+				if (typeof value === 'object') {
+					// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
+					console.log(chalk`  {cyan ${key}}: {white ${JSON.stringify(value, null, 4)}}`);
+				} else {
+					// biome-ignore lint/suspicious/noConsole: structured log output — intentional single console.log point for the logger
+					console.log(chalk`  {cyan ${key}}: {white ${JSON.stringify(value)}}`);
+				}
 			}
 		});
 	} else {

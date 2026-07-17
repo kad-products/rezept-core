@@ -8,6 +8,7 @@ const capturedChain = vi.hoisted(() => ({ handlers: [] as unknown[] }));
 vi.mock('@/repositories', () => ({
 	createIngredient: vi.fn(),
 	updateIngredient: vi.fn(),
+	normalizeApostrophes: vi.fn(),
 }));
 
 vi.mock('cloudflare:workers', () => ({
