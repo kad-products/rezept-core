@@ -1,4 +1,5 @@
 import { except, route } from 'rwsdk/router';
+import growingZonesSeasonsLoad from './growing-zones/seasons-load';
 import images from './images';
 import ingredientsUpload from './ingredients/upload';
 import recipesImportsScrapes from './recipes/imports/scrapes';
@@ -11,6 +12,7 @@ export default [
 	except(error => apiErrorResponse(error)),
 	route('/images/:imageId', images),
 	route('/ingredients/upload', ingredientsUpload),
+	route('/growing-zones/:growingZoneId/seasons-load', growingZonesSeasonsLoad),
 	route('/recipes/search', recipesSearch),
 	route('/recipes/imports/scrapes', recipesImportsScrapes),
 	route('/recipes/imports/uploads', recipesImportsUploads),

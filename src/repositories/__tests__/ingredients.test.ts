@@ -9,11 +9,38 @@ import {
 	getIngredientById,
 	getIngredients,
 	getIngredientsByNames,
+	normalizeApostrophes,
 	updateIngredient,
 	verifyIngredient,
 } from '../ingredients';
 
 const logger = createNoopLogger();
+
+describe('normalizeApostrophes', () => {
+	it('replaces U+0027 straight apostrophe with U+2019', () => {
+		expect(normalizeApostrophes('za\u0027atar')).toBe('za\u2019atar');
+	});
+
+	it('replaces U+2018 left single quote with U+2019', () => {
+		expect(normalizeApostrophes('za\u2018atar')).toBe('za\u2019atar');
+	});
+
+	it('replaces U+02BC modifier letter apostrophe with U+2019', () => {
+		expect(normalizeApostrophes('za\u02BCatar')).toBe('za\u2019atar');
+	});
+
+	it('leaves U+2019 unchanged', () => {
+		expect(normalizeApostrophes('za\u2019atar')).toBe('za\u2019atar');
+	});
+
+	it('replaces all occurrences in a string', () => {
+		expect(normalizeApostrophes('it\u0027s cook\u0027s')).toBe('it\u2019s cook\u2019s');
+	});
+
+	it('leaves strings with no apostrophe variants unchanged', () => {
+		expect(normalizeApostrophes('tomato')).toBe('tomato');
+	});
+});
 
 describe('ingredients repository', () => {
 	let testUserId: string;
@@ -93,6 +120,72 @@ describe('ingredients repository', () => {
 			const result = await getIngredientById(target.id, logger);
 			expect(result.id).toBe(target.id);
 			expect(result.name).toBe('Onion');
+		});
+	});
+
+	describe('apostrophe normalization', () => {
+		it('normalizes U+0027 straight apostrophe to U+2019 on create', async () => {
+			const result = await createIngredient({ name: 'za\u0027atar' }, testUserId, logger);
+			expect(result.name).toBe('za\u2019atar');
+		});
+
+		it('leaves U+2019 unchanged on create', async () => {
+			const result = await createIngredient({ name: 'za\u2019atar' }, testUserId, logger);
+			expect(result.name).toBe('za\u2019atar');
+		});
+
+		it('normalizes U+2018 left single quote to U+2019 on create', async () => {
+			const result = await createIngredient({ name: 'za\u2018atar' }, testUserId, logger);
+			expect(result.name).toBe('za\u2019atar');
+		});
+
+		it('normalizes U+02BC modifier letter apostrophe to U+2019 on create', async () => {
+			const result = await createIngredient({ name: 'za\u02BCatar' }, testUserId, logger);
+			expect(result.name).toBe('za\u2019atar');
+		});
+
+		it('normalizes U+0027 straight apostrophe to U+2019 on update', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const result = await updateIngredient(created.id, { name: 'donne\u0027 peppers' }, testUserId, logger);
+			expect(result.name).toBe('donne\u2019 peppers');
+		});
+
+		it('normalizes U+2018 left single quote to U+2019 on update', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const result = await updateIngredient(created.id, { name: 'za\u2018atar' }, testUserId, logger);
+			expect(result.name).toBe('za\u2019atar');
+		});
+
+		it('normalizes U+02BC modifier letter apostrophe to U+2019 on update', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const result = await updateIngredient(created.id, { name: 'za\u02BCatar' }, testUserId, logger);
+			expect(result.name).toBe('za\u2019atar');
+		});
+
+		it('leaves U+2019 unchanged on update', async () => {
+			const created = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			const result = await updateIngredient(created.id, { name: 'za\u2019atar' }, testUserId, logger);
+			expect(result.name).toBe('za\u2019atar');
+		});
+
+		it('normalizes U+0027 straight apostrophe to U+2019 in ensureIngredientsByName', async () => {
+			const result = await ensureIngredientsByName(['za\u0027atar'], testUserId, logger);
+			expect(result[0].name).toBe('za\u2019atar');
+		});
+
+		it('normalizes U+2018 left single quote to U+2019 in ensureIngredientsByName', async () => {
+			const result = await ensureIngredientsByName(['za\u2018atar'], testUserId, logger);
+			expect(result[0].name).toBe('za\u2019atar');
+		});
+
+		it('normalizes U+02BC modifier letter apostrophe to U+2019 in ensureIngredientsByName', async () => {
+			const result = await ensureIngredientsByName(['za\u02BCatar'], testUserId, logger);
+			expect(result[0].name).toBe('za\u2019atar');
+		});
+
+		it('leaves U+2019 unchanged in ensureIngredientsByName', async () => {
+			const result = await ensureIngredientsByName(['za\u2019atar'], testUserId, logger);
+			expect(result[0].name).toBe('za\u2019atar');
 		});
 	});
 

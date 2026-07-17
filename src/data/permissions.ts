@@ -40,6 +40,9 @@ const permissions = {
 		update: ['ADMIN'],
 		delete: ['ADMIN'],
 	},
+	'ingredient-seasons': {
+		load: ['ADMIN'],
+	},
 	permissions: {
 		override: ['ADMIN'],
 	},

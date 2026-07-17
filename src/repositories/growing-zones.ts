@@ -2,7 +2,7 @@ import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { growingZones } from '@/models';
-import type { GrowingZonesDBRead, GrowingZonesFormInput, RzLogger } from '@/types';
+import type { GrowingZonesDBRead, GrowingZonesFormInput, GrowingZonesWithSeasons, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getGrowingZones(logger: RzLogger): Promise<GrowingZonesDBRead[]> {
@@ -12,7 +12,7 @@ export async function getGrowingZones(logger: RzLogger): Promise<GrowingZonesDBR
 	return allGrowingZones;
 }
 
-export async function getGrowingZoneById(growingZoneId: string, logger: RzLogger): Promise<GrowingZonesDBRead> {
+export async function getGrowingZoneById(growingZoneId: string, logger: RzLogger): Promise<GrowingZonesWithSeasons> {
 	if (!validateUuid(growingZoneId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [growingZoneId, 'Growing Zone']);
 	}
@@ -20,6 +20,13 @@ export async function getGrowingZoneById(growingZoneId: string, logger: RzLogger
 	logger.debug(`Fetching growing zone ${growingZoneId}`);
 	const growingZone = await db.query.growingZones.findFirst({
 		where: and(eq(growingZones.id, growingZoneId), isNull(growingZones.deletedAt)),
+		with: {
+			seasons: {
+				with: {
+					ingredient: true,
+				},
+			},
+		},
 	});
 
 	if (!growingZone) {

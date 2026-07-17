@@ -232,6 +232,13 @@
 			"when": 1784028307016,
 			"tag": "0032_dashing_rocket_raccoon",
 			"breakpoints": true
+		},
+		{
+			"idx": 33,
+			"version": "6",
+			"when": 1784123173686,
+			"tag": "0033_naive_rockslide",
+			"breakpoints": true
 		}
 	]
 }

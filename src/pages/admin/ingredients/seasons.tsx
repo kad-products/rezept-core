@@ -1,10 +1,9 @@
 import type { RequestInfo } from 'rwsdk/worker';
 import { RzPopMenu, RzTable } from '@/components/design-system';
-import { countryOptions } from '@/data/countries';
 import { monthOptions } from '@/data/months';
 import IngredientSeasonForm from '@/forms/ingredient-season';
 import AdminLayout from '@/layouts/admin';
-import { getIngredientById } from '@/repositories';
+import { getGrowingZones, getIngredientById } from '@/repositories';
 import type { RzTableColumn } from '@/types';
 
 const columns: RzTableColumn[] = [
@@ -26,6 +25,8 @@ export default async function Pages__admin__ingredients__seasons({ ctx, params }
 		...s,
 		verifyUrl: `/admin/ingredients/${s.ingredientId}/seasons/${s.id}/verify`,
 	}));
+	const growingZones = await getGrowingZones(ctx.logger);
+	const growingZoneOptions = growingZones.map(gz => ({ value: gz.id, label: gz.name }));
 	return (
 		<AdminLayout ctx={ctx} currentBasePage="ingredients" pageTitle={`Seasons for ${ingredient.name}`}>
 			<RzPopMenu
@@ -53,14 +54,14 @@ export default async function Pages__admin__ingredients__seasons({ ctx, params }
 					<IngredientSeasonForm
 						key={season.id}
 						ingredientId={ingredient.id}
-						countryOptions={countryOptions}
+						growingZoneOptions={growingZoneOptions}
 						monthOptions={monthOptions}
 						ingredientSeason={season}
 					/>
 				);
 			})}
 			<RzTable userPermissions={ctx.permissions} columns={columns} data={rows} />
-			<IngredientSeasonForm ingredientId={ingredient.id} countryOptions={countryOptions} monthOptions={monthOptions} />
+			<IngredientSeasonForm ingredientId={ingredient.id} growingZoneOptions={growingZoneOptions} monthOptions={monthOptions} />
 		</AdminLayout>
 	);
 }

@@ -22,7 +22,7 @@ export default async function Pages__admin__ingredients__season_verify({ ctx, pa
 		<AdminLayout
 			ctx={ctx}
 			currentBasePage="ingredients"
-			pageTitle={`Verifications for ${ingredient.name} in ${season.country} / ${season.region} (${season.startMonth} to ${season.endMonth})`}
+			pageTitle={`Verifications for ${ingredient.name} in ${season.growingZoneId} (${season.startMonth} to ${season.endMonth})`}
 		>
 			<RzPopMenu
 				userPermissions={ctx.permissions}

@@ -7,8 +7,8 @@ export type IngredientDBRead = typeof ingredients.$inferSelect;
 export type IngredientFormInput = z.input<typeof ingredientsSchemas.form>;
 
 export type IngredientLoadRecord = {
-	name: string;
 	id?: string | undefined;
+	name: string;
 	description?: string | null | undefined;
 	hasSeasons?: boolean | undefined;
 };

@@ -92,3 +92,6 @@ storybook-static/
 terraform.tfstate*
 *.tfvars.backup
 *.tfvars*
+
+# data files
+/*.csv

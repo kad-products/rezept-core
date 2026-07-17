@@ -29,8 +29,7 @@ export async function _postHandler({ request, ctx }: RequestInfo<DefaultAppConte
 		return errorResponse('File exceeds the 100MB size limit', 413);
 	}
 
-	// Generate the ID upfront so it can be used as the R2 key (id == R2 key by convention)
-	const key = `ingredients/${new Date().toISOString().replace(/[TZ:\-.]/g, '')}`;
+	const key = `ingredients/upload/${new Date().toISOString().replace(/[TZ:\-.]/g, '')}`;
 
 	// Stream the file directly to R2
 	await env.REZEPT_ADMIN_OPERATIONS.put(key, file.stream(), {

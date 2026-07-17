@@ -11,7 +11,10 @@ const columns: RzTableColumn[] = [
 	{
 		key: 'actions',
 		label: '',
-		actions: [{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'growing-zones:update' }],
+		actions: [
+			{ type: 'link', hrefProp: 'editUrl', label: 'Edit', requiredPermission: 'growing-zones:update' },
+			{ type: 'link', hrefProp: 'seasonsUrl', label: 'Ingredient Seasons', requiredPermission: 'seasons:read' },
+		],
 	},
 ];
 
@@ -20,6 +23,7 @@ export default async function Pages__admin__growing_zones__listing({ ctx }: Requ
 	const rows = growingZones.map(gz => ({
 		...gz,
 		editUrl: `/admin/growing-zones/${gz.id}/edit`,
+		seasonsUrl: `/admin/growing-zones/${gz.id}/seasons`,
 	}));
 
 	return (

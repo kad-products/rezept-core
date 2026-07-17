@@ -42,7 +42,7 @@ export async function readCsvFromR2Object<T>(bucket: R2Bucket, key: string, logg
 			throw new RzStepError(
 				422,
 				'CSV data does not match expected format',
-				`Row ${i + 1}: field "${field}" — ${firstIssue.message}`,
+				`Row ${i + 1}: field "${field}" — ${firstIssue.message} - ${JSON.stringify(result.data[i])}`,
 				false,
 			);
 		}
