@@ -43,6 +43,7 @@ export async function createIngredient(
 	logger: RzLogger,
 ): Promise<IngredientDBRead> {
 	logger.debug(`Creating ingredient ${ingredient.name}`);
+	ingredient.name = normalizeApostrophes(ingredient.name);
 	const [newIngredient] = await db
 		.insert(ingredients)
 		.values({ ...ingredient, createdBy: userId })
@@ -61,6 +62,8 @@ export async function updateIngredient(
 	if (!validateUuid(ingredientId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientId, 'Ingredient']);
 	}
+
+	ingredient.name = normalizeApostrophes(ingredient.name);
 
 	logger.debug(`Updating ingredient ${ingredientId}`);
 	const [updatedIngredient] = await db
@@ -82,17 +85,22 @@ export async function getIngredientsByNames(names: string[], logger: RzLogger): 
 		return [];
 	}
 
-	logger.debug(`Fetching ingredients by ${names.length} names`);
+	const normalizedNames = names.map(n => normalizeApostrophes(n));
+
+	logger.debug(`Fetching ingredients by ${normalizedNames.length} names`);
 
 	const BATCH_SIZE = 100;
 	const results = (
 		await Promise.all(
-			Array.from({ length: Math.ceil(names.length / BATCH_SIZE) }, (_, i) =>
+			Array.from({ length: Math.ceil(normalizedNames.length / BATCH_SIZE) }, (_, i) =>
 				db
 					.select()
 					.from(ingredients)
 					.where(
-						and(inArray(ingredients.name, names.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE)), isNull(ingredients.deletedAt)),
+						and(
+							inArray(ingredients.name, normalizedNames.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE)),
+							isNull(ingredients.deletedAt),
+						),
 					),
 			),
 		)
@@ -107,17 +115,19 @@ export async function ensureIngredientsByName(
 	userId: string,
 	logger: RzLogger,
 ): Promise<IngredientDBRead[]> {
-	logger.debug(`Saving ${ingredientNames.length} ingredients`);
+	logger.debug(`Ensuring ${ingredientNames.length} ingredients`);
+
+	const normalizedNames = ingredientNames.map(n => normalizeApostrophes(n));
 
 	try {
 		const BATCH_SIZE = 100;
 		const existingIngredients = (
 			await Promise.all(
-				Array.from({ length: Math.ceil(ingredientNames.length / BATCH_SIZE) }, (_, i) =>
+				Array.from({ length: Math.ceil(normalizedNames.length / BATCH_SIZE) }, (_, i) =>
 					db
 						.select()
 						.from(ingredients)
-						.where(inArray(ingredients.name, ingredientNames.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE))),
+						.where(inArray(ingredients.name, normalizedNames.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE))),
 				),
 			)
 		).flat();
@@ -125,7 +135,7 @@ export async function ensureIngredientsByName(
 		logger.debug(`Found ${existingIngredients.length} existing ingredients`);
 
 		const savedIngredients = await Promise.all(
-			ingredientNames.map(async ing => {
+			normalizedNames.map(async ing => {
 				try {
 					const matchingIngredient = existingIngredients.find(existing => existing.name === ing);
 					if (matchingIngredient) {
@@ -160,7 +170,7 @@ export async function ensureIngredientsByName(
 			}),
 		);
 
-		logger.info(`Saved ${savedIngredients.length} ingredients`);
+		logger.info(`Ensured ${savedIngredients.length} ingredients exist`);
 
 		return savedIngredients;
 	} catch (err) {
@@ -203,4 +213,13 @@ export async function verifyIngredient(
 		ingredient: updatedIngredient,
 		verification: verificationRecord,
 	};
+}
+
+function normalizeApostrophes(s: string): string {
+	// U+0027 straight apostrophe
+	// U+2018 left single quote
+	// U+02BC modifier letter apostrophe
+	//
+	// all normalize to U+2019 right single quote
+	return s.replace(/[\u0027\u2018\u02BC]/g, '\u2019');
 }
