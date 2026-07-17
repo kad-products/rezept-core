@@ -1,14 +1,17 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { createNoopLogger } from '@/logger';
-import { createUser, getImageTypeByName } from '@/repositories';
+import { createGrowingZone, createIngredient, createIngredientSeason, createUser, getImageTypeByName } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
 import { createImage } from '../images';
+import { updateRecipeIngredients } from '../recipe-ingredients';
+import { updateRecipeSections } from '../recipe-sections';
 import {
 	countRecipes,
 	createRecipe,
 	deleteRecipe,
 	getRecipeById,
 	getRecipes,
+	searchRecipes,
 	updateRecipe,
 	updateRecipeCoverImage,
 } from '../recipes';
@@ -561,6 +564,157 @@ describe('recipes repository', () => {
 		it('creates recipe without coverImageId when not provided', async () => {
 			const result = await createRecipe(baseRecipeData, testUserId, logger);
 			expect(result.coverImageId).toBeNull();
+		});
+	});
+
+	describe('searchRecipes', () => {
+		// currentMonth is used to create seasons that are/aren't active right now.
+		// outOfSeasonMonth is always a different month so the season never matches.
+		const currentMonth = new Date().getMonth() + 1;
+		const outOfSeasonMonth = (currentMonth % 12) + 1;
+
+		let testGrowingZoneId: string;
+		let testIngredientId: string;
+
+		// Creates a recipe with one section and one recipe_ingredient linked to testIngredientId.
+		async function createLinkedRecipe(title: string): Promise<string> {
+			const recipe = await createRecipe({ ...baseRecipeData, title }, testUserId, logger);
+			const [section] = await updateRecipeSections(recipe.id, [{ order: 1 }], testUserId, logger);
+			await updateRecipeIngredients(section.id, [{ ingredientId: testIngredientId, order: 1 }], testUserId, logger);
+			return recipe.id;
+		}
+
+		beforeEach(async () => {
+			const growingZone = await createGrowingZone(
+				{ name: 'US Pacific Northwest', code: 'us_pacific_northwest' },
+				testUserId,
+				logger,
+			);
+			testGrowingZoneId = growingZone.id;
+			const ingredient = await createIngredient({ name: 'Tomato' }, testUserId, logger);
+			testIngredientId = ingredient.id;
+		});
+
+		it('returns empty array when no recipes exist', async () => {
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			expect(result).toEqual([]);
+		});
+
+		it('returns empty array when no growingZoneId is provided', async () => {
+			const result = await searchRecipes({}, logger);
+			expect(result).toEqual([]);
+		});
+
+		it('returns a recipe whose ingredient is in season for the growing zone', async () => {
+			await createIngredientSeason(
+				{ ingredientId: testIngredientId, growingZoneId: testGrowingZoneId, startMonth: currentMonth, endMonth: currentMonth },
+				testUserId,
+				logger,
+			);
+			await createLinkedRecipe('Tomato Salad');
+
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			expect(result).toHaveLength(1);
+			expect(result[0].title).toBe('Tomato Salad');
+		});
+
+		it('does not return a recipe whose ingredient season is outside the current month', async () => {
+			await createIngredientSeason(
+				{
+					ingredientId: testIngredientId,
+					growingZoneId: testGrowingZoneId,
+					startMonth: outOfSeasonMonth,
+					endMonth: outOfSeasonMonth,
+				},
+				testUserId,
+				logger,
+			);
+			await createLinkedRecipe('Tomato Salad');
+
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			expect(result).toEqual([]);
+		});
+
+		it('does not return a recipe whose ingredient season is in a different growing zone', async () => {
+			const otherZone = await createGrowingZone({ name: 'US Gulf Coast', code: 'us_gulf_coast' }, testUserId, logger);
+			await createIngredientSeason(
+				{ ingredientId: testIngredientId, growingZoneId: otherZone.id, startMonth: currentMonth, endMonth: currentMonth },
+				testUserId,
+				logger,
+			);
+			await createLinkedRecipe('Tomato Salad');
+
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			expect(result).toEqual([]);
+		});
+
+		it('filters by title search term', async () => {
+			await createIngredientSeason(
+				{ ingredientId: testIngredientId, growingZoneId: testGrowingZoneId, startMonth: currentMonth, endMonth: currentMonth },
+				testUserId,
+				logger,
+			);
+			await createLinkedRecipe('Tomato Salad');
+			await createLinkedRecipe('Tomato Soup');
+
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, term: 'Soup' }, logger);
+			expect(result).toHaveLength(1);
+			expect(result[0].title).toBe('Tomato Soup');
+		});
+
+		it('returns all seasonal recipes when no search term is provided', async () => {
+			await createIngredientSeason(
+				{ ingredientId: testIngredientId, growingZoneId: testGrowingZoneId, startMonth: currentMonth, endMonth: currentMonth },
+				testUserId,
+				logger,
+			);
+			await createLinkedRecipe('Tomato Salad');
+			await createLinkedRecipe('Tomato Soup');
+
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			expect(result).toHaveLength(2);
+		});
+
+		it('does not return duplicate recipes when a recipe has multiple seasonal ingredients', async () => {
+			const otherIngredient = await createIngredient({ name: 'Basil' }, testUserId, logger);
+			await createIngredientSeason(
+				{ ingredientId: testIngredientId, growingZoneId: testGrowingZoneId, startMonth: currentMonth, endMonth: currentMonth },
+				testUserId,
+				logger,
+			);
+			await createIngredientSeason(
+				{ ingredientId: otherIngredient.id, growingZoneId: testGrowingZoneId, startMonth: currentMonth, endMonth: currentMonth },
+				testUserId,
+				logger,
+			);
+			const recipe = await createRecipe({ ...baseRecipeData, title: 'Caprese' }, testUserId, logger);
+			const [section] = await updateRecipeSections(recipe.id, [{ order: 1 }], testUserId, logger);
+			await updateRecipeIngredients(
+				section.id,
+				[
+					{ ingredientId: testIngredientId, order: 1 },
+					{ ingredientId: otherIngredient.id, order: 2 },
+				],
+				testUserId,
+				logger,
+			);
+
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			expect(result).toHaveLength(1);
+		});
+
+		it('orders results by title', async () => {
+			await createIngredientSeason(
+				{ ingredientId: testIngredientId, growingZoneId: testGrowingZoneId, startMonth: currentMonth, endMonth: currentMonth },
+				testUserId,
+				logger,
+			);
+			await createLinkedRecipe('Zucchini Pasta');
+			await createLinkedRecipe('Arugula Salad');
+			await createLinkedRecipe('Minestrone');
+
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			expect(result.map(r => r.title)).toEqual(['Arugula Salad', 'Minestrone', 'Zucchini Pasta']);
 		});
 	});
 });

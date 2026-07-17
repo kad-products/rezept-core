@@ -1,7 +1,15 @@
-import { and, asc, eq, inArray, isNull, type SQL, sql } from 'drizzle-orm';
+import { and, asc, eq, gte, inArray, isNull, like, lte, type SQL, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
-import { recipeCookingMethods, recipeIngredients, recipeInstructions, recipeSections, recipes } from '@/models';
+import {
+	ingredientSeasons,
+	ingredients,
+	recipeCookingMethods,
+	recipeIngredients,
+	recipeInstructions,
+	recipeSections,
+	recipes,
+} from '@/models';
 import type { RecipeDBRead, RecipeFilters, RecipeWithSections, RecipeWriteInput, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
@@ -174,4 +182,41 @@ export async function updateRecipe(
 	const result = updatedRecipes[0];
 	logger.info(`Updated recipe ${result.id}`);
 	return result;
+}
+
+type RecipeSearchOptions = {
+	growingZoneId?: string;
+	term?: string;
+};
+
+export async function searchRecipes(searchOptions: RecipeSearchOptions, logger: RzLogger): Promise<RecipeDBRead[]> {
+	const { growingZoneId, term: searchTerm } = searchOptions;
+	const currentMonth = new Date().getMonth() + 1;
+
+	logger.debug(`Searching recipes for growingZoneId ${growingZoneId}, search term ${searchTerm}, and month ${currentMonth}`);
+
+	const seasonalRecipeIds = db
+		.select({ id: recipes.id })
+		.from(recipes)
+		.innerJoin(recipeSections, eq(recipes.id, recipeSections.recipeId))
+		.innerJoin(recipeIngredients, eq(recipeSections.id, recipeIngredients.recipeSectionId))
+		.innerJoin(ingredients, eq(recipeIngredients.ingredientId, ingredients.id))
+		.innerJoin(ingredientSeasons, eq(ingredients.id, ingredientSeasons.ingredientId))
+		.where(
+			and(
+				eq(ingredientSeasons.growingZoneId, growingZoneId ?? ''),
+				lte(ingredientSeasons.startMonth, currentMonth),
+				gte(ingredientSeasons.endMonth, currentMonth),
+			),
+		);
+
+	const searchResults = await db
+		.select()
+		.from(recipes)
+		.where(and(inArray(recipes.id, seasonalRecipeIds), searchTerm ? like(recipes.title, `%${searchTerm}%`) : undefined))
+		.orderBy(recipes.title);
+
+	logger.debug(`Search found ${searchResults.length} results`);
+
+	return searchResults;
 }
