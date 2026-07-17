@@ -5,6 +5,7 @@ export * from './credentials';
 export * from './growing-zones';
 export * from './image-types';
 export * from './images';
+export * from './in-season-recipe-search';
 export * from './ingredient-seasons';
 export * from './ingredient-units';
 export * from './ingredients';

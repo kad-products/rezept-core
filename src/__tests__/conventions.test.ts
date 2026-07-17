@@ -73,7 +73,10 @@ describe('actions', () => {
 	});
 
 	it('all serverActions require auth', () => {
+		// Actions that intentionally omit requireAuthentication (e.g. public-facing search)
+		const exceptions = ['actions/submit-recipe-search.ts'];
 		const bad = allFiles.filter(f => {
+			if (exceptions.includes(rel(f))) return false;
 			const fileContents = read(f);
 			const matches = [...fileContents.matchAll(/serverAction\(\[([\s\S]*?)\]\)/g)].map(m => String(m[1]));
 			if (matches.length === 0) {
