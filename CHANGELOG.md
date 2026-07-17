@@ -1,3 +1,13 @@
+## [1.73.0](https://github.com/kad-products/rezept-core/compare/v1.72.0...v1.73.0) (2026-07-17)
+
+### Features
+
+* initial recipe search ux ([f4b54c0](https://github.com/kad-products/rezept-core/commit/f4b54c095cdb606b4b5b10710a9cfe8558258d6e))
+
+### Bug Fixes
+
+* show growingZoneId in seasons column ([7c73242](https://github.com/kad-products/rezept-core/commit/7c73242ad5849ef6d7c654c6a8bcfca0e6617c53))
+
 ## [1.72.0](https://github.com/kad-products/rezept-core/compare/v1.71.0...v1.72.0) (2026-07-17)
 
 ### Features
