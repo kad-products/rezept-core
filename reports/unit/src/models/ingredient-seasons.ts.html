@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">54.54% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/10</span>
+                <span class='fraction'>6/11</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">44.44% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/8</span>
+                <span class='fraction'>4/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.55% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/9</span>
+                <span class='fraction'>5/10</span>
             </div>
         
             
@@ -119,7 +119,12 @@
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -131,7 +136,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -141,9 +149,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">42x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -152,7 +158,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">468x</span>
+<span class="cline-any cline-yes">483x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,9 +167,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">483x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">468x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,6 +186,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import crypto from 'node:crypto';
 import { relations, sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { growingZones } from './growing-zones';
 import { ingredients } from './ingredients';
 import { users } from './users';
 import { verifications } from './verifications';
@@ -191,8 +200,9 @@ export const ingredientSeasons = sqliteTable(
 		ingredientId: text()
 			.notNull()
 			.<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >i</span>ngredients.id, {</span> onDelete: 'cascade' }),
-		country: text().notNull(),
-		region: text(),
+		growingZoneId: text()
+			.notNull()
+			.<span class="fstat-no" title="function not covered" >references(() =&gt; <span class="cstat-no" title="statement not covered" >g</span>rowingZones.id, {</span> onDelete: 'cascade' }),
 		startMonth: integer().notNull(), // 1-12
 		endMonth: integer().notNull(), // 1-12
 		notes: text(),
@@ -210,11 +220,9 @@ export const ingredientSeasons = sqliteTable(
 	},
 	table =&gt; [
 		index('ingredient_seasons_ingredient_id_idx').on(table.ingredientId),
-		index('ingredient_seasons_country_idx').on(table.country),
-		index('ingredient_seasons_region_idx').on(table.region),
-		index('ingredient_seasons_country_region_idx').on(table.country, table.region),
-		uniqueIndex('ingredient_seasons_ingredient_id_country_region_unique')
-			.on(table.ingredientId, table.country, table.region)
+		index('ingredient_seasons_growing_zone_id_idx').on(table.growingZoneId),
+		uniqueIndex('ingredient_seasons_ingredient_id_growing_zone_id_unique')
+			.on(table.ingredientId, table.growingZoneId)
 			.where(sql`"deleted_at" IS NULL`),
 	],
 );
@@ -223,6 +231,10 @@ export const ingredientSeasonsRelations = relations(ingredientSeasons, ({ one, m
 	ingredient: one(ingredients, {
 		fields: [ingredientSeasons.ingredientId],
 		references: [ingredients.id],
+	}),
+	growingZone: one(growingZones, {
+		fields: [ingredientSeasons.growingZoneId],
+		references: [growingZones.id],
 	}),
 	creator: one(users, {
 		fields: [ingredientSeasons.createdBy],
@@ -238,7 +250,7 @@ export const ingredientSeasonsRelations = relations(ingredientSeasons, ({ one, m
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-15T04:02:17.956Z
+                at 2026-07-17T02:13:16.565Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
