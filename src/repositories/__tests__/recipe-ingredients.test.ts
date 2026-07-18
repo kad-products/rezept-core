@@ -1,9 +1,11 @@
+import { randomUUID } from 'node:crypto';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { RzRepositoryError } from '@/classes';
 import db from '@/db';
 import { createNoopLogger } from '@/logger';
-import { createUser } from '@/repositories';
+import { createIngredient, createUser } from '@/repositories';
 import { resetDb } from '../../../tests/mocks/db';
-import { getRecipeIngredientsByRecipeSectionId, updateRecipeIngredients } from '../recipe-ingredients';
+import { getRecipeIngredientsByRecipeSectionId, updateRecipeIngredient, updateRecipeIngredients } from '../recipe-ingredients';
 import { updateRecipeSections } from '../recipe-sections';
 import { createRecipe } from '../recipes';
 
@@ -205,6 +207,50 @@ describe('recipe-ingredients repository', () => {
 			});
 			expect(otherIngredients).toHaveLength(1);
 			expect(otherIngredients[0].raw).toBe('Other ingredient');
+		});
+	});
+
+	describe('updateRecipeIngredient', () => {
+		let testRecipeIngredientId: string;
+
+		beforeEach(async () => {
+			const [ri] = await updateRecipeIngredients(testSectionId, [{ order: 1, raw: '2 cups flour' }], testUserId, logger);
+			testRecipeIngredientId = ri.id;
+		});
+
+		it('updates the specified field', async () => {
+			const result = await updateRecipeIngredient(testRecipeIngredientId, { raw: 'updated raw' }, testUserId, logger);
+			expect(result.raw).toBe('updated raw');
+		});
+
+		it('does not alter fields absent from the update payload', async () => {
+			const result = await updateRecipeIngredient(testRecipeIngredientId, { raw: 'updated raw' }, testUserId, logger);
+			expect(result.order).toBe(1);
+		});
+
+		it('sets updatedBy on the record', async () => {
+			const result = await updateRecipeIngredient(testRecipeIngredientId, { raw: 'updated raw' }, testUserId, logger);
+			expect(result.updatedBy).toBe(testUserId);
+		});
+
+		it('returns the full updated record', async () => {
+			const result = await updateRecipeIngredient(testRecipeIngredientId, { raw: 'updated raw' }, testUserId, logger);
+			expect(result.id).toBe(testRecipeIngredientId);
+			expect(result.recipeSectionId).toBe(testSectionId);
+		});
+
+		it('updates ingredientId when provided', async () => {
+			const ingredient = await createIngredient({ name: 'Flour' }, testUserId, logger);
+			const result = await updateRecipeIngredient(testRecipeIngredientId, { ingredientId: ingredient.id }, testUserId, logger);
+			expect(result.ingredientId).toBe(ingredient.id);
+		});
+
+		it('throws RzRepositoryError for an invalid UUID', async () => {
+			await expect(updateRecipeIngredient('not-a-uuid', { raw: 'x' }, testUserId, logger)).rejects.toThrow(RzRepositoryError);
+		});
+
+		it('throws RzRepositoryError when the record does not exist', async () => {
+			await expect(updateRecipeIngredient(randomUUID(), { raw: 'x' }, testUserId, logger)).rejects.toThrow(RzRepositoryError);
 		});
 	});
 });
