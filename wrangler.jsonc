@@ -140,6 +140,16 @@
 			],
 			"workflows": [
 				{
+					"name": "recipe-ingredients-linked-to-ingredients-workflow",
+					"binding": "RECIPE_INGREDIENTS_LINKED_TO_INGREDIENTS_WORKFLOW",
+					"class_name": "RecipeIngredientsLinkedToIngredientsWorkflow"
+				},
+				{
+					"name": "recipe-raw-ingredients-to-ingredients-workflow",
+					"binding": "RECIPE_RAW_INGREDIENTS_TO_INGREDIENTS_WORKFLOW",
+					"class_name": "RecipeRawIngredientsToIngredientsWorkflow"
+				},
+				{
 					"name": "recipe-scrape-cover-image-retry-workflow",
 					"binding": "RECIPE_SCRAPE_COVER_IMAGE_RETRY_WORKFLOW",
 					"class_name": "RecipeScrapeCoverImageRetryWorkflow"
