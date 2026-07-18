@@ -1,3 +1,9 @@
+## [1.74.0](https://github.com/kad-products/rezept-core/compare/v1.73.0...v1.74.0) (2026-07-18)
+
+### Features
+
+* in-season search and recIng linked to ingId ([0ff4522](https://github.com/kad-products/rezept-core/commit/0ff4522a4f4fff8580588e6a17303cf762d24404))
+
 ## [1.73.0](https://github.com/kad-products/rezept-core/compare/v1.72.0...v1.73.0) (2026-07-17)
 
 ### Features
