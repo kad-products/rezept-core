@@ -1,85 +1,37 @@
-import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { RzStepError } from '@/classes';
 import { createNoopLogger } from '@/logger';
-import { parseRawIngredients } from '@/steps';
-import type { RecipeIngredientDBRead } from '@/types';
+import { parseRawIngredient } from '@/steps';
 
 const logger = createNoopLogger();
 
-function dbRecipeIngredientsFromStrings(rawIngredients: string[]): RecipeIngredientDBRead[] {
-	return rawIngredients.map(raw => {
-		return {
-			id: randomUUID(),
-			raw,
-		};
-	}) as unknown as RecipeIngredientDBRead[];
-}
-
-describe('parseRawIngredients', () => {
-	it('returns empty array when passed empty input', async () => {
-		const result = await parseRawIngredients([], logger);
-		expect(result).toEqual([]);
+describe('parseRawIngredient', () => {
+	it('returns a simple string when passed a valid recipe ingredient', () => {
+		expect(parseRawIngredient('12 onions', logger)).toBe('onions');
 	});
 
-	it('filters out items with no raw value', async () => {
-		const recipeIngredients = [
-			{ id: randomUUID(), raw: null },
-			{ id: randomUUID(), raw: undefined },
-			{ id: randomUUID(), raw: '1 onion' },
-		] as unknown as RecipeIngredientDBRead[];
-
-		const results = await parseRawIngredients(recipeIngredients, logger);
-
-		expect(results).toHaveLength(1);
-		expect(results[0]).toBe('onion');
+	it('preserves hyphens in ingredient names', () => {
+		expect(parseRawIngredient('3 cups cream-style corn', logger)).toContain('cream-style corn');
 	});
 
-	it('returns empty array when all items lack a raw value', async () => {
-		const recipeIngredients = [{ id: randomUUID(), raw: null }] as unknown as RecipeIngredientDBRead[];
-
-		const results = await parseRawIngredients(recipeIngredients, logger);
-
-		expect(results).toEqual([]);
+	it('handles stripping various numeric values and non-hyphen characters', () => {
+		expect(parseRawIngredient('12 onions', logger)).toBe('onions');
+		expect(parseRawIngredient('1.52 apples', logger)).toBe('apples');
+		expect(parseRawIngredient('.4 slices of cheese', logger)).toBe('cheese');
+		expect(parseRawIngredient('(12) oranges', logger)).toBe('oranges');
 	});
 
-	it('deduplicates identical raw values before processing', async () => {
-		const recipeIngredients = dbRecipeIngredientsFromStrings(['1 onion', '1 onion']);
-
-		const results = await parseRawIngredients(recipeIngredients, logger);
-
-		expect(results).toHaveLength(1);
-		expect(results[0]).toBe('onion');
+	it('returns undefined for disallowed standalone values', () => {
+		expect(parseRawIngredient('1 medium', logger)).toBeUndefined();
+		expect(parseRawIngredient('1 packet', logger)).toBeUndefined();
 	});
 
-	it('preserves hyphens in ingredient names', async () => {
-		const recipeIngredients = dbRecipeIngredientsFromStrings(['3 cups cream-style corn']);
-
-		const results = await parseRawIngredients(recipeIngredients, logger);
-
-		expect(results[0]).toContain('cream-style corn');
+	it('throws RzStepError when passed a non-string value', () => {
+		expect(() => parseRawIngredient(null as unknown as string, logger)).toThrow(RzStepError);
 	});
 
-	it('returns a simple string when passed a valid recipe ingredient', async () => {
-		const recipeIngredients = dbRecipeIngredientsFromStrings(['12 onions']);
-
-		const results = await parseRawIngredients(recipeIngredients, logger);
-
-		expect(results).toStrictEqual(['onions']);
-	});
-	it('handles stripping various numeric values and non-hyphen characters', async () => {
-		const recipeIngredients = dbRecipeIngredientsFromStrings(['12 onions', '1.52 apples', '.4 slices of cheese', '(12) oranges']);
-
-		const results = await parseRawIngredients(recipeIngredients, logger);
-
-		expect(results).toStrictEqual(['onions', 'apples', 'cheese', 'oranges']);
-	});
-	it('throws RzStepError when the input is not iterable', async () => {
-		await expect(parseRawIngredients(null as unknown as RecipeIngredientDBRead[], logger)).rejects.toThrow(RzStepError);
-	});
-
-	it('handles our somewhat realistic and small list of recipe ingredients', async () => {
-		const recipeIngredients = dbRecipeIngredientsFromStrings([
+	it('handles our somewhat realistic and small list of recipe ingredients', () => {
+		const rawStrings = [
 			'0.5 cup diced bacon',
 			'4 medium potatoes, peeled and chopped',
 			'1 medium onion, chopped',
@@ -88,9 +40,9 @@ describe('parseRawIngredients', () => {
 			'2 teaspoons salt',
 			'ground black pepper to taste',
 			'2 cups half-and-half',
-		]);
+		];
 
-		const results = await parseRawIngredients(recipeIngredients, logger);
+		const results = rawStrings.map(s => parseRawIngredient(s, logger));
 
 		expect(results).toStrictEqual([
 			'bacon',
@@ -104,8 +56,8 @@ describe('parseRawIngredients', () => {
 		]);
 	});
 
-	it('handles a large list pulled after scraping a couple sites for recipes', async () => {
-		const recipeIngredients = dbRecipeIngredientsFromStrings([
+	it('handles a large list pulled after scraping a couple sites for recipes', () => {
+		const rawStrings = [
 			'2  Yellow Plantains (peeled)',
 			'Vegetable Oil (for frying)',
 			'Sea salt (to taste)',
@@ -448,7 +400,7 @@ describe('parseRawIngredients', () => {
 			'3  Yams (peeled and cubed)',
 			'¼ cup Red Palm Oil',
 			'1  Red onion (finely diced)',
-			'1  Shrimp bouillon cube (I substituted chicken as I couldn’t find shrimp)',
+			'1  Shrimp bouillon cube (I substituted chicken as I couldn\u2019t find shrimp)',
 			'Sea salt to taste',
 			'2-3  Hard boiled eggs',
 			'1/3 cup olive oil',
@@ -552,7 +504,7 @@ describe('parseRawIngredients', () => {
 			'1 lb Lamb',
 			'Salt and pepper to taste',
 			'Oil for frying',
-			'1 cup uncooked Couscous (“Moroccan”)',
+			'1 cup uncooked Couscous ("Moroccan")',
 			'½ cup evaporated milk',
 			'½ cup vanilla Greek yogurt',
 			'¼ cup sour cream',
@@ -597,7 +549,7 @@ describe('parseRawIngredients', () => {
 			'2 tbsp lemon juice',
 			'3 tbsp water',
 			'¼ tsp salt',
-			'½ tsp za’atar',
+			'½ tsp za\u2019atar',
 			'½ cup mayonnaise',
 			'⅓ tsp cinnamon',
 			'2 tbsp honey',
@@ -723,7 +675,7 @@ describe('parseRawIngredients', () => {
 			'1 small rotisserie chicken (2.5lb) (grilled, skin removed &amp; deboned, chopped finely)',
 			'½ medium yellow onion (very finely diced (almost a paste))',
 			'4 stalks green onions (chopped)',
-			'5-10 pieces Donne’ peppers (I substituted Bird’s Eye Chilies) (finely chopped, adjust to taste)',
+			'5-10 pieces Donn\u00e9 peppers (I substituted Bird\u2019s Eye Chilies) (finely chopped, adjust to taste)',
 			'6 tbsp fresh lemon juice',
 			'½ tsp salt (more or less to taste)',
 			'1 tsp lemon powder (optional (if you are not using, replace with 1-2 more Tablespoons of lemon juice))',
@@ -750,7 +702,7 @@ describe('parseRawIngredients', () => {
 			'2  roma tomatoes',
 			'2 tbsp olive oil',
 			'1 tsp flakey sea salt',
-			'4 medium Flour Tortillas ( 5.5”)',
+			'4 medium Flour Tortillas ( 5.5")',
 			'2-4 pieces Ham',
 			'2 cups Oaxaca Cheese (shredded)',
 			'Guacamole',
@@ -769,7 +721,7 @@ describe('parseRawIngredients', () => {
 			'1 tsp baking powder',
 			'vegetable oil for frying',
 			'8 slices plain white bread (crusts cut off)',
-			'8 slices fresh mozzarella (½” thick)',
+			'8 slices fresh mozzarella (½" thick)',
 			'2  eggs',
 			'¼ tsp salt',
 			'1 pinch black pepper',
@@ -782,7 +734,7 @@ describe('parseRawIngredients', () => {
 			'1 Tbsp white vinegar',
 			'1 tsp salt',
 			'½ tsp granulated sugar',
-			'2.5 lb chicken thigh (fat trimmed off and cut into 1” cubes)',
+			'2.5 lb chicken thigh (fat trimmed off and cut into 1" cubes)',
 			'½ cup coconut milk',
 			'2 tbsp soy sauce',
 			'1 tsp curry powder',
@@ -796,7 +748,7 @@ describe('parseRawIngredients', () => {
 			'1 tbsp soy sauce',
 			'1 Tbsp brown sugar',
 			'½ Tbsp freshly chopped ginger',
-			'½ tbsp fish sauce (if you don’t want to buy another ingredient, you can substitute this with more soy sauce)',
+			'½ tbsp fish sauce (if you don\u2019t want to buy another ingredient, you can substitute this with more soy sauce)',
 			'1 tsp rice vinegar',
 			'1/2 tsp chili paste to taste',
 			'¼ cup water',
@@ -1002,11 +954,11 @@ describe('parseRawIngredients', () => {
 			'1 tbsp lemon juice',
 			'¼ tsp salt',
 			'2 tbsp onions (finely chopped)',
-		]);
+		];
 
-		const results = await parseRawIngredients(recipeIngredients, logger);
+		const results = [...new Set(rawStrings.map(s => parseRawIngredient(s, logger)).filter(r => r !== undefined))].sort();
 
-		expect(results.sort()).toStrictEqual([
+		expect(results).toStrictEqual([
 			'active dry yeast',
 			'all purpose flour',
 			'all-purpose flour',
@@ -1115,7 +1067,7 @@ describe('parseRawIngredients', () => {
 			'dijon mustard',
 			'distilled white vinegar',
 			'ditalini',
-			'donne’ peppers',
+			'donn\u00e9 peppers',
 			'dried apricots',
 			'dried brown lentils',
 			'dried chickpeas',
@@ -1218,7 +1170,7 @@ describe('parseRawIngredients', () => {
 			'italian breadcrumbs',
 			'italian dressing',
 			'jalapeno',
-			'jalapeño',
+			'jalape\u00f1o',
 			'jimmy deans sausage',
 			'korerima',
 			'koseret',
@@ -1299,7 +1251,7 @@ describe('parseRawIngredients', () => {
 			'pure vanilla extract',
 			'quartered tomatoes',
 			'quesillo cheese',
-			'ragù',
+			'rag\u00f9',
 			'raisins',
 			'raspberry jam',
 			'recipe for cuban picadillo',
@@ -1421,7 +1373,7 @@ describe('parseRawIngredients', () => {
 			'yellow split peas',
 			'yellow/brown plantains',
 			'yukon gold potato',
-			'za’atar',
+			'za\u2019atar',
 		]);
 	});
 });

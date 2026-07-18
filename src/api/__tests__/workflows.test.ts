@@ -7,6 +7,9 @@ const mockEnv = vi.hoisted(() => ({
 	RECIPE_RAW_INGREDIENTS_TO_INGREDIENTS_WORKFLOW: {
 		create: vi.fn(),
 	},
+	RECIPE_INGREDIENTS_LINKED_TO_INGREDIENTS_WORKFLOW: {
+		create: vi.fn(),
+	},
 }));
 
 vi.mock('cloudflare:workers', () => ({ env: mockEnv }));
@@ -28,6 +31,7 @@ describe('_postHandler', () => {
 		vi.clearAllMocks();
 		ctx = { user: { id: 'user-id' }, logger: createNoopLogger() };
 		mockEnv.RECIPE_RAW_INGREDIENTS_TO_INGREDIENTS_WORKFLOW.create.mockResolvedValue(mockWorkflowInstance);
+		mockEnv.RECIPE_INGREDIENTS_LINKED_TO_INGREDIENTS_WORKFLOW.create.mockResolvedValue(mockWorkflowInstance);
 	});
 
 	describe('recipe-raw-ingredients-to-ingredients workflow', () => {
@@ -76,6 +80,63 @@ describe('_postHandler', () => {
 
 			const response = await _postHandler({
 				params: { workflowName: 'recipe-raw-ingredients-to-ingredients' },
+				ctx,
+			} as any);
+
+			expect(response.status).toBe(500);
+			const body = (await response.json()) as any;
+			expect(body.success).toBe(false);
+		});
+	});
+
+	describe('recipe-ingredients-linked-to-ingredients workflow', () => {
+		it('returns 200 with the workflow instance on success', async () => {
+			const response = await _postHandler({
+				params: { workflowName: 'recipe-ingredients-linked-to-ingredients' },
+				ctx,
+			} as any);
+
+			expect(response.status).toBe(200);
+			const body = (await response.json()) as any;
+			expect(body.success).toBe(true);
+			expect(body.data).toEqual(mockWorkflowInstance);
+		});
+
+		it('calls workflow create with userId spread into params', async () => {
+			await _postHandler({
+				params: { workflowName: 'recipe-ingredients-linked-to-ingredients', recipeId: 'r-123' },
+				ctx,
+			} as any);
+
+			expect(mockEnv.RECIPE_INGREDIENTS_LINKED_TO_INGREDIENTS_WORKFLOW.create).toHaveBeenCalledWith({
+				params: {
+					workflowName: 'recipe-ingredients-linked-to-ingredients',
+					recipeId: 'r-123',
+					userId: 'user-id',
+				},
+			});
+		});
+
+		it('uses the authenticated user id from ctx', async () => {
+			ctx.user.id = 'another-user-id';
+
+			await _postHandler({
+				params: { workflowName: 'recipe-ingredients-linked-to-ingredients' },
+				ctx,
+			} as any);
+
+			expect(mockEnv.RECIPE_INGREDIENTS_LINKED_TO_INGREDIENTS_WORKFLOW.create).toHaveBeenCalledWith(
+				expect.objectContaining({ params: expect.objectContaining({ userId: 'another-user-id' }) }),
+			);
+		});
+
+		it('returns an error response when workflow create throws', async () => {
+			mockEnv.RECIPE_INGREDIENTS_LINKED_TO_INGREDIENTS_WORKFLOW.create.mockRejectedValue(
+				new Error('Workflow service unavailable'),
+			);
+
+			const response = await _postHandler({
+				params: { workflowName: 'recipe-ingredients-linked-to-ingredients' },
 				ctx,
 			} as any);
 

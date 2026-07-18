@@ -2,18 +2,18 @@ import type { WorkflowEvent } from 'cloudflare:workers';
 import { WorkflowEntrypoint, type WorkflowStep } from 'cloudflare:workers';
 import { createWorkflowLogger } from '@/logger';
 import {
-	ensureIngredientsByName,
+	getIngredients,
 	getRecipeById,
 	getRecipeIngredientsByRecipeSectionId,
 	getRecipes,
 	getSectionsByRecipeId,
 } from '@/repositories';
-import { parseRawIngredient } from '@/steps';
-import type { RecipeDBRead, RecipeIngredientDBRead, RecipeSectionDBRead } from '@/types';
+import { updateRecipeIngredientsWithIngredientIds } from '@/steps';
+import type { IngredientDBRead, RecipeDBRead, RecipeIngredientDBRead, RecipeSectionDBRead } from '@/types';
 
 type Params = { recipeId?: string; userId: string };
 
-export class RecipeRawIngredientsToIngredientsWorkflow extends WorkflowEntrypoint<Env, Params> {
+export class RecipeIngredientsLinkedToIngredientsWorkflow extends WorkflowEntrypoint<Env, Params> {
 	async run(event: WorkflowEvent<Params>, step: WorkflowStep): Promise<void> {
 		const logger = createWorkflowLogger(event);
 		const { recipeId, userId } = event.payload;
@@ -72,33 +72,31 @@ export class RecipeRawIngredientsToIngredientsWorkflow extends WorkflowEntrypoin
 			},
 		);
 
-		let parsedIngredients: string[] = [];
+		// get all verified ingredients
+		let verifiedIngredients: IngredientDBRead[] = [];
 		await step.do(
-			'Parse recipe ingredients down to actual purchaseable ingredients',
+			'Fetching all verified ingredients',
 			{ retries: { limit: 3, delay: '5 seconds', backoff: 'exponential' } },
 			async () => {
-				logger.info('Parsing recipe ingredients into just ingredients');
-				parsedIngredients = allRecipeIngredients.flatMap(ing => {
-					if (ing.raw) {
-						const parsed = parseRawIngredient(ing.raw, logger);
-						if (parsed) {
-							return parsed;
-						}
-					}
-					return [];
-				});
-				logger.info(`Found ${parsedIngredients.length} ingredients`);
+				logger.info('Fetching all verified ingredients');
+				verifiedIngredients = await getIngredients({ verifiedOnly: true }, logger);
+				logger.info(`Found ${verifiedIngredients.length} verified ingredients`);
 			},
 		);
 
+		// match em up and update em
 		await step.do(
-			'Save parsed ingredients to D1 table',
+			'Creating mapping of recipe ingredient IDs to ingredient IDs',
 			{ retries: { limit: 3, delay: '5 seconds', backoff: 'exponential' } },
 			async () => {
-				logger.info(`Saving ingredients list of ${parsedIngredients.length} ingredients to D1`);
-
-				const ingredients = await ensureIngredientsByName(parsedIngredients, userId, logger);
-				logger.info(`Saved ${ingredients.length} ingredients`);
+				logger.info(`Mapping ingredients back to recipe ingredients and updating them`);
+				const updatesCompleted = await updateRecipeIngredientsWithIngredientIds(
+					allRecipeIngredients,
+					verifiedIngredients,
+					userId,
+					logger,
+				);
+				logger.info(`Updated ${updatesCompleted.length} recipe ingredients`);
 			},
 		);
 	}

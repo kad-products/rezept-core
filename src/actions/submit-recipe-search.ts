@@ -18,7 +18,7 @@ export async function _submitRecipeSearch(formData: InSeasonRecipeSearchFormInpu
 		});
 
 		const matchedRecipes = await searchRecipes(
-			{ growingZoneId: formData.growingZoneId, term: formData.recipeSearchTerm },
+			{ growingZoneId: formData.growingZoneId, term: formData.recipeSearchTerm, month: Number(formData.searchMonth) },
 			requestInfo.ctx.logger,
 		);
 

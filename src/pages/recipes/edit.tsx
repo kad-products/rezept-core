@@ -11,7 +11,7 @@ export default async function Pages__recipes__edit({ ctx, params }: RequestInfo)
 	const userId = ctx.user?.id;
 
 	const recipe: RecipeWithSections | undefined = recipeId ? await getRecipeById(recipeId, ctx.logger) : undefined;
-	const allIngredients = await getIngredients(ctx.logger);
+	const allIngredients = await getIngredients({}, ctx.logger);
 
 	return (
 		<AppLayout currentBasePage="recipes" pageTitle="Recipes" ctx={ctx} leftNav="recipes">

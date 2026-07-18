@@ -596,12 +596,12 @@ describe('recipes repository', () => {
 		});
 
 		it('returns empty array when no recipes exist', async () => {
-			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, month: currentMonth }, logger);
 			expect(result).toEqual([]);
 		});
 
 		it('returns empty array when no growingZoneId is provided', async () => {
-			const result = await searchRecipes({}, logger);
+			const result = await searchRecipes({ month: currentMonth }, logger);
 			expect(result).toEqual([]);
 		});
 
@@ -613,7 +613,7 @@ describe('recipes repository', () => {
 			);
 			await createLinkedRecipe('Tomato Salad');
 
-			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, month: currentMonth }, logger);
 			expect(result).toHaveLength(1);
 			expect(result[0].title).toBe('Tomato Salad');
 		});
@@ -631,7 +631,7 @@ describe('recipes repository', () => {
 			);
 			await createLinkedRecipe('Tomato Salad');
 
-			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, month: currentMonth }, logger);
 			expect(result).toEqual([]);
 		});
 
@@ -644,7 +644,7 @@ describe('recipes repository', () => {
 			);
 			await createLinkedRecipe('Tomato Salad');
 
-			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, month: currentMonth }, logger);
 			expect(result).toEqual([]);
 		});
 
@@ -657,7 +657,7 @@ describe('recipes repository', () => {
 			await createLinkedRecipe('Tomato Salad');
 			await createLinkedRecipe('Tomato Soup');
 
-			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, term: 'Soup' }, logger);
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, term: 'Soup', month: currentMonth }, logger);
 			expect(result).toHaveLength(1);
 			expect(result[0].title).toBe('Tomato Soup');
 		});
@@ -671,7 +671,7 @@ describe('recipes repository', () => {
 			await createLinkedRecipe('Tomato Salad');
 			await createLinkedRecipe('Tomato Soup');
 
-			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, month: currentMonth }, logger);
 			expect(result).toHaveLength(2);
 		});
 
@@ -699,7 +699,7 @@ describe('recipes repository', () => {
 				logger,
 			);
 
-			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, month: currentMonth }, logger);
 			expect(result).toHaveLength(1);
 		});
 
@@ -713,7 +713,7 @@ describe('recipes repository', () => {
 			await createLinkedRecipe('Arugula Salad');
 			await createLinkedRecipe('Minestrone');
 
-			const result = await searchRecipes({ growingZoneId: testGrowingZoneId }, logger);
+			const result = await searchRecipes({ growingZoneId: testGrowingZoneId, month: currentMonth }, logger);
 			expect(result.map(r => r.title)).toEqual(['Arugula Salad', 'Minestrone', 'Zucchini Pasta']);
 		});
 	});

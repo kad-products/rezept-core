@@ -11,7 +11,7 @@ import type { SeasonWithIngredients } from '@/types';
 export default async function Pages__seasons__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const seasonId = params.seasonId;
 	let [allIngredients, season] = await Promise.all([
-		getIngredients(ctx.logger),
+		getIngredients({}, ctx.logger),
 		seasonId ? getSeasonById(seasonId, ctx.logger) : Promise.resolve(undefined),
 	]);
 

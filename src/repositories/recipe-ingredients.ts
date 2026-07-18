@@ -1,7 +1,9 @@
 import { and, eq, isNull, sql } from 'drizzle-orm';
+import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { recipeIngredients } from '@/models';
 import type { RecipeIngredientDBRead, RecipeIngredientWriteInput, RzLogger } from '@/types';
+import { validateUuid } from './utils';
 
 export async function getRecipeIngredientsByRecipeSectionId(
 	recipeSectionId: string,
@@ -98,4 +100,32 @@ export async function updateRecipeIngredients(
 	logger.info(`Updated ${savedIngredients.length} ingredients for section ${recipeSectionId}`);
 
 	return savedIngredients;
+}
+
+export async function updateRecipeIngredient(
+	recipeIngredientId: string,
+	recipeIngredient: Partial<RecipeIngredientWriteInput>,
+	userId: string,
+	logger: RzLogger,
+): Promise<RecipeIngredientDBRead> {
+	if (!validateUuid(recipeIngredientId)) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [recipeIngredientId, 'Recipe Ingredient']);
+	}
+	logger.debug(`Updating recipe ingredient ${recipeIngredientId}`);
+	const [updatedRecipeIngredient] = await db
+		.update(recipeIngredients)
+		.set({
+			...recipeIngredient,
+			updatedAt: sql`(datetime('now', 'localtime'))`,
+			updatedBy: userId,
+		})
+		.where(eq(recipeIngredients.id, recipeIngredientId))
+		.returning();
+	if (!updatedRecipeIngredient) {
+		throw new RzRepositoryError(RzRepositoryErrorTypes.UnexpectedRecordCount, [0, 1, 'Recipe Ingredient']);
+	}
+
+	logger.info(`Updated ingredient ${recipeIngredientId}`);
+
+	return updatedRecipeIngredient;
 }
