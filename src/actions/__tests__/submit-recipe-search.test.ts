@@ -41,7 +41,6 @@ vi.mock('rwsdk/worker', () => ({
 	},
 }));
 
-import { requirePermissions } from '@/interrupters';
 import { searchRecipes } from '@/repositories';
 import { _submitRecipeSearch } from '../submit-recipe-search';
 
