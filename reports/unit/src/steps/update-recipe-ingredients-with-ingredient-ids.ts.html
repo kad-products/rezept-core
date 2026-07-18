@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/types/index.ts</title>
+    <title>Code coverage report for src/steps/update-recipe-ingredients-with-ingredient-ids.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/types</a> index.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/steps</a> update-recipe-ingredients-with-ingredient-ids.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/11</span>
             </div>
         
             
@@ -89,10 +89,7 @@
 <a name='L24'></a><a href='#L24'>24</a>
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -103,53 +100,47 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export * from './action-state';
-export * from './api-keys';
-export * from './app-context';
-export * from './credentials';
-export * from './growing-zones';
-export * from './image-types';
-export * from './images';
-export * from './in-season-recipe-search';
-export * from './ingredient-seasons';
-export * from './ingredient-units';
-export * from './ingredients';
-export * from './nav-item';
-export * from './permissions';
-export * from './recipe-cooking-methods';
-export * from './recipe-ingredients';
-export * from './recipe-instructions';
-export * from './recipe-scrape-attempts';
-export * from './recipe-scrapes';
-export * from './recipe-sections';
-export * from './recipe-uploads';
-export * from './recipes';
-export * from './rz-link';
-export * from './rz-logger';
-export * from './rz-table';
-export * from './seasonal-ingredients';
-export * from './seasons';
-export * from './sessions';
-export * from './users';
-export * from './verifications';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { updateRecipeIngredient } from '@/repositories';
+import type { IngredientDBRead, RecipeIngredientDBRead, RzLogger } from '@/types';
+import { parseRawIngredient } from './parse-raw-ingredient';
+&nbsp;
+export async function <span class="fstat-no" title="function not covered" >updateRecipeIngredientsWithIngredientIds(</span>
+	allRecipeIngredients: RecipeIngredientDBRead[],
+	verifiedIngredients: IngredientDBRead[],
+	userId: string,
+	logger: RzLogger,
+): Promise&lt;RecipeIngredientDBRead[]&gt; {
+	// build a map of recipeIngredientId to ingredientId
+	const ingredientsMap = <span class="cstat-no" title="statement not covered" >new Map&lt;string, string&gt;();</span>
+<span class="cstat-no" title="statement not covered" >	allRecipeIngredients.<span class="fstat-no" title="function not covered" >forEach(r</span>i =&gt; {</span>
+		const matchingIngredient = <span class="cstat-no" title="statement not covered" >verifiedIngredients.<span class="fstat-no" title="function not covered" >find(v</span>i =&gt; <span class="cstat-no" title="statement not covered" >vi.name === parseRawIngredient(ri.raw ?? '', logger))</span>;</span>
+<span class="cstat-no" title="statement not covered" >		if (matchingIngredient) {</span>
+<span class="cstat-no" title="statement not covered" >			ingredientsMap.set(ri.id, matchingIngredient.id);</span>
+		}
+	});
+	const updatedRecipeIngredients: RecipeIngredientDBRead[] = <span class="cstat-no" title="statement not covered" >[];</span>
+<span class="cstat-no" title="statement not covered" >	for (const [recipeIngredientId, ingredientId] of ingredientsMap) {</span>
+<span class="cstat-no" title="statement not covered" >		logger.info(`Ingredient map has recipe ingredient ${recipeIngredientId} mapped to ingredient ${ingredientId}`);</span>
+		const updatedRecipeIngredient = <span class="cstat-no" title="statement not covered" >await updateRecipeIngredient(recipeIngredientId, { ingredientId }, userId, logger);</span>
+<span class="cstat-no" title="statement not covered" >		updatedRecipeIngredients.push(updatedRecipeIngredient);</span>
+	}
+<span class="cstat-no" title="statement not covered" >	return updatedRecipeIngredients;</span>
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
