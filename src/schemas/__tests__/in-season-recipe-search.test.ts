@@ -5,12 +5,12 @@ import { inSeasonRecipeSearchSchemas } from '../in-season-recipe-search';
 describe('inSeasonRecipeSearchSchemas.form', () => {
 	describe('valid inputs', () => {
 		it('accepts a valid growingZoneId UUID', () => {
-			const result = inSeasonRecipeSearchSchemas.form.safeParse({ growingZoneId: randomUUID() });
+			const result = inSeasonRecipeSearchSchemas.form.safeParse({ growingZoneId: randomUUID(), searchMonth: '7' });
 			expect(result.success).toBe(true);
 		});
 
 		it('accepts without recipeSearchTerm', () => {
-			const result = inSeasonRecipeSearchSchemas.form.safeParse({ growingZoneId: randomUUID() });
+			const result = inSeasonRecipeSearchSchemas.form.safeParse({ growingZoneId: randomUUID(), searchMonth: '7' });
 			expect(result.success).toBe(true);
 			if (result.success) {
 				expect(result.data.recipeSearchTerm).toBeUndefined();
@@ -18,12 +18,20 @@ describe('inSeasonRecipeSearchSchemas.form', () => {
 		});
 
 		it('accepts with a recipeSearchTerm string', () => {
-			const result = inSeasonRecipeSearchSchemas.form.safeParse({ growingZoneId: randomUUID(), recipeSearchTerm: 'tomato' });
+			const result = inSeasonRecipeSearchSchemas.form.safeParse({
+				growingZoneId: randomUUID(),
+				recipeSearchTerm: 'tomato',
+				searchMonth: '7',
+			});
 			expect(result.success).toBe(true);
 		});
 
 		it('accepts empty string for recipeSearchTerm', () => {
-			const result = inSeasonRecipeSearchSchemas.form.safeParse({ growingZoneId: randomUUID(), recipeSearchTerm: '' });
+			const result = inSeasonRecipeSearchSchemas.form.safeParse({
+				growingZoneId: randomUUID(),
+				recipeSearchTerm: '',
+				searchMonth: '7',
+			});
 			expect(result.success).toBe(true);
 		});
 	});

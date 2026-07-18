@@ -53,7 +53,7 @@ describe('ingredients repository', () => {
 
 	describe('getIngredients', () => {
 		it('returns empty array when no ingredients exist', async () => {
-			const result = await getIngredients(logger);
+			const result = await getIngredients({}, logger);
 			expect(result).toEqual([]);
 		});
 
@@ -62,14 +62,29 @@ describe('ingredients repository', () => {
 			await createIngredient({ name: 'Onion' }, testUserId, logger);
 			await createIngredient({ name: 'Garlic' }, testUserId, logger);
 
-			const result = await getIngredients(logger);
+			const result = await getIngredients({}, logger);
 			expect(result).toHaveLength(3);
 		});
 
 		it('returns ingredients with correct shape', async () => {
 			await createIngredient({ name: 'Tomato', description: 'A red fruit' }, testUserId, logger);
 
-			const result = await getIngredients(logger);
+			const result = await getIngredients({}, logger);
+			expect(result[0]).toMatchObject({
+				name: 'Tomato',
+				description: 'A red fruit',
+				createdBy: testUserId,
+			});
+			expect(result[0].id).toBeDefined();
+		});
+
+		it('returns only verified ingredients', async () => {
+			const ing1 = await createIngredient({ name: 'Tomato', description: 'A red fruit' }, testUserId, logger);
+			await createIngredient({ name: 'Onion', description: 'It will make you cry' }, testUserId, logger);
+			await verifyIngredient(ing1.id, testUserId, logger);
+
+			const result = await getIngredients({ verifiedOnly: true }, logger);
+			expect(result.length).toBe(1);
 			expect(result[0]).toMatchObject({
 				name: 'Tomato',
 				description: 'A red fruit',
@@ -362,7 +377,7 @@ describe('ingredients repository', () => {
 
 			await ensureIngredientsByName(['Tomato'], testUserId, logger);
 
-			const allIngredients = await getIngredients(logger);
+			const allIngredients = await getIngredients({}, logger);
 			const garlic = allIngredients.find(i => i.id === unrelated.id);
 			expect(garlic?.updatedAt).toBeNull();
 		});

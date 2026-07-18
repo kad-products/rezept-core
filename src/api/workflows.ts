@@ -17,6 +17,17 @@ export async function _postHandler({ params, ctx }: RequestInfo): Promise<Respon
 
 	try {
 		switch (workflowName) {
+			case 'recipe-ingredients-linked-to-ingredients': {
+				// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
+				const userId = ctx.user!.id;
+				const workflowInstance = await env.RECIPE_INGREDIENTS_LINKED_TO_INGREDIENTS_WORKFLOW.create({
+					params: {
+						...params,
+						userId,
+					},
+				});
+				return successResponse(workflowInstance);
+			}
 			case 'recipe-raw-ingredients-to-ingredients': {
 				// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 				const userId = ctx.user!.id;

@@ -23,7 +23,7 @@ const columns: RzTableColumn[] = [
 ];
 
 export default async function Pages__admin__ingredients__listing({ ctx }: RequestInfo): Promise<React.JSX.Element> {
-	const ingredients = await getIngredients(ctx.logger);
+	const ingredients = await getIngredients({}, ctx.logger);
 	const rows = ingredients.map(u => ({
 		...u,
 		editUrl: `/admin/ingredients/${u.id}/edit`,

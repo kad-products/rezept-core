@@ -1,4 +1,4 @@
-import { and, asc, eq, gte, inArray, isNull, like, lte, type SQL, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, gte, inArray, isNull, like, lte, or, type SQL, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import {
@@ -187,13 +187,29 @@ export async function updateRecipe(
 type RecipeSearchOptions = {
 	growingZoneId?: string;
 	term?: string;
+	month: number;
 };
 
-export async function searchRecipes(searchOptions: RecipeSearchOptions, logger: RzLogger): Promise<RecipeDBRead[]> {
-	const { growingZoneId, term: searchTerm } = searchOptions;
-	const currentMonth = new Date().getMonth() + 1;
+function isInSeason(month: number): SQL {
+	return or(
+		// Non-wrapping: e.g. March–August
+		and(
+			lte(ingredientSeasons.startMonth, ingredientSeasons.endMonth),
+			lte(ingredientSeasons.startMonth, month),
+			gte(ingredientSeasons.endMonth, month),
+		),
+		// Wrapping: e.g. November–February
+		and(
+			gt(ingredientSeasons.startMonth, ingredientSeasons.endMonth),
+			or(lte(ingredientSeasons.startMonth, month), gte(ingredientSeasons.endMonth, month)),
+		),
+	) as SQL;
+}
 
-	logger.debug(`Searching recipes for growingZoneId ${growingZoneId}, search term ${searchTerm}, and month ${currentMonth}`);
+export async function searchRecipes(searchOptions: RecipeSearchOptions, logger: RzLogger): Promise<RecipeDBRead[]> {
+	const { growingZoneId, term: searchTerm, month: searchMonth } = searchOptions;
+
+	logger.debug(`Searching recipes for growingZoneId ${growingZoneId}, search term ${searchTerm}, and month ${searchMonth}`);
 
 	const seasonalRecipeIds = db
 		.select({ id: recipes.id })
@@ -202,13 +218,7 @@ export async function searchRecipes(searchOptions: RecipeSearchOptions, logger: 
 		.innerJoin(recipeIngredients, eq(recipeSections.id, recipeIngredients.recipeSectionId))
 		.innerJoin(ingredients, eq(recipeIngredients.ingredientId, ingredients.id))
 		.innerJoin(ingredientSeasons, eq(ingredients.id, ingredientSeasons.ingredientId))
-		.where(
-			and(
-				eq(ingredientSeasons.growingZoneId, growingZoneId ?? ''),
-				lte(ingredientSeasons.startMonth, currentMonth),
-				gte(ingredientSeasons.endMonth, currentMonth),
-			),
-		);
+		.where(and(and(eq(ingredientSeasons.growingZoneId, growingZoneId ?? ''), isInSeason(searchMonth))));
 
 	const searchResults = await db
 		.select()

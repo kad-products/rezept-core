@@ -4,9 +4,9 @@ Code within this directory defines background processing workflows that run outs
 
 ## How it works
 
-Each workflow is a class extending `WorkflowEntrypoint` from `cloudflare:workers`. A workflow is triggered by a `POST /api/workflows/:workflow-name` request, which calls `env.<workflow-name>.create(params)`. The CF Workflows runtime executes the `run()` method, automatically persisting state across steps so that failures mid-workflow don't restart from the beginning.
+Each workflow is a class extending `WorkflowEntrypoint` from `cloudflare:workers`. Many workflows (but not all) are triggered by a `POST /api/workflows/:workflow-name` request, which calls `env.<workflow-name>.create(params)`. The CF Workflows runtime executes the `run()` method, automatically persisting state across steps so that failures mid-workflow don't restart from the beginning.
 
-Workflows are passed a `step` object that can `.do()` something or `.sleep()` for an amount of time.  Those steps (not our `src/steps/*` data pipelines) are the unit of execution and retry. Each step runs in isolation — if a step fails, CF retries it independently without re-running steps that already succeeded.
+Workflows are passed a `step` object that can `.do()` something or `.sleep()` for an amount of time.  Those steps (not necessarily one-to-one with our `src/steps/*` data pipelines but might often be setup as such) are the unit of execution and retry. Each step runs in isolation — if a step fails, CF retries it independently without re-running steps that already succeeded.
 
 For workflows that need to process many records in parallel, a parent workflow spawns child workflows — one per record. Each child gets its own CPU budget.
 
@@ -30,14 +30,14 @@ src/workflows/
      "class_name": "WorkflowNameWorkflow"
    }
    ```
-3. Export the class from `src/workflows/index.ts` and ensure it is re-exported from `worker.tsx`
-4. Add the workflow name to the known-names const in `src/models/workflows.ts`
+3. Export the class from `src/workflows/index.ts` (which will automatically be re-exported from `worker.tsx` via the `export *` in that file)
+4. Optionally add it to the `case` statement in the `src/api/workflows` handler if it is intended to be invoked via the API
 
 The `class_name` in wrangler must exactly match the exported class name. CF's runtime resolves the binding to the exported class by name — the same mechanism used for Durable Objects.
 
 ## Wrangler configuration
 
-Workflows are declared under a top-level `"workflows"` key, not per-environment (the same as `"migrations"`). The binding is what you use in code (`env.WORKFLOW_NAME`); the name is the CF-side queue identifier; the `class_name` is the export that wires them together.
+Workflows are declared under a top-level `"workflows"` key, not per-environment (the same as `"migrations"`). The binding is what you use in code (`env.WORKFLOW_NAME`); the name is the CF-side identifier and should match the API `case` option (if used); the `class_name` is the export that wires them together.
 
 ```jsonc
 "workflows": [
@@ -51,7 +51,7 @@ Workflows are declared under a top-level `"workflows"` key, not per-environment 
 
 ## CPU limits and sub-workflows
 
-CF Workflows allows 5 minutes of CPU time per instance. Time spent in `step.sleep()` or waiting on I/O does not count against this limit — only active CPU.
+CF Workflows allows 5 minutes of CPU time per instance. Time spent in `step.sleep()` or waiting on I/O does _not_ count against this limit — only active CPU.
 
 For workflows that process many records, spawn child workflows rather than looping inline:
 
@@ -85,11 +85,11 @@ Use `logger.child({ task: 'step-name' })` to scope logs to a specific step, or p
 
 ## Development
 
-Once the workflow API is wired up for a new workflow calling that API via curl works reasonably well:
+Once the workflow API is wired up for a new workflow calling that API via `curl` works reasonably well:
 
 ```sh
-curl -X POST http://rezept.localhost:5173/api/workflows/recipe-raw-ingredients-to-ingredients \
-  -H "Authorization: Bearer rz_std_<redaced>" \
+curl -X POST http://rezept.localhost:5173/api/workflows/recipe-ingredients-linked-to-ingredients \
+  -H "Authorization: Bearer ${REZEPT_API_KEY}" \
   -H "Content-Type: application/json"
 ```
 

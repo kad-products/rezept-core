@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { ingredients, verifications } from '@/models';
@@ -30,9 +30,20 @@ export async function getIngredientById(ingredientId: string, logger: RzLogger):
 	return ingredient;
 }
 
-export async function getIngredients(logger: RzLogger): Promise<IngredientDBRead[]> {
+type IngredientLookupOptions = {
+	verifiedOnly?: boolean;
+};
+
+export async function getIngredients(
+	{ verifiedOnly = false }: IngredientLookupOptions,
+	logger: RzLogger,
+): Promise<IngredientDBRead[]> {
 	logger.debug('Fetching all ingredients');
-	const ingredientsList = await db.select().from(ingredients).where(isNull(ingredients.deletedAt));
+
+	const ingredientsList = await db
+		.select()
+		.from(ingredients)
+		.where(and(isNull(ingredients.deletedAt), verifiedOnly ? isNotNull(ingredients.lastVerifiedAt) : undefined));
 	logger.debug(`Fetched ${ingredientsList.length} ingredients`);
 	return ingredientsList;
 }
