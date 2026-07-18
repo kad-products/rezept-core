@@ -1,3 +1,9 @@
+## [1.74.1](https://github.com/kad-products/rezept-core/compare/v1.74.0...v1.74.1) (2026-07-18)
+
+### Bug Fixes
+
+* enable workflows in integration ([2906481](https://github.com/kad-products/rezept-core/commit/2906481870b7cf1ff1b70b3743e3ccda38151cec))
+
 ## [1.74.0](https://github.com/kad-products/rezept-core/compare/v1.73.0...v1.74.0) (2026-07-18)
 
 ### Features
