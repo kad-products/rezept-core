@@ -109,7 +109,7 @@
 		"@vitest/ui": "^4.1.5",
 		"chalk-template": "^1.1.2",
 		"change-case": "^5.4.4",
-		"conventional-changelog-conventionalcommits": "^9.1.0",
+		"conventional-changelog-conventionalcommits": "^10.0.0",
 		"drizzle-kit": "^0.31.8",
 		"drizzle-mermaid-generator": "^0.0.5",
 		"drizzle-seed": "^0.3.1",
