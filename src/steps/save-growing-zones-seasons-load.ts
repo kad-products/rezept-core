@@ -6,14 +6,14 @@ import {
 	normalizeApostrophes,
 	updateIngredientSeason,
 } from '@/repositories';
-import type { IngredientSeasonLoadRecord, IngredientSeasonsDBRead, IngredientSeasonWriteInput, RzLogger } from '@/types';
+import type { IngredientSeasonDBRead, IngredientSeasonLoadRecord, IngredientSeasonWriteInput, RzLogger } from '@/types';
 
 export async function saveGrowingZonesSeasonsLoad(
 	records: IngredientSeasonLoadRecord[],
 	growingZoneId: string,
 	userId: string,
 	logger: RzLogger,
-): Promise<IngredientSeasonsDBRead[]> {
+): Promise<IngredientSeasonDBRead[]> {
 	logger.debug(`Processing ${records.length} ingredient season load records`);
 
 	try {

@@ -2,17 +2,17 @@ import { and, eq, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { growingZones } from '@/models';
-import type { GrowingZonesDBRead, GrowingZonesFormInput, GrowingZonesWithSeasons, RzLogger } from '@/types';
+import type { GrowingZoneDBRead, GrowingZoneFormInput, GrowingZoneWithSeasons, RzLogger } from '@/types';
 import { validateUuid } from './utils';
 
-export async function getGrowingZones(logger: RzLogger): Promise<GrowingZonesDBRead[]> {
+export async function getGrowingZones(logger: RzLogger): Promise<GrowingZoneDBRead[]> {
 	logger.debug('Fetching all growing zones');
 	const allGrowingZones = await db.select().from(growingZones).where(isNull(growingZones.deletedAt));
 	logger.debug(`Fetched ${allGrowingZones.length} growing zones`);
 	return allGrowingZones;
 }
 
-export async function getGrowingZoneById(growingZoneId: string, logger: RzLogger): Promise<GrowingZonesWithSeasons> {
+export async function getGrowingZoneById(growingZoneId: string, logger: RzLogger): Promise<GrowingZoneWithSeasons> {
 	if (!validateUuid(growingZoneId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [growingZoneId, 'Growing Zone']);
 	}
@@ -37,10 +37,10 @@ export async function getGrowingZoneById(growingZoneId: string, logger: RzLogger
 }
 
 export async function createGrowingZone(
-	growingZone: GrowingZonesFormInput,
+	growingZone: GrowingZoneFormInput,
 	userId: string,
 	logger: RzLogger,
-): Promise<GrowingZonesDBRead> {
+): Promise<GrowingZoneDBRead> {
 	logger.debug('Creating growing zone');
 
 	const createdGrowingZones = await db
@@ -56,7 +56,7 @@ export async function createGrowingZone(
 	return result;
 }
 
-export async function deleteGrowingZone(growingZoneId: string, userId: string, logger: RzLogger): Promise<GrowingZonesDBRead> {
+export async function deleteGrowingZone(growingZoneId: string, userId: string, logger: RzLogger): Promise<GrowingZoneDBRead> {
 	if (!validateUuid(growingZoneId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [growingZoneId, 'Growing Zone']);
 	}
@@ -78,10 +78,10 @@ export async function deleteGrowingZone(growingZoneId: string, userId: string, l
 
 export async function updateGrowingZone(
 	growingZoneId: string,
-	growingZone: GrowingZonesFormInput,
+	growingZone: GrowingZoneFormInput,
 	userId: string,
 	logger: RzLogger,
-): Promise<GrowingZonesDBRead> {
+): Promise<GrowingZoneDBRead> {
 	if (!validateUuid(growingZoneId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [growingZoneId, 'Growing Zone']);
 	}

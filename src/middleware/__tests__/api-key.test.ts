@@ -105,15 +105,13 @@ describe('apiKeyMiddleware', () => {
 			expect(mockRequestInfo.ctx.session?.userId).toBe('test-user-id');
 		});
 
-		it('sets session createdAt and lastAccessedAt', async () => {
+		it('sets session lastAccessedAt', async () => {
 			vi.mocked(getApiKeyByKey).mockResolvedValue(mockApiKey as any);
 
 			const before = Date.now();
 			await apiKeyMiddleware(mockRequestInfo);
 			const after = Date.now();
 
-			expect(mockRequestInfo.ctx.session?.createdAt).toBeGreaterThanOrEqual(before);
-			expect(mockRequestInfo.ctx.session?.createdAt).toBeLessThanOrEqual(after);
 			expect(mockRequestInfo.ctx.session?.lastAccessedAt).toBeGreaterThanOrEqual(before);
 			expect(mockRequestInfo.ctx.session?.lastAccessedAt).toBeLessThanOrEqual(after);
 		});

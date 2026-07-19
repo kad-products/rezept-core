@@ -20,7 +20,7 @@ export default async function apiKeyMiddleware({ ctx, request }: RequestInfo<Def
 		}
 
 		const now = Date.now();
-		ctx.session = { userId: apiKey.userId, createdAt: now, lastAccessedAt: now };
+		ctx.session = { userId: apiKey.userId, lastAccessedAt: now };
 		ctx.apiKey = apiKey;
 		ctx.logger = ctx.logger.child({ userId: apiKey.userId });
 		trackApiKeyUsed({

@@ -3,12 +3,12 @@ import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveGrowingZone } from '@/actions/growing-zone';
 import { growingZonesSchemas } from '@/schemas';
-import type { ActionState, GrowingZonesDBRead, GrowingZonesFormInput } from '@/types';
+import type { ActionState, GrowingZoneDBRead, GrowingZoneFormInput } from '@/types';
 import { useAppForm } from './setup/context';
 import { FormDevtools } from './setup/FormDevtools';
 
-export default function GrowingZoneForm({ growingZone }: { growingZone: GrowingZonesFormInput }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<GrowingZonesDBRead>>();
+export default function GrowingZoneForm({ growingZone }: { growingZone: GrowingZoneFormInput }): React.ReactNode {
+	const [formState, setFormState] = useState<ActionState<GrowingZoneDBRead>>();
 
 	const form = useAppForm({
 		formId: 'growing-zone',
@@ -16,7 +16,7 @@ export default function GrowingZoneForm({ growingZone }: { growingZone: GrowingZ
 		validators: {
 			onBlur: growingZonesSchemas.form,
 		},
-		onSubmit: async ({ value }: { value: GrowingZonesFormInput }): Promise<void> => {
+		onSubmit: async ({ value }: { value: GrowingZoneFormInput }): Promise<void> => {
 			setFormState(await saveGrowingZone(value));
 		},
 	});

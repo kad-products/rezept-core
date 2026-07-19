@@ -3,7 +3,7 @@ import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveIngredientSeason } from '@/actions/ingredient-seasons';
 import { ingredientSeasonsSchemas } from '@/schemas';
-import type { ActionState, IngredientSeasonFormInput, IngredientSeasonsDBRead } from '@/types';
+import type { ActionState, IngredientSeasonDBRead, IngredientSeasonFormInput } from '@/types';
 import { useAppForm } from './setup/context';
 import { FormDevtools } from './setup/FormDevtools';
 
@@ -18,7 +18,7 @@ export default function IngredientSeasonForm({
 	growingZoneOptions: { value: string; label: string }[];
 	monthOptions: { value: string; label: string }[];
 }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<IngredientSeasonsDBRead>>();
+	const [formState, setFormState] = useState<ActionState<IngredientSeasonDBRead>>();
 
 	const defaultSeason: IngredientSeasonFormInput = {
 		startMonth: '1',

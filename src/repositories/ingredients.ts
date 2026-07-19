@@ -2,7 +2,7 @@ import { and, eq, inArray, isNotNull, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { ingredients, verifications } from '@/models';
-import type { IngredientDBRead, IngredientFormInput, IngredientWithSeasons, RzLogger, VerificationsDBRead } from '@/types';
+import type { IngredientDBRead, IngredientFormInput, IngredientWithSeasons, RzLogger, VerificationDBRead } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getIngredientById(ingredientId: string, logger: RzLogger): Promise<IngredientWithSeasons> {
@@ -194,7 +194,7 @@ export async function verifyIngredient(
 	ingredientId: string,
 	userId: string,
 	logger: RzLogger,
-): Promise<{ ingredient: IngredientDBRead; verification: VerificationsDBRead }> {
+): Promise<{ ingredient: IngredientDBRead; verification: VerificationDBRead }> {
 	if (!validateUuid(ingredientId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientId, 'Ingredient']);
 	}

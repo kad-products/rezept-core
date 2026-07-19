@@ -17,7 +17,7 @@ import {
 	updateIngredientSeason,
 } from '@/repositories';
 import { saveGrowingZonesSeasonsLoad } from '@/steps';
-import type { IngredientDBRead, IngredientSeasonsDBRead } from '@/types';
+import type { IngredientDBRead, IngredientSeasonDBRead } from '@/types';
 
 const logger = createNoopLogger();
 const userId = '00000000-0000-0000-0000-000000000001';
@@ -25,7 +25,7 @@ const growingZoneId = '00000000-0000-0000-0000-000000000010';
 const ingredientId = '00000000-0000-0000-0000-000000000002';
 const seasonId = '00000000-0000-0000-0000-000000000003';
 
-function makeSeason(overrides: Partial<IngredientSeasonsDBRead> = {}): IngredientSeasonsDBRead {
+function makeSeason(overrides: Partial<IngredientSeasonDBRead> = {}): IngredientSeasonDBRead {
 	return {
 		id: seasonId,
 		ingredientId,
