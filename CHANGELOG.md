@@ -1,3 +1,9 @@
+## [1.74.2](https://github.com/kad-products/rezept-core/compare/v1.74.1...v1.74.2) (2026-07-19)
+
+### Bug Fixes
+
+* **deps:** update dependency rwsdk to v1.5.7 ([2fee877](https://github.com/kad-products/rezept-core/commit/2fee877b7e6a178f0b7c5daf30eb831bb448944a))
+
 ## [1.74.1](https://github.com/kad-products/rezept-core/compare/v1.74.0...v1.74.1) (2026-07-18)
 
 ### Bug Fixes
