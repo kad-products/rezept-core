@@ -3,7 +3,7 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { verifyIngredient, verifyIngredientSeason } from '@/repositories';
 import { verificationsSchemas } from '@/schemas';
-import type { ActionState, VerificationsDBRead, VerificationsFormInput } from '@/types';
+import type { ActionState, VerificationDBRead, VerificationFormInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
 export const saveVerification = serverAction([
@@ -15,7 +15,7 @@ export const saveVerification = serverAction([
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _saveVerification(formData: VerificationsFormInput): Promise<ActionState<VerificationsDBRead>> {
+export async function _saveVerification(formData: VerificationFormInput): Promise<ActionState<VerificationDBRead>> {
 	const { ctx } = requestInfo;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
@@ -29,11 +29,11 @@ export async function _saveVerification(formData: VerificationsFormInput): Promi
 	try {
 		const parsed = verificationsSchemas.form.safeParse(formData);
 		if (!parsed.success) {
-			return errorResponse<VerificationsDBRead>(parsed.error.flatten().fieldErrors, 400);
+			return errorResponse<VerificationDBRead>(parsed.error.flatten().fieldErrors, 400);
 		}
 		if (parsed.data.id) {
 			requestInfo.ctx.logger.error('Updating existing verifications is not implemented yet');
-			return errorResponse<VerificationsDBRead>(
+			return errorResponse<VerificationDBRead>(
 				`Updating existing verifications is not implemented yet`,
 				400,
 				'Request included ID which indicates updating an existing verification which has not been implemented yet',
@@ -44,7 +44,7 @@ export async function _saveVerification(formData: VerificationsFormInput): Promi
 					requestInfo.ctx.logger.error(
 						`Ingredient Season ID ${parsed.data.ingredientSeasonId} provided but no Ingredient ID, both must be present for an ingredient season verification`,
 					);
-					return errorResponse<VerificationsDBRead>(
+					return errorResponse<VerificationDBRead>(
 						`Request to verify season ingredient must also include parent ingredient ID`,
 						400,
 						'Request to verify season ingredient must also include parent ingredient ID',
@@ -56,20 +56,20 @@ export async function _saveVerification(formData: VerificationsFormInput): Promi
 					userId,
 					requestInfo.ctx.logger,
 				);
-				return successResponse<VerificationsDBRead>(ingredientSeasonVerification.verification);
+				return successResponse<VerificationDBRead>(ingredientSeasonVerification.verification);
 			} else if (parsed.data.ingredientId) {
 				const ingredientVerification = await verifyIngredient(parsed.data.ingredientId, userId, requestInfo.ctx.logger);
-				return successResponse<VerificationsDBRead>(ingredientVerification.verification);
+				return successResponse<VerificationDBRead>(ingredientVerification.verification);
 			}
 		}
 		requestInfo.ctx.logger.error('Request did not include ingredientId or ingredientSeasonId');
-		return errorResponse<VerificationsDBRead>(
+		return errorResponse<VerificationDBRead>(
 			`Request must include ingredientId or ingredientSeasonId`,
 			400,
 			'Request did not include ingredientId or ingredientSeasonId',
 		);
 	} catch (error) {
 		requestInfo.ctx.logger.error('Failed to save verification', { error });
-		return errorResponse<VerificationsDBRead>(error, 500, 'Failed to save verification');
+		return errorResponse<VerificationDBRead>(error, 500, 'Failed to save verification');
 	}
 }

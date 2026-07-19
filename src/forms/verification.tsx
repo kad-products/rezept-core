@@ -3,12 +3,12 @@ import { Form } from 'radix-ui';
 import { useState } from 'react';
 import { saveVerification } from '@/actions/verifications';
 import { verificationsSchemas } from '@/schemas';
-import type { ActionState, VerificationsDBRead, VerificationsFormInput } from '@/types';
+import type { ActionState, VerificationDBRead, VerificationFormInput } from '@/types';
 import { useAppForm } from './setup/context';
 import { FormDevtools } from './setup/FormDevtools';
 
-export default function VerificationForm({ verification }: { verification: VerificationsFormInput }): React.ReactNode {
-	const [formState, setFormState] = useState<ActionState<VerificationsDBRead>>();
+export default function VerificationForm({ verification }: { verification: VerificationFormInput }): React.ReactNode {
+	const [formState, setFormState] = useState<ActionState<VerificationDBRead>>();
 
 	const form = useAppForm({
 		formId: 'verification',
@@ -16,7 +16,7 @@ export default function VerificationForm({ verification }: { verification: Verif
 		validators: {
 			onBlur: verificationsSchemas.form,
 		},
-		onSubmit: async ({ value }: { value: VerificationsFormInput }): Promise<void> => {
+		onSubmit: async ({ value }: { value: VerificationFormInput }): Promise<void> => {
 			setFormState(await saveVerification(value));
 		},
 	});

@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 import type { ingredients } from '@/models';
 import type { ingredientsSchemas } from '@/schemas';
-import type { IngredientSeasonsDBRead, VerificationsDBRead } from '@/types';
+import type { IngredientSeasonDBRead, VerificationDBRead } from '@/types';
 
 export type IngredientDBRead = typeof ingredients.$inferSelect;
 export type IngredientFormInput = z.input<typeof ingredientsSchemas.form>;
@@ -14,6 +14,6 @@ export type IngredientLoadRecord = {
 };
 
 export type IngredientWithSeasons = IngredientDBRead & {
-	seasons: (IngredientSeasonsDBRead & { verifications: VerificationsDBRead[] })[];
-	verifications: VerificationsDBRead[];
+	seasons: (IngredientSeasonDBRead & { verifications: VerificationDBRead[] })[];
+	verifications: VerificationDBRead[];
 };

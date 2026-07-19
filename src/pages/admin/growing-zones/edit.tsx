@@ -3,11 +3,11 @@ import { RzPopMenu } from '@/components/design-system';
 import GrowingZoneForm from '@/forms/growing-zone';
 import AdminLayout from '@/layouts/admin';
 import { getGrowingZoneById } from '@/repositories';
-import type { GrowingZonesFormInput } from '@/types';
+import type { GrowingZoneFormInput } from '@/types';
 
 export default async function Pages__admin__growing_zones__edit({ ctx, params }: RequestInfo): Promise<React.JSX.Element> {
 	const growingZoneId = params.growingZoneId;
-	const growingZone: GrowingZonesFormInput = growingZoneId
+	const growingZone: GrowingZoneFormInput = growingZoneId
 		? await getGrowingZoneById(growingZoneId, ctx.logger)
 		: { code: '', name: '' };
 

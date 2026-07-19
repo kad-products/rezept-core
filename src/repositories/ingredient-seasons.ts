@@ -2,14 +2,14 @@ import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { RzRepositoryError, RzRepositoryErrorTypes } from '@/classes';
 import db from '@/db';
 import { ingredientSeasons, verifications } from '@/models';
-import type { IngredientSeasonsDBRead, IngredientSeasonWriteInput, RzLogger, VerificationsDBRead } from '@/types';
+import type { IngredientSeasonDBRead, IngredientSeasonWriteInput, RzLogger, VerificationDBRead } from '@/types';
 import { validateUuid } from './utils';
 
 export async function getIngredientSeasonsByIngredientIds(
 	ingredientIds: string[],
 	growingZoneId: string,
 	logger: RzLogger,
-): Promise<IngredientSeasonsDBRead[]> {
+): Promise<IngredientSeasonDBRead[]> {
 	if (ingredientIds.length === 0) {
 		return [];
 	}
@@ -38,7 +38,7 @@ export async function getIngredientSeasonsByIngredientIds(
 	return results;
 }
 
-export async function getIngredientSeasons(ingredientId: string, logger: RzLogger): Promise<IngredientSeasonsDBRead[]> {
+export async function getIngredientSeasons(ingredientId: string, logger: RzLogger): Promise<IngredientSeasonDBRead[]> {
 	logger.debug(`Fetching seasons for ingredient ${ingredientId}`);
 	const seasons = await db
 		.select()
@@ -52,7 +52,7 @@ export async function createIngredientSeason(
 	ingredientSeason: IngredientSeasonWriteInput,
 	userId: string,
 	logger: RzLogger,
-): Promise<IngredientSeasonsDBRead> {
+): Promise<IngredientSeasonDBRead> {
 	logger.debug('Creating ingredient season');
 	if (ingredientSeason.id && !validateUuid(ingredientSeason.id)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeason.id, 'Ingredient Season']);
@@ -80,7 +80,7 @@ export async function updateIngredientSeason(
 	ingredientSeason: IngredientSeasonWriteInput,
 	userId: string,
 	logger: RzLogger,
-): Promise<IngredientSeasonsDBRead> {
+): Promise<IngredientSeasonDBRead> {
 	logger.debug(`Updating ingredient season ${ingredientSeasonId}`);
 	if (!validateUuid(ingredientSeasonId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeasonId, 'Ingredient Season']);
@@ -107,7 +107,7 @@ export async function deleteIngredientSeason(
 	ingredientSeasonId: string,
 	actingUserId: string,
 	logger: RzLogger,
-): Promise<IngredientSeasonsDBRead> {
+): Promise<IngredientSeasonDBRead> {
 	if (!validateUuid(ingredientSeasonId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeasonId, 'Ingredient Season']);
 	}
@@ -132,7 +132,7 @@ export async function verifyIngredientSeason(
 	ingredientId: string,
 	userId: string,
 	logger: RzLogger,
-): Promise<{ ingredientSeason: IngredientSeasonsDBRead; verification: VerificationsDBRead }> {
+): Promise<{ ingredientSeason: IngredientSeasonDBRead; verification: VerificationDBRead }> {
 	if (!validateUuid(ingredientSeasonId)) {
 		throw new RzRepositoryError(RzRepositoryErrorTypes.InvalidUUID, [ingredientSeasonId, 'Ingredient Season']);
 	}

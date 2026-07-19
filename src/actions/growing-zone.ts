@@ -3,7 +3,7 @@ import { requestInfo, serverAction } from 'rwsdk/worker';
 import { requireAuthentication, requirePermissions } from '@/interrupters';
 import { createGrowingZone, updateGrowingZone } from '@/repositories';
 import { growingZonesSchemas } from '@/schemas';
-import type { ActionState, GrowingZonesDBRead, GrowingZonesFormInput } from '@/types';
+import type { ActionState, GrowingZoneDBRead, GrowingZoneFormInput } from '@/types';
 import { errorResponse, successResponse } from './utils';
 
 export const saveGrowingZone = serverAction([
@@ -15,7 +15,7 @@ export const saveGrowingZone = serverAction([
 /**
  * @private - exported for testing only, do not use directly
  */
-export async function _saveGrowingZone(formData: GrowingZonesFormInput): Promise<ActionState<GrowingZonesDBRead>> {
+export async function _saveGrowingZone(formData: GrowingZoneFormInput): Promise<ActionState<GrowingZoneDBRead>> {
 	const { ctx } = requestInfo;
 	// biome-ignore lint/style/noNonNullAssertion: guaranteed by requireAuthentication in serverAction chain
 	const userId = ctx.user!.id;
@@ -25,16 +25,16 @@ export async function _saveGrowingZone(formData: GrowingZonesFormInput): Promise
 	try {
 		const parsed = growingZonesSchemas.form.safeParse(formData);
 		if (!parsed.success) {
-			return errorResponse<GrowingZonesDBRead>(parsed.error.flatten().fieldErrors, 400);
+			return errorResponse<GrowingZoneDBRead>(parsed.error.flatten().fieldErrors, 400);
 		}
 		if (parsed.data.id) {
 			const updatedGrowingZone = await updateGrowingZone(parsed.data.id, parsed.data, userId, requestInfo.ctx.logger);
-			return successResponse<GrowingZonesDBRead>(updatedGrowingZone);
+			return successResponse<GrowingZoneDBRead>(updatedGrowingZone);
 		}
 		const createdGrowingZone = await createGrowingZone(parsed.data, userId, requestInfo.ctx.logger);
-		return successResponse<GrowingZonesDBRead>(createdGrowingZone);
+		return successResponse<GrowingZoneDBRead>(createdGrowingZone);
 	} catch (error) {
 		requestInfo.ctx.logger.error('Failed to save growing zone', { error });
-		return errorResponse<GrowingZonesDBRead>(error, 500, 'Failed to save growing zone');
+		return errorResponse<GrowingZoneDBRead>(error, 500, 'Failed to save growing zone');
 	}
 }

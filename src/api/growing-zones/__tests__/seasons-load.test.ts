@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createNoopLogger } from '@/logger';
-import type { IngredientSeasonsDBRead, RzLogger } from '@/types';
+import type { IngredientSeasonDBRead, RzLogger } from '@/types';
 
 const mockEnv = vi.hoisted(() => ({
 	REZEPT_ADMIN_OPERATIONS: {
@@ -33,7 +33,7 @@ const userId = '00000000-0000-0000-0000-000000000001';
 const growingZoneId = '00000000-0000-0000-0000-000000000010';
 
 const mockRecord = { ingredientName: 'tomato', startMonth: 6, endMonth: 9 };
-const mockSavedSeason = { id: '00000000-0000-0000-0000-000000000002' } as unknown as IngredientSeasonsDBRead;
+const mockSavedSeason = { id: '00000000-0000-0000-0000-000000000002' } as unknown as IngredientSeasonDBRead;
 
 function makeCsvFile(content = 'ingredient_name,start_month,end_month\ntomato,6,9'): File {
 	return new File([content], 'seasons.csv', { type: 'text/csv' });
