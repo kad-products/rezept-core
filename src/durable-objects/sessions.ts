@@ -33,7 +33,6 @@ export class SessionDurableObject extends DurableObject {
 			userId,
 			challenge,
 			permissionsOverride,
-			createdAt: now,
 			lastAccessedAt: now,
 		};
 

@@ -64,7 +64,6 @@ describe('SessionDurableObject', () => {
 
 			expect(saved.userId).toBe('user-123');
 			expect(saved.challenge).toBeNull();
-			expect(saved.createdAt).toBe(START_TIME);
 			expect(saved.lastAccessedAt).toBe(START_TIME);
 		});
 
@@ -73,7 +72,6 @@ describe('SessionDurableObject', () => {
 
 			expect(saved.userId).toBeNull();
 			expect(saved.challenge).toBe('challenge-abc');
-			expect(saved.createdAt).toBe(START_TIME);
 		});
 
 		it('saves session with both userId and challenge', async () => {
@@ -91,14 +89,12 @@ describe('SessionDurableObject', () => {
 
 			expect(saved.userId).toBeNull();
 			expect(saved.challenge).toBeNull();
-			expect(saved.createdAt).toBe(START_TIME);
 		});
 
-		it('sets createdAt and lastAccessedAt to current time', async () => {
+		it('sets lastAccessedAt to current time', async () => {
 			session.setTime(5000000);
 			const saved = await session.saveSession({ userId: 'user-123' });
 
-			expect(saved.createdAt).toBe(5000000);
 			expect(saved.lastAccessedAt).toBe(5000000);
 		});
 
@@ -107,7 +103,6 @@ describe('SessionDurableObject', () => {
 
 			const stored = await mockState.storage.get<Session>('session');
 			expect(stored?.userId).toBe('user-123');
-			expect(stored?.createdAt).toBe(START_TIME);
 		});
 
 		it('overwrites existing session', async () => {
@@ -119,7 +114,7 @@ describe('SessionDurableObject', () => {
 			const result = await session.getSession();
 			if ('value' in result) {
 				expect(result.value.userId).toBe('user-2');
-				expect(result.value.createdAt).toBe(START_TIME + 1000);
+				expect(result.value.lastAccessedAt).toBe(START_TIME + 1000);
 			}
 		});
 
@@ -144,7 +139,6 @@ describe('SessionDurableObject', () => {
 			expect('value' in result).toBe(true);
 			if ('value' in result) {
 				expect(result.value.userId).toBe('user-123');
-				expect(result.value.createdAt).toBe(START_TIME);
 			}
 		});
 
@@ -318,7 +312,6 @@ describe('SessionDurableObject', () => {
 			const result = await session.getSession();
 			if ('value' in result) {
 				expect(result.value.userId).toBe('user-2');
-				expect(result.value.createdAt).toBe(START_TIME + 5000);
 			}
 		});
 
@@ -452,19 +445,6 @@ describe('SessionDurableObject', () => {
 			const saved = await session.saveSession({ challenge });
 
 			expect(saved.challenge).toBe(challenge);
-		});
-
-		it('maintains separate createdAt and lastAccessedAt', async () => {
-			await session.saveSession({ userId: 'user-123' });
-
-			session.setTime(START_TIME + 50000);
-			const result = await session.getSession();
-
-			if ('value' in result) {
-				expect(result.value.createdAt).toBe(START_TIME);
-				expect(result.value.lastAccessedAt).toBe(START_TIME + 50000);
-				expect(result.value.createdAt).not.toBe(result.value.lastAccessedAt);
-			}
 		});
 	});
 });

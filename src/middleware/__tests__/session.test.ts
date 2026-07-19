@@ -57,7 +57,6 @@ describe('setupPasskeyAuth', () => {
 	it('loads session and sets it on context', async () => {
 		const mockSession = {
 			userId: 'test-user-123',
-			createdAt: Date.now(),
 			lastAccessedAt: Date.now(),
 		};
 		vi.mocked(sessions.load).mockResolvedValue(mockSession);
