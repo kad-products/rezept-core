@@ -74,7 +74,7 @@
 		"react": "19.2.7",
 		"react-dom": "19.2.7",
 		"react-server-dom-webpack": "19.2.7",
-		"rwsdk": "1.5.7",
+		"rwsdk": "1.5.8",
 		"ua-parser-js": "^2.0.8",
 		"zod": "^4.3.6"
 	},
