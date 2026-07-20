@@ -24,6 +24,10 @@ jobs:
           filters: |
             design_system:
               - 'src/components/design-system/**'
+            forms:
+              - 'src/forms/**'
+              - 'playwright-ct.config.ts'
+              - 'tests/mocks/**'
 
       - name: Install git-lfs
         if: steps.changes.outputs.design_system == 'true'
@@ -37,26 +41,26 @@ jobs:
           git lfs pull
 
       - uses: pnpm/action-setup@v6
-        if: steps.changes.outputs.design_system == 'true'
+        if: steps.changes.outputs.design_system == 'true' || steps.changes.outputs.forms == 'true'
 
       - uses: actions/setup-node@v7
-        if: steps.changes.outputs.design_system == 'true'
+        if: steps.changes.outputs.design_system == 'true' || steps.changes.outputs.forms == 'true'
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install dependencies
-        if: steps.changes.outputs.design_system == 'true'
+        if: steps.changes.outputs.design_system == 'true' || steps.changes.outputs.forms == 'true'
         run: pnpm install
 
       - name: Run Playwright component tests
-        if: steps.changes.outputs.design_system == 'true'
+        if: steps.changes.outputs.design_system == 'true' || steps.changes.outputs.forms == 'true'
         run: pnpm playwright-ct:run
         env:
           HOME: /root
 
       - uses: actions/upload-artifact@v7
-        if: ${{ steps.changes.outputs.design_system == 'true' && !cancelled() }}
+        if: ${{ (steps.changes.outputs.design_system == 'true' || steps.changes.outputs.forms == 'true') && !cancelled() }}
         with:
           name: playwright-report
           path: playwright-report/
