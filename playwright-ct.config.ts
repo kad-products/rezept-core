@@ -18,7 +18,15 @@ export default defineConfig({
 		screenshot: 'on',
 		ctPort: 3100,
 		ctViteConfig: {
-			resolve: { alias: { '@': resolve(__dirname, './src') } },
+			resolve: {
+				alias: [
+					{
+						find: '@/actions/submit-recipe-search',
+						replacement: resolve(__dirname, './tests/mocks/actions/submit-recipe-search.ts'),
+					},
+					{ find: '@', replacement: resolve(__dirname, './src') },
+				],
+			},
 		},
 	},
 	projects: [

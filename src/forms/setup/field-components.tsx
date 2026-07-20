@@ -159,7 +159,14 @@ export function SelectInput({
 	const field = useFieldContext<string>();
 	return (
 		<FieldComponent label={label} required={required} name={field.name} meta={field.state.meta}>
-			<RzFormInput.RzSelect value={field.state.value} onChange={field.handleChange} options={options} />
+			<RzFormInput.RzSelect
+				value={field.state.value}
+				onChange={(value: string): void => {
+					field.handleChange(value);
+					field.handleBlur();
+				}}
+				options={options}
+			/>
 		</FieldComponent>
 	);
 }
