@@ -16,8 +16,8 @@ importers:
   .:
     dependencies:
       '@jlucaspains/sharp-recipe-parser':
-        specifier: ^1.3.6
-        version: 1.3.6
+        specifier: ^2.0.0
+        version: 2.0.0
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
@@ -1650,8 +1650,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@jlucaspains/sharp-recipe-parser@1.3.6':
-    resolution: {integrity: sha512-NqI0svYcg/oubFf4GsTkIEaIz9HUqWnhg4sxHVxft5xAikIFYwZXCsjosk2+y1wZgKfrV+14C4mm5q6/wr6BHw==}
+  '@jlucaspains/sharp-recipe-parser@2.0.0':
+    resolution: {integrity: sha512-GJPDJcHJFqIqZVdDmaJxPqfE7P2rsV1wvQjnzH0+BL7WNH7/RbP6RpfGkSLj1BRx77fuaX5hGGsZazHvkIYCAg==}
 
   '@joshwooding/vite-plugin-react-docgen-typescript@0.7.0':
     resolution: {integrity: sha512-qvsTEwEFefhdirGOPnu9Wp6ChfIwy2dBCRuETU3uE+4cC+PFoxMSiiEhxk4lOluA34eARHA0OxqsEUYDqRMgeQ==}
@@ -8423,7 +8423,7 @@ snapshots:
   '@img/sharp-win32-x64@0.35.2':
     optional: true
 
-  '@jlucaspains/sharp-recipe-parser@1.3.6':
+  '@jlucaspains/sharp-recipe-parser@2.0.0':
     dependencies:
       fraction.js: 5.3.4
 
